@@ -25,15 +25,63 @@ Some of the useful features Xi provides:
 - Other helper libraries for time functions, object manipulation, and inventory management
 - Complete utility scripts, as well as drop-in `#import`able snippets for special use cases
 
+## Instructions
+
+Unpack the "xi-lsl-library" directory inside your LSL preprocessor include directory.
+
+Include the libraries by adding the following line to the top of your script:
+
+```
+#include "xi-lsl-framework/main.lsl"
+```
+
+Then, in the script body, include the event handlers:
+
+```
+default
+{
+    #include "xi-lsl-framework/event-handlers/state_entry.lsl"
+    #include "xi-lsl-framework/event-handlers/on_rez.lsl"
+    #include "xi-lsl-framework/event-handlers/attach.lsl"
+    #include "xi-lsl-framework/event-handlers/changed.lsl"
+    #include "xi-lsl-framework/event-handlers/link_message.lsl"
+    #include "xi-lsl-framework/event-handlers/listen.lsl"
+    #include "xi-lsl-framework/event-handlers/timer.lsl"
+}
+```
+
+Which event handlers you need depends on which functions you use. Generally, it's recommended to use all of the event handlers unless you have a reason not to (like not wanting to clog the event queue with `link_message` events in an environment with heavy `link_message` traffic that you don't need to process, or being extremely memory-limited). Omitting an event handler can cause certain functions to not work properly, so make sure you understand the code you're omitting.
+
+If you want to run your own code on an event, most event handlers can forward them to user-defined functions upon request:
+
+```
+#define XI_STATE_ENTRY
+Xi_state_entry()
+{
+    // runs on state_entry if XI_STATE_ENTRY has been defined
+}
+```
+
+If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* the `main.lsl` `#include` line:
+
+```
+#define XI_ALL_ENABLE_XILOG
+#include "xi-lsl-framework/main.lsl"
+```
+
+## Function Reference
+
+TBD - moving to wiki
+
 ## Why?
 
-The Linden Scripting Language is over twenty years old and does not have any function that gives you a random integer.
+LSL is over twenty years old and still has no function that returns a random integer. While it's still fun, coding in any other language makes LSL feel... barbaric.
 
 Xi augments LSL with features that should have been in LSL a decade ago, but aren't. While LSL does enjoy occasional improvements, a lot of code snippets end up copied and pasted across multiple projects, each with its own tweaks and bugs. Most LSL code is, as a result, ugly, incomprehensible, and unmaintainable.
 
 Xi is an attempt to centralize all of these handy snippets into one omnibus framework. With all the hacks at your fingertips, there's no need to reinvent the wheel in every new script. Focus on the code, not the infrastructure.
 
-No need to stress over which delineator character to use when dumping a list to a string, just use `XiList_ToString`. Want to append the prim UUID and a special header to all of your linkset data pairs so they don't conflict with other scripts in the linkset? Put `#define XILSD_HEADER "myheader"` and `#define XILSD_ENABLE_UUID_HEADER` at the top of your script, include some event handlers, and use `XiLSD_Write` - Xi will even update all of your linkset data pairs automatically when the key changes.
+No need to stress over which delineator character to use when dumping a list to a string, use `XiList_ToString`, which requires no escaping. Need to interpolate between two rotations, just call `XiRotation_Slerp`. Want to append the prim UUID and a special header to all of your linkset data pairs so they don't conflict with other scripts in the linkset? Put `#define XILSD_HEADER "myheader"` and `#define XILSD_ENABLE_UUID_HEADER` at the top of your script, include some event handlers, and use `XiLSD_Write` - Xi will even update all of your linkset data pairs automatically when the key changes.
 
 Thanks to the LSL preprocessor, these additional functions are always available to you while you script. For example, XiLog enables in-the-field debugging out-of-the-box. With Xi, just write:
 
@@ -76,51 +124,3 @@ or, if you enable TRACE logging, you'll not only get additional relevant logs, b
 ```
 
 Since you can change the loglevel at runtime, you can get a treasure trove of diagnostic information without needing anything more than a script with a single line of code! (Or the ManageLoglevel.lsl and SetLoglevel.lsl utility scripts, which are a little easier to use.)
-
-## Instructions
-
-Unpack the "xi-lsl-library" directory inside your LSL preprocessor include directory.
-
-Include the libraries by adding the following line to the top of your script:
-
-```
-#include "xi-lsl-framework/main.lsl"
-```
-
-Then, in the script body, include the event handlers:
-
-```
-default
-{
-    #include "xi-lsl-framework/event-handlers/state_entry.lsl"
-    #include "xi-lsl-framework/event-handlers/on_rez.lsl"
-    #include "xi-lsl-framework/event-handlers/attach.lsl"
-    #include "xi-lsl-framework/event-handlers/changed.lsl"
-    #include "xi-lsl-framework/event-handlers/link_message.lsl"
-    #include "xi-lsl-framework/event-handlers/listen.lsl"
-    #include "xi-lsl-framework/event-handlers/timer.lsl"
-}
-```
-
-Which event handlers you need depends on which functions you use. Generally, it's recommended to use all of the event handlers unless you have a reason not to (like not wanting to clog the event queue with `link_message` events in an environment with heavy `link_message` traffic that you don't need to process, or being extremely memory-limited). Omitting an event handler can cause certain functions to not work properly, so make sure you understand the code you're omitting.
-
-If you want to run your own code on an event, most event handlers can forward them to user-defined functions upon request:
-
-```
-#define XI_STATE_ENTRY
-Xi_state_entry()
-{
-	// runs on state_entry if XI_STATE_ENTRY has been defined
-}
-```
-
-If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* the `main.lsl` `#include` line:
-
-```
-#define XI_ALL_ENABLE_XILOG
-#include "xi-lsl-framework/main.lsl"
-```
-
-## Function Reference
-
-TBD - moving to wiki

@@ -40,3 +40,30 @@
 // ==
 // == functions
 // ==
+
+XiRotation_Normalize(
+    rotation r
+    )
+{
+    float m = 1 / llSqrt( r.x * r.x + r.y * r.y + r.z * r.z + r.s * r.s ); // normalize
+    return < r.x * m, r.y * m, r.z * m, r.s * m >;
+}
+
+XiRotation_Slerp(
+    rotation a,
+    rotation b,
+    float t
+    )
+{
+    return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
+}
+
+XiRotation_Nlerp(
+    rotation a,
+    rotation b,
+    float t
+{
+    float ti = 1 - t;
+    rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
+    return XiRotation_Normalize( r );
+}
