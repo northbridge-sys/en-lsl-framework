@@ -41,7 +41,7 @@
 // == functions
 // ==
 
-XiRotation_Normalize(
+rotation XiRotation_Normalize(
     rotation r
     )
 {
@@ -49,7 +49,7 @@ XiRotation_Normalize(
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
 }
 
-XiRotation_Slerp(
+rotation XiRotation_Slerp(
     rotation a,
     rotation b,
     float t
@@ -58,7 +58,7 @@ XiRotation_Slerp(
     return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
-XiRotation_Nlerp(
+rotation XiRotation_Nlerp(
     rotation a,
     rotation b,
     float t
