@@ -115,7 +115,7 @@ list XiLSD_Find(string name, integer start, integer count)
 string XiLSD_Head() // gets LSD header
 {
     string h = XILSD_HEADER;
-    #ifdef XILSD_ENABLE_UUID
+    #ifdef XILSD_ENABLE_UUID_HEADER
         h = llGetKey() + h; // if XILSD_ENABLE_UUID_HEADER defined, append llGetKey to start of string to avoid linkset conflicts
     #endif
     return h;

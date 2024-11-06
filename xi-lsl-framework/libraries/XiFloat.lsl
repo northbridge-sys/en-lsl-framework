@@ -52,3 +52,23 @@ string XiFloat_ToString( // rounds a float to a specified number of digits after
     integer i = llSubStringIndex(s, "."); // there are more efficient ways to do this, but whatever
     return llGetSubString(s, 0, i + digits); // return string-cast float, but only up to the number of digits requested
 }
+
+float XiFloat_Clamp(
+    float i,
+    float m,
+    float x
+    )
+{
+    if (i < m) i = m; // clamp to minimum
+    if (i > x) i = x; // clamp to maXimum
+    return i;
+}
+
+integer XiFloat_CoinFlip(
+    float weight // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
+    )
+{
+    if ( weight <= 0.0 || weight >= 1.0 ) weight = 0.5;
+    if ( llFrand( 1.0 ) < weight ) return 0;
+    return 1;
+}
