@@ -15,14 +15,14 @@ LSL is the native scripting language used to control Second Life objects. Certai
 Some of the useful features Xi provides:
 
 - XiLog - a standardized logging interface that encourages better scripting
-- XiChat - `llListen`/`llRegionSayTo` with hashed "string channels", packetization, and LSD/KVP/inventory transfers
-- XiIMP - `llMessageLinked` (or XiChat) with lists, source/target script filtering, and a request-response protocol
+- XiChat - `llListen`/`llRegionSayTo` with hash channels, packetization, and LSD/KVP/inventory transfers
+- XiIMP - `llMessageLinked` (or XiChat) with lists, script filtering, and a request-response protocol
 - XiLSD - functions to safely write, read, and manipulate key-value pairs in the `llLinksetData*` store
 - XiKVP - simple in-memory key-value pair database, particularly useful for backing up critical linkset data
 - XiTimer - `llSetTimerEvent` with string callbacks, multiple concurrent timers, and one-shot timers
 - XiTest - unit testing utilities
-- Helper libraries for integers (including hex and bitwise operations), floats, vectors, rotations, strings, lists, and keys
-- Other helper libraries for common scenarios involving time functions, object manipulation, and inventory management
+- Helper libraries for integers (including hex & bitwise), floats, vectors, rotations, strings, lists, and keys
+- Other helper libraries for time functions, object manipulation, and inventory management
 - Complete utility scripts, as well as drop-in `#import`able snippets for special use cases
 
 ## Why?
