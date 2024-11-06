@@ -29,11 +29,13 @@ Some of the useful features Xi provides:
 
 The Linden Scripting Language is over twenty years old and does not have any function that gives you a random integer.
 
-While LSL does enjoy occasional improvements, a lot of code snippets end up copied and pasted across multiple projects, each with its own tweaks and bugs. Xi is an ettempt to centralize all of these handy snippets in one omnibus framework. Xi augments LSL with features that should be in LSL out-of-the-box, but aren't.
+Xi augments LSL with features that should have been in LSL a decade ago, but aren't. While LSL does enjoy occasional improvements, a lot of code snippets end up copied and pasted across multiple projects, each with its own tweaks and bugs. Most LSL code is, as a result, ugly, incomprehensible, and unmaintainable.
 
-Xi is the culmination of over a decade of learning LSL tricks. No need to stress over which delineator character to use when dumping a list to a string, just use `XiList_ToString`. Want to append the prim UUID to all of your linkset data pairs? Put `#include XILSD_ENABLE_UUID_HEADER` at the top of your script, include some event handlers, and use `XiLSD_Write` - Xi will even update all of your linkset data pairs automatically when the key changes.
+Xi is an attempt to centralize all of these handy snippets into one omnibus framework. With all the hacks at your fingertips, there's no need to reinvent the wheel in every new script. Focus on the code, not the infrastructure.
 
-Thanks to the LSL preprocessor, these additional functions are always available to you while you script. For example, XiLog enables in-the-field debugging. It lets you write:
+No need to stress over which delineator character to use when dumping a list to a string, just use `XiList_ToString`. Want to append the prim UUID and a special header to all of your linkset data pairs so they don't conflict with other scripts in the linkset? Put `#define XILSD_HEADER "myheader"` and `#define XILSD_ENABLE_UUID_HEADER` at the top of your script, include some event handlers, and use `XiLSD_Write` - Xi will even update all of your linkset data pairs automatically when the key changes.
+
+Thanks to the LSL preprocessor, these additional functions are always available to you while you script. For example, XiLog enables in-the-field debugging out-of-the-box. It lets you write:
 
 ```
 XiLog_TraceParams( "function", [ "x", "y" ], [ x, y ] );
@@ -75,7 +77,7 @@ or, if you enable TRACE logging at runtime, you'll not only get additional logs,
 
 ## Instructions
 
-Unpack the "xi-lsl-library" inside your LSL preprocessor include directory.
+Unpack the "xi-lsl-library" directory inside your LSL preprocessor include directory.
 
 Include the libraries by adding the following line to the top of your script:
 
