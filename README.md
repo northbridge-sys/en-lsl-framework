@@ -35,10 +35,10 @@ Xi is an attempt to centralize all of these handy snippets into one omnibus fram
 
 No need to stress over which delineator character to use when dumping a list to a string, just use `XiList_ToString`. Want to append the prim UUID and a special header to all of your linkset data pairs so they don't conflict with other scripts in the linkset? Put `#define XILSD_HEADER "myheader"` and `#define XILSD_ENABLE_UUID_HEADER` at the top of your script, include some event handlers, and use `XiLSD_Write` - Xi will even update all of your linkset data pairs automatically when the key changes.
 
-Thanks to the LSL preprocessor, these additional functions are always available to you while you script. For example, XiLog enables in-the-field debugging out-of-the-box. It lets you write:
+Thanks to the LSL preprocessor, these additional functions are always available to you while you script. For example, XiLog enables in-the-field debugging out-of-the-box. With Xi, just write:
 
 ```
-XiLog_TraceParams( "function", [ "x", "y" ], [ x, y ] );
+XiLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
 XiLog( DEBUG, "Performing action..." );
 XiLog( INFO, "You have just called the function with values " + (string)x + " and " + (string)y + "." );
 if ( x ) XiLog( WARN, "Non-zero values of x are discouraged." );
@@ -46,7 +46,7 @@ else XiLog( ERROR, "Hey, how are you reading both of these at once?" );
 XiLog_Fatal( "The script will send this message and stop." );
 ```
 
-but you'll actually see:
+and you'll see:
 
 ```
 💬 You have just called the function with values 1 and 2.
@@ -55,11 +55,11 @@ but you'll actually see:
 🛑 FATAL ERROR: The script will send this message and stop.
 ```
 
-or, if you enable TRACE logging at runtime, you'll not only get additional logs, but a header that shows the exact time, the first 4 digits of the object's UUID (for distinguishing objects in logs), the current memory used, and the name of the script logging the message:
+or, if you enable TRACE logging, you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
 
 ```
 🔽 [12:11:24.81] (13a1 17%) New Script
-🚦 function(
+🚦 someFunction(
         x=1,
         y=2
     )
@@ -74,6 +74,8 @@ or, if you enable TRACE logging at runtime, you'll not only get additional logs,
 🔽 [12:11:25.05] (13a1 16%) New Script
 🛑 FATAL ERROR: The script will send this message and stop.
 ```
+
+Since you can change the loglevel at runtime, you can get a treasure trove of diagnostic information without needing anything more than a script with a single line of code! (Or the ManageLoglevel.lsl and SetLoglevel.lsl utility scripts, which are a little easier to use.)
 
 ## Instructions
 
