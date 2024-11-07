@@ -41,63 +41,23 @@
 
 // libraries
 
-// XiLog - logging/output interface via llOwnerSay
-// must be defined early due to preprocessor flags being used in other libraries
+// these libraries must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiLog.lsl"
-
-// XiInteger - integer variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiInteger.lsl"
-
-// XiFloat - float variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiFloat.lsl"
-
-// XiVector - vector variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiVector.lsl"
-
-// XiRotation - rotation variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiRotation.lsl"
-
-// XiString - string variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiString.lsl"
-
-// XiKey - key variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiKey.lsl"
-
-// XiList - list variable manipulation functions
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiList.lsl"
-
-// XiObject - utilities that expose information about linksets (self or others)
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiObject.lsl"
-
-// XiInventory - inventory & notecard management libraries
-// must be defined early due to preprocessor flags being used in other libraries
 #include "xi-lsl-framework/libraries/XiInventory.lsl"
 
-// XiChat - libraries for safely communicating with other scripts via chat
+// these libraries are not dependencies of any others
 #include "xi-lsl-framework/libraries/XiChat.lsl"
-
-// XiHTTP - outgoing HTTP request library with queueing and throttling protection
 #include "xi-lsl-framework/libraries/XiHTTP.lsl"
-
-// XiIMP - implementation of the structured Interface Message Protocol via link messages and XiChat
 #include "xi-lsl-framework/libraries/XiIMP.lsl"
-
-// XiKVP - simple in-memory key-value storage, helpful as a backup to XiLSD
 #include "xi-lsl-framework/libraries/XiKVP.lsl"
-
-// XiLSD - method to store values in linkset data with a preset header, optionally separated by prim UUID
 #include "xi-lsl-framework/libraries/XiLSD.lsl"
-
-// XiTimer - multiple timers in one script with callbacks
 #include "xi-lsl-framework/libraries/XiTimer.lsl"
-
-// XiTest - runtime testing utilities, such as unit tests
 #include "xi-lsl-framework/libraries/XiTest.lsl"
