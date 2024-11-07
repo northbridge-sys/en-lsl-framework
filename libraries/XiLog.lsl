@@ -25,8 +25,9 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This is an LSL Preprocessor include file that implements a set of fleXible
-    logging functions that can output different loglevels via llOwnerSay.
+    This is an LSL preprocessor include file that implements a set of fleXible
+    logging functions that can output different loglevels via llOwnerSay and,
+    optionally, via XiChat to a specified UUID and service.
 */
 
 // ==
@@ -61,29 +62,6 @@ XiLog( // custom logging function
     string lsd_text = llLinksetDataRead("loglevel"); // any valid log level number, 0 (uses default), or negative (suppresses all output)
     integer lsd_level = XILOG_DEFAULT_LOGLEVEL;
     if ((integer)lsd_text) lsd_level = (integer)lsd_text;
-    #ifdef XILOG_ALLOW_LOGTARGET
-        string t = llLinksetDataRead("logtarget");
-        // default sending via XiIMP to the named script in linkset
-        string p = "";
-        string s = t;
-        if ((key)t)
-        { // logtarget is set as UUID, so change to XiChat
-            p = t + "_XiLog"; // send via XiIMP using XiChat format with domain "_XiLog"
-            s = ""; // script set to all
-        }
-        if (t != "")
-        { // logtarget is set
-            XiIMP_Send(
-                p, // prim
-                s, // script
-                ":", // status
-                0, // ident
-                ["_XiLog", llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetScriptName(), level], // params
-                message // data
-                );
-        }
-    #endif
-    if (level && level > lsd_level) return; // don't need to output via llOwnerSay
     list debug_header;
     if (lsd_level >= 5)
     { // use debug header
@@ -98,18 +76,30 @@ XiLog( // custom logging function
         }
         debug_header = ["🔽 [", llGetSubString(llGetTimestamp(), 11, 21), "] (", llGetSubString(llGetKey(), 0, 3), " ", (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())), "%) ", llDumpList2String(script_name, " "), "\n"];
     }
-    llOwnerSay(
-        llDumpList2String(debug_header, "")
-        + llList2String([ // loglevel header, usually an icon but can be anything
-            "", // no level
-            "🛑 FATAL ERROR: ", // FATAL
-            "❌ ERROR: ", // ERROR
-            "🚩 WARNING: ", // WARN
-            "💬 ", // INFO
-            "🪲 ", // DEBUG
-            "🚦 " // TRACE
-            ], level)
-        + message);
+    if ( lsd_level >= level )
+    {
+        llOwnerSay(
+            llDumpList2String(debug_header, "")
+            + llList2String([ // loglevel header, usually an icon but can be anything
+                "", // no level
+                "🛑 FATAL ERROR: ", // FATAL
+                "❌ ERROR: ", // ERROR
+                "🚩 WARNING: ", // WARN
+                "💬 ", // INFO
+                "🪲 ", // DEBUG
+                "🚦 " // TRACE
+                ], level)
+            + message);
+    }
+    #ifndef XILOG_DISABLE_LOGTARGET
+        string t = llLinksetDataRead("logtarget");
+        string prim = llGetSubString( t, 0, 35 );
+        if ( XiKey_IsPrim( prim ) )
+        { // log via XiChat to logtarget
+            string domain = llDeleteSubString( t, 0, 35 );
+            XiChat_RegionSayTo( prim, XiChat_Channel( domain ), XiList_ToString([ "XiChat", XICHAT_SERVICE, prim, domain, "_XiLog", message ] ) );
+        }
+    #endif
 }
 
 XiLog_Fatal( // logs a fatal error and stops the script
