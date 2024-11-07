@@ -151,7 +151,7 @@ someFunction( integer x, integer y )
     XiLog( INFO, "Function called with parameters " + (string)x + " and " + (string)y + "." );
     if ( x ) XiLog( WARN, "Non-zero values of x are discouraged." );
     if ( y ) XiLog( ERROR, "Non-zero values of y are prohibited (normally you would return at this point)." );
-    if ( x && y ) XiLog_Fatal( "Everything is terrible. The script will send this message and stop." );
+    if ( x && y ) XiLog_FatalStop( "Everything is terrible." ); // script will stop when XiLog_FatalStop is called
 }
 ```
 
@@ -161,7 +161,7 @@ and when you call `someFunction( 1, 2 );`, you'll see:
 💬 Function called with parameters 1 and 2.
 🚩 WARNING: Non-zero values of x are discouraged.
 ❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
-🛑 FATAL ERROR: Everything is terrible. The script will send this message and stop.
+🛑 FATAL ERROR: Everything is terrible. Script stopped.
 ```
 
 or, if you change the runtime loglevel to TRACE, you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
@@ -181,5 +181,5 @@ or, if you change the runtime loglevel to TRACE, you'll not only get additional 
 🔽 [12:11:24.98] (13a1 16%) New Script
 ❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
 🔽 [12:11:25.05] (13a1 16%) New Script
-🛑 FATAL ERROR: Everything is terrible. The script will send this message and stop.
+🛑 FATAL ERROR: Everything is terrible. Script stopped.
 ```

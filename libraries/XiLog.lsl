@@ -102,13 +102,54 @@ XiLog( // custom logging function
     #endif
 }
 
-XiLog_Fatal( // logs a fatal error and stops the script
+XiLog_FatalStop( // logs a fatal error and stops the script
     string m // message
     )
 {
-    XiLog( FATAL, m );
+    if ( m != "" ) m += " ";
+    XiLog( FATAL, m + "Script stopped." );
     llSetScriptState( llGetScriptName(), FALSE );
     llSleep( 1.0 ); // give the simulator time to stop the script to be safe
+}
+
+XiLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+    string m // message
+)
+{
+    if ( m != "" ) m += " ";
+    XiLog( FATAL, m + "Script deleted." );
+    llSetScriptState( llGetScriptName(), FALSE );
+    // remove inventory if XILOG_ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef XILOG_ENABLE_FATALDELETE_OWNEDBYCREATOR
+        if ( !XiInventory_OwnedByCreator( llGetScriptName() ) )
+    #endif
+    // only remove inventory if XILOG_DISABLE_FATALDELETE is NOT defined
+    #ifdef XILOG_DISABLE_FATALDELETE
+        1;
+    #else
+        llRemoveInventory( llGetScriptName() );
+    #endif
+    llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
+}
+
+XiLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE)
+    string m // message
+)
+{
+    if ( m != "" ) m += " ";
+    XiLog( FATAL, m + "Object deleted." );
+    llSetScriptState( llGetScriptName(), FALSE );
+    // delete object if XILOG_ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef XILOG_ENABLE_FATALDIE_OWNEDBYCREATOR
+        if ( !XiInventory_OwnedByCreator( llGetScriptName() ) )
+    #endif
+    // only delete object if XILOG_DISABLE_FATALDELETE is NOT defined
+    #ifdef XILOG_DISABLE_FATALDIE
+        1;
+    #else
+        llDie();
+    #endif
+    llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
 }
 
 string XiLog_LevelToString( // converts integer level number into string representation
