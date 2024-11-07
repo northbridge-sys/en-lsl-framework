@@ -6,6 +6,8 @@
 
 ## Introduction
 
+**Xi is under active and ongoing development; many functions have not been fully tested. Do not use this framework in your projects until this message is removed! It is considered experimental and highly unstable!**
+
 A framework for the [Linden Scripting Language](https://wiki.secondlife.com/wiki/LSL_Portal) in [Second Life](https://secondlife.com/).
 
 LSL is the native scripting language used to control Second Life objects. Certain third-party viewers incorporate an [LSL preprocessor](https://wiki.firestormviewer.org/fs_preprocessor) that provides C-style preprocessor macros via the built-in script editor. The Xi LSL Framework leverages the `#include` and `#define` macros, along with the built-in script optimizer, to make dozens of helper functions available to LSL scripts.

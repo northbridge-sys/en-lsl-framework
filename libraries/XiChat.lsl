@@ -51,16 +51,15 @@
             protection and should only be used for strings that you know will fit in
             memory for both the source and the target scripts.
 
-    To define the service string:
-        #define XICHAT_SERVICE "Service Name"
-    Any string supported by llSHA256String can be used. This will be used twice:
+    To define the service string, call XiChat_SetService( service ). Any string
+    supported by llSHA256String can be used. This will be used twice:
         - Appended to the start of all chat messages in plain text for filtering.
         - Hashed against the domain to generate the integer channel for llListen.
 
-    XiChat_Lsn(...) will return 0 and fail to add the listen if you attempt to add
-    more than 65 listeners (the maXimum allowed per script). If you call llListen
-    separately, set the number of listens you want reserved for non-XiChat use by
-    adding the following line:
+    XiChat_Listen(...) will return 0 and fail to add the listen if you attempt to
+    add more than 65 listeners (the maXimum allowed per script). If you call
+    llListen separately, set the number of listens you want reserved for non-XiChat\
+    use by adding the following line:
         #define XICHAT_RESERVE_LISTENS x
     where x is the number of listens you want to allocate for non-XiChat use.
 
@@ -70,7 +69,8 @@
 
     WARNING: If the local prim's UUID is used as the domain, you MUST use the
     state_entry, on_rez, and changed event handler include files, which will
-    dynamically update the domain after a key change.
+    dynamically update the domain after a key change. (This is done automatically
+    in event-handlers.lsl if you use it.)
 */
 
 // ==
