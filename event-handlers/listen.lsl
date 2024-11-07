@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_LISTEN_ENABLE_XILOG_TRACE
+#endif
+
 	listen( integer channel, string name, key id, string message )
 	{
         // log event if requested

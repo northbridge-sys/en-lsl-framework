@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_STATE_ENTRY_ENABLE_XILOG_TRACE
+#endif
+
 	state_entry()
 	{
         // log event if requested

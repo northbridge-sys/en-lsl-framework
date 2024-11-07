@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_CHANGED_ENABLE_XILOG_TRACE
+#endif
+
 	changed( integer change )
 	{
         // log event if requested

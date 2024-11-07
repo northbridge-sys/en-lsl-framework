@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_DATASERVER_ENABLE_XILOG_TRACE
+#endif
+
 	dataserver( key query, string data )
 	{
         // log event if requested

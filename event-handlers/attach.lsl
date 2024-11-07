@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_ATTACH_ENABLE_XILOG_TRACE
+#endif
+
 	attach( key id )
 	{
         // log event if requested

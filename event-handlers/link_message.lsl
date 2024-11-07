@@ -99,6 +99,10 @@
     Define this function directly in the script to process IMP messages.
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_LINK_MESSAGE_ENABLE_XILOG_TRACE
+#endif
+
     link_message( integer link, integer i, string s, key k )
     {
         // log event if requested

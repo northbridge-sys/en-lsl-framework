@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_ON_REZ_ENABLE_XILOG_TRACE
+#endif
+
 	on_rez( integer param )
 	{
         // log event if requested

@@ -37,6 +37,10 @@
 		}
 */
 
+#ifdef XI_ALL_ENABLE_XILOG_TRACE
+    #define XI_TIMER_ENABLE_XILOG_TRACE
+#endif
+
 	timer()
 	{
         // log event if requested
