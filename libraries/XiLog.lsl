@@ -68,9 +68,7 @@ XiLog$( // custom logging function
     )
 {
     // can use level 0 to always send, or a level constant for loglevel support
-    string lsd_text = llLinksetDataRead("loglevel"); // any valid log level number, 0 (uses default), or negative (suppresses all output)
-    integer lsd_level = XILOG_DEFAULT_LOGLEVEL;
-    if ((integer)lsd_text) lsd_level = (integer)lsd_text;
+    integer lsd_level = XiLog$GetLoglevel();
     list debug_header;
     if (lsd_level >= 5)
     { // use debug header
@@ -101,7 +99,7 @@ XiLog$( // custom logging function
             + message);
     }
     #ifndef XILOG_DISABLE_LOGTARGET
-        string t = llLinksetDataRead("logtarget");
+        string t = XiLog$GetLogtarget();
         string prim = llGetSubString( t, 0, 35 );
         if ( XiKey$IsPrimInRegion( prim ) )
         { // log via XiChat to logtarget
@@ -210,6 +208,15 @@ XiLog$TraceVars( list var_names, list var_values )
     XiLog$TraceParams( "XiLog$TraceVars", var_names, var_values );
 }
 
+#define XiLog$GetLoglevel(...) _XiLog_GetLoglevel( __VA_ARGS__ )
+integer XiLog$GetLoglevel(
+)
+{
+    string lsd = llLinksetDataRead( "loglevel" ); // any valid log level number, 0 (uses default), or negative (suppresses all output)
+    if ( (integer)lsd ) return lsd;
+    else return XILOG_DEFAULT_LOGLEVEL;
+}
+
 #define XiLog$SetLoglevel(...) _XiLog_SetLoglevel( __VA_ARGS__ )
 XiLog$SetLoglevel(
     integer level
@@ -217,4 +224,19 @@ XiLog$SetLoglevel(
 {
     if ( level < FATAL || level > TRACE ) return;
     llLinksetDataWrite( "loglevel", (string)level );
+}
+
+#define XiLog$GetLogtarget(...) _XiLog_GetLogtarget( __VA_ARGS__ )
+integer XiLog$GetLogtarget(
+)
+{
+    return llLinksetDataRead("logtarget");
+}
+
+#define XiLog$SetLogtarget(...) _XiLog_SetLogtarget( __VA_ARGS__ )
+XiLog$SetLogtarget(
+    string target
+)
+{
+    llLinksetDataWrite( "logtarget", target );
 }
