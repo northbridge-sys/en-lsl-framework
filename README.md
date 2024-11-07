@@ -168,8 +168,8 @@ or, if you enable TRACE logging, you'll not only get additional relevant logs, b
 ```
 🔽 [12:11:24.81] (13a1 17%) New Script
 🚦 someFunction(
-        x=1,
-        y=2
+        x = 1,
+        y = 2
     )
 🔽 [12:11:24.86] (13a1 16%) New Script
 🪲 Performing action...

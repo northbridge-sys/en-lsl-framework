@@ -141,14 +141,14 @@ integer XiLog_StrToLevel( // converts integer level number into string represent
         ], [ llToUpper( llStringTrim( s, STRING_TRIM ) ) ] ) + 1;
 }
 
-XiLog_TraceParams(string function_name, list param_names, list param_values)
+XiLog_TraceParams( string function_name, list param_names, list param_values )
 {
     string params;
-    if (param_values != []) params = "\n        " + llDumpList2String(XiList_Concatenate("", param_names, "=", param_values, ""), ",\n        ") + "\n    ";
-    XiLog(TRACE, function_name + "(" + params + ")");
+    if ( param_values != [] ) params = "\n        " + llDumpList2String( XiList_Concatenate( "", param_names, " = ", param_values, "" ), ",\n        " ) + "\n    ";
+    XiLog( TRACE, function_name + "(" + params + ")" );
 }
 
-XiLog_TraceVars(list var_names, list var_values)
+XiLog_TraceVars( list var_names, list var_values )
 {
-    XiLog(TRACE, llList2CSV(XiList_Concatenate("", var_names, "=", var_values, "")));
+    XiLog_TraceParams( "XiLog_TraceVars", var_names, var_values );
 }
