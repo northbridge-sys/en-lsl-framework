@@ -1,5 +1,5 @@
 /*
-    timer.lsl
+    on_death.lsl
     Event Handler
     Xi LSL Framework
     Revision 0
@@ -26,17 +26,24 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This snippet replaces the timer event handler with a version that calls
-    maintenance functions required by Xi libraries.
+    This snippet replaces the on_death event handler with a version that calls
+    maintenance functions required by Xi libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by Xi libraries:
 
-    Unlike other event handlers, this event handler does not allow events to be
-    passed to a user-defined function; use the XiTimer library functions instead.
-    Additionally, XiLog cannot be called on the timer event; if you want to monitor
-    timer events, use XITIMER_ENABLE_XILOG_TRACE.
+		#define XI_ON_DEATH
+		Xi_on_death()
+		{
+            // code to run when event occurs that is not intercepted by Xi
+		}
 */
 
-	timer()
+#ifdef XI_ON_DEATH
+	on_death()
 	{
-        // forward all timers directly to XiTimer
-        _XiTimer_Trigger();
+        // event unused, so the only reason to define it is to log it
+        XiLog_TraceParams( "on_death", [], [] );
+
+        // event unused, so pass to user-defined function only
+        Xi_on_death();
 	}
+#endif

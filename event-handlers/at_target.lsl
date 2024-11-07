@@ -1,6 +1,6 @@
 /*
-    XiRotation.lsl
-    Library
+    at_target.lsl
+    Event Handler
     Xi LSL Framework
     Revision 0
     Copyright (C) 2024  BuildTronics
@@ -26,44 +26,28 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    TBD
+    This snippet replaces the at_target event handler with a version that calls
+    maintenance functions required by Xi libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by Xi libraries:
+
+		#define XI_AT_TARGET
+		Xi_at_target( integer handle, vector target, vector current )
+		{
+            // code to run when event occurs that is not intercepted by Xi
+		}
 */
 
-// ==
-// == preprocessor options
-// ==
+#ifdef XI_AT_TARGET
+	at_target( integer handle, vector target, vector current )
+	{
+        // event unused, so the only reason to define it is to log it
+        XiLog_TraceParams( "at_target", [ "handle", "target", "current" ], [
+            handle,
+            target
+            current
+        ] );
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-#define XIROTATION_ENABLE_XILOG_TRACE
+        // event unused, so pass to user-defined function only
+        Xi_at_target( handle, target, current );
+	}
 #endif
-
-// ==
-// == functions
-// ==
-
-rotation XiRotation_Normalize(
-    rotation r
-    )
-{
-    float m = 1 / llSqrt( r.x * r.x + r.y * r.y + r.z * r.z + r.s * r.s ); // normalize
-    return < r.x * m, r.y * m, r.z * m, r.s * m >;
-}
-
-rotation XiRotation_Slerp(
-    rotation a,
-    rotation b,
-    float t
-    )
-{
-    return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
-}
-
-rotation XiRotation_Nlerp(
-    rotation a,
-    rotation b,
-    float t
-{
-    float ti = 1 - t;
-    rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
-    return XiRotation_Normalize( r );
-}

@@ -27,19 +27,22 @@ Some of the useful features Xi provides:
 
 ## Instructions
 
-Unpack the "xi-lsl-library" directory inside your LSL preprocessor include directory.
-
-Include the libraries by adding the following line to the top of your script:
+- If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
+- Create a directory called `xi-lsl-framework` in your LSL preprocessor include directory.
+- Unpack the repository into the `xi-lsl-framework`, so that `main.lsl` is located in `[preprocessor directory]/xi-lsl-library/main.lsl`.
+- Include the framework libraries by placing the following line at the top of your script:
 
 ```
-#include "xi-lsl-framework/main.lsl"
+#include "xi-lsl-framework/libraries.lsl"
 ```
 
-Then, in the script body, include the event handlers:
+Then, in the script body, include the framework event handlers:
 
 ```
 default
 {
+    // any user-defined event handlers should be placed here
+    
     #include "xi-lsl-framework/event-handlers/state_entry.lsl"
     #include "xi-lsl-framework/event-handlers/on_rez.lsl"
     #include "xi-lsl-framework/event-handlers/attach.lsl"
@@ -49,8 +52,6 @@ default
     #include "xi-lsl-framework/event-handlers/timer.lsl"
 }
 ```
-
-Which event handlers you need depends on which functions you use. Generally, it's recommended to use all of the event handlers unless you have a reason not to (like not wanting to clog the event queue with `link_message` events in an environment with heavy `link_message` traffic that you don't need to process, or being extremely memory-limited). Omitting an event handler can cause certain functions to not work properly, so make sure you understand the code you're omitting.
 
 If you want to run your own code on an event, most event handlers can forward them to user-defined functions upon request:
 
@@ -62,11 +63,21 @@ Xi_state_entry()
 }
 ```
 
-If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* the `main.lsl` `#include` line:
+However, if an event is added to LSL and isn't part of the Xi framework (there is no event handler in the event-handlers directory), it's safe to add it manually in the state.
+
+If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* the `main.lsl` `#include` line.
+
+Here's an example of a script that basically does nothing but log events (via TRACE):
 
 ```
 #define XI_ALL_ENABLE_XILOG
-#include "xi-lsl-framework/main.lsl"
+
+#include "xi-lsl-framework/libraries.lsl"
+
+default
+{
+    #include "xi-lsl-framework/event-handlers.lsl"
+}
 ```
 
 ## Function Reference
