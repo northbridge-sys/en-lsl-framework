@@ -1,5 +1,5 @@
 /*
-    main.lsl
+    libraries.lsl
     Xi LSL Framework
     Revision 0
     Copyright (C) 2024  BuildTronics
@@ -38,7 +38,7 @@
 */
 
 // each major revision of XI increments this value
-#define XI_LOADED 1
+#define XI_LIBRARIES_LOADED 1
 
 // libraries
 
