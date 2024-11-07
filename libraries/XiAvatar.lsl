@@ -48,7 +48,8 @@
 // == functions
 // ==
 
-string XiAvatar_Elem( string id )
+#define XiAvatar$Elem(...) _XiAvatar_Elem( __VA_ARGS__ )
+string XiAvatar$Elem( string id )
 {
     return "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)";
 }

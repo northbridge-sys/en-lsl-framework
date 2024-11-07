@@ -40,23 +40,51 @@
 // == functions
 // ==
 
-integer XiKey_Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
+#define XiKey$Is(...) _XiKey_Is( __VA_ARGS__ )
+integer XiKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
     string k
     )
 {
-    if ((key)k) return 1;
-    if (k == NULL_KEY) return 1;
+    if ( (key)k ) return 1;
+    return k == NULL_KEY;
+}
+
+#define XiKey$IsNotNull(...) _XiKey_IsNotNull( __VA_ARGS__ )
+integer XiKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
+    string k
+    )
+{
+    if ( (key)k ) return 1;
     return 0;
 }
 
-integer XiKey_IsAvatar( // returns 1 if a valid avatar key IN THIS REGION
+#define XiKey$IsNull(...) _XiKey_IsNull( __VA_ARGS__ )
+integer XiKey$IsNull( // returns 1 if is NULL_KEY
+    string k
+    )
+{
+    return k == NULL_KEY;
+}
+
+#define XiKey$IsInRegion(...) _XiKey_IsInRegion( __VA_ARGS__ )
+integer XiKey$IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
+    string k
+    )
+{
+    if ( XiKey$IsAvatarInRegion( k ) ) return 1;
+    return XiKey$IsPrimInRegion( k );
+}
+
+#define XiKey$IsAvatarInRegion(...) _XiKey_IsAvatarInRegion( __VA_ARGS__ )
+integer XiKey$IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
     string k
 )
 {
     return llGetAgentSize() != ZERO_VECTOR;
 }
 
-integer XiKey_IsPrim( // returns 1 if a valid prim key IN THIS REGION
+#define XiKey$IsPrimInRegion(...) _XiKey_IsPrimInRegion( __VA_ARGS__ )
+integer XiKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     string k
     )
 {
@@ -66,15 +94,17 @@ integer XiKey_IsPrim( // returns 1 if a valid prim key IN THIS REGION
     return 1; // must be a prim
 }
 
-string XiKey_Strip( // strips dashes out of a key
+#define XiKey$Strip(...) _XiKey_Strip( __VA_ARGS__ )
+string XiKey$Strip( // strips dashes out of a key
     string k
     )
 {
-    if ( !XiKey_Is( k ) ) return k; // not a valid key
+    if ( !XiKey$Is( k ) ) return k; // not a valid key
     return llReplaceSubString( k, "-", "", 0 ); // valid key, so strip dashes
 }
 
-string XiKey_Unstrip( // adds dashes into a 32-character hex string to turn it into a key
+#define XiKey$Unstrip(...) _XiKey_Unstrip( __VA_ARGS__ )
+string XiKey$Unstrip( // adds dashes into a 32-character hex string to turn it into a key
     string k
     )
 {
@@ -88,29 +118,31 @@ string XiKey_Unstrip( // adds dashes into a 32-character hex string to turn it i
         llGetSubString(k, 20, 31);
 }
 
-string XiKey_Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
+#define XiKey$Compress(...) _XiKey_Compress( __VA_ARGS__ )
+string XiKey$Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
     string k
     )
 {
-    if ( !XiKey_Is( k ) ) return k; // not a valid key
-    k = XiKey_Strip( k );
+    if ( !XiKey$Is( k ) ) return k; // not a valid key
+    k = XiKey$Strip( k );
     return llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 0, 7))), 0, 5) // concatenate the first 6 characters of Base64 encoding of each 8 nybbles (the remaining is always padding)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 8, 15))), 0, 5)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 16, 23))), 0, 5)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 24, 31))), 0, 5);
 }
 
-string XiKey_Decompress( // adds dashes back into a key that was sent through XiKey_Compress(...)
+#define XiKey$Decompress(...) _XiKey_Decompress( __VA_ARGS__ )
+string XiKey$Decompress( // adds dashes back into a key that was sent through XiKey$Compress(...)
     string k
     )
 {
     if (llStringLength(k) != 24) return k; // not a compressed key
     // presumptively valid key at this point (no point k checking any further)
     // convert from Base64 to a 32-nybble hex string
-    k = XiInteger_ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)))
-        + XiInteger_ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)))
-        + XiInteger_ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)))
-        + XiInteger_ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)));
+    k = XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)))
+        + XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)))
+        + XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)))
+        + XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)));
     // inject dashes and return
-    return XiKey_Unstrip( k );
+    return XiKey$Unstrip( k );
 }

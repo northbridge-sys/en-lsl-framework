@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_COLLISION
-		Xi_collision( integer count )
+		Xi$collision( integer count )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,11 +40,11 @@
 	collision( integer count )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "collision", [ "count" ], [
+        XiLog$TraceParams( "collision", [ "count" ], [
             count
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_collision( integer count );
+        Xi$collision( integer count );
 	}
 #endif

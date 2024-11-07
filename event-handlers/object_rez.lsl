@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_OBJECT_REZ
-		Xi_object_rez( key id )
+		Xi$object_rez( key id )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,11 +40,11 @@
 	object_rez( key id )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "object_rez", [ "id" ], [
-            XiObject_Elem( id ),
+        XiLog$TraceParams( "object_rez", [ "id" ], [
+            XiObject$Elem( id ),
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_object_rez( id );
+        Xi$object_rez( id );
 	}
 #endif

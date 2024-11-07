@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_DATASERVER
-		Xi_dataserver( key query, string data )
+		Xi$dataserver( key query, string data )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -44,16 +44,16 @@
 	{
         // log event if requested
         #ifdef XI_DATASERVER_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "dataserver", [ "query", "data" ], [ XiString_Elem( query ), XiString_Elem( data ) ] );
+            XiLog$TraceParams( "dataserver", [ "query", "data" ], [ XiString$Elem( query ), XiString$Elem( data ) ] );
         #endif
 
         // check if any Xi libraries want to intercept this event
         #ifdef XIINVENTORY_ENABLE_NC
-            if ( query == XIINVENTORY_NC_K ) _XiInventory_NCParse( data ); // XiInventory_NCRead(...) response
+            if ( query == XIINVENTORY_NC_K ) _XiInventory$NCParse( data ); // XiInventory$NCRead(...) response
         #endif
 
         // pass to user-defined function if requested
 		#ifdef XI_DATASERVER
-			Xi_dataserver( query, data );
+			Xi$dataserver( query, data );
 		#endif
 	}

@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_TRANSACTION_RESULT
-		Xi_transaction_result( key id, integer success, string data )
+		Xi$transaction_result( key id, integer success, string data )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,13 +40,13 @@
 	transaction_result( key transaction, integer success, string data )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "transaction_result", [ "transaction", "success", "data" ], [
-            XiString_Elem( transaction ),
+        XiLog$TraceParams( "transaction_result", [ "transaction", "success", "data" ], [
+            XiString$Elem( transaction ),
             success,
-            XiString_Elem( data )
+            XiString$Elem( data )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_transaction_result( transaction, success, data );
+        Xi$transaction_result( transaction, success, data );
 	}
 #endif

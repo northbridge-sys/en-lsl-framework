@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_TOUCH
-		Xi_touch( integer num )
+		Xi$touch( integer num )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,11 +40,11 @@
 	touch( integer num )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "touch", [ "num" ], [
+        XiLog$TraceParams( "touch", [ "num" ], [
             num
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_touch( num );
+        Xi$touch( num );
 	}
 #endif

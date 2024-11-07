@@ -39,7 +39,7 @@ default
     // we don't need full Xi support in this script, so the state_entry and on_rez event handlers are defined manually
     state_entry()
     {
-        XiLog_TraceParams( "state_entry", [], [] );
+        XiLog$TraceParams( "state_entry", [], [] );
 
         // force temp off
         llSetLinkPrimitiveParamsFast( LINK_SET, [ PRIM_TEMP_ON_REZ, FALSE ] );
@@ -48,29 +48,29 @@ default
 
     on_rez( integer param )
     {
-        // calling XiInventory_RezRemote in the parent causes the loglevel to be sent as the start parameter,
+        // calling XiInventory$RezRemote in the parent causes the loglevel to be sent as the start parameter,
         // so immediately write loglevel based on llRez* start parameter
         llLinksetDataWrite( "loglevel", (string)param );
 
         // trace event params after setting loglevel
-        XiLog_TraceParams( "on_rez", [ "param" ], [ param ] );
+        XiLog$TraceParams( "on_rez", [ "param" ], [ param ] );
 
-        XiObject_StopIfOwnerRezzed(); // if owner rezzed us from inventory, stop script for inspection
+        XiObject$StopIfOwnerRezzed(); // if owner rezzed us from inventory, stop script for inspection
 
         // check that object is temp-on-rez and, if not, warn the owner that it was packaged improperly
-        if ( !(integer)llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_TEMP_ON_REZ ] ), 0 ) ) XiLog_Fatal( "Object is not temp-on-rez; set temp-on-rez and repackage." );
+        if ( !(integer)llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_TEMP_ON_REZ ] ), 0 ) ) XiLog$Fatal( "Object is not temp-on-rez; set temp-on-rez and repackage." );
 
         // generate and llRemoteLoadScriptPin pin
-        integer pin = XiInteger_Rand();
+        integer pin = XiInteger$Rand();
         if ( !pin ) pin++; // need a nonzero pin
         llSetRemoteScriptAccessPin( pin );
 
         // notify parent that we are rezzed and ready to receive script(s)
-        XiChat_SetService( "XiInventory_RezRemote" );
-        XiChat_Send( // send via XiChat
-            XiObject_Parent(), // prim
-            XiObject_Parent(), // domain
-            "XiInventory_RezRemote", // type
+        XiChat$SetService( "XiInventory$RezRemote" );
+        XiChat$Send( // send via XiChat
+            XiObject$Parent(), // prim
+            XiObject$Parent(), // domain
+            "XiInventory$RezRemote", // type
             (string)pin // message
             );
 

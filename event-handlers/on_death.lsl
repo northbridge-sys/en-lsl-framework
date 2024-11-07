@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_ON_DEATH
-		Xi_on_death()
+		Xi$on_death()
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,9 +40,9 @@
 	on_death()
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "on_death", [], [] );
+        XiLog$TraceParams( "on_death", [], [] );
 
         // event unused, so pass to user-defined function only
-        Xi_on_death();
+        Xi$on_death();
 	}
 #endif

@@ -30,7 +30,7 @@
 
 if (status == "" && llList2String(params, 0) == "script")
 { // return script info
-    XiIMP_Send( // sends an IMP message
+    XiIMP$Send( // sends an IMP message
         "",
         source,
         0, // signed

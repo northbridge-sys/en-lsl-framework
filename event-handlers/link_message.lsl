@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_LINK_MESSAGE
-		Xi_link_message( integer link, integer i, string s, key k )
+		Xi$link_message( integer link, integer i, string s, key k )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -70,8 +70,8 @@
             any response data as a new line (or new lines) at the end of the data
             value that was received in the request.
 
-    Valid messages will call the user-defined Xi_imp_message function:
-		Xi_imp_message(
+    Valid messages will call the user-defined Xi$imp_message function:
+		Xi$imp_message(
             string prim,        // the SOURCE prim UUID
             string target,  	// one of the following:
                                     //  - (the target script name): this script name
@@ -106,15 +106,15 @@
     {
         // log event if requested
         #ifdef XI_LINK_MESSAGE_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, XiString_Elem( s ), XiString_Elem( k ) ] );
+            XiLog$TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, XiString$Elem( s ), XiString$Elem( k ) ] );
         #endif
 
         // check if any Xi libraries want to intercept this event
-        if ( _XiIMP_Process( llGetLinkKey( link ), link, i, s, k )) return; // valid IMP message
+        if ( _XiIMP$Process( llGetLinkKey( link ), link, i, s, k )) return; // valid IMP message
         // non-XiIMP message
 
         // pass to user-defined function if requested
 		#ifdef XI_LINK_MESSAGE
-			Xi_link_message( link, i, s, k );
+			Xi$link_message( link, i, s, k );
 		#endif
 	}

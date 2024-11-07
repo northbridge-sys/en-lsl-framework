@@ -33,28 +33,28 @@ if (status == "" && llList2String(params, 0) == "kvp")
 	string kvp_check_op = llList2String(params, 1);
 	if (kvp_check_op == "list")
 	{ // return list of KVP pairs
-		XiIMP_Send("", source, 0, "ok", ident, params, llDumpList2String(XIKVP_NAMES, "\n"));
+		XiIMP$Send("", source, 0, "ok", ident, params, llDumpList2String(XIKVP_NAMES, "\n"));
 	}
 	if (kvp_check_op == "set" || kvp_check_op == "get")
 	{ // check name for set or get operation first
-		if (!XiKVP_EXists(llList2String(params, 1)))
+		if (!XiKVP$EXists(llList2String(params, 1)))
 		{ // invalid name
-			XiIMP_Send("", source, 0, "err:undefined", ident, params, data);
+			XiIMP$Send("", source, 0, "err:undefined", ident, params, data);
 			return;
 		}
 	}
 	if (kvp_check_op == "set")
 	{ // setting an XiKVP pair
-		if (!XiKVP_Set(llList2String(params, 1), data))
+		if (!XiKVP$Set(llList2String(params, 1), data))
 		{ // write failed due to protect
-			XiIMP_Send("", source, 0, "err:readonly", ident, params, data);
+			XiIMP$Send("", source, 0, "err:readonly", ident, params, data);
 			return;
 		}
-		XiIMP_Send("", source, 0, "ok", ident, params, data);
+		XiIMP$Send("", source, 0, "ok", ident, params, data);
 		return;
 	}
 	if (kvp_check_op == "get")
 	{ // getting an XiKVP pair
-		XiIMP_Send("", source, 0, "ok", ident, params, XiKVP_Get(llList2String(params, 1)));
+		XiIMP$Send("", source, 0, "ok", ident, params, XiKVP$Get(llList2String(params, 1)));
 	}
 }

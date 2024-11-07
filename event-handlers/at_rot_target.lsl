@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_AT_ROT_TARGET
-		Xi_at_rot_target( integer handle, rotation target, rotation current )
+		Xi$at_rot_target( integer handle, rotation target, rotation current )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,13 +40,13 @@
 	at_rot_target( integer handle, rotation target, rotation current )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
+        XiLog$TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
             handle,
-            XiRotation_Elem( target ),
-            XiRotation_Elem( current )
+            XiRotation$Elem( target ),
+            XiRotation$Elem( current )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_at_rot_target( handle, target, current );
+        Xi$at_rot_target( handle, target, current );
 	}
 #endif

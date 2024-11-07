@@ -42,6 +42,7 @@
 // == preprocessor flags
 // ==
 
+#define PRINT 0
 #define FATAL 1
 #define ERROR 2
 #define WARN 3
@@ -53,7 +54,15 @@
 // == functions
 // ==
 
-XiLog( // custom logging function
+#define XiLog$(...) _XiLog_( __VA_ARGS__ )
+#define XiLog$Print(...) _XiLog_( 0, __VA_ARGS__ )
+#define XiLog$Fatal(...) _XiLog_( 1, __VA_ARGS__ )
+#define XiLog$Error(...) _XiLog_( 2, __VA_ARGS__ )
+#define XiLog$Warn(...) _XiLog_( 3, __VA_ARGS__ )
+#define XiLog$Info(...) _XiLog_( 4, __VA_ARGS__ )
+#define XiLog$Debug(...) _XiLog_( 5, __VA_ARGS__ )
+#define XiLog$Trace(...) _XiLog_( 6, __VA_ARGS__ )
+XiLog$( // custom logging function
     integer level,
     string message
     )
@@ -94,15 +103,16 @@ XiLog( // custom logging function
     #ifndef XILOG_DISABLE_LOGTARGET
         string t = llLinksetDataRead("logtarget");
         string prim = llGetSubString( t, 0, 35 );
-        if ( XiKey_IsPrim( prim ) )
+        if ( XiKey$IsPrimInRegion( prim ) )
         { // log via XiChat to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            XiChat_RegionSayTo( prim, XiChat_Channel( domain ), XiList_ToString([ "XiChat", XICHAT_SERVICE, prim, domain, "_XiLog", message ] ) );
+            XiChat$RegionSayTo( prim, XiChat$Channel( domain ), XiList$ToString([ "XiChat", XICHAT_SERVICE, prim, domain, "$XiLog", message ] ) );
         }
     #endif
 }
 
-XiLog_FatalStop( // logs a fatal error and stops the script
+#define XiLog$FatalStop(...) _XiLog_FatalStop( __VA_ARGS__ )
+XiLog$FatalStop( // logs a fatal error and stops the script
     string m // message
     )
 {
@@ -112,7 +122,8 @@ XiLog_FatalStop( // logs a fatal error and stops the script
     llSleep( 1.0 ); // give the simulator time to stop the script to be safe
 }
 
-XiLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+#define XiLog$FatalDelete(...) _XiLog_FatalDelete( __VA_ARGS__ )
+XiLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
     string m // message
 )
 {
@@ -121,7 +132,7 @@ XiLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
     llSetScriptState( llGetScriptName(), FALSE );
     // remove inventory if XILOG_ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef XILOG_ENABLE_FATALDELETE_OWNEDBYCREATOR
-        if ( !XiInventory_OwnedByCreator( llGetScriptName() ) )
+        if ( !XiInventory$OwnedByCreator( llGetScriptName() ) )
     #endif
     // only remove inventory if XILOG_DISABLE_FATALDELETE is NOT defined
     #ifdef XILOG_DISABLE_FATALDELETE
@@ -132,7 +143,8 @@ XiLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
     llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
 }
 
-XiLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE)
+#define XiLog$FatalDie(...) _XiLog_FatalDie_( __VA_ARGS__ )
+XiLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE)
     string m // message
 )
 {
@@ -141,7 +153,7 @@ XiLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
     llSetScriptState( llGetScriptName(), FALSE );
     // delete object if XILOG_ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef XILOG_ENABLE_FATALDIE_OWNEDBYCREATOR
-        if ( !XiInventory_OwnedByCreator( llGetScriptName() ) )
+        if ( !XiInventory$OwnedByCreator( llGetScriptName() ) )
     #endif
     // only delete object if XILOG_DISABLE_FATALDELETE is NOT defined
     #ifdef XILOG_DISABLE_FATALDIE
@@ -152,7 +164,8 @@ XiLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
     llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
 }
 
-string XiLog_LevelToString( // converts integer level number into string representation
+#define XiLog$LevelToString(...) _XiLog_LevelToString( __VA_ARGS__ )
+string XiLog$LevelToString( // converts integer level number into string representation
     integer l
     )
 {
@@ -168,7 +181,8 @@ string XiLog_LevelToString( // converts integer level number into string represe
         ], l );
 }
 
-integer XiLog_StrToLevel( // converts integer level number into string representation
+#define XiLog$StringToLevel(...) _XiLog_StringToLevel( __VA_ARGS__ )
+integer XiLog$StringToLevel( // converts integer level number into string representation
     string s
     )
 {
@@ -182,14 +196,25 @@ integer XiLog_StrToLevel( // converts integer level number into string represent
         ], [ llToUpper( llStringTrim( s, STRING_TRIM ) ) ] ) + 1;
 }
 
-XiLog_TraceParams( string function_name, list param_names, list param_values )
+#define XiLog$TraceParams(...) _XiLog_TraceParams( __VA_ARGS__ )
+XiLog$TraceParams( string function_name, list param_names, list param_values )
 {
     string params;
-    if ( param_values != [] ) params = "\n        " + llDumpList2String( XiList_Concatenate( "", param_names, " = ", param_values, "" ), ",\n        " ) + "\n    ";
-    XiLog( TRACE, function_name + "(" + params + ")" );
+    if ( param_values != [] ) params = "\n        " + llDumpList2String( XiList$Concatenate( "", param_names, " = ", param_values, "" ), ",\n        " ) + "\n    ";
+    XiLog$Trace( function_name + "(" + params + ")" );
 }
 
-XiLog_TraceVars( list var_names, list var_values )
+#define XiLog$TraceVars(...) _XiLog_TraceVars( __VA_ARGS__ )
+XiLog$TraceVars( list var_names, list var_values )
 {
-    XiLog_TraceParams( "XiLog_TraceVars", var_names, var_values );
+    XiLog$TraceParams( "XiLog$TraceVars", var_names, var_values );
+}
+
+#define XiLog$SetLoglevel(...) _XiLog_SetLoglevel( __VA_ARGS__ )
+XiLog$SetLoglevel(
+    integer level
+)
+{
+    if ( level < FATAL || level > TRACE ) return;
+    llLinksetDataWrite( "loglevel", (string)level );
 }

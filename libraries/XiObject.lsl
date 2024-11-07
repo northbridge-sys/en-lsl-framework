@@ -25,7 +25,7 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This script exposes the XiObject_* functions and XIOBJECT_* globals, which allows code
+    This script exposes the XiObject$* functions and XIOBJECT_* globals, which allows code
     to monitor metadata about the prim and linkset that the script is in, and get
     information about other prims.
 */
@@ -62,28 +62,32 @@ list XIOBJECT_UUIDS_SELF;
 // == functions
 // ==
 
-string XiObject_Elem( string id )
+#define XiObject$Elem(...) _XiObject_Elem( __VA_ARGS__ )
+string XiObject$Elem( string id )
 {
     list details = llGetObjectDetails( id, [ OBJECT_NAME, OBJECT_POS ] );
     if ( details == [] ) return "\"" + id + "\" (not in region)";
-    return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + XiVector_ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
+    return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + XiVector$ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
 }
 
-string XiObject_Parent() // gets UUID of entity that rezzed the object
+#define XiObject$Parent(...) _XiObject_Parent( __VA_ARGS__ )
+string XiObject$Parent() // gets UUID of entity that rezzed the object
 {
     return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
 }
 
-XiObject_StopIfOwnerRezzed()
-{
-    if ( XiObject_Parent() == (string)llGetKey() ) XiLog_Fatal( "XiObject_StopIfOwnerRezzed()" );
+#define XiObject$StopIfOwnerRezzed(...) _XiObject_StopIfOwnerRezzed( __VA_ARGS__ )
+XiObject$StopIfOwnerRezzed()
+{ // TODO: move this to a macro that runs automatically on_rez
+    if ( XiObject$Parent() == (string)llGetKey() ) XiLog$Fatal( "XiObject$StopIfOwnerRezzed()" );
 }
 
-integer XiObject_ClosestLink(string name)
+#define XiObject$ClosestLink(...) _XiObject_ClosestLink( __VA_ARGS__ )
+integer XiObject$ClosestLink(string name)
 { // finds the linknum of the closest prim in the linkset with the specified name
     #ifdef XIOBJECT_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiObject_ClosestLink", ["name"], [
-            XiString_Elem(name)
+        XiLog$TraceParams("XiObject$ClosestLink", ["name"], [
+            XiString$Elem(name)
             ]);
     #endif
     integer i;
@@ -106,7 +110,8 @@ integer XiObject_ClosestLink(string name)
     return 0; // no match
 }
 
-integer XiObject_Profile( // returns various bitwise flags for the state of an object
+#define XiObject$Profile(...) _XiObject_Profile( __VA_ARGS__ )
+integer XiObject$Profile( // returns various bitwise flags for the state of an object
     string k
     )
 {
@@ -120,10 +125,11 @@ integer XiObject_Profile( // returns various bitwise flags for the state of an o
     return f;
 }
 
-_XiObject_UpdateUUIDs()
+#define _XiObject$UpdateUUIDs(...) _XiObject_UpdateUUIDs( __VA_ARGS__ )
+_XiObject$UpdateUUIDs()
 {
     #ifdef XIOBJECT_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiObject_UpdateUUIDs", [], []);
+        XiLog$TraceParams("_XiObject$UpdateUUIDs", [], []);
     #endif
 	if (XIOBJECT_LIMIT_SELF)
 	{ // check own UUID

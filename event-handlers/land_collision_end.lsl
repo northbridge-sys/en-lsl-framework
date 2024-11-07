@@ -31,7 +31,7 @@
     libraries:
 
 		#define XI_LAND_COLLISION_END
-		Xi_land_collision_end( vector pos )
+		Xi$land_collision_end( vector pos )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -41,11 +41,11 @@
 	land_collision_end( vector pos )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "land_collision_end", [ "pos" ], [
+        XiLog$TraceParams( "land_collision_end", [ "pos" ], [
             pos
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_land_collision_end( pos );
+        Xi$land_collision_end( pos );
 	}
 #endif

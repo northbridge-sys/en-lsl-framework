@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_CHANGED
-		Xi_changed( integer change )
+		Xi$changed( integer change )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -44,21 +44,21 @@
 	{
         // log event if requested
         #ifdef XI_CHANGED_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "changed", [ "change" ], [ XiInteger_ElemBitfield( change ) ] );
+            XiLog$TraceParams( "changed", [ "change" ], [ XiInteger$ElemBitfield( change ) ] );
         #endif
 
         // check if any Xi libraries want to intercept this event
         if ( change & CHANGED_LINK )
         {
-			_XiChat_RefreshLinkset();
+			_XiChat$RefreshLinkset();
             #ifdef XILSD_ENABLE_UUID_HEADER
-                _XiLSD_CheckUUID();
+                _XiLSD$CheckUUID();
             #endif
-			_XiObject_UpdateUUIDs();
+			_XiObject$UpdateUUIDs();
         }
 
         // pass to user-defined function if requested
 		#ifdef XI_ATTACH
-			Xi_changed( change );
+			Xi$changed( change );
 		#endif
 	}

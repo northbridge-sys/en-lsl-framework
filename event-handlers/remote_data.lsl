@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_REMOTE_DATA
-		Xi_remote_data( integer type, key channel, key message_id, string sender,
+		Xi$remote_data( integer type, key channel, key message_id, string sender,
             integer i, string s )
 		{
             // code to run when event occurs that is not intercepted by Xi
@@ -44,16 +44,16 @@
 	remote_data( integer type, key channel, key message_id, string sender, integer i, string s )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "remote_data", [ "type", "channel", "message_id", "sender", "i", "s" ], [
+        XiLog$TraceParams( "remote_data", [ "type", "channel", "message_id", "sender", "i", "s" ], [
             type,
-            XiString_Elem( channel ),
-            XiString_Elem( message_id ),
-            XiString_Elem( sender ),
+            XiString$Elem( channel ),
+            XiString$Elem( message_id ),
+            XiString$Elem( sender ),
             i,
-            XiString_Elem( s )
+            XiString$Elem( s )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_remote_data( type, channel, message_id, sender, i, s );
+        Xi$remote_data( type, channel, message_id, sender, i, s );
 	}
 #endif

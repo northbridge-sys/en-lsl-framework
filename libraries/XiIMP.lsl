@@ -44,7 +44,8 @@
 // == functions
 // ==
 
-XiIMP_Send( // sends an IMP message
+#define XiIMP$Send(...) _XiIMP_Send( __VA_ARGS__ )
+XiIMP$Send( // sends an IMP message
     string prim,        // the TARGET prim, valid values:
                             //  - "" (empty string): send via llMessageLinked(XIIMP_LINK_MESSAGE_SCOPE, ...)
                             //  - (integer cast as string): send via llMessageLinked(...) to linknum or LINK_* constant
@@ -60,22 +61,22 @@ XiIMP_Send( // sends an IMP message
     )
 {
     #ifdef XIIMP_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiIMP_Send", ["prim", "target", "status", "ident", "params", "data"], [
-            XiObject_Elem(prim),
-            XiString_Elem(target),
-            XiString_Elem(status),
+        XiLog$TraceParams("XiIMP$Send", ["prim", "target", "status", "ident", "params", "data"], [
+            XiObject$Elem(prim),
+            XiString$Elem(target),
+            XiString$Elem(status),
             ident,
-            XiList_Elem(params),
-            XiString_Elem(data)
+            XiList$Elem(params),
+            XiString$Elem(data)
             ]);
     #endif
     string message = "\n" + llGetScriptName() + "\n" + status + "\n" + llDumpList2String(params, "\n");
     integer enable;
     #ifdef XIIMP_ENABLE_XICHAT
         enable = 1;
-        if (XiKey_Is(prim))
+        if (XiKey$Is(prim))
         { // XiChat via specified URL and domain
-            XiChat_Send(prim, target, "XiIMP", XiList_ToString([ident, message, data]));
+            XiChat$Send(prim, target, "XiIMP", XiList$ToString([ident, message, data]));
             return;
         }
     #endif
@@ -95,7 +96,8 @@ XiIMP_Send( // sends an IMP message
     #endif
 }
 
-integer _XiIMP_Process(
+#define _XiIMP$Process(...) _XiIMP_Process( __VA_ARGS__ )
+integer _XiIMP$Process(
     string prim,
     integer linknum,
     integer num,
@@ -104,12 +106,12 @@ integer _XiIMP_Process(
     )
 {
     #ifdef XIIMP_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiIMP_Process", ["prim", "linknum", "num", "message", "id"], [
-            XiObject_Elem(prim),
+        XiLog$TraceParams("_XiIMP$Process", ["prim", "linknum", "num", "message", "id"], [
+            XiObject$Elem(prim),
             linknum,
             num,
-            XiString_Elem(message),
-            XiString_Elem(id)
+            XiString$Elem(message),
+            XiString$Elem(id)
             ]);
     #endif
     list parts = llParseStringKeepNulls(message, ["\n"], []); // parse Interface Message Protocol
@@ -129,12 +131,12 @@ integer _XiIMP_Process(
         // XIIMP_ALLOWED_INBOUND_TARGETS_ALL was not defined (see IMPTap.lsl), so filter out messages that don't match the allowed targets list
         if (llListFindList(allowed_targets, [llList2String(parts, 0)]) == -1) return 0; // discard message, not targeted to us
     #endif
-    Xi_imp_message(
+    Xi$imp_message(
         prim, // SOURCE prim
         llList2String(parts, 0), // target
         llList2String(parts, 2), // status
         num, // IMP message ident (link_message integer)
-        XiList_Empty(llDeleteSubList(parts, 0, 2)), // params
+        XiList$Empty(llDeleteSubList(parts, 0, 2)), // params
         id, // IMP data (link_message key)
         linknum,
         llList2String(parts, 1) // source

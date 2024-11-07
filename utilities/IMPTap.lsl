@@ -27,7 +27,7 @@
 
     This is a full script that reports all IMP messages sent via link message in the
     prim. These will be reported via "imp_message" event reports through
-    XiLog_TraceParams.
+    XiLog$TraceParams.
 
     Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
     can either set the loglevel to 6 as follows to permanently enable output:
@@ -43,7 +43,7 @@
 
 #include "xi-lsl-framework/main.lsl"
 
-Xi_imp_message(
+Xi$imp_message(
     string prim,        // the SOURCE prim UUID
     string target,      // one of the following:
                             //  - (the target script name): this script name
@@ -68,15 +68,15 @@ Xi_imp_message(
                         //      XIIMP_ALLOWED_SOURCES list)
     )
 {
-    XiLog_TraceParams("Xi_imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
-        XiObject_Elem(prim),
-        XiString_Elem(target),
-        XiString_Elem(status),
+    XiLog$TraceParams("Xi$imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
+        XiObject$Elem(prim),
+        XiString$Elem(target),
+        XiString$Elem(status),
         ident,
-        XiList_Elem(params),
-        XiString_Elem(data),
+        XiList$Elem(params),
+        XiString$Elem(data),
         linknum,
-        XiString_Elem(source)
+        XiString$Elem(source)
         ]);
 }
 

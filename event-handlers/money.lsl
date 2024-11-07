@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_MONEY
-		Xi_money( key id, integer amount )
+		Xi$money( key id, integer amount )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,12 +40,12 @@
 	money( key id, integer amount )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "money", [ "id", "amount" ], [
-            XiAvatar_Elem( id ),
+        XiLog$TraceParams( "money", [ "id", "amount" ], [
+            XiAvatar$Elem( id ),
             amount
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_money( id, amount );
+        Xi$money( id, amount );
 	}
 #endif

@@ -52,24 +52,27 @@
 // == functions
 // ==
 
-string XiInteger_ElemBitfield(integer var)
+#define XiInteger$ElemBitfield(...) _XiInteger_ElemBitfield( __VA_ARGS__ )
+string XiInteger$ElemBitfield(integer var)
 {
     integer test = 1;
     list flags;
     while (test <= var)
     {
-        if (test & var) flags += ["0x" + XiInteger_ToHex(test, 1) + " (" + (string)test + ")"];
+        if (test & var) flags += ["0x" + XiInteger$ToHex(test, 1) + " (" + (string)test + ")"];
         test *= 2;
     }
     return "{" + llList2CSV(flags) + "}";
 }
 
-integer XiInteger_Rand() // random integer
+#define XiInteger$Rand(...) _XiInteger_Rand( __VA_ARGS__ )
+integer XiInteger$Rand() // random integer
 {
     return (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ));
 }
 
-string XiInteger_ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
+#define XiInteger$ToHex(...) _XiInteger_ToHex( __VA_ARGS__ )
+string XiInteger$ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
     integer i, // integer
     integer digits // number of hex digits
     )
@@ -90,7 +93,8 @@ string XiInteger_ToHex( // converts a 32-bit signed integer in its entirety to h
     return hex;
 }
 
-integer XiInteger_ToNybbles( // grabs the specified nybbles out of an integer
+#define XiInteger$ToNybbles(...) _XiInteger_ToNybbles( __VA_ARGS__ )
+integer XiInteger$ToNybbles( // grabs the specified nybbles out of an integer
     integer i, // integer
     integer start_index, // start index
     integer digits // number of nybbles to return
@@ -105,7 +109,8 @@ integer XiInteger_ToNybbles( // grabs the specified nybbles out of an integer
     return nybbles;
 }
 
-string XiInteger_ToString64( // converts int to string of length using 64-character charset, XITYPE_CHARSET_64
+#define XiInteger$ToString64(...) _XiInteger_ToString64( __VA_ARGS__ )
+string XiInteger$ToString64( // converts int to string of length using 64-character charset, XITYPE_CHARSET_64
     integer int,
     integer length
     )
@@ -126,7 +131,8 @@ string XiInteger_ToString64( // converts int to string of length using 64-charac
     return o;
 }
 
-integer XiInteger_FromStr64( // inverse of XiInteger_ToString64
+#define XiInteger$FromStr64(...) _XiInteger_FromStr64( __VA_ARGS__ )
+integer XiInteger$FromStr64( // inverse of XiInteger$ToString64
     string str
     )
 {
@@ -136,7 +142,8 @@ integer XiInteger_FromStr64( // inverse of XiInteger_ToString64
     return x;
 }
 
-integer XiInteger_Clamp(
+#define XiInteger$Clamp(...) _XiInteger_Clamp( __VA_ARGS__ )
+integer XiInteger$Clamp(
     integer i,
     integer m,
     integer x
@@ -147,7 +154,8 @@ integer XiInteger_Clamp(
     return i;
 }
 
-integer XiInteger_Reset(
+#define XiInteger$Reset(...) _XiInteger_Reset( __VA_ARGS__ )
+integer XiInteger$Reset(
     integer i,
     integer m,
     integer x,

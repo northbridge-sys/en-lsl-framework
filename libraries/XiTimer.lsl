@@ -57,17 +57,18 @@
 // == functions
 // ==
 
-string XiTimer_Start( // adds a timer
+#define XiTimer$Start(...) _XiTimer_Start( __VA_ARGS__ )
+string XiTimer$Start( // adds a timer
     float interval,
     integer periodic,
     string callback
     )
 {
     #ifdef XITIMER_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiTimer_Start", [ "interval", "periodic", "callback" ], [
+        XiLog$TraceParams("XiTimer$Start", [ "interval", "periodic", "callback" ], [
             interval,
             periodic,
-            XiString_Elem( callback )
+            XiString$Elem( callback )
             ]);
     #endif
 
@@ -87,20 +88,21 @@ string XiTimer_Start( // adds a timer
             id,
             callback,
             (integer)( interval * 1000 ) * !!periodic,
-            XiDate_MSAdd( XiDate_MSNow(), (integer)( interval * 1000 ) ) // convert to ms
+            XiDate$MSAdd( XiDate$MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
         _XITimer_Check(); // then reprocess queue
     #endif
     return id;
 }
 
-integer XiTimer_Cancel( // removes a timer
+#define XiTimer$Cancel(...) _XiTimer_Cancel( __VA_ARGS__ )
+integer XiTimer$Cancel( // removes a timer
     string id // required unless XITIMER_DISABLE_MULTIPLE is set
     )
 {
     #ifdef XITIMER_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiTimer_Cancel", [ "id" ], [
-            XiString_Elem( id )
+        XiLog$TraceParams("XiTimer$Cancel", [ "id" ], [
+            XiString$Elem( id )
             ]);
     #endif
     #ifdef XITIMER_DISABLE_MULTIPLE
@@ -117,13 +119,14 @@ integer XiTimer_Cancel( // removes a timer
     return 1;
 }
 
-string XiTimer_Find( // finds a timer by callback
+#define XiTimer$Find(...) _XiTimer_Find( __VA_ARGS__ )
+string XiTimer$Find( // finds a timer by callback
     string callback
     )
 {
     #ifdef XITIMER_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiTimer_Find", [ "callback" ], [
-            XiString_Elem( callback )
+        XiLog$TraceParams("XiTimer$Find", [ "callback" ], [
+            XiString$Elem( callback )
             ]);
     #endif
     integer i = llListFindList( llList2ListSlice( XIMIT_TIMERS, 0, -1, XIMIT_TIMERS_STRIDE, 1 ), [ callback ] );
@@ -131,10 +134,11 @@ string XiTimer_Find( // finds a timer by callback
     return llList2String( XIMIT_TIMERS, i * XIMIT_TIMERS_STRIDE );
 }
 
-_XiTimer_Check() // checks the MIT timers to see if any are triggered
+#define _XiTimer$Check(...) _XiTimer_Check( __VA_ARGS__ )
+_XiTimer$Check() // checks the MIT timers to see if any are triggered
 {
     #ifdef XITIMER_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiTimer_Check", [], []);
+        XiLog$TraceParams("_XiTimer$Check", [], []);
     #endif
     llSetTimerEvent(0.0);
     if ( _XITIMER_QUEUE != [] ) return; // no timer to check
@@ -146,7 +150,7 @@ _XiTimer_Check() // checks the MIT timers to see if any are triggered
         if ( (integer)llList2String( _XITIMER_QUEUE, 3 ) ) llSetTimerEvent( (integer)llList2String( _XITIMER_QUEUE, 3 ) * 0.001 ); // periodic
         else _XITIMER_QUEUE = []; // one-shot
     #else
-        integer now = XiDate_MSNow();
+        integer now = XiDate$MSNow();
         integer i;
         integer l = llGetListLength( _XITIMER_QUEUE ) / _XITIMER_QUEUE_STRIDE;
         integer lowest = 0x7FFFFFFF;
@@ -156,7 +160,7 @@ _XiTimer_Check() // checks the MIT timers to see if any are triggered
             string t_callback = llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE + 1 );
             integer t_length = (integer)llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE + 2 );
             integer t_trigger = (integer)llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE + 3 );
-            integer remain = XiDate_MSAdd( t_trigger, -now );
+            integer remain = XiDate$MSAdd( t_trigger, -now );
             if ( remain * 0.001 < XITIMER_MINIMUM_INTERVAL )
             { // timer triggered
                 if ( !t_length )

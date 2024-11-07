@@ -40,36 +40,41 @@
 // == functions
 // ==
 
-string XiVector_ToString( // removes the < & > from a vector and rounds each element, good for displaying positions
+#define XiVector$ToString(...) _XiVector_ToString( __VA_ARGS__ )
+string XiVector$ToString( // removes the < & > from a vector and rounds each element, good for displaying positions
     vector pos,
     integer digits
     )
 {
-    return XiFloat_ToString(pos.x, digits) + ", " + XiFloat_ToString(pos.y, digits) + ", " + XiFloat_ToString(pos.z, digits);
+    return XiFloat$ToString(pos.x, digits) + ", " + XiFloat$ToString(pos.y, digits) + ", " + XiFloat$ToString(pos.z, digits);
 }
 
-vector XiVector_WorldToCorner( // converts a world pos to a region CORNER
+#define XiVector$WorldToCorner(...) _XiVector_WorldToCorner( __VA_ARGS__ )
+vector XiVector$WorldToCorner( // converts a world pos to a region CORNER
     vector world
     )
 {
     // TODO
 }
 
-vector XiVector_WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
+#define XiVector$WorldToRegion(...) _XiVector_WorldToRegion( __VA_ARGS__ )
+vector XiVector$WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
     vector world
     )
 {
     // TODO
 }
 
-vector XiVector_RegionToWorld( // converts the current region position to world position
+#define XiVector$RegionToWorld(...) _XiVector_RegionToWorld( __VA_ARGS__ )
+vector XiVector$RegionToWorld( // converts the current region position to world position
     vector region
     )
 {
-    return XiVector_RegionCornerToWorld( region, llGetRegionCorner() );
+    return XiVector$RegionCornerToWorld( region, llGetRegionCorner() );
 }
 
-vector XiVector_RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
+#define XiVector$RegionCornerToWorld(...) _XiVector_RegionCornerToWorld( __VA_ARGS__ )
+vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
     vector region,
     vector corner
     )

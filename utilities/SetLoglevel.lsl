@@ -41,7 +41,7 @@
 
 setLoglevel()
 {
-    integer loglevel = XiLog_StrToLevel(
+    integer loglevel = XiLog$StrToLevel(
         llList2String(
             llParseStringKeepNulls(
                 llStringTrim(
@@ -61,9 +61,9 @@ setLoglevel()
     }
     string lsd = llLinksetDataRead( "loglevel" );
     llLinksetDataWrite( "loglevel", (string)loglevel );
-    if ( lsd != "0" && !(integer)lsd ) XiLog( 0, "Set loglevel to " + XiLog_LevelToString( loglevel ) + "." );
-    else if ( lsd != (string)loglevel ) XiLog( 0, "Changed loglevel from " + XiLog_LevelToString( (integer)lsd ) + " to " + XiLog_LevelToString( loglevel ) + "." );
-    else XiLog( 0, "Loglevel remains set at " + XiLog_LevelToString( loglevel ) + "." );
+    if ( lsd != "0" && !(integer)lsd ) XiLog( 0, "Set loglevel to " + XiLog$LevelToString( loglevel ) + "." );
+    else if ( lsd != (string)loglevel ) XiLog( 0, "Changed loglevel from " + XiLog$LevelToString( (integer)lsd ) + " to " + XiLog$LevelToString( loglevel ) + "." );
+    else XiLog( 0, "Loglevel remains set at " + XiLog$LevelToString( loglevel ) + "." );
 }
 
 default

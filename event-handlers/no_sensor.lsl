@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_NO_SENSOR
-		Xi_no_sensor( key id, integer level, integer edge )
+		Xi$no_sensor( key id, integer level, integer edge )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,9 +40,9 @@
 	no_sensor()
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "no_sensor", [], [] );
+        XiLog$TraceParams( "no_sensor", [], [] );
 
         // event unused, so pass to user-defined function only
-        Xi_no_sensor();
+        Xi$no_sensor();
 	}
 #endif

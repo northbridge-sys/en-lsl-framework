@@ -31,7 +31,7 @@
     intercepted by Xi libraries:
 
 		#define XI_EXPERIENCE_PERMISSIONS
-		Xi_experience_permissions( key id )
+		Xi$experience_permissions( key id )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -41,11 +41,11 @@
 	experience_permissions( key id )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "experience_permissions", [ "id" ], [
-            XiAvatar_Elem( id )
+        XiLog$TraceParams( "experience_permissions", [ "id" ], [
+            XiAvatar$Elem( id )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_experience_permissions( id );
+        Xi$experience_permissions( id );
 	}
 #endif

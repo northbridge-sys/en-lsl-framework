@@ -78,7 +78,8 @@
 // == functions
 // ==
 
-list XiTest_Assert( // unit test
+#define XiTest$Assert(...) _XiTest_( __VA_ARGS__ )
+list XiTest$Assert( // unit test
     integer l, // loglevel (FATAL stops script, all others get logged, 0 to not log)
     integer n, // line
     integer at, // value A type
@@ -91,10 +92,10 @@ list XiTest_Assert( // unit test
     #ifndef XITEST_ENABLE
         return []; // XiTest not enabled
     #else
-        list r = _XiTest_Check( at, av, m, bt, bv );
+        list r = _XiTest$Check( at, av, m, bt, bv );
         if ( r == [] ) return []; // tested ok
         string e = llList2String( r, -1 ); // error type
-        string f = "XiTest_Assert( " + XiLog_Level( l ) + ", " + (string)n + ", " + _XiTest_Type( at ) + ", \"" + av + "\", XITEST_" + _XiTest_Method( m ) + ", " + _XiTest_Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
+        string f = "XiTest$Assert( " + XiLog$Level( l ) + ", " + (string)n + ", " + _XiTest$Type( at ) + ", \"" + av + "\", XITEST_" + _XiTest$Method( m ) + ", " + _XiTest$Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
         // generate extended failure reason if error type is not "!"
         if ( e == "!Match") f = " due to input parameter type mismatch";
         else if ( e == "!Type" ) f = " due to incompatible input types for this method";
@@ -103,12 +104,13 @@ list XiTest_Assert( // unit test
         // terminate failure reason
         f += " at line " + (string)n + ".";
         // log error
-        if ( l == FATAL ) XiLog_Fatal( f );
+        if ( l == FATAL ) XiLog$Fatal( f );
         else XiLog( l, f );
     #endif
 }
 
-string XiTest_Type( // converts integer type number into string representation
+#define XiTest$Type(...) _XiTest_Type( __VA_ARGS__ )
+string XiTest$Type( // converts integer type number into string representation
     integer t
     )
 {
@@ -124,7 +126,8 @@ string XiTest_Type( // converts integer type number into string representation
         ], t);
 }
 
-string XiTest_Method( // converts integer method number into string representation
+#define XiTest$Method(...) _XiTest_Method( __VA_ARGS__ )
+string XiTest$Method( // converts integer method number into string representation
     integer m
     )
 {
@@ -137,7 +140,8 @@ string XiTest_Method( // converts integer method number into string representati
         ], m);
 }
 
-list _XiTest_Check( // internal function called for each test
+#define _XiTest$Check(...) _XiTest_Check( __VA_ARGS__ )
+list _XiTest$Check( // internal function called for each test
     integer at, // value A type
     string av, // value A value
     integer m, // method
@@ -166,8 +170,8 @@ list _XiTest_Check( // internal function called for each test
     }
     if ( at == KEY )
     { // validate key
-        if ( !XiKey_Is( av ) ) f = "!KeyA"; // av is not a valid key or NULL_KEY
-        if ( !XiKey_Is( bv ) ) f = "!KeyB"; // bv is not a valid key or NULL_KEY
+        if ( !XiKey$Is( av ) ) f = "!KeyA"; // av is not a valid key or NULL_KEY
+        if ( !XiKey$Is( bv ) ) f = "!KeyB"; // bv is not a valid key or NULL_KEY
     }
     if ( at == LIST )
     { // validate lists
@@ -196,7 +200,7 @@ list _XiTest_Check( // internal function called for each test
         {
             if ( av != bv ) f = "!";
         }
-        if ( m == XITEST_NOT_EQUAL ) f = XiString_Bool( (f == ""), "!" ); // invert result
+        if ( m == XITEST_NOT_EQUAL ) f = XiString$Bool( (f == ""), "!" ); // invert result
     }
     else if ( m == XITEST_GREATER )
     {
@@ -243,11 +247,12 @@ list _XiTest_Check( // internal function called for each test
     return []; // ok
 }
 
-XiTest_StopOnFail(
-    list a // results of XiTest_Assert
+#define XiTest$StopOnFail(...) _XiTest_StopOnFail( __VA_ARGS__ )
+XiTest$StopOnFail(
+    list a // results of XiTest$Assert
     )
 {
     if ( a = [] ) return; // no need to crash
-    XiLog_TraceParams( "XiTest_Crash", [ "XiTest_Assert(...)" ], [ XiList_Elem( a ) ); // log crash
+    XiLog$TraceParams( "XiTest$Crash", [ "XiTest$Assert(...)" ], [ XiList$Elem( a ) ); // log crash
     llSetScriptState( llGetScriptName(), FALSE ); // stop script
 }

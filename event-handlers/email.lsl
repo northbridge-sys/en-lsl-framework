@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_EMAIL
-		Xi_email( string time, string address, string subject, string message,
+		Xi$email( string time, string address, string subject, string message,
             integer remaining )
 		{
             // code to run when event occurs that is not intercepted by Xi
@@ -41,15 +41,15 @@
 	email( string time, string address, string subject, string message, integer remaining )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
-            XiString_Elem( time ),
-            XiString_Elem( address ),
-            XiString_Elem( subject ),
-            XiString_Elem( message ),
+        XiLog$TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
+            XiString$Elem( time ),
+            XiString$Elem( address ),
+            XiString$Elem( subject ),
+            XiString$Elem( message ),
             remaining
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_email( time, address, subject, message, remaining );
+        Xi$email( time, address, subject, message, remaining );
 	}
 #endif

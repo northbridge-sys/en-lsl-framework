@@ -40,7 +40,8 @@
 // == functions
 // ==
 
-string XiFloat_ToString( // rounds a float to a specified number of digits after the decimal
+#define XiFloat$ToString(...) _XiFloat_( __VA_ARGS__ )
+string XiFloat$ToString( // rounds a float to a specified number of digits after the decimal
     float f,
     integer digits
     )
@@ -52,7 +53,8 @@ string XiFloat_ToString( // rounds a float to a specified number of digits after
     return llGetSubString(s, 0, i + digits); // return string-cast float, but only up to the number of digits requested
 }
 
-float XiFloat_Clamp(
+#define XiFloat$Clamp(...) _XiFloat_( __VA_ARGS__ )
+float XiFloat$Clamp(
     float i,
     float m,
     float x
@@ -63,11 +65,22 @@ float XiFloat_Clamp(
     return i;
 }
 
-integer XiFloat_CoinFlip(
-    float weight // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
+#define XiFloat$FlipCoin(...) _XiFloat_( __VA_ARGS__ )
+integer XiFloat$FlipCoin(
+    float chance // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
     )
 {
-    if ( weight <= 0.0 || weight >= 1.0 ) weight = 0.5;
-    if ( llFrand( 1.0 ) < weight ) return 0;
+    if ( chance <= 0.0 ) return 0;
+    if ( chance >= 1.0 ) return 1;
+    if ( llFrand( 1.0 ) < chance ) return 0;
     return 1;
+}
+
+#define XiFloat$RandRange(...) _XiFloat_( __VA_ARGS__ )
+float XiFloat$RandRange(
+    float min,
+    float max
+    )
+{
+    return min + llFrand( max - min );
 }

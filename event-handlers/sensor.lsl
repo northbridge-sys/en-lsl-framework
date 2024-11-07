@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_SENSOR
-		Xi_sensor( integer num )
+		Xi$sensor( integer num )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,11 +40,11 @@
 	sensor( integer num )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "sensor", [ "num" ], [
+        XiLog$TraceParams( "sensor", [ "num" ], [
             num
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_sensor( num );
+        Xi$sensor( num );
 	}
 #endif

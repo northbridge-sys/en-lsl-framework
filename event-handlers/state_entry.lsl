@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_STATE_ENTRY
-		Xi_state_entry()
+		Xi$state_entry()
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -44,19 +44,19 @@
 	{
         // log event if requested
         #ifdef XI_STATE_ENTRY_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "state_entry", [], [] );
+            XiLog$TraceParams( "state_entry", [], [] );
         #endif
 
         // check if any Xi libraries want to intercept this event
         #ifdef XILSD_ENABLE_UUID_HEADER
-            _XiLSD_CheckUUID();
+            _XiLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested
 		#ifdef XI_STATE_ENTRY
-			Xi_state_entry();
+			Xi$state_entry();
 		#endif
 
 		// update XIOBJECT_UUIDS_SELF
-        _XiObject_UpdateUUIDs();
+        _XiObject$UpdateUUIDs();
 	}

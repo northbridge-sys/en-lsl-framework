@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_HTTP_REQUEST
-		Xi_http_request( key request, string method, string body )
+		Xi$http_request( key request, string method, string body )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,13 +40,13 @@
 	http_request( key request, string method, string body )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "http_request", [ "request", "method", "body" ], [
-            XiString_Elem( request ),
-            XiString_Elem( method ),
-            XiString_Elem( body )
+        XiLog$TraceParams( "http_request", [ "request", "method", "body" ], [
+            XiString$Elem( request ),
+            XiString$Elem( method ),
+            XiString$Elem( body )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_http_request( request, method, body );
+        Xi$http_request( request, method, body );
 	}
 #endif

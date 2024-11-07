@@ -56,13 +56,13 @@ state abc   // if you use multiple states, make sure to #include the event handl
 
 ```
 #define XI_STATE_ENTRY
-Xi_state_entry()
+Xi$state_entry()
 {
     // runs on state_entry if XI_STATE_ENTRY has been defined
 }
 
 #define XI_ON_REZ
-Xi_on_rez( integer param )
+Xi$on_rez( integer param )
 {
     // runs on on_rez if XI_ON_REZ has been defined
 }
@@ -73,7 +73,7 @@ Xi_on_rez( integer param )
 However, it's possible to exclusively use custom Xi "event functions" - for example, here's a script that responds to any "ping" requests made to it over XiIMP:
 
 ```
-Xi_imp_message(
+Xi$imp_message(
     string prim, // source prim
     string target, // target script
     string status, // status string
@@ -86,7 +86,7 @@ Xi_imp_message(
 {
     if ( status != "" ) return; // only respond to requests
     if ( llList2String( params, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
-    XiIMP_Send( // respond via IMP
+    XiIMP$Send( // respond via IMP
         prim,
         source,
         "ok",
@@ -146,12 +146,12 @@ For example, XiLog enables in-the-field debugging out-of-the-box. With Xi, just 
 ```
 someFunction( integer x, integer y )
 {
-    XiLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
-    XiLog( DEBUG, "This will only appear if loglevel is DEBUG or above." );
-    XiLog( INFO, "Function called with parameters " + (string)x + " and " + (string)y + "." );
-    if ( x ) XiLog( WARN, "Non-zero values of x are discouraged." );
-    if ( y ) XiLog( ERROR, "Non-zero values of y are prohibited (normally you would return at this point)." );
-    if ( x && y ) XiLog_FatalStop( "Everything is terrible." ); // script will stop when XiLog_FatalStop is called
+    XiLog$TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
+    XiLog$Debug( "This will only appear if loglevel is DEBUG or above." );
+    XiLog$Info( "Function called with parameters " + (string)x + " and " + (string)y + "." );
+    if ( x ) XiLog$Warn( "Non-zero values of x are discouraged." );
+    if ( y ) XiLog$Error( "Non-zero values of y are prohibited (normally you would return at this point)." );
+    if ( x && y ) XiLog$FatalStop( "Everything is terrible." ); // script will stop when XiLog$FatalStop is called
 }
 ```
 
@@ -164,7 +164,7 @@ and when you call `someFunction( 1, 2 );`, you'll see:
 🛑 FATAL ERROR: Everything is terrible. Script stopped.
 ```
 
-or, if you change the runtime loglevel to TRACE, you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
+or, if you change the runtime loglevel to TRACE (such as with `XiLog$SetLoglevel( TRACE );`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
 
 ```
 🔽 [12:11:24.81] (13a1 17%) New Script

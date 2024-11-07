@@ -46,13 +46,15 @@
 
 // TODO: automatic LSD backup to KVP
 
-XiLSD_Reset() // safely resets linkset data
+#define XiLSD$Reset(...) _XiLSD_Reset( __VA_ARGS__ )
+XiLSD$Reset() // safely resets linkset data
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams( "XiLSD_Reset", [], [] );
+        XiLog$TraceParams( "XiLSD$Reset", [], [] );
     #endif
     list protected = [
-        "loglevel"
+        "loglevel",
+        "logtarget"
         ];
     list values;
     integer i;
@@ -68,50 +70,55 @@ XiLSD_Reset() // safely resets linkset data
     }
 }
 
-integer XiLSD_Write(string name, string data)
+#define XiLSD$Write(...) _XiLSD_Write( __VA_ARGS__ )
+integer XiLSD$Write(string name, string data)
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiLSD_Write", ["name", "data"], [
-            XiString_Elem(name),
-            XiString_Elem(data)
+        XiLog$TraceParams("XiLSD$Write", ["name", "data"], [
+            XiString$Elem(name),
+            XiString$Elem(data)
             ]);
     #endif
-	return llLinksetDataWrite(XiLSD_Head() + name, data);
+	return llLinksetDataWrite(XiLSD$Head() + name, data);
 }
 
-string XiLSD_Read(string name)
+#define XiLSD$Read(...) _XiLSD_Read( __VA_ARGS__ )
+string XiLSD$Read(string name)
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiLSD_Read", ["name"], [
-            XiString_Elem(name)
+        XiLog$TraceParams("XiLSD$Read", ["name"], [
+            XiString$Elem(name)
             ]);
     #endif
-	return llLinksetDataRead(XiLSD_Head() + name);
+	return llLinksetDataRead(XiLSD$Head() + name);
 }
 
-list XiLSD_Delete(string name)
+#define XiLSD$Delete(...) _XiLSD_Delete( __VA_ARGS__ )
+list XiLSD$Delete(string name)
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiLSD_Delete", ["name"], [
-            XiString_Elem(name)
+        XiLog$TraceParams("XiLSD$Delete", ["name"], [
+            XiString$Elem(name)
             ]);
     #endif
-	return llLinksetDataDeleteFound("^" + XiLSD_Head() + name + "$", "");
+	return llLinksetDataDeleteFound("^" + XiLSD$Head() + name + "$", "");
 }
 
-list XiLSD_Find(string name, integer start, integer count)
+#define XiLSD$Find(...) _XiLSD_Find( __VA_ARGS__ )
+list XiLSD$Find(string name, integer start, integer count)
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiLSD_Find", ["name", "start", "count"], [
-            XiString_Elem(name),
+        XiLog$TraceParams("XiLSD$Find", ["name", "start", "count"], [
+            XiString$Elem(name),
             start,
             count
             ]);
     #endif
-	return llLinksetDataFindKeys("^" + XiString_Escape(XISTRING_ESCAPE_REGEX, XiLSD_Head() + name) + "$", start, count);
+	return llLinksetDataFindKeys("^" + XiString$Escape(XISTRING_ESCAPE_REGEX, XiLSD$Head() + name) + "$", start, count);
 }
 
-string XiLSD_Head() // gets LSD header
+#define XiLSD$Head(...) _XiLSD_Head( __VA_ARGS__ )
+string XiLSD$Head() // gets LSD header
 {
     string h = XILSD_HEADER;
     #ifdef XILSD_ENABLE_UUID_HEADER
@@ -120,7 +127,8 @@ string XiLSD_Head() // gets LSD header
     return h;
 }
 
-XiLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active XiLSD header
+#define XiLSD$Pull(...) _XiLSD_Pull( __VA_ARGS__ )
+XiLSD$Pull( // reads a linkset data name-value pair FROM another script, optionally using the active XiLSD header
     string prim,
     string domain,
     integer use_header,
@@ -128,17 +136,18 @@ XiLSD_Pull( // reads a linkset data name-value pair FROM another script, optiona
     )
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiLSD_Pull", ["prim", "domain", "use_header", "name"], [
-            XiObject_Elem(prim),
-            XiString_Elem(domain),
+        XiLog$TraceParams("XiLSD$Pull", ["prim", "domain", "use_header", "name"], [
+            XiObject$Elem(prim),
+            XiString$Elem(domain),
             use_header,
-            XiString_Elem(name)
+            XiString$Elem(name)
             ]);
     #endif
-    XiChat_Send(prim, domain, "XiLSD_PullLSD", XiList_ToString([use_header, name]));
+    XiChat$Send(prim, domain, "XiLSD$PullLSD", XiList$ToString([use_header, name]));
 }
 
-XiLSD_Push( // writes a linkset data name-value pair TO another script, optionally using the active XiLSD header
+#define XiLSD$Push(...) _XiLSD_Push( __VA_ARGS__ )
+XiLSD$Push( // writes a linkset data name-value pair TO another script, optionally using the active XiLSD header
     string prim,
     string domain,
     integer use_header,
@@ -146,24 +155,25 @@ XiLSD_Push( // writes a linkset data name-value pair TO another script, optional
     )
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiLSD_Push", ["prim", "domain", "use_header", "name"], [
-            XiObject_Elem(prim),
-            XiString_Elem(domain),
+        XiLog$TraceParams("XiLSD$Push", ["prim", "domain", "use_header", "name"], [
+            XiObject$Elem(prim),
+            XiString$Elem(domain),
             use_header,
-            XiString_Elem(name)
+            XiString$Elem(name)
             ]);
     #endif
     string v;
-    if (use_header) v = XiLSD_Read(name);
+    if (use_header) v = XiLSD$Read(name);
     else v = llLinksetDataRead(name);
     integer u;
     #ifdef XILSD_ENABLE_UUID_HEADER
         u = 1; // if XILSD_ENABLE_UUID_HEADER defined, note in response
     #endif
-    XiChat_Send(prim, domain, "XiLSD_Push", XiList_ToString([u, use_header, XILSD_HEADER, name, v]));
+    XiChat$Send(prim, domain, "XiLSD$Push", XiList$ToString([u, use_header, XILSD_HEADER, name, v]));
 }
 
-_XiLSD_Process( // writes a linkset data name-value pair FROM another script
+#define _XiLSD$Process(...) _XiLSD_Process( __VA_ARGS__ )
+_XiLSD$Process( // writes a linkset data name-value pair FROM another script
     string prim,
     integer use_uuid,
     integer use_header,
@@ -174,18 +184,18 @@ _XiLSD_Process( // writes a linkset data name-value pair FROM another script
     )
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiLSD_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
-            XiObject_Elem(prim),
+        XiLog$TraceParams("_XiLSD$Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
+            XiObject$Elem(prim),
             use_uuid,
             use_header,
-            XiString_Elem(uuid),
-            XiString_Elem(header),
-            XiString_Elem(name),
-            XiString_Elem(value)
+            XiString$Elem(uuid),
+            XiString$Elem(header),
+            XiString$Elem(name),
+            XiString$Elem(value)
             ]);
     #endif
     #ifndef XILSD_PUSHED_ALLOW_BROADCAST
-        if (prim != (string)llGetKey()) return; // do not allow XiLSD_Push calls sent to NULL_KEY
+        if (prim != (string)llGetKey()) return; // do not allow XiLSD$Push calls sent to NULL_KEY
     #endif
     #ifdef XILSD_PUSHED_ADD_HEADER
         use_header = 1; // always use header when writing
@@ -206,7 +216,7 @@ _XiLSD_Process( // writes a linkset data name-value pair FROM another script
         if (use_uuid) header = uuid + header;
     #endif
     #ifdef XILSD_PUSHED_EVENT
-        Xi_pushed_lsd(
+        Xi$pushed_lsd(
             prim,
             use_uuid,
             use_header,
@@ -222,10 +232,11 @@ _XiLSD_Process( // writes a linkset data name-value pair FROM another script
     #endif
 }
 
-_XiLSD_CheckUUID() // updates LSD entries that use old UUID
+#define _XiLSD$CheckUUID(...) _XiLSD_CheckUUID( __VA_ARGS__ )
+_XiLSD$CheckUUID() // updates LSD entries that use old UUID
 {
     #ifdef XILSD_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiLSD_CheckUUID", [], []);
+        XiLog$TraceParams("_XiLSD$CheckUUID", [], []);
     #endif
     #ifdef XILSD_ENABLE_UUID_HEADER
         string k = llList2String(XIOBJECT_UUIDS_SELF, 0);
@@ -234,10 +245,10 @@ _XiLSD_CheckUUID() // updates LSD entries that use old UUID
         h = k + h;
         do
         {
-            list l = llLinksetDataFindKeys("^" + XiString_Escape(XISTRING_ESCAPE_REGEX, h) + ".*$", 0, 1);
+            list l = llLinksetDataFindKeys("^" + XiString$Escape(XISTRING_ESCAPE_REGEX, h) + ".*$", 0, 1);
             if (l != [])
             {
-                llLinksetDataWrite(_XiLSD_Head() + llDeleteSubString(llList2String(l, 0), 0, llStringLength(h) - 1)); // write with updated header
+                llLinksetDataWrite(_XiLSD$Head() + llDeleteSubString(llList2String(l, 0), 0, llStringLength(h) - 1)); // write with updated header
                 llLinksetDataDelete(llList2String(l, 0)); // immediately delete old pair to save memory
             }
         } while (l != []); // repeat until we didn't find any keys left with old header

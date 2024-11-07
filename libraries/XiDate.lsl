@@ -40,8 +40,9 @@
 // == functions
 // ==
 
-integer XiDate_MS( // gets an integer that represents the current millisecond of a month
-    string timestamp // llGetTimestamp string (use XiDate_MSNow() for the current value)
+#define XiDate$MS(...) _XiDate_MS( __VA_ARGS__ )
+integer XiDate$MS( // gets an integer that represents the current millisecond of a month
+    string timestamp // llGetTimestamp string (use XiDate$MSNow() for the current value)
     )
 {
     return 0x80000000 + // start at -2147483648
@@ -52,13 +53,15 @@ integer XiDate_MS( // gets an integer that represents the current millisecond of
     // total range is 2764800000 ms, or ms in 31 days
 }
 
-integer XiDate_MSNow() // gets the value of XiDate_MS( ... ) for the current datetime
+#define XiDate$MSNow(...) _XiDate_MSNow( __VA_ARGS__ )
+integer XiDate$MSNow() // gets the value of XiDate$MS( ... ) for the current datetime
 {
-    return XiDate_MS( llGetTimestamp() );
+    return XiDate$MS( llGetTimestamp() );
 }
 
-integer XiDate_MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
-    integer ms, // XiDate_MS result
+#define XiDate$MSAdd(...) _XiDate_MSAdd( __VA_ARGS__ )
+integer XiDate$MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
+    integer ms, // XiDate$MS result
     integer add // milliseconds to add - note this is limited to 
 )
 {

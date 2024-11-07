@@ -40,12 +40,12 @@
 // == preprocessor flags
 // ==
 
-// XiString_Pad alignment flags
+// XiString$Pad alignment flags
 #define XISTRING_PAD_ALIGN_LEFT 0
 #define XISTRING_PAD_ALIGN_RIGHT 1
 #define XISTRING_PAD_ALIGN_CENTER 2
 
-// XiString_Escape filters
+// XiString$Escape filters
 #define XISTRING_ESCAPE_FILTER_REGEX 0x1
 #define XISTRING_ESCAPE_REVERSE 0x40000000
 
@@ -53,12 +53,14 @@
 // == functions
 // ==
 
-string XiString_Elem(string var)
+#define XiString$Elem(...) _XiString_Elem( __VA_ARGS__ )
+string XiString$Elem(string var)
 {
     return "\"" + var + "\"";
 }
 
-string XiString_Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
+#define XiString$Plural(...) _XiString_Plural( __VA_ARGS__ )
+string XiString$Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
     integer x,
     string s
     )
@@ -68,7 +70,8 @@ string XiString_Plural( // returns pluralization ("s"/"es"/etc.) for specified i
     return s;
 }
 
-string XiString_BoolStr( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
+#define XiString$If(...) _XiString_( __VA_ARGS__ )
+string XiString$If( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
     integer x,
     string s
     )
@@ -77,7 +80,8 @@ string XiString_BoolStr( // returns specified string if x is 1; can be used for 
     return "";
 }
 
-string XiString_Pad( // pads a string to length l_target
+#define XiString$Pad(...) _XiString_( __VA_ARGS__ )
+string XiString$Pad( // pads a string to length l_target
 	string src,
 	string pad,
 	integer l_target,
@@ -126,7 +130,8 @@ string XiString_Pad( // pads a string to length l_target
     return src; // return src as-modified
 }
 
-string XiString_MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
+#define XiString$MultiByteUnit(...) _XiString_MultiByteUnit( __VA_ARGS__ )
+string XiString$MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
 	integer bytes
 	)
 {
@@ -139,7 +144,8 @@ string XiString_MultiByteUnit( // appends the SI prefix to a specified number of
     return (string)bytes + llList2String(["", "K", "M", "G"], mult);
 }
 
-string XiString_Escape(
+#define XiString$Escape(...) _XiString_Escape( __VA_ARGS__ )
+string XiString$Escape(
     integer f, // filter string flag
     string x
     )
@@ -164,7 +170,8 @@ string XiString_Escape(
     return x;
 }
 
-list XiString_ParseCfgLine( // parses a notecard line using a basic configuration markup format
+#define XiString$ParseCfgLine(...) _XiString_ParseCfgLine( __VA_ARGS__ )
+list XiString$ParseCfgLine( // parses a notecard line using a basic configuration markup format
     string s
     )
 {
@@ -179,7 +186,8 @@ list XiString_ParseCfgLine( // parses a notecard line using a basic configuratio
     return [n, v];
 }
 
-integer XiString_FindChars( // finds the first instance of any of the specified characters, used for user input validation
+#define XiString$FindChars(...) _XiString_FindChars( __VA_ARGS__ )
+integer XiString$FindChars( // finds the first instance of any of the specified characters, used for user input validation
     string in,
     string chars
     )

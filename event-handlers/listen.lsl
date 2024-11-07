@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_LISTEN
-		Xi_listen( integer channel, string name, key id, string message )
+		Xi$listen( integer channel, string name, key id, string message )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -44,15 +44,15 @@
 	{
         // log event if requested
         #ifdef XI_LISTEN_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, XiString_Elem( name ), XiObject_Elem( id ), XiString_Elem( message ) ] );
+            XiLog$TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, XiString$Elem( name ), XiObject$Elem( id ), XiString$Elem( message ) ] );
         #endif
 
         // check if any Xi libraries want to intercept this event
-		if ( _XiChat_Process( channel, name, id, message ) ) return; // valid XiChat message
+		if ( _XiChat$Process( channel, name, id, message ) ) return; // valid XiChat message
         // non-XiChat message
 
         // pass to user-defined function if requested
 		#ifdef XI_LISTEN
-			Xi_listen( channel, name, id, message );
+			Xi$listen( channel, name, id, message );
 		#endif
 	}

@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_RUN_TIME_PERMISSIONS
-		Xi_run_time_permissions( integer perm )
+		Xi$run_time_permissions( integer perm )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,11 +40,11 @@
 	run_time_permissions( integer perm )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "run_time_permissions", [ "perm" ], [
-            XiInteger_ElemBitwise( perm )
+        XiLog$TraceParams( "run_time_permissions", [ "perm" ], [
+            XiInteger$ElemBitwise( perm )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_run_time_permissions( perm );
+        Xi$run_time_permissions( perm );
 	}
 #endif

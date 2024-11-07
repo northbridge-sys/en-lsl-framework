@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_AT_TARGET
-		Xi_at_target( integer handle, vector target, vector current )
+		Xi$at_target( integer handle, vector target, vector current )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,13 +40,13 @@
 	at_target( integer handle, vector target, vector current )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "at_target", [ "handle", "target", "current" ], [
+        XiLog$TraceParams( "at_target", [ "handle", "target", "current" ], [
             handle,
             target
             current
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_at_target( handle, target, current );
+        Xi$at_target( handle, target, current );
 	}
 #endif

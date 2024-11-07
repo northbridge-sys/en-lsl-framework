@@ -52,7 +52,8 @@ list XIINVENTORY_REMOTE; // start_param, script_name, running
 // == functions
 // ==
 
-list XiInventory_List(
+#define XiInventory$List(...) _XiInventory_List( __VA_ARGS__ )
+list XiInventory$List(
     integer t
     )
 {
@@ -66,7 +67,8 @@ list XiInventory_List(
     return x;
 }
 
-integer XiInventory_Copy( // copies an inventory item to another object
+#define XiInventory$Copy(...) _XiInventory_Copy( __VA_ARGS__ )
+integer XiInventory$Copy( // copies an inventory item to another object
     string prim,
     string name,
     integer type,
@@ -76,9 +78,9 @@ integer XiInventory_Copy( // copies an inventory item to another object
     )
 {
     #ifdef XIINVENTORY_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiInventory_Copy", ["prim", "name", "type", "pin", "run", "param"], [
-            XiObject_Elem(prim),
-            XiString_Elem(name),
+        XiLog$TraceParams("XiInventory$Copy", ["prim", "name", "type", "pin", "run", "param"], [
+            XiObject$Elem(prim),
+            XiString$Elem(name),
             type,
             pin,
             run,
@@ -95,14 +97,16 @@ integer XiInventory_Copy( // copies an inventory item to another object
     return 1;
 }
 
-integer XiInventory_OwnedByCreator(
+#define XiInventory$OwnedByCreator(...) _XiInventory_OwnedByCreator( __VA_ARGS__ )
+integer XiInventory$OwnedByCreator(
     string name
 )
 {
     return llGetInventoryCreator( name ) == llGetOwner();
 }
 
-integer XiInventory_RezRemote( // rezzes a remote object with Remote.lsl
+#define XiInventory$RezRemote(...) _XiInventory_RezRemote( __VA_ARGS__ )
+integer XiInventory$RezRemote( // rezzes a remote object with Remote.lsl
     string name,
     vector pos,
     vector vel,
@@ -113,30 +117,31 @@ integer XiInventory_RezRemote( // rezzes a remote object with Remote.lsl
     )
 {
     #ifdef XIINVENTORY_ENABLE_XILOG_TRACE
-        XiLog_TraceParams( "XiInventory_RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
-            XiString_Elem( name ),
+        XiLog$TraceParams( "XiInventory$RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
+            XiString$Elem( name ),
             (string)pos,
             (string)vel,
             (string)rot,
             (string)param,
-            XiList_Elem( scripts ),
-            XiList_Elem( runs )
+            XiList$Elem( scripts ),
+            XiList$Elem( runs )
             ] );
     #endif
-    XiLog( DEBUG, "Rezzing remote object with loglevel " + XiLog_LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
+    XiLog( DEBUG, "Rezzing remote object with loglevel " + XiLog$LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
     llRezAtRoot( name, pos, vel, rot, (integer)llLinksetDataRead( "loglevel" ) );
-    XIINVENTORY_REMOTE += [ param, XiList_ToString( scripts ), XiList_ToString( runs ) ];
+    XIINVENTORY_REMOTE += [ param, XiList$ToString( scripts ), XiList$ToString( runs ) ];
     // TODO: somehow timeout XIINVENTORY_REMOTE
     return 1;
 }
 
-integer XiInventory_NCOpen( // opens a notecard for XiInventory_NC* operations
+#define XiInventory$NCOpen(...) _XiInventory_NCOpen( __VA_ARGS__ )
+integer XiInventory$NCOpen( // opens a notecard for XiInventory$NC* operations
     string name
     )
 {
     #ifdef XIINVENTORY_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiInventory_NCOpen", ["name"], [
-            XiString_Elem(name)
+        XiLog$TraceParams("XiInventory$NCOpen", ["name"], [
+            XiString$Elem(name)
             ]);
     #endif
     #ifndef XIINVENTORY_ENABLE_NC
@@ -151,12 +156,13 @@ integer XiInventory_NCOpen( // opens a notecard for XiInventory_NC* operations
     return 0x3; // notecard opened, changes since last opened
 }
 
-XiInventory_NCRead( // reads a line from the open notecard
+#define XiInventory$NCRead(...) _XiInventory_NCRead( __VA_ARGS__ )
+XiInventory$NCRead( // reads a line from the open notecard
     integer i // line number, starting from 0
     )
 {
     #ifdef XIINVENTORY_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiInventory_NCRead", ["i"], [
+        XiLog$TraceParams("XiInventory$NCRead", ["i"], [
             i
             ]);
     #endif
@@ -167,10 +173,11 @@ XiInventory_NCRead( // reads a line from the open notecard
     string s = NAK;
     if (llGetFreeMemory() > 4096) s = llGetNotecardLineSync(XIINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free
     if (s == NAK) XIINVENTORY_NC_H = llGetNotecardLine(XIINVENTORY_NC_N, i); // sync read failed, do dataserver read
-    else Xi_nc_line(XIINVENTORY_NC_N, XIINVENTORY_NC_L, s);
+    else Xi$nc_line(XIINVENTORY_NC_N, XIINVENTORY_NC_L, s);
 }
 
-string XiInventory_TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(XiInventory_TypeToString(...)) to get actual flag name)
+#define XiInventory$TypeToString(...) _XiInventory_TypeToString( __VA_ARGS__ )
+string XiInventory$TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(XiInventory$TypeToString(...)) to get actual flag name)
     integer f // INVENTORY_* flag
     )
 {
@@ -206,7 +213,8 @@ string XiInventory_TypeToString( // converts an INVENTORY_* flag into a string (
         ], i);
 }
 
-XiInventory_Push( // pushes an inventory item via XiChat
+#define XiInventory$Push(...) _XiInventory_Push( __VA_ARGS__ )
+XiInventory$Push( // pushes an inventory item via XiChat
     string prim,
     string domain,
     string name,
@@ -217,10 +225,10 @@ XiInventory_Push( // pushes an inventory item via XiChat
     )
 {
     #ifdef XIINVENTORY_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiInventory_Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
-            XiObject_Elem(prim),
-            XiString_Elem(domain),
-            XiString_Elem(name),
+        XiLog$TraceParams("XiInventory$Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
+            XiObject$Elem(prim),
+            XiString$Elem(domain),
+            XiString$Elem(name),
             type,
             pin,
             run,
@@ -230,7 +238,8 @@ XiInventory_Push( // pushes an inventory item via XiChat
     // TODO
 }
 
-XiInventory_Pull( // pulls an inventory item via XiChat
+#define XiInventory$Pull(...) _XiInventory_Pull( __VA_ARGS__ )
+XiInventory$Pull( // pulls an inventory item via XiChat
     string prim,
     string domain,
     string name,
@@ -241,10 +250,10 @@ XiInventory_Pull( // pulls an inventory item via XiChat
     )
 {
     #ifdef XIINVENTORY_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiInventory_Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
-            XiObject_Elem(prim),
-            XiString_Elem(domain),
-            XiString_Elem(name),
+        XiLog$TraceParams("XiInventory$Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
+            XiObject$Elem(prim),
+            XiString$Elem(domain),
+            XiString$Elem(name),
             type,
             pin,
             run,

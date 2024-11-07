@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_ON_REZ
-		Xi_on_rez( integer param )
+		Xi$on_rez( integer param )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -44,20 +44,20 @@
 	{
         // log event if requested
         #ifdef XI_ON_REZ_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "on_rez", [], [ i ] );
+            XiLog$TraceParams( "on_rez", [], [ i ] );
         #endif
 
         // check if any Xi libraries want to intercept this event
-        _XiChat_RefreshLinkset();
+        _XiChat$RefreshLinkset();
         #ifdef XILSD_ENABLE_UUID_HEADER
-            _XiLSD_CheckUUID();
+            _XiLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested
 		#ifdef XI_ON_REZ
-			Xi_on_rez(i);
+			Xi$on_rez(i);
 		#endif
 
 		// update XIOBJECT_UUIDS_SELF
-        _XiObject_UpdateUUIDs();
+        _XiObject$UpdateUUIDs();
 	}

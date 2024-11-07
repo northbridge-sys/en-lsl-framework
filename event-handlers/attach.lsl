@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_ATTACH
-		Xi_attach( key id )
+		Xi$attach( key id )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -44,13 +44,13 @@
 	{
         // log event if requested
         #ifdef XI_ATTACH_ENABLE_XILOG_TRACE
-            XiLog_TraceParams( "attach", [ "id" ], [ XiString_Elem( id ) ]);
+            XiLog$TraceParams( "attach", [ "id" ], [ XiString$Elem( id ) ]);
         #endif
 
         // check if any Xi libraries want to intercept this event
 
         // pass to user-defined function if requested
 		#ifdef XI_ATTACH
-			Xi_attach( id );
+			Xi$attach( id );
 		#endif
 	}

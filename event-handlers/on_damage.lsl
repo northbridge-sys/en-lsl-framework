@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_ON_DAMAGE
-		Xi_on_damage( integer num )
+		Xi$on_damage( integer num )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,11 +40,11 @@
 	on_damage( integer num )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "on_damage", [ "num" ], [
+        XiLog$TraceParams( "on_damage", [ "num" ], [
             num
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_on_damage( num );
+        Xi$on_damage( num );
 	}
 #endif

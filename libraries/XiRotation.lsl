@@ -40,12 +40,14 @@
 // == functions
 // ==
 
-string XiRotation_Elem( rotation r )
+#define XiRotation$Elem(...) _XiRotation_Elem( __VA_ARGS__ )
+string XiRotation$Elem( rotation r )
 {
     return (string)r + " (" + (string)llRot2Euler( r ) + ")";
 }
 
-rotation XiRotation_Normalize(
+#define XiRotation$Normalize(...) _XiRotation_Normalize( __VA_ARGS__ )
+rotation XiRotation$Normalize(
     rotation r
     )
 {
@@ -53,7 +55,8 @@ rotation XiRotation_Normalize(
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
 }
 
-rotation XiRotation_Slerp(
+#define XiRotation$Slerp(...) _XiRotation_Slerp( __VA_ARGS__ )
+rotation XiRotation$Slerp(
     rotation a,
     rotation b,
     float t
@@ -62,12 +65,14 @@ rotation XiRotation_Slerp(
     return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
-rotation XiRotation_Nlerp(
+#define XiRotation$Nlerp(...) _XiRotation_Nlerp( __VA_ARGS__ )
+rotation XiRotation$Nlerp(
     rotation a,
     rotation b,
     float t
+)
 {
     float ti = 1 - t;
     rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
-    return XiRotation_Normalize( r );
+    return XiRotation$Normalize( r );
 }

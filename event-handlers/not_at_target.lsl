@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_NOT_AT_TARGET
-		Xi_not_at_target()
+		Xi$not_at_target()
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,9 +40,9 @@
 	not_at_target()
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "not_at_target", [], [] );
+        XiLog$TraceParams( "not_at_target", [], [] );
 
         // event unused, so pass to user-defined function only
-        Xi_not_at_target();
+        Xi$not_at_target();
 	}
 #endif

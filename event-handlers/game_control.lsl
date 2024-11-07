@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI_GAME_CONTROL
-		Xi_game_control( key id, integer held, list axes )
+		Xi$game_control( key id, integer held, list axes )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
@@ -40,13 +40,13 @@
 	game_control( key id, integer held, list axes )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog_TraceParams( "game_control", [ "id", "held", "axes" ], [
-            XiAvatar_Elem( id ),
+        XiLog$TraceParams( "game_control", [ "id", "held", "axes" ], [
+            XiAvatar$Elem( id ),
             held,
-            XiList_Elem( axes )
+            XiList$Elem( axes )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi_game_control( id, held, axes );
+        Xi$game_control( id, held, axes );
 	}
 #endif

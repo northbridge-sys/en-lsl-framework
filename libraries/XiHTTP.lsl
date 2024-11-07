@@ -51,7 +51,8 @@ list XIHTTP_REQUESTS; // Xihttp_id, req_id, url, http_params, body
 // == functions
 // ==
 
-key XiHTTP_Request( // sends an HTTP request to a URL
+#define XiHTTP$Request(...) _XiHTTP_Request( __VA_ARGS__ )
+key XiHTTP$Request( // sends an HTTP request to a URL
     string url,         // url to pass to llHTTPRequest
     list http_params,   // parameters to pass to llHTTPRequest
                         //  do not specify the following parameters:
@@ -61,20 +62,20 @@ key XiHTTP_Request( // sends an HTTP request to a URL
     )
 {
     #ifdef XIHTTP_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("XiHTTP_Request", ["url", "http_params", "body"], [
-            XiString_Elem(url),
-            XiList_Elem(http_params),
-            XiString_Elem(body)
+        XiLog$TraceParams("XiHTTP$Request", ["url", "http_params", "body"], [
+            XiString$Elem(url),
+            XiList$Elem(http_params),
+            XiString$Elem(body)
             ]);
     #endif
     #ifndef XIHTTP_ENABLE_REQUESTS
-        XiLog(DEBUG, "XiHTTP_Request failed due to XIHTTP_ENABLE_REQUESTS not being defined.");
+        XiLog(DEBUG, "XiHTTP$Request failed due to XIHTTP_ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer len = llStringLength(url) + llStringLength(body);
     if (len * 4 + 2048 > llGetFreeMemory())
     { // refuse request due to low memory
-        XiLog(DEBUG, "XiHTTP_Request failed due to low memory.");
+        XiLog(DEBUG, "XiHTTP$Request failed due to low memory.");
         return NULL_KEY;
     }
     // populate pending requests stack
@@ -86,11 +87,12 @@ key XiHTTP_Request( // sends an HTTP request to a URL
         llDumpList2String(http_params, "\n"),
         body
         ];
-    if (!XIHTTP_PAUSE) _XiHTTP_NextRequest(); // not being throttled, so request now
+    if (!XIHTTP_PAUSE) _XiHTTP$NextRequest(); // not being throttled, so request now
     return Xi_id;
 }
 
-_XiHTTP_ProcessResponse( // processes http_response
+#define _XiHTTP$ProcessResponse(...) _XiHTTP_ProcessResponse( __VA_ARGS__ )
+_XiHTTP$ProcessResponse( // processes http_response
     string req_id,
     integer status,
     list metadata,
@@ -98,20 +100,20 @@ _XiHTTP_ProcessResponse( // processes http_response
     )
 {
     #ifdef XIHTTP_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiHTTP_ProcessResponse", ["req_id", "status", "metadata", "body"], [
-            XiString_Elem(req_id),
+        XiLog$TraceParams("_XiHTTP$ProcessResponse", ["req_id", "status", "metadata", "body"], [
+            XiString$Elem(req_id),
             status,
-            XiList_Elem(metadata),
-            XiString_Elem(body)
+            XiList$Elem(metadata),
+            XiString$Elem(body)
             ]);
     #endif
     #ifndef XIHTTP_ENABLE_REQUESTS
-        XiLog(DEBUG, "_XiHTTP_ProcessResponse failed due to XIHTTP_ENABLE_REQUESTS not being defined.");
+        XiLog(DEBUG, "_XiHTTP$ProcessResponse failed due to XIHTTP_ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer req_ind = llListFindList(llList2ListSlice(XIHTTP_REQUESTS, 0, -1, XIHTTP_REQUESTS_STRIDE, 1), [req_id]);
     if (req_ind == -1) return; // not a response to a known request
-    Xi_http_response(
+    Xi$http_response(
         orig_id,
         llList2String(XIHTTP_REQUESTS, req_ind * XIHTTP_REQUESTS_STRIDE + 2), // url
         llParseStringKeepNulls(llList2String(XIHTTP_REQUESTS, req_ind * XIHTTP_REQUESTS_STRIDE + 3), ["\n"], []), // http_params
@@ -123,10 +125,11 @@ _XiHTTP_ProcessResponse( // processes http_response
     XIHTTP_REQUESTS = llDeleteSubList(XIHTTP_REQUESTS, req_ind * XIHTTP_REQUESTS_STRIDE, (req_ind + 1) * XIHTTP_REQUESTS_STRIDE - 1);
 }
 
-_XiHTTP_Timer() // request queue timer
+#define _XiHTTP$Timer(...) _XiHTTP_Timer( __VA_ARGS__ )
+_XiHTTP$Timer() // request queue timer
 {
     #ifdef XIHTTP_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiHTTP_Timer", [], []);
+        XiLog$TraceParams("_XiHTTP$Timer", [], []);
     #endif
     #ifdef XIHTTP_ENABLE_REQUESTS
         // TODO: allow using either SIT or MIT instead of directly calling llSetTimerEvent
@@ -138,13 +141,13 @@ _XiHTTP_Timer() // request queue timer
         }
         // keep firing off queued requests
         integer resp;
-        do resp = _XiHTTP_NextRequest();
+        do resp = _XiHTTP$NextRequest();
         while (resp == 1);
         // can't fire off any more queued requests
         if (resp == -1)
         { // throttled while processing queue
             XIHTTP_PAUSE *= 2; // double XIHTTP_PAUSE
-            XiLog(DEBUG, "XiHTTP_Request retry throttled, pausing " + (string)XIHTTP_PAUSE + " seconds.");
+            XiLog(DEBUG, "XiHTTP$Request retry throttled, pausing " + (string)XIHTTP_PAUSE + " seconds.");
             llSetTimerEvent(XIHTTP_PAUSE);
             return;
         }
@@ -153,10 +156,11 @@ _XiHTTP_Timer() // request queue timer
     #endif
 }
 
-integer _XiHTTP_NextRequest() // fire off next request in queue (used internally by _XiHTTP_Timer)
+#define _XiHTTP$NextRequest(...) _XiHTTP_NextRequest( __VA_ARGS__ )
+integer _XiHTTP$NextRequest() // fire off next request in queue (used internally by _XiHTTP$Timer)
 {
     #ifdef XIHTTP_ENABLE_XILOG_TRACE
-        XiLog_TraceParams("_XiHTTP_NextRequest", [], []);
+        XiLog$TraceParams("_XiHTTP$NextRequest", [], []);
     #endif
     integer req_ind = llListFindList(llList2ListSlice(XIHTTP_REQUESTS, 0, -1, XIHTTP_REQUESTS_STRIDE, 1), [NULL_KEY]);
     if (req_ind == -1) return 0; // no more requests to make
@@ -171,7 +175,7 @@ integer _XiHTTP_NextRequest() // fire off next request in queue (used internally
         {
             XIHTTP_PAUSE = 40;
             llSetTimerEvent(XIHTTP_PAUSE);
-            XiLog(DEBUG, "XiHTTP_Request throttled, pausing " + (string)XIHTTP_PAUSE + " seconds.");
+            XiLog(DEBUG, "XiHTTP$Request throttled, pausing " + (string)XIHTTP_PAUSE + " seconds.");
         }
         return -1; // throttled
     }
