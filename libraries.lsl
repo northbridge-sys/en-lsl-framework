@@ -26,7 +26,7 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This file #includes all eXisting Xi library scripts. Type the following:
-		#include "xi-lsl-framework/main.lsl"
+		#include "xi-lsl-framework/libraries.lsl"
     into the top of an LSL script with the LSL preprocessor enabled to be able to
     call Xi library functions.
 
@@ -84,9 +84,6 @@
 
 // XiChat - libraries for safely communicating with other scripts via chat
 #include "xi-lsl-framework/libraries/XiChat.lsl"
-
-// XiCrypt - """cryptographic""" libraries, or at least as far as is possible in LSL
-#include "xi-lsl-framework/libraries/XiCrypt.lsl"
 
 // XiHTTP - outgoing HTTP request library with queueing and throttling protection
 #include "xi-lsl-framework/libraries/XiHTTP.lsl"
