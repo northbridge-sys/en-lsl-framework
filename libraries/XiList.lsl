@@ -33,7 +33,7 @@
 // == preprocessor options
 // ==
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
+#ifdef XIALL_ENABLE_XILOG_TRACE
 #define XILIST_ENABLE_XILOG_TRACE
 #endif
 

@@ -29,27 +29,24 @@ Some of the useful features Xi provides:
 
 - If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
 - Create a directory called `xi-lsl-framework` in your LSL preprocessor include directory.
-- Unpack the repository into the `xi-lsl-framework`, so that `main.lsl` is located in `[preprocessor directory]/xi-lsl-library/main.lsl`.
+- Unpack the repository into the `xi-lsl-framework`, so that `libraries.lsl` is located in `[preprocessor directory]/xi-lsl-library/libraries.lsl`.
 - Include the framework libraries by placing the following line at the top of your script:
 
 ```
 #include "xi-lsl-framework/libraries.lsl"
 ```
 
-Then, in the script body, include the framework event handlers:
+Then, in the script body, include the framework event handlers in each state
 
 ```
 default
 {
-    // any user-defined event handlers should be placed here
-    
-    #include "xi-lsl-framework/event-handlers/state_entry.lsl"
-    #include "xi-lsl-framework/event-handlers/on_rez.lsl"
-    #include "xi-lsl-framework/event-handlers/attach.lsl"
-    #include "xi-lsl-framework/event-handlers/changed.lsl"
-    #include "xi-lsl-framework/event-handlers/link_message.lsl"
-    #include "xi-lsl-framework/event-handlers/listen.lsl"
-    #include "xi-lsl-framework/event-handlers/timer.lsl"
+    #include "xi-lsl-framework/event-handlers.lsl"
+}
+
+state abc   // if you use multiple states, make sure to #include the event handlers again, just be aware of memory!
+{
+    #include "xi-lsl-framework/event-handlers.lsl"
 }
 ```
 
@@ -61,16 +58,32 @@ Xi_state_entry()
 {
     // runs on state_entry if XI_STATE_ENTRY has been defined
 }
+
+#define XI_ON_REZ
+Xi_on_rez( integer param )
+{
+    // runs on on_rez if XI_ON_REZ has been defined
+}
+
+// ...
 ```
 
-However, if an event is added to LSL and isn't part of the Xi framework (there is no event handler in the event-handlers directory), it's safe to add it manually in the state.
+Xi only injects its own trace logging if the following macros are defined:
 
-If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* the `main.lsl` `#include` line.
+- `XIALL_ENABLE_XILOG_TRACE` enables all *library* logging
+- `XI*_ENABLE_XILOG_TRACE` enables logging for a *specific* library (such as `XICHAT_ENABLE_XILOG_TRACE`)
+- `XI_ALL_ENABLE_XILOG_TRACE` enables all *event* logging (but see note below)
+- `XI_*_ENABLE_XILOG_TRACE` enables logging for a *specific* event (such as `XI_LINK_MESSAGE_ENABLE_XILOG_TRACE`)
 
-Here's an example of a script that basically does nothing but log events (via TRACE):
+The following events are used by Xi: `attach`, `changed`, `dataserver`, `link_message`, `listen`, `on_rez`, `state_entry`, `timer`. If you define the `XI_*` option to pass through these events, you *also* need to enable `XI_*_ENABLE_XILOG_TRACE` or `XI_ALL_ENABLE_XILOG_TRACE` to log these events. For all other events, logging is *automatically enabled* - if you don't want logging, define the event handler yourself.
+
+If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* `#include "xi-lsl-framework/libraries.lsl"`.
+
+Here's an example of a script that does nothing but log Xi function calls and events used by Xi:
 
 ```
-#define XI_ALL_ENABLE_XILOG
+#define XIALL_ENABLE_XILOG_TRACE
+#define XI_ALL_ENABLE_XILOG_TRACE
 
 #include "xi-lsl-framework/libraries.lsl"
 
