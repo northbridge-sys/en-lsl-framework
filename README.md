@@ -6,7 +6,7 @@
 
 ## Introduction
 
-**Xi is under active and ongoing development; many functions have not been fully tested. Do not use this framework in your projects until this message is removed! It is considered experimental and highly unstable!**
+**Xi is under active and ongoing development; many functions have not been fully tested. Do not use this framework in your projects until this message is removed! It is experimental and highly unstable!**
 
 A framework for the [Linden Scripting Language](https://wiki.secondlife.com/wiki/LSL_Portal) in [Second Life](https://secondlife.com/).
 
