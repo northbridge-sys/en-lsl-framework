@@ -36,7 +36,7 @@ Some of the useful features Xi provides:
 #include "xi-lsl-framework/libraries.lsl"
 ```
 
-Then, in the script body, include the framework event handlers in each state
+- Then, in the script body, include the framework event handlers in each state
 
 ```
 default
@@ -50,7 +50,7 @@ state abc   // if you use multiple states, make sure to #include the event handl
 }
 ```
 
-If you want to run your own code on an event, most event handlers can forward them to user-defined functions upon request:
+- To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
 
 ```
 #define XI_STATE_ENTRY
@@ -66,6 +66,40 @@ Xi_on_rez( integer param )
 }
 
 // ...
+```
+
+However, it's possible to exclusively use custom Xi "event functions" - for example, here's a script that responds to any "ping" requests made to it over XiIMP:
+
+```
+Xi_imp_message(
+    string prim, // source prim
+    string target, // target script
+    string status, // status string
+    integer ident, // IMP ident (optional)
+    list params, // IMP request parameters
+    string data, // IMP data (optional)
+    integer linknum, // -1 if not part of linkset
+    string source // source script name
+    )
+{
+    if ( status != "" ) return; // only respond to requests
+    if ( llList2String( params, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
+    XiIMP_Send( // respond via IMP
+        prim,
+        source,
+        "ok",
+        ident,
+        params,
+        "Hello, \"" + source + "\"!"
+        );
+}
+
+#include "xi-lsl-framework/libraries.lsl"
+
+default
+{
+    #include "xi-lsl-framework/event-handlers.lsl"
+}
 ```
 
 Xi only injects its own trace logging if the following macros are defined:
