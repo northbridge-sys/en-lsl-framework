@@ -147,21 +147,21 @@ For example, XiLog enables in-the-field debugging out-of-the-box. With Xi, just 
 someFunction( integer x, integer y )
 {
     XiLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
-    XiLog( DEBUG, "Performing action..." );
-    XiLog( INFO, "You have just called the function with values " + (string)x + " and " + (string)y + "." );
+    XiLog( DEBUG, "This will only appear if loglevel is DEBUG or above." );
+    XiLog( INFO, "Function called with parameters " + (string)x + " and " + (string)y + "." );
     if ( x ) XiLog( WARN, "Non-zero values of x are discouraged." );
-    else XiLog( ERROR, "Hey, how are you reading both of these at once?" );
-    XiLog_Fatal( "The script will send this message and stop." );
+    if ( y ) XiLog( ERROR, "Non-zero values of y are prohibited (normally you would return at this point)." );
+    if ( x && y ) XiLog_Fatal( "Everything is terrible. The script will send this message and stop." );
 }
 ```
 
 and when you call `someFunction( 1, 2 );`, you'll see:
 
 ```
-💬 You have just called the function with values 1 and 2.
+💬 Function called with parameters 1 and 2.
 🚩 WARNING: Non-zero values of x are discouraged.
-❌ ERROR: Hey, how are you reading both of these at once?
-🛑 FATAL ERROR: The script will send this message and stop.
+❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
+🛑 FATAL ERROR: Everything is terrible. The script will send this message and stop.
 ```
 
 or, if you change the runtime loglevel to TRACE, you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
@@ -173,13 +173,13 @@ or, if you change the runtime loglevel to TRACE, you'll not only get additional 
         y = 2
     )
 🔽 [12:11:24.86] (13a1 16%) New Script
-🪲 Performing action...
+🪲 This will only appear if loglevel is DEBUG or above.
 🔽 [12:11:24.89] (13a1 16%) New Script
-💬 You have just called the function with values 1 and 2.
+💬 Function called with parameters 1 and 2.
 🔽 [12:11:24.91] (13a1 17%) New Script
 🚩 WARNING: Non-zero values of x are discouraged.
 🔽 [12:11:24.98] (13a1 16%) New Script
-❌ ERROR: Hey, how are you reading both of these at once?
+❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
 🔽 [12:11:25.05] (13a1 16%) New Script
-🛑 FATAL ERROR: The script will send this message and stop.
+🛑 FATAL ERROR: Everything is terrible. The script will send this message and stop.
 ```
