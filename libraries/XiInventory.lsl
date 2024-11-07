@@ -95,6 +95,13 @@ integer XiInventory_Copy( // copies an inventory item to another object
     return 1;
 }
 
+integer XiInventory_OwnedByCreator(
+    string name
+)
+{
+    return llGetInventoryCreator( name ) == llGetOwner();
+}
+
 integer XiInventory_RezRemote( // rezzes a remote object with Remote.lsl
     string name,
     vector pos,
