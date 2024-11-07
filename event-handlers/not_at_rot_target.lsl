@@ -2,7 +2,6 @@
     not_at_rot_target.lsl
     Event Handler
     Xi LSL Framework
-    Revision 0
     Copyright (C) 2024  BuildTronics
     https://docs.buildtronics.net/xi-lsl-framework
 

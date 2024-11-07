@@ -2,7 +2,6 @@
     timer.lsl
     Event Handler
     Xi LSL Framework
-    Revision 0
     Copyright (C) 2024  BuildTronics
     https://docs.buildtronics.net/xi-lsl-framework
 
@@ -49,7 +48,7 @@
         #endif
 
         // forward all timers directly to XiTimer
-        _XiTimer_Trigger();
+        _XiTimer_Check();
 
         // pass to user-defined function if requested
 		#ifdef XI_TIMER

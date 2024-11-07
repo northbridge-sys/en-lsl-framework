@@ -1,7 +1,6 @@
 /*
     event-handlers.lsl
     Xi LSL Framework
-    Revision 0
     Copyright (C) 2024  BuildTronics
     https://docs.buildtronics.net/xi-lsl-framework
 

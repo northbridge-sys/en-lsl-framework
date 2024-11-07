@@ -2,7 +2,6 @@
     XiDate.lsl
     Library
     Xi LSL Framework
-    Revision 0
     Copyright (C) 2024  BuildTronics
     https://docs.buildtronics.net/xi-lsl-framework
 
@@ -41,18 +40,29 @@
 // == functions
 // ==
 
-integer XiDate_MS( // gets an integer in the range [ -617316353, 2147483547 ] that represents the current millisecond of a month
+integer XiDate_MS( // gets an integer that represents the current millisecond of a month
     string timestamp // llGetTimestamp string (use XiDate_MSNow() for the current value)
     )
 {
-    return (integer)llGetSubString( timestamp, 8, 9 ) * 86400000 + // days * ms_per_day
-        (integer)llGetSubString( timestamp, 11, 12 ) * 3600000 + // hours * ms_per_hour
-        (integer)llGetSubString( timestamp, 14, 15 ) * 60000 + // minutes * ms_per_minute
-        llRound( ( (float)llGetSubString( timestamp, 17, -2 ) * 1000.0 ) ) // seconds.ms * ms_per_second
-        - 617316353; // offset negative so it fits within [ -617316353, 2147483547 ]
+    return 0x80000000 + // start at -2147483648
+        (integer)llGetSubString( timestamp, 8, 9 ) * 86400000 + // days * ms_per_day (-2147483648 + (31 * 86400000) = 530916352)
+        (integer)llGetSubString( timestamp, 11, 12 ) * 3600000 + // hours * ms_per_hour (530916352 + (23 * 3600000) = 613716352)
+        (integer)llGetSubString( timestamp, 14, 15 ) * 60000 + // minutes * ms_per_minute (613716352 + (59 * 60000) = 617256352)
+        (integer)( (float)llGetSubString( timestamp, 17, -2 ) * 1000.0 ); // seconds.ms * ms_per_second (617256352 + 60000 = 617316352)
+    // total range is 2764800000 ms, or ms in 31 days
 }
 
 integer XiDate_MSNow() // gets the value of XiDate_MS( ... ) for the current datetime
 {
     return XiDate_MS( llGetTimestamp() );
+}
+
+integer XiDate_MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
+    integer ms, // XiDate_MS result
+    integer add // milliseconds to add - note this is limited to 
+)
+{
+    // check if adding takes us into the "dead zone" of 617316352 to 2147483647
+    if ( ms + add > 617316352 ) return ( ms + add ) + 2764800000 * ( -1 * ( add > 0 ) ); // if we are adding +, subtract the entire range; otherwise, add it
+    return ms + add; // no adjustment needed
 }
