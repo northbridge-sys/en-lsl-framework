@@ -79,14 +79,14 @@ string XiInteger_ToHex( // converts a 32-bit signed integer in its entirety to h
     string hex;
     do
     {
-        if (digits)
-        {
-            hex = llGetSubString( XIINTEGER_CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
-            digits--;
-        }
+        hex = llGetSubString( XIINTEGER_CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
+        digits--;
     }
     while ( i = ( 0xFFFFFFF & ( i >> 4 ) ) );
-    while ( digits-- ) hex = "0" + hex; // pad with leading zeroes until we have reached the minimum digits
+    if ( digits > 0 )
+    {
+        while ( digits-- ) hex = "0" + hex; // pad with leading zeroes until we have reached the minimum digits
+    }
     return hex;
 }
 
@@ -113,16 +113,16 @@ string XiInteger_ToString64( // converts int to string of length using 64-charac
     string o;
     integer x;
     integer y;
-    if (int < 0)
-    {
-        x = ((0x7FFFFFFF & int) % 64) - (0x80000000 % 64);
+    if ( int < 0 )
+    { // fix for negative values
+        x = ( (0x7FFFFFFF & int) % 64 ) - ( 0x80000000 % 64 );
         y = x % 64;
-        int = (x / 64) + ((0x7FFFFFFF & int) / 64) - (0x80000000 / 64);
-        o = llGetSubString(XIVAR_CHARSET_64, y, y);
+        int = ( x / 64 ) + ( ( 0x7FFFFFFF & int ) / 64 ) - ( 0x80000000 / 64 );
+        o = llGetSubString( XIVAR_CHARSET_64, y, y );
     }
-    do o = llGetSubString(XIVAR_CHARSET_64, x = int % 64, x) + o;
-    while (int /= 64);
-    while (llStringLength(o) < length) o = "0" + o;
+    do o = llGetSubString( XIVAR_CHARSET_64, x = int % 64, x ) + o;
+    while ( int /= 64 );
+    while ( llStringLength(o) < length ) o = "0" + o;
     return o;
 }
 
