@@ -139,22 +139,23 @@ LSL is over twenty years old and still has no function that returns a random int
 
 Xi augments LSL with features that should have been in LSL a decade ago, but aren't. While LSL does enjoy occasional improvements, a lot of code snippets end up copied and pasted across multiple projects, each with its own tweaks and bugs. Most LSL code is, as a result, ugly, incomprehensible, and unmaintainable.
 
-Xi is an attempt to centralize all of these handy snippets into one omnibus framework. With all the hacks at your fingertips, there's no need to reinvent the wheel in every new script. Focus on the code, not the infrastructure.
+Xi is centralizes all of these handy snippets into one omnibus framework. With all the tricks at your fingertips, there's no need to reinvent the wheel in every new script. Focus on the code, not the infrastructure. Thanks to the LSL preprocessor, these additional functions and background routines just work.
 
-No need to stress over which delineator character to use when dumping a list to a string, use `XiList_ToString`, which requires no escaping. Need to interpolate between two rotations, just call `XiRotation_Slerp`. Want to append the prim UUID and a special header to all of your linkset data pairs so they don't conflict with other scripts in the linkset? Put `#define XILSD_HEADER "myheader"` and `#define XILSD_ENABLE_UUID_HEADER` at the top of your script, include some event handlers, and use `XiLSD_Write` - Xi will even update all of your linkset data pairs automatically when the key changes.
-
-Thanks to the LSL preprocessor, these additional functions are always available to you while you script. For example, XiLog enables in-the-field debugging out-of-the-box. With Xi, just write:
+For example, XiLog enables in-the-field debugging out-of-the-box. With Xi, just write:
 
 ```
-XiLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
-XiLog( DEBUG, "Performing action..." );
-XiLog( INFO, "You have just called the function with values " + (string)x + " and " + (string)y + "." );
-if ( x ) XiLog( WARN, "Non-zero values of x are discouraged." );
-else XiLog( ERROR, "Hey, how are you reading both of these at once?" );
-XiLog_Fatal( "The script will send this message and stop." );
+someFunction( integer x, integer y )
+{
+    XiLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
+    XiLog( DEBUG, "Performing action..." );
+    XiLog( INFO, "You have just called the function with values " + (string)x + " and " + (string)y + "." );
+    if ( x ) XiLog( WARN, "Non-zero values of x are discouraged." );
+    else XiLog( ERROR, "Hey, how are you reading both of these at once?" );
+    XiLog_Fatal( "The script will send this message and stop." );
+}
 ```
 
-and you'll see:
+and when you call `someFunction( 1, 2 );`, you'll see:
 
 ```
 💬 You have just called the function with values 1 and 2.
@@ -163,7 +164,7 @@ and you'll see:
 🛑 FATAL ERROR: The script will send this message and stop.
 ```
 
-or, if you enable TRACE logging, you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
+or, if you change the runtime loglevel to TRACE, you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, and the name of the script logging the message:
 
 ```
 🔽 [12:11:24.81] (13a1 17%) New Script
@@ -182,5 +183,3 @@ or, if you enable TRACE logging, you'll not only get additional relevant logs, b
 🔽 [12:11:25.05] (13a1 16%) New Script
 🛑 FATAL ERROR: The script will send this message and stop.
 ```
-
-Since you can change the loglevel at runtime, you can get a treasure trove of diagnostic information without needing anything more than a script with a single line of code! (Or the ManageLoglevel.lsl and SetLoglevel.lsl utility scripts, which are a little easier to use.)
