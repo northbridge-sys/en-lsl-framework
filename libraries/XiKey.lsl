@@ -49,6 +49,23 @@ integer XiKey_Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the
     return 0;
 }
 
+integer XiKey_IsAvatar( // returns 1 if a valid avatar key IN THIS REGION
+    string k
+)
+{
+    return llGetAgentSize() != ZERO_VECTOR;
+}
+
+integer XiKey_IsPrim( // returns 1 if a valid prim key IN THIS REGION
+    string k
+    )
+{
+    list d = llGetObjectDetails( k, [ OBJECT_OWNER ] );
+    if ( d == [] ) return 0; // not in region
+    if ( llList2String( d, 0 ) == llToLower( k ) ) return 0; // is an avatar
+    return 1; // must be a prim
+}
+
 string XiKey_Strip( // strips dashes out of a key
     string k
     )
