@@ -286,7 +286,7 @@ integer _XiChat$Process(
     { // owner only flag enabled for this listener
         if (llGetOwnerKey(id) != llGetOwner()) return 1; // not sent by same-owner object/agent
     }
-    #ifdef XICHAT$ENABLE_XIIMP
+    #ifdef XI$IMP_MESSAGE
         if (llList2String(data, 4) == "XiIMP")
         { // IMP message
                 data = XiList$FromStr(llList2String(data, 5));
@@ -388,10 +388,10 @@ integer _XiChat$Process(
         }
     #endif
     // generic message
-    #ifndef XICHAT$ENABLE_RAW
-        XiLog$(DEBUG, "Raw XiChat message received, but XICHAT$ENABLE_CHAT not defined.");
+    #ifndef XI$CHAT_MESSAGE
+        XiLog$( DEBUG, "Raw XiChat message received from " + XiObject$Elem( id ) + " on domain \"" + llList2String( data, 2 ) + "\", but XI$CHAT_MESSAGE not defined: " + llList2String( data, 4 ) );
     #else
-        Xi$raw_message(
+        Xi$chat_message(
             id, // source id
             llList2String(data, 2), // domain
             llList2String(data, 4) // message

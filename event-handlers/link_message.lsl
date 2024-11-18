@@ -98,7 +98,7 @@
     Define this function directly in the script to process IMP messages.
 */
 
-#if defined XI$LINK_MESSAGE_TRACE || defined XI$LINK_MESSAGE || defined XIIMP$ENABLE
+#if defined XI$LINK_MESSAGE_TRACE || defined XI$LINK_MESSAGE || defined XI$IMP_MESSAGE
     link_message( integer link, integer i, string s, key k )
     {
 #endif
@@ -108,7 +108,7 @@
             XiLog$TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, XiString$Elem( s ), XiString$Elem( k ) ] );
         #endif
 
-        #ifdef XIIMP$ENABLE
+        #ifdef XI$IMP_MESSAGE
             if ( _XiIMP$Process( llGetLinkKey( link ), link, i, s, k )) return; // valid IMP message
         #endif
 

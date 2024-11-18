@@ -121,7 +121,7 @@ integer _XiIMP$Process(
         // XIIMP$ALLOWED_INBOUND_TARGETS_ALL was not defined (see IMPTap.lsl), so filter out messages that don't match the allowed targets list
         if (llListFindList(allowed_targets, [llList2String(parts, 0)]) == -1) return 0; // discard message, not targeted to us
     #endif
-    #ifdef XIIMP$ENABLE
+    #ifdef XI$IMP_MESSAGE
         Xi$imp_message(
             prim, // SOURCE prim
             llList2String(parts, 0), // target
