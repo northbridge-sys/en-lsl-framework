@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_PATH_UPDATE
+		#define XI$PATH_UPDATE
 		Xi$path_update( integer type, list reserved )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_PATH_UPDATE
+#ifdef XI$PATH_UPDATE
 	path_update( integer type, list reserved )
 	{
         // event unused, so the only reason to define it is to log it

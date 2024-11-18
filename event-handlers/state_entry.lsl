@@ -29,34 +29,38 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_STATE_ENTRY
+		#define XI$STATE_ENTRY
 		Xi$state_entry()
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_STATE_ENTRY_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$STATE_ENTRY_TRACE || defined XI$STATE_ENTRY || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
 	state_entry()
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_STATE_ENTRY_ENABLE_XILOG_TRACE
+        #ifdef XI$STATE_ENTRY_TRACE
             XiLog$TraceParams( "state_entry", [], [] );
         #endif
 
         // check if any Xi libraries want to intercept this event
-        #ifdef XILSD_ENABLE_UUID_HEADER
+        #ifdef XILSD$ENABLE_UUID_HEADER
             _XiLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI_STATE_ENTRY
+		#ifdef XI$STATE_ENTRY
 			Xi$state_entry();
 		#endif
 
-		// update XIOBJECT_UUIDS_SELF
-        _XiObject$UpdateUUIDs();
+		// update _XIOBJECT_UUIDS_SELF if needed
+        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+            _XiObject$UpdateUUIDs();
+        #endif
+
+#if defined XI$STATE_ENTRY_TRACE || defined XI$STATE_ENTRY || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
 	}
+#endif

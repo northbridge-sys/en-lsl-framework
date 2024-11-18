@@ -46,7 +46,7 @@ default
     #include "xi-lsl-framework/event-handlers.lsl"
 }
 
-state abc   // if you use multiple states, make sure to #include the event handlers again, just be aware of memory!
+state abc   // if you use multiple states, make sure to #include the event handlers again, just be aware that all necessary event handlers will be included in all states
 {
     #include "xi-lsl-framework/event-handlers.lsl"
 }
@@ -55,16 +55,16 @@ state abc   // if you use multiple states, make sure to #include the event handl
 - To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
 
 ```
-#define XI_STATE_ENTRY
+#define XI$STATE_ENTRY
 Xi$state_entry()
 {
-    // runs on state_entry if XI_STATE_ENTRY has been defined
+    // runs on state_entry if XI$STATE_ENTRY has been defined
 }
 
-#define XI_ON_REZ
+#define XI$ON_REZ
 Xi$on_rez( integer param )
 {
-    // runs on on_rez if XI_ON_REZ has been defined
+    // runs on on_rez if XI$ON_REZ has been defined
 }
 
 // ...
@@ -73,6 +73,10 @@ Xi$on_rez( integer param )
 However, it's possible to exclusively use custom Xi "event functions" - for example, here's a script that responds to any "ping" requests made to it over XiIMP:
 
 ```
+#define XIIMP_ENABLE
+
+#include "xi-lsl-framework/libraries.lsl"
+
 Xi$imp_message(
     string prim, // source prim
     string target, // target script
@@ -96,8 +100,6 @@ Xi$imp_message(
         );
 }
 
-#include "xi-lsl-framework/libraries.lsl"
-
 default
 {
     #include "xi-lsl-framework/event-handlers.lsl"
@@ -106,20 +108,18 @@ default
 
 Xi only injects its own trace logging if the following macros are defined:
 
-- `XIALL_ENABLE_XILOG_TRACE` enables all *library* logging
-- `XI*_ENABLE_XILOG_TRACE` enables logging for a *specific* library (such as `XICHAT_ENABLE_XILOG_TRACE`)
-- `XI_ALL_ENABLE_XILOG_TRACE` enables all *event* logging (but see note below)
-- `XI_*_ENABLE_XILOG_TRACE` enables logging for a *specific* event (such as `XI_LINK_MESSAGE_ENABLE_XILOG_TRACE`)
-
-The following events are used by Xi: `attach`, `changed`, `dataserver`, `link_message`, `listen`, `on_rez`, `state_entry`, `timer`. If you define the `XI_*` option to pass through these events, you *also* need to enable `XI_*_ENABLE_XILOG_TRACE` or `XI_ALL_ENABLE_XILOG_TRACE` to log these events. For all other events, logging is *automatically enabled* - if you don't want logging, define the event handler yourself.
+- `XI$TRACE_LIBRARIES` enables all *library* logging
+- `XI*$TRACE` enables logging for a *specific* library (such as `XICHAT$TRACE`)
+- `XI$TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
+- `XI$*_TRACE` enables logging for a *specific* event (such as `XI$LINK_MESSAGE_TRACE`)
 
 If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* `#include "xi-lsl-framework/libraries.lsl"`.
 
 Here's an example of a script that does nothing but log Xi function calls and events used by Xi:
 
 ```
-#define XIALL_ENABLE_XILOG_TRACE
-#define XI_ALL_ENABLE_XILOG_TRACE
+#define XI$TRACE_LIBRARIES
+#define XI$TRACE_EVENT_HANDLERS
 
 #include "xi-lsl-framework/libraries.lsl"
 

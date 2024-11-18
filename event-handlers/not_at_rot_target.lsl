@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_NOT_AT_ROT_TARGET
+		#define XI$NOT_AT_ROT_TARGET
 		Xi$not_at_rot_target()
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_NOT_AT_ROT_TARGET
+#ifdef XI$NOT_AT_ROT_TARGET
 	not_at_rot_target()
 	{
         // event unused, so the only reason to define it is to log it

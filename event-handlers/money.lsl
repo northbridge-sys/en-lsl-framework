@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_MONEY
+		#define XI$MONEY
 		Xi$money( key id, integer amount )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_MONEY
+#ifdef XI$MONEY
 	money( key id, integer amount )
 	{
         // event unused, so the only reason to define it is to log it

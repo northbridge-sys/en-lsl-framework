@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_MOVING_END
+		#define XI$MOVING_END
 		Xi$moving_end( key id, integer level, integer edge )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_MOVING_END
+#ifdef XI$MOVING_END
 	moving_end()
 	{
         // event unused, so the only reason to define it is to log it

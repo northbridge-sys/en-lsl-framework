@@ -29,7 +29,7 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_LINK_MESSAGE
+		#define XI$LINK_MESSAGE
 		Xi$link_message( integer link, integer i, string s, key k )
 		{
             // code to run when event occurs that is not intercepted by Xi
@@ -51,7 +51,7 @@
                     - "" (empty string): broadcast targeted at all scripts
                     - (script name): message targeted at a specific script
                     - (any other value): message targeted at any script with this
-                                         value in its XI_IMP_WHITELIST list
+                                         value in its XI$IMP_WHITELIST list
                 - source: script name of source script
                 - status: one of the following:
                     - "" (empty string): the script requests a response
@@ -77,7 +77,7 @@
                                     //  - (the target script name): this script name
                                     //  - "": all scripts in the prim
                                     //  - (any other value): scripts with this value
-                                    //      set in XIIMP_ALLOWED_TARGETS list
+                                    //      set in XIIMP$ALLOWED_TARGETS list
 			string status,      // one of the following:
                                     // - ":": broadcast (no response requested)
                                     // - "": request
@@ -93,28 +93,30 @@
                                 //      (-1 if received via XiChat)
             string source       // the source script name
                                 //      (can be pre-filtered by defining
-                                //      XIIMP_ALLOWED_SOURCES list)
+                                //      XIIMP$ALLOWED_SOURCES list)
 			)
     Define this function directly in the script to process IMP messages.
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_LINK_MESSAGE_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$LINK_MESSAGE_TRACE || defined XI$LINK_MESSAGE || defined XIIMP$ENABLE
     link_message( integer link, integer i, string s, key k )
     {
+#endif
+
         // log event if requested
-        #ifdef XI_LINK_MESSAGE_ENABLE_XILOG_TRACE
+        #ifdef XI$LINK_MESSAGE_TRACE
             XiLog$TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, XiString$Elem( s ), XiString$Elem( k ) ] );
         #endif
 
-        // check if any Xi libraries want to intercept this event
-        if ( _XiIMP$Process( llGetLinkKey( link ), link, i, s, k )) return; // valid IMP message
-        // non-XiIMP message
+        #ifdef XIIMP$ENABLE
+            if ( _XiIMP$Process( llGetLinkKey( link ), link, i, s, k )) return; // valid IMP message
+        #endif
 
         // pass to user-defined function if requested
-		#ifdef XI_LINK_MESSAGE
+		#ifdef XI$LINK_MESSAGE
 			Xi$link_message( link, i, s, k );
 		#endif
+
+#if defined XI$LINK_MESSAGE_TRACE || defined XI$LINK_MESSAGE || defined XIIMP$ENABLE
 	}
+#endif

@@ -25,22 +25,19 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    TBD
+    This library provides helper functions for manipulation of vectors.
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIVECTOR_ENABLE_XILOG_TRACE
-#endif
 
 // ==
 // == functions
 // ==
 
-#define XiVector$ToString(...) _XiVector_ToString( __VA_ARGS__ )
+// typecasting
+
 string XiVector$ToString( // removes the < & > from a vector and rounds each element, good for displaying positions
     vector pos,
     integer digits
@@ -49,7 +46,8 @@ string XiVector$ToString( // removes the < & > from a vector and rounds each ele
     return XiFloat$ToString(pos.x, digits) + ", " + XiFloat$ToString(pos.y, digits) + ", " + XiFloat$ToString(pos.z, digits);
 }
 
-#define XiVector$WorldToCorner(...) _XiVector_WorldToCorner( __VA_ARGS__ )
+// position scope translation
+
 vector XiVector$WorldToCorner( // converts a world pos to a region CORNER
     vector world
     )
@@ -57,7 +55,6 @@ vector XiVector$WorldToCorner( // converts a world pos to a region CORNER
     // TODO
 }
 
-#define XiVector$WorldToRegion(...) _XiVector_WorldToRegion( __VA_ARGS__ )
 vector XiVector$WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
     vector world
     )
@@ -65,7 +62,6 @@ vector XiVector$WorldToRegion( // converts a world pos to a region POSITION, as 
     // TODO
 }
 
-#define XiVector$RegionToWorld(...) _XiVector_RegionToWorld( __VA_ARGS__ )
 vector XiVector$RegionToWorld( // converts the current region position to world position
     vector region
     )
@@ -73,7 +69,6 @@ vector XiVector$RegionToWorld( // converts the current region position to world 
     return XiVector$RegionCornerToWorld( region, llGetRegionCorner() );
 }
 
-#define XiVector$RegionCornerToWorld(...) _XiVector_RegionCornerToWorld( __VA_ARGS__ )
 vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
     vector region,
     vector corner

@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_TRANSACTION_RESULT
+		#define XI$TRANSACTION_RESULT
 		Xi$transaction_result( key id, integer success, string data )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_TRANSACTION_RESULT
+#ifdef XI$TRANSACTION_RESULT
 	transaction_result( key transaction, integer success, string data )
 	{
         // event unused, so the only reason to define it is to log it

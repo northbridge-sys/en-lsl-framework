@@ -29,24 +29,32 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_AT_TARGET
+		#define XI$AT_TARGET
 		Xi$at_target( integer handle, vector target, vector current )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_AT_TARGET
+#if defined XI$AT_TARGET_TRACE || defined XI$AT_TARGET
 	at_target( integer handle, vector target, vector current )
 	{
-        // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "at_target", [ "handle", "target", "current" ], [
-            handle,
-            target
-            current
-        ] );
+#endif
+
+        // log event if requested
+        #ifdef XI$AT_TARGET_TRACE
+            XiLog$TraceParams( "at_target", [ "handle", "target", "current" ], [
+                handle,
+                target
+                current
+            ] );
+        #endif
 
         // event unused, so pass to user-defined function only
-        Xi$at_target( handle, target, current );
+        #ifdef XI$AT_TARGET
+            Xi$at_target( handle, target, current );
+        #endif
+
+#if defined XI$AT_TARGET_TRACE || defined XI$AT_TARGET
 	}
 #endif

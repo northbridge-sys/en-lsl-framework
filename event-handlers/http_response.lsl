@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_HTTP_RESPONSE
+		#define XI$HTTP_RESPONSE
 		Xi$http_response( key request, integer status, list metadata, string body )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_HTTP_RESPONSE
+#ifdef XI$HTTP_RESPONSE
 	http_response( key request, integer status, list metadata, string body )
 	{
         // event unused, so the only reason to define it is to log it

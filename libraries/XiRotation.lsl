@@ -29,24 +29,18 @@
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIROTATION_ENABLE_XILOG_TRACE
-#endif
 
 // ==
 // == functions
 // ==
 
-#define XiRotation$Elem(...) _XiRotation_Elem( __VA_ARGS__ )
 string XiRotation$Elem( rotation r )
 {
     return (string)r + " (" + (string)llRot2Euler( r ) + ")";
 }
 
-#define XiRotation$Normalize(...) _XiRotation_Normalize( __VA_ARGS__ )
 rotation XiRotation$Normalize(
     rotation r
     )
@@ -55,7 +49,6 @@ rotation XiRotation$Normalize(
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
 }
 
-#define XiRotation$Slerp(...) _XiRotation_Slerp( __VA_ARGS__ )
 rotation XiRotation$Slerp(
     rotation a,
     rotation b,
@@ -65,7 +58,6 @@ rotation XiRotation$Slerp(
     return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
-#define XiRotation$Nlerp(...) _XiRotation_Nlerp( __VA_ARGS__ )
 rotation XiRotation$Nlerp(
     rotation a,
     rotation b,

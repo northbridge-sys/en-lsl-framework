@@ -56,13 +56,13 @@ setLoglevel()
         );
     if ( !loglevel )
     {
-        XiLog( ERROR, "Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
+        XiLog$( ERROR, "Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
         return;
     }
     string lsd = llLinksetDataRead( "loglevel" );
     llLinksetDataWrite( "loglevel", (string)loglevel );
-    if ( lsd != "0" && !(integer)lsd ) XiLog( 0, "Set loglevel to " + XiLog$LevelToString( loglevel ) + "." );
-    else if ( lsd != (string)loglevel ) XiLog( 0, "Changed loglevel from " + XiLog$LevelToString( (integer)lsd ) + " to " + XiLog$LevelToString( loglevel ) + "." );
+    if ( lsd != "0" && !(integer)lsd ) XiLog$( 0, "Set loglevel to " + XiLog$LevelToString( loglevel ) + "." );
+    else if ( lsd != (string)loglevel ) XiLog$( 0, "Changed loglevel from " + XiLog$LevelToString( (integer)lsd ) + " to " + XiLog$LevelToString( loglevel ) + "." );
 }
 
 default

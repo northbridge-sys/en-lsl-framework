@@ -29,7 +29,7 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_EMAIL
+		#define XI$EMAIL
 		Xi$email( string time, string address, string subject, string message,
             integer remaining )
 		{
@@ -37,7 +37,7 @@
 		}
 */
 
-#ifdef XI_EMAIL
+#ifdef XI$EMAIL
 	email( string time, string address, string subject, string message, integer remaining )
 	{
         // event unused, so the only reason to define it is to log it

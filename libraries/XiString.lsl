@@ -29,37 +29,18 @@
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XISTRING_ENABLE_XILOG_TRACE
-#endif
-
-// ==
-// == preprocessor flags
-// ==
-
-// XiString$Pad alignment flags
-#define XISTRING_PAD_ALIGN_LEFT 0
-#define XISTRING_PAD_ALIGN_RIGHT 1
-#define XISTRING_PAD_ALIGN_CENTER 2
-
-// XiString$Escape filters
-#define XISTRING_ESCAPE_FILTER_REGEX 0x1
-#define XISTRING_ESCAPE_REVERSE 0x40000000
 
 // ==
 // == functions
 // ==
 
-#define XiString$Elem(...) _XiString_Elem( __VA_ARGS__ )
 string XiString$Elem(string var)
 {
     return "\"" + var + "\"";
 }
 
-#define XiString$Plural(...) _XiString_Plural( __VA_ARGS__ )
 string XiString$Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
     integer x,
     string s
@@ -70,7 +51,6 @@ string XiString$Plural( // returns pluralization ("s"/"es"/etc.) for specified i
     return s;
 }
 
-#define XiString$If(...) _XiString_( __VA_ARGS__ )
 string XiString$If( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
     integer x,
     string s
@@ -80,7 +60,6 @@ string XiString$If( // returns specified string if x is 1; can be used for text 
     return "";
 }
 
-#define XiString$Pad(...) _XiString_( __VA_ARGS__ )
 string XiString$Pad( // pads a string to length l_target
 	string src,
 	string pad,
@@ -119,18 +98,17 @@ string XiString$Pad( // pads a string to length l_target
         { // trim the pad back down to diff
             pad = llDeleteSubString(pad, -l_pad + l_diff, -1);
         }
-        if (align == XISTRING_PAD_ALIGN_CENTER)
+        if (align == XISTRING$PAD_ALIGN_CENTER)
         { // center align
             if (l_diff == 1) src += llGetSubString(pad, 0, 0);
             else src = llGetSubString(pad, 0, (l_diff / 2) - 1) + src + llGetSubString(pad, 0, (l_diff - (l_diff / 2)) - 1);
         }
-        else if (align == XISTRING_PAD_ALIGN_RIGHT) src = pad + src; // right align
+        else if (align == XISTRING$PAD_ALIGN_RIGHT) src = pad + src; // right align
         else src += pad; // left align
     }
     return src; // return src as-modified
 }
 
-#define XiString$MultiByteUnit(...) _XiString_MultiByteUnit( __VA_ARGS__ )
 string XiString$MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
 	integer bytes
 	)
@@ -144,7 +122,6 @@ string XiString$MultiByteUnit( // appends the SI prefix to a specified number of
     return (string)bytes + llList2String(["", "K", "M", "G"], mult);
 }
 
-#define XiString$Escape(...) _XiString_Escape( __VA_ARGS__ )
 string XiString$Escape(
     integer f, // filter string flag
     string x
@@ -152,12 +129,12 @@ string XiString$Escape(
 {
     string y;
     string e;
-    if (f & XISTRING_ESCAPE_FILTER_REGEX)
+    if (f & XISTRING$ESCAPE_FILTER_REGEX)
     {
         y = "^$*+?.()|{}[]\\"; // note that \\ must be the last entry, otherwise previously escaped characters will be double-escaped
         e = "\\"; // regex escaped with single backwards slash
     }
-    if (f & XISTRING_ESCAPE_REVERSE)
+    if (f & XISTRING$ESCAPE_REVERSE)
     {
         // TODO: unescape
     }
@@ -170,7 +147,6 @@ string XiString$Escape(
     return x;
 }
 
-#define XiString$ParseCfgLine(...) _XiString_ParseCfgLine( __VA_ARGS__ )
 list XiString$ParseCfgLine( // parses a notecard line using a basic configuration markup format
     string s
     )
@@ -186,7 +162,6 @@ list XiString$ParseCfgLine( // parses a notecard line using a basic configuratio
     return [n, v];
 }
 
-#define XiString$FindChars(...) _XiString_FindChars( __VA_ARGS__ )
 integer XiString$FindChars( // finds the first instance of any of the specified characters, used for user input validation
     string in,
     string chars

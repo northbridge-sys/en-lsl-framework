@@ -30,7 +30,7 @@
     used to load one or more scripts dynamically into the newly rezzed object.
 */
 
-#define XI_ALL_ENABLE_XILOG_TRACE
+#define XI$ALL_TRACE
 
 #include "xi-lsl-framework/main.lsl"
 
@@ -43,7 +43,7 @@ default
 
         // force temp off
         llSetLinkPrimitiveParamsFast( LINK_SET, [ PRIM_TEMP_ON_REZ, FALSE ] );
-        XiLog( WARN, "Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
+        XiLog$( WARN, "Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
     }
 
     on_rez( integer param )

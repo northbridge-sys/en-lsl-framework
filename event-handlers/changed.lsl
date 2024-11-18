@@ -29,36 +29,47 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_CHANGED
+		#define XI$CHANGED
 		Xi$changed( integer change )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_CHANGED_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
 	changed( integer change )
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_CHANGED_ENABLE_XILOG_TRACE
+        #ifdef XI$CHANGED_TRACE
             XiLog$TraceParams( "changed", [ "change" ], [ XiInteger$ElemBitfield( change ) ] );
         #endif
 
-        // check if any Xi libraries want to intercept this event
-        if ( change & CHANGED_LINK )
-        {
-			_XiChat$RefreshLinkset();
-            #ifdef XILSD_ENABLE_UUID_HEADER
-                _XiLSD$CheckUUID();
-            #endif
-			_XiObject$UpdateUUIDs();
-        }
+        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+            if ( change & CHANGED_LINK )
+            {
+        #endif
+
+                #ifdef XICHAT$ENABLE
+                    _XiChat$RefreshLinkset();
+                #endif
+                #ifdef XILSD$ENABLE_UUID_HEADER
+                    _XiLSD$CheckUUID();
+                #endif
+                #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+                    _XiObject$UpdateUUIDs();
+                #endif
+
+        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+            }
+        #endif
 
         // pass to user-defined function if requested
-		#ifdef XI_ATTACH
+		#ifdef XI$ATTACH
 			Xi$changed( change );
 		#endif
+
+#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
 	}
+#endif

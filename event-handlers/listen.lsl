@@ -29,30 +29,32 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_LISTEN
+		#define XI$LISTEN
 		Xi$listen( integer channel, string name, key id, string message )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_LISTEN_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$LISTEN_TRACE || defined XI$LISTEN || defined XICHAT$ENABLE
 	listen( integer channel, string name, key id, string message )
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_LISTEN_ENABLE_XILOG_TRACE
+        #ifdef XI$LISTEN_TRACE
             XiLog$TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, XiString$Elem( name ), XiObject$Elem( id ), XiString$Elem( message ) ] );
         #endif
 
-        // check if any Xi libraries want to intercept this event
-		if ( _XiChat$Process( channel, name, id, message ) ) return; // valid XiChat message
-        // non-XiChat message
-
+        #ifdef XICHAT$ENABLE
+		    if ( _XiChat$Process( channel, name, id, message ) ) return; // valid XiChat message
+        #endif
+        
         // pass to user-defined function if requested
-		#ifdef XI_LISTEN
+		#ifdef XI$LISTEN
 			Xi$listen( channel, name, id, message );
 		#endif
+
+#if defined XI$LISTEN_TRACE || defined XI$LISTEN || defined XICHAT$ENABLE
 	}
+#endif

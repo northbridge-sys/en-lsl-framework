@@ -37,27 +37,29 @@
 */
 
 // each major revision of XI increments this value
-#define XI_LIBRARIES_LOADED 1
+#define XI$LIBRARIES_LOADED 1
+
+// definition files, since we are at the top of the script
+#include "xi-lsl-framework/event-handlers/_definitions.lsl"
+#include "xi-lsl-framework/libraries/_definitions.lsl"
 
 // libraries
-
-// these libraries must be defined early due to preprocessor flags being used in other libraries
-#include "xi-lsl-framework/libraries/XiInteger.lsl"
-#include "xi-lsl-framework/libraries/XiFloat.lsl"
-#include "xi-lsl-framework/libraries/XiVector.lsl"
-#include "xi-lsl-framework/libraries/XiRotation.lsl"
-#include "xi-lsl-framework/libraries/XiString.lsl"
-#include "xi-lsl-framework/libraries/XiKey.lsl"
-#include "xi-lsl-framework/libraries/XiList.lsl"
+#include "xi-lsl-framework/libraries/XiAvatar.lsl"
 #include "xi-lsl-framework/libraries/XiChat.lsl"
-#include "xi-lsl-framework/libraries/XiLog.lsl"
-#include "xi-lsl-framework/libraries/XiObject.lsl"
-#include "xi-lsl-framework/libraries/XiInventory.lsl"
-
-// these libraries are not dependencies of any others
+#include "xi-lsl-framework/libraries/XiDate.lsl"
+#include "xi-lsl-framework/libraries/XiFloat.lsl"
 #include "xi-lsl-framework/libraries/XiHTTP.lsl"
 #include "xi-lsl-framework/libraries/XiIMP.lsl"
+#include "xi-lsl-framework/libraries/XiInteger.lsl"
+#include "xi-lsl-framework/libraries/XiInventory.lsl"
+#include "xi-lsl-framework/libraries/XiKey.lsl"
 #include "xi-lsl-framework/libraries/XiKVP.lsl"
+#include "xi-lsl-framework/libraries/XiList.lsl"
+#include "xi-lsl-framework/libraries/XiLog.lsl"
 #include "xi-lsl-framework/libraries/XiLSD.lsl"
+#include "xi-lsl-framework/libraries/XiObject.lsl"
+#include "xi-lsl-framework/libraries/XiRotation.lsl"
+#include "xi-lsl-framework/libraries/XiString.lsl"
 #include "xi-lsl-framework/libraries/XiTimer.lsl"
 #include "xi-lsl-framework/libraries/XiTest.lsl"
+#include "xi-lsl-framework/libraries/XiVector.lsl"

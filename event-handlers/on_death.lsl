@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_ON_DEATH
+		#define XI$ON_DEATH
 		Xi$on_death()
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ON_DEATH
+#ifdef XI$ON_DEATH
 	on_death()
 	{
         // event unused, so the only reason to define it is to log it

@@ -29,29 +29,33 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_TIMER
+		#define XI$TIMER
 		Xi$timer(  )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_TIMER_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$TIMER_TRACE || XI$TIMER || XITIMER$ENABLE
 	timer()
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_TIMER_ENABLE_XILOG_TRACE
+        #ifdef XI$TIMER_TRACE
             XiLog$TraceParams( "timer", [], [] );
         #endif
 
-        // forward all timers directly to XiTimer
-        _XiTimer$Check();
+        // forward timers directly to XiTimer if enabled
+        #ifdef XITIMER$ENABLE
+            _XiTimer$Check();
+        #endif
 
         // pass to user-defined function if requested
-		#ifdef XI_TIMER
+		#ifdef XI$TIMER
 			Xi$timer();
 		#endif
+
+#if defined XI$TIMER_TRACE || XI$TIMER || XITIMER$ENABLE
 	}
+#endif

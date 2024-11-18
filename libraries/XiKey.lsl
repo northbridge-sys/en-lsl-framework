@@ -29,18 +29,13 @@
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIKEY_ENABLE_XILOG_TRACE
-#endif
 
 // ==
 // == functions
 // ==
 
-#define XiKey$Is(...) _XiKey_Is( __VA_ARGS__ )
 integer XiKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
     string k
     )
@@ -49,7 +44,6 @@ integer XiKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the
     return k == NULL_KEY;
 }
 
-#define XiKey$IsNotNull(...) _XiKey_IsNotNull( __VA_ARGS__ )
 integer XiKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     string k
     )
@@ -58,7 +52,6 @@ integer XiKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     return 0;
 }
 
-#define XiKey$IsNull(...) _XiKey_IsNull( __VA_ARGS__ )
 integer XiKey$IsNull( // returns 1 if is NULL_KEY
     string k
     )
@@ -66,7 +59,6 @@ integer XiKey$IsNull( // returns 1 if is NULL_KEY
     return k == NULL_KEY;
 }
 
-#define XiKey$IsInRegion(...) _XiKey_IsInRegion( __VA_ARGS__ )
 integer XiKey$IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
     string k
     )
@@ -75,7 +67,6 @@ integer XiKey$IsInRegion( // returns 1 if is a key of something that exists IN T
     return XiKey$IsPrimInRegion( k );
 }
 
-#define XiKey$IsAvatarInRegion(...) _XiKey_IsAvatarInRegion( __VA_ARGS__ )
 integer XiKey$IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
     string k
 )
@@ -83,7 +74,6 @@ integer XiKey$IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGIO
     return llGetAgentSize() != ZERO_VECTOR;
 }
 
-#define XiKey$IsPrimInRegion(...) _XiKey_IsPrimInRegion( __VA_ARGS__ )
 integer XiKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     string k
     )
@@ -94,7 +84,6 @@ integer XiKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     return 1; // must be a prim
 }
 
-#define XiKey$Strip(...) _XiKey_Strip( __VA_ARGS__ )
 string XiKey$Strip( // strips dashes out of a key
     string k
     )
@@ -103,7 +92,6 @@ string XiKey$Strip( // strips dashes out of a key
     return llReplaceSubString( k, "-", "", 0 ); // valid key, so strip dashes
 }
 
-#define XiKey$Unstrip(...) _XiKey_Unstrip( __VA_ARGS__ )
 string XiKey$Unstrip( // adds dashes into a 32-character hex string to turn it into a key
     string k
     )
@@ -118,7 +106,6 @@ string XiKey$Unstrip( // adds dashes into a 32-character hex string to turn it i
         llGetSubString(k, 20, 31);
 }
 
-#define XiKey$Compress(...) _XiKey_Compress( __VA_ARGS__ )
 string XiKey$Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
     string k
     )
@@ -131,7 +118,6 @@ string XiKey$Compress( // strips dashes out of a key and encodes it in Base64 fo
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 24, 31))), 0, 5);
 }
 
-#define XiKey$Decompress(...) _XiKey_Decompress( __VA_ARGS__ )
 string XiKey$Decompress( // adds dashes back into a key that was sent through XiKey$Compress(...)
     string k
     )

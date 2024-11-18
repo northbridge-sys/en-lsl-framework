@@ -29,24 +29,32 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_AT_ROT_TARGET
+		#define XI$AT_ROT_TARGET
 		Xi$at_rot_target( integer handle, rotation target, rotation current )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_AT_ROT_TARGET
+#if defined XI$AT_ROT_TARGET_TRACE || defined XI$AT_ROT_TARGET
 	at_rot_target( integer handle, rotation target, rotation current )
 	{
-        // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
-            handle,
-            XiRotation$Elem( target ),
-            XiRotation$Elem( current )
-        ] );
+#endif
+
+        // log event if requested
+        #ifdef XI$AT_ROT_TARGET_TRACE
+            XiLog$TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
+                handle,
+                XiRotation$Elem( target ),
+                XiRotation$Elem( current )
+            ] );
+        #endif
 
         // event unused, so pass to user-defined function only
-        Xi$at_rot_target( handle, target, current );
+        #ifdef XI$AT_ROT_TARGET
+            Xi$at_rot_target( handle, target, current );
+        #endif
+
+#if defined XI$AT_ROT_TARGET_TRACE || defined XI$AT_ROT_TARGET
 	}
 #endif

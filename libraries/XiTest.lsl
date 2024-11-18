@@ -29,56 +29,13 @@
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XITEST_ENABLE_XILOG_TRACE
-#endif
-
-#ifndef XITEST_PRECISION_FLOAT
-// default exact precision for floats - adjust this in script if desired
-#define XITEST_PRECISION_FLOAT 0.0
-#endif
-
-#ifndef XITEST_PRECISION_VECTOR
-// default exact precision for vectors - adjust this in script if desired
-#define XITEST_PRECISION_VECTOR 0.0
-#endif
-
-#ifndef XITEST_PRECISION_ROTATION
-// default exact precision for vectors - adjust this in script if desired
-#define XITEST_PRECISION_ROTATION 0.0
-#endif
-
-// ==
-// == preprocessor flags
-// ==
-
-
-
-// ==
-// == preprocessor constants
-// ==
-
-#define INTEGER 0
-#define FLOAT 1
-#define VECTOR 2
-#define ROTATION 3
-#define STRING 4
-#define KEY 5
-#define LIST 6
-
-#define XITEST_EQUAL 0
-#define XITEST_NOT_EQUAL 1
-#define XITEST_GREATER 2
-#define XITEST_LESS 3
 
 // ==
 // == functions
 // ==
 
-#define XiTest$Assert(...) _XiTest_( __VA_ARGS__ )
 list XiTest$Assert( // unit test
     integer l, // loglevel (FATAL stops script, all others get logged, 0 to not log)
     integer n, // line
@@ -89,13 +46,13 @@ list XiTest$Assert( // unit test
     string bv // value B value
     )
 {
-    #ifndef XITEST_ENABLE
+    #ifndef XITEST$ENABLE
         return []; // XiTest not enabled
     #else
         list r = _XiTest$Check( at, av, m, bt, bv );
         if ( r == [] ) return []; // tested ok
         string e = llList2String( r, -1 ); // error type
-        string f = "XiTest$Assert( " + XiLog$Level( l ) + ", " + (string)n + ", " + _XiTest$Type( at ) + ", \"" + av + "\", XITEST_" + _XiTest$Method( m ) + ", " + _XiTest$Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
+        string f = "XiTest$Assert( " + XiLog$Level( l ) + ", " + (string)n + ", " + _XiTest$Type( at ) + ", \"" + av + "\", XITEST$" + _XiTest$Method( m ) + ", " + _XiTest$Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
         // generate extended failure reason if error type is not "!"
         if ( e == "!Match") f = " due to input parameter type mismatch";
         else if ( e == "!Type" ) f = " due to incompatible input types for this method";
@@ -105,11 +62,10 @@ list XiTest$Assert( // unit test
         f += " at line " + (string)n + ".";
         // log error
         if ( l == FATAL ) XiLog$Fatal( f );
-        else XiLog( l, f );
+        else XiLog$( l, f );
     #endif
 }
 
-#define XiTest$Type(...) _XiTest_Type( __VA_ARGS__ )
 string XiTest$Type( // converts integer type number into string representation
     integer t
     )
@@ -126,7 +82,6 @@ string XiTest$Type( // converts integer type number into string representation
         ], t);
 }
 
-#define XiTest$Method(...) _XiTest_Method( __VA_ARGS__ )
 string XiTest$Method( // converts integer method number into string representation
     integer m
     )
@@ -140,7 +95,6 @@ string XiTest$Method( // converts integer method number into string representati
         ], m);
 }
 
-#define _XiTest$Check(...) _XiTest_Check( __VA_ARGS__ )
 list _XiTest$Check( // internal function called for each test
     integer at, // value A type
     string av, // value A value
@@ -178,7 +132,7 @@ list _XiTest$Check( // internal function called for each test
         // TODO
     }
     if ( f != "" ) return [ at, av, m, bt, bv, f ]; // not ok
-    if ( m == XITEST_EQUAL || m == XITEST_NOT_EQUAL )
+    if ( m == XITEST$EQUAL || m == XITEST$NOT_EQUAL )
     {
         if ( at == INTEGER )
         {
@@ -186,23 +140,23 @@ list _XiTest$Check( // internal function called for each test
         }
         if ( at == FLOAT )
         {
-            if ( llFabs( (float)av - (float)bv ) <= XITEST_PRECISION_FLOAT ) f = "!";
+            if ( llFabs( (float)av - (float)bv ) <= XITEST$PRECISION_FLOAT ) f = "!";
         }
         if ( at == VECTOR )
         {
-            if ( llVecDist( (vector)av, (vector)bv ) <= XITEST_PRECISION_VECTOR ) f = "!";
+            if ( llVecDist( (vector)av, (vector)bv ) <= XITEST$PRECISION_VECTOR ) f = "!";
         }
         if ( at == ROTATION )
         {
-            if ( llVecDist( llRot2Euler( (rotation)av ), llRot2Euler( (rotation)bv ) ) <= XITEST_PRECISION_ROTATION ) f = "!";
+            if ( llVecDist( llRot2Euler( (rotation)av ), llRot2Euler( (rotation)bv ) ) <= XITEST$PRECISION_ROTATION ) f = "!";
         }
         if ( at == STRING || at == KEY || at == LIST )
         {
             if ( av != bv ) f = "!";
         }
-        if ( m == XITEST_NOT_EQUAL ) f = XiString$Bool( (f == ""), "!" ); // invert result
+        if ( m == XITEST$NOT_EQUAL ) f = XiString$Bool( (f == ""), "!" ); // invert result
     }
-    else if ( m == XITEST_GREATER )
+    else if ( m == XITEST$GREATER )
     {
         if ( at == INTEGER )
         {
@@ -210,19 +164,19 @@ list _XiTest$Check( // internal function called for each test
         }
         if ( at == FLOAT )
         {
-            if ( (float)av + XITEST_PRECISION_FLOAT <= (float)bv ) f = "!";
+            if ( (float)av + XITEST$PRECISION_FLOAT <= (float)bv ) f = "!";
         }
         if ( at == VECTOR )
         {
-            if ( llVecMag( (vector)av ) + XITEST_PRECISION_VECTOR <= llVecMag( (vector)bv ) ) f = "!";
+            if ( llVecMag( (vector)av ) + XITEST$PRECISION_VECTOR <= llVecMag( (vector)bv ) ) f = "!";
         }
         if ( at == ROTATION )
         {
-            if ( llVecMag( llRot2Euler( (rotation)av ) ) + XITEST_PRECISION_ROTATION <= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
+            if ( llVecMag( llRot2Euler( (rotation)av ) ) + XITEST$PRECISION_ROTATION <= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
         }
         if ( at == STRING || at == KEY || at == LIST ) f = "!Type";
     }
-    else if ( m == XITEST_LESS )
+    else if ( m == XITEST$LESS )
     {
         if ( at == INTEGER )
         {
@@ -230,15 +184,15 @@ list _XiTest$Check( // internal function called for each test
         }
         if ( at == FLOAT )
         {
-            if ( (float)av + XITEST_PRECISION_FLOAT >= (float)bv ) f = "!";
+            if ( (float)av + XITEST$PRECISION_FLOAT >= (float)bv ) f = "!";
         }
         if ( at == VECTOR )
         {
-            if ( llVecMag( (vector)av ) - XITEST_PRECISION_VECTOR >= llVecMag( (vector)bv ) ) f = "!";
+            if ( llVecMag( (vector)av ) - XITEST$PRECISION_VECTOR >= llVecMag( (vector)bv ) ) f = "!";
         }
         if ( at == ROTATION )
         {
-            if ( llVecMag( llRot2Euler( (rotation)av ) ) - XITEST_PRECISION_ROTATION >= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
+            if ( llVecMag( llRot2Euler( (rotation)av ) ) - XITEST$PRECISION_ROTATION >= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
         }
         if ( at == STRING || at == KEY || at == LIST ) f = "!Type";
     }
@@ -247,7 +201,6 @@ list _XiTest$Check( // internal function called for each test
     return []; // ok
 }
 
-#define XiTest$StopOnFail(...) _XiTest_StopOnFail( __VA_ARGS__ )
 XiTest$StopOnFail(
     list a // results of XiTest$Assert
     )

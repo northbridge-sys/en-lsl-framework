@@ -29,31 +29,33 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_DATASERVER
+		#define XI$DATASERVER
 		Xi$dataserver( key query, string data )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_DATASERVER_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$DATASERVER_TRACE || defined XI$DATASERVER || defined XIINVENTORY$ENABLE_NC
 	dataserver( key query, string data )
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_DATASERVER_ENABLE_XILOG_TRACE
+        #ifdef XI$DATASERVER_TRACE
             XiLog$TraceParams( "dataserver", [ "query", "data" ], [ XiString$Elem( query ), XiString$Elem( data ) ] );
         #endif
 
         // check if any Xi libraries want to intercept this event
-        #ifdef XIINVENTORY_ENABLE_NC
-            if ( query == XIINVENTORY_NC_K ) _XiInventory$NCParse( data ); // XiInventory$NCRead(...) response
+        #ifdef XIINVENTORY$ENABLE_NC
+            if ( query == XIINVENTORY$NC_K ) _XiInventory$NCParse( data ); // XiInventory$NCRead(...) response
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI_DATASERVER
+		#ifdef XI$DATASERVER
 			Xi$dataserver( query, data );
 		#endif
+
+#if defined XI$DATASERVER_TRACE || defined XI$DATASERVER || defined XIINVENTORY$ENABLE_NC
 	}
+#endif

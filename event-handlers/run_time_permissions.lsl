@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_RUN_TIME_PERMISSIONS
+		#define XI$RUN_TIME_PERMISSIONS
 		Xi$run_time_permissions( integer perm )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_RUN_TIME_PERMISSIONS
+#ifdef XI$RUN_TIME_PERMISSIONS
 	run_time_permissions( integer perm )
 	{
         // event unused, so the only reason to define it is to log it

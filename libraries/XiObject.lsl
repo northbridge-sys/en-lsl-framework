@@ -25,44 +25,21 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This script exposes the XiObject$* functions and XIOBJECT_* globals, which allows code
+    This script exposes the XiObject$* functions and XIOBJECT$* globals, which allows code
     to monitor metadata about the prim and linkset that the script is in, and get
     information about other prims.
 */
 
 // ==
-// == preprocessor options
-// ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIOBJECT_ENABLE_XILOG_TRACE
-#endif
-
-#ifndef XIOBJECT_LIMIT_SELF
-#define XIOBJECT_LIMIT_SELF 1
-#endif
-
-// ==
-// == preprocessor flags
-// ==
-
-#define XIOBJECT_PROFILE_EXISTS 0x80000000
-#define XIOBJECT_PROFILE_PHYSICS 0x1
-#define XIOBJECT_PROFILE_PHANTOM 0x2
-#define XIOBJECT_PROFILE_TEMP_ON_REZ 0x4
-#define XIOBJECT_PROFILE_TEMP_ATTACHED 0x8
-
-// ==
 // == globals
 // ==
 
-list XIOBJECT_UUIDS_SELF;
+list _XIOBJECT_UUIDS_SELF;
 
 // ==
 // == functions
 // ==
 
-#define XiObject$Elem(...) _XiObject_Elem( __VA_ARGS__ )
 string XiObject$Elem( string id )
 {
     list details = llGetObjectDetails( id, [ OBJECT_NAME, OBJECT_POS ] );
@@ -70,22 +47,26 @@ string XiObject$Elem( string id )
     return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + XiVector$ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
 }
 
-#define XiObject$Parent(...) _XiObject_Parent( __VA_ARGS__ )
+string XiObject$Self( // returns either own object's current UUID or one of its previous UUIDs
+    integer last
+    )
+{
+    return llList2String( _XIOBJECT_UUIDS_SELF, last );
+}
+
 string XiObject$Parent() // gets UUID of entity that rezzed the object
 {
     return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
 }
 
-#define XiObject$StopIfOwnerRezzed(...) _XiObject_StopIfOwnerRezzed( __VA_ARGS__ )
 XiObject$StopIfOwnerRezzed()
-{ // TODO: move this to a macro that runs automatically on_rez
+{ // TODO: move this to a definition macro that runs automatically on_rez
     if ( XiObject$Parent() == (string)llGetKey() ) XiLog$Fatal( "XiObject$StopIfOwnerRezzed()" );
 }
 
-#define XiObject$ClosestLink(...) _XiObject_ClosestLink( __VA_ARGS__ )
 integer XiObject$ClosestLink(string name)
 { // finds the linknum of the closest prim in the linkset with the specified name
-    #ifdef XIOBJECT_ENABLE_XILOG_TRACE
+    #ifdef XIOBJECT$TRACE
         XiLog$TraceParams("XiObject$ClosestLink", ["name"], [
             XiString$Elem(name)
             ]);
@@ -110,32 +91,30 @@ integer XiObject$ClosestLink(string name)
     return 0; // no match
 }
 
-#define XiObject$Profile(...) _XiObject_Profile( __VA_ARGS__ )
 integer XiObject$Profile( // returns various bitwise flags for the state of an object
     string k
     )
 {
     list l = llGetObjectDetails(k, [OBJECT_PHYSICS, OBJECT_PHANTOM, OBJECT_TEMP_ON_REZ, OBJECT_TEMP_ATTACHED]);
     if (l == []) return 0;
-    integer f = XIOBJECT_PROFILE_EXISTS;
-    if ((integer)llList2String(l, 0)) f += XIOBJECT_PROFILE_PHYSICS;
-    if ((integer)llList2String(l, 1)) f += XIOBJECT_PROFILE_PHANTOM;
-    if ((integer)llList2String(l, 2)) f += XIOBJECT_PROFILE_TEMP_ON_REZ;
-    if ((integer)llList2String(l, 3)) f += XIOBJECT_PROFILE_TEMP_ATTACHED;
+    integer f = XIOBJECT$PROFILE_EXISTS;
+    if ((integer)llList2String(l, 0)) f += XIOBJECT$PROFILE_PHYSICS;
+    if ((integer)llList2String(l, 1)) f += XIOBJECT$PROFILE_PHANTOM;
+    if ((integer)llList2String(l, 2)) f += XIOBJECT$PROFILE_TEMP_ON_REZ;
+    if ((integer)llList2String(l, 3)) f += XIOBJECT$PROFILE_TEMP_ATTACHED;
     return f;
 }
 
-#define _XiObject$UpdateUUIDs(...) _XiObject_UpdateUUIDs( __VA_ARGS__ )
 _XiObject$UpdateUUIDs()
 {
-    #ifdef XIOBJECT_ENABLE_XILOG_TRACE
+    #ifdef XIOBJECT$TRACE
         XiLog$TraceParams("_XiObject$UpdateUUIDs", [], []);
     #endif
-	if (XIOBJECT_LIMIT_SELF)
+	if (XIOBJECT$LIMIT_SELF)
 	{ // check own UUID
-		if ((string)llGetKey() != llList2String(XIOBJECT_UUIDS_SELF, 0))
+		if ((string)llGetKey() != llList2String(_XIOBJECT_UUIDS_SELF, 0))
 		{ // key change
-			XIOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + XIOBJECT_UUIDS_SELF, 0, XIOBJECT_LIMIT_SELF - 1);
+			_XIOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _XIOBJECT_UUIDS_SELF, 0, XIOBJECT$LIMIT_SELF - 1);
 		}
 	}
 }

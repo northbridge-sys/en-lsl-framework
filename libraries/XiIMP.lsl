@@ -29,25 +29,16 @@
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIIMP_ENABLE_XILOG_TRACE
-#endif
-
-#ifndef XIIMP_LINK_MESSAGE_SCOPE
-#define XIIMP_LINK_MESSAGE_SCOPE LINK_THIS
-#endif
 
 // ==
 // == functions
 // ==
 
-#define XiIMP$Send(...) _XiIMP_Send( __VA_ARGS__ )
 XiIMP$Send( // sends an IMP message
     string prim,        // the TARGET prim, valid values:
-                            //  - "" (empty string): send via llMessageLinked(XIIMP_LINK_MESSAGE_SCOPE, ...)
+                            //  - "" (empty string): send via llMessageLinked(XIIMP$LINK_MESSAGE_SCOPE, ...)
                             //  - (integer cast as string): send via llMessageLinked(...) to linknum or LINK_* constant
                             //  - NULL_KEY: send via XiChat to all prims in the region listening to target domain
                             //  - (any other UUID): send via XiChat to prim with UUID, as long as it is listening to target domain
@@ -60,7 +51,7 @@ XiIMP$Send( // sends an IMP message
     string data         // the message data
     )
 {
-    #ifdef XIIMP_ENABLE_XILOG_TRACE
+    #ifdef XIIMP$TRACE
         XiLog$TraceParams("XiIMP$Send", ["prim", "target", "status", "ident", "params", "data"], [
             XiObject$Elem(prim),
             XiString$Elem(target),
@@ -72,7 +63,7 @@ XiIMP$Send( // sends an IMP message
     #endif
     string message = "\n" + llGetScriptName() + "\n" + status + "\n" + llDumpList2String(params, "\n");
     integer enable;
-    #ifdef XIIMP_ENABLE_XICHAT
+    #ifdef XIIMP$ENABLE_XICHAT
         enable = 1;
         if (XiKey$Is(prim))
         { // XiChat via specified URL and domain
@@ -80,23 +71,22 @@ XiIMP$Send( // sends an IMP message
             return;
         }
     #endif
-    #ifdef XIIMP_ENABLE_LINK_MESSAGE
+    #ifdef XIIMP$ENABLE_LINK_MESSAGE
         enable = 1;
         integer linknum = (integer)prim;
-        if (prim == "") linknum = XIIMP_LINK_MESSAGE_SCOPE; // blank prim uses default scope
+        if (prim == "") linknum = XIIMP$LINK_MESSAGE_SCOPE; // blank prim uses default scope
         if (linknum || prim == "0") // either prim is literally "0", or we have found a valid linknum, so send to it
         { // llMessageLinked via specified linknum
             llMessageLinked(linknum, ident, target + message, data); // note that we can add the target to the front of the message in this case
             return;
         }
     #endif
-    #ifndef XIIMP_ENABLE_LINK_MESSAGE
-        // only add this code if XIIMP_ENABLE_LINK_MESSAGE is not defined (to save memory)
-        if (!enable) XiLog(WARN, "XIIMP_ENABLE_* not defined.");
+    #ifndef XIIMP$ENABLE_LINK_MESSAGE
+        // only add this code if XIIMP$ENABLE_LINK_MESSAGE is not defined (to save memory)
+        if (!enable) XiLog$(WARN, "XIIMP$ENABLE_* not defined.");
     #endif
 }
 
-#define _XiIMP$Process(...) _XiIMP_Process( __VA_ARGS__ )
 integer _XiIMP$Process(
     string prim,
     integer linknum,
@@ -105,7 +95,7 @@ integer _XiIMP$Process(
     key id
     )
 {
-    #ifdef XIIMP_ENABLE_XILOG_TRACE
+    #ifdef XIIMP$TRACE
         XiLog$TraceParams("_XiIMP$Process", ["prim", "linknum", "num", "message", "id"], [
             XiObject$Elem(prim),
             linknum,
@@ -118,28 +108,30 @@ integer _XiIMP$Process(
     // target, source, status, params
     if (llGetListLength(parts) < 4) return 0; // invalid message
     if (prim == (string)llGetKey() && llList2String(parts, 1) == llGetScriptName()) return 1; // discard own feedback message
-    #ifdef XIIMP_ALLOWED_INBOUND_SOURCES
-        // XIIMP_ALLOWED_SOURCES was defined, so use it to filter out messages that don't match the allowed source list
-        if (llListFindList(XIIMP_ALLOWED_INBOUND_SOURCES, [llList2String(parts, 1)]) == -1) return 1; // discard message, not sent from an allowed source
+    #ifdef XIIMP$ALLOWED_INBOUND_SOURCES
+        // XIIMP$ALLOWED_SOURCES was defined, so use it to filter out messages that don't match the allowed source list
+        if (llListFindList(XIIMP$ALLOWED_INBOUND_SOURCES, [llList2String(parts, 1)]) == -1) return 1; // discard message, not sent from an allowed source
     #endif
     list allowed_targets = ["", llGetScriptName()]; // allow messages targeted to "" (all) and this script only
-    #ifdef XIIMP_ALLOWED_INBOUND_TARGETS
-        // XIIMP_ALLOWED_TARGETS was defined, so use it as well
-        allowed_targets += XIIMP_ALLOWED_INBOUND_TARGETS;
+    #ifdef XIIMP$ALLOWED_INBOUND_TARGETS
+        // XIIMP$ALLOWED_TARGETS was defined, so use it as well
+        allowed_targets += XIIMP$ALLOWED_INBOUND_TARGETS;
     #endif
-    #ifndef XIIMP_ALLOWED_INBOUND_TARGETS_ALL
-        // XIIMP_ALLOWED_INBOUND_TARGETS_ALL was not defined (see IMPTap.lsl), so filter out messages that don't match the allowed targets list
+    #ifndef XIIMP$ALLOWED_INBOUND_TARGETS_ALL
+        // XIIMP$ALLOWED_INBOUND_TARGETS_ALL was not defined (see IMPTap.lsl), so filter out messages that don't match the allowed targets list
         if (llListFindList(allowed_targets, [llList2String(parts, 0)]) == -1) return 0; // discard message, not targeted to us
     #endif
-    Xi$imp_message(
-        prim, // SOURCE prim
-        llList2String(parts, 0), // target
-        llList2String(parts, 2), // status
-        num, // IMP message ident (link_message integer)
-        XiList$Empty(llDeleteSubList(parts, 0, 2)), // params
-        id, // IMP data (link_message key)
-        linknum,
-        llList2String(parts, 1) // source
-        );
+    #ifdef XIIMP$ENABLE
+        Xi$imp_message(
+            prim, // SOURCE prim
+            llList2String(parts, 0), // target
+            llList2String(parts, 2), // status
+            num, // IMP message ident (link_message integer)
+            XiList$Empty(llDeleteSubList(parts, 0, 2)), // params
+            id, // IMP data (link_message key)
+            linknum,
+            llList2String(parts, 1) // source
+            );
+    #endif
     return 1;
 }

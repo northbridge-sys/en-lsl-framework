@@ -31,75 +31,63 @@
 */
 
 // ==
-// == preprocessor options
-// ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIKVP_ENABLE_XILOG_TRACE
-#endif
-
-// ==
 // == globals
 // ==
 
 // these are done as separate lists for speed, the memory difference is negligible
-list XIKVP_NAMES;
-list XIKVP_DATA;
+list _XIKVP_NAMES;
+list _XIKVP_DATA;
 
 // ==
 // == functions
 // ==
 
-#define XiKVP$Exists(...) _XiKVP_Exists( __VA_ARGS__ )
 integer XiKVP$Exists(string name)
 { // checks if a KVP pair eXists by name
-    #ifdef XIKVP_ENABLE_XILOG_TRACE
+    #ifdef XIKVP$TRACE
         XiLog$TraceParams("XiKVP$Exists", ["name"], [
             XiString$Elem(name)
             ]);
     #endif
-	return llListFindList(XIKVP_NAMES, [name]) != -1;
+	return llListFindList(_XIKVP_NAMES, [name]) != -1;
 }
 
-#define XiKVP$Write(...) _XiKVP_Write( __VA_ARGS__ )
 integer XiKVP$Write(string name, string data)
 { // writes a KVP pair value
-    #ifdef XIKVP_ENABLE_XILOG_TRACE
+    #ifdef XIKVP$TRACE
         XiLog$TraceParams("XiKVP$Write", ["name", "data"], [
             XiString$Elem(name),
             XiString$Elem(data)
             ]);
     #endif
-	integer i = llListFindList(XIKVP_NAMES, [name]);
+	integer i = llListFindList(_XIKVP_NAMES, [name]);
 	if (i != -1) XiKVP$Delete(name); // delete value, then reappend
-	XIKVP_NAMES += [name];
-	XIKVP_DATA += [data];
+	_XIKVP_NAMES += [name];
+	_XIKVP_DATA += [data];
 	return 1;
 }
 
-#define XiKVP$Read(...) _XiKVP_Read( __VA_ARGS__ )
 string XiKVP$Read(string name)
 { // reads a KVP pair value
-    #ifdef XIKVP_ENABLE_XILOG_TRACE
+    #ifdef XIKVP$TRACE
         XiLog$TraceParams("XiKVP$Read", ["name"], [
             XiString$Elem(name)
             ]);
     #endif
-	integer i = llListFindList(XIKVP_NAMES, [name]);
+	integer i = llListFindList(_XIKVP_NAMES, [name]);
 	if (i == -1) return ""; // doesn't eXist
-	return llList2String(XIKVP_DATA, i);
+	return llList2String(_XIKVP_DATA, i);
 }
 
-#define XiKVP$Delete(...) _XiKVP_Delete( __VA_ARGS__ )
 XiKVP$Delete(string name)
 { // deletes a KVP pair
-    #ifdef XIKVP_ENABLE_XILOG_TRACE
+    #ifdef XIKVP$TRACE
         XiLog$TraceParams("XiKVP$Delete", ["name"], [
             XiString$Elem(name)
             ]);
     #endif
-	integer i = llListFindList(XIKVP_NAMES, [name]);
+	integer i = llListFindList(_XIKVP_NAMES, [name]);
 	if (i == -1) return; // doesn't eXist
-	XIKVP_NAMES = llDeleteSubList(XIKVP_NAMES, i, i);
-	XIKVP_DATA = llDeleteSubList(XIKVP_DATA, i, i);
+	_XIKVP_NAMES = llDeleteSubList(_XIKVP_NAMES, i, i);
+	_XIKVP_DATA = llDeleteSubList(_XIKVP_DATA, i, i);
 }

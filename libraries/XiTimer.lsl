@@ -29,23 +29,10 @@
 */
 
 // ==
-// == preprocessor options
-// ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XITIMER_ENABLE_XILOG_TRACE
-#endif
-
-#ifndef XITIMER_MINIMUM_INTERVAL
-#define XITIMER_MINIMUM_INTERVAL 0.1
-#endif
-
-// ==
 // == globals
 // ==
 
-
-#ifdef XITIMER_DISABLE_MULTIPLE
+#ifdef XITIMER$DISABLE_MULTIPLE
     list _XITIMER_QUEUE; // id, callback, length
     #define _XITIMER_QUEUE_STRIDE 3
 #else
@@ -57,14 +44,13 @@
 // == functions
 // ==
 
-#define XiTimer$Start(...) _XiTimer_Start( __VA_ARGS__ )
 string XiTimer$Start( // adds a timer
     float interval,
     integer periodic,
     string callback
     )
 {
-    #ifdef XITIMER_ENABLE_XILOG_TRACE
+    #ifdef XITIMER$TRACE
         XiLog$TraceParams("XiTimer$Start", [ "interval", "periodic", "callback" ], [
             interval,
             periodic,
@@ -74,9 +60,9 @@ string XiTimer$Start( // adds a timer
 
     // check inputs
     if ( interval < 0.00001 ) return NULL_KEY; // invalid interval
-    if ( interval < XITIMER_MINIMUM_INTERVAL ) interval = XITIMER_MINIMUM_INTERVAL; // clamp to minimum interval
+    if ( interval < XITIMER$MINIMUM_INTERVAL ) interval = XITIMER$MINIMUM_INTERVAL; // clamp to minimum interval
     string id = llGenerateKey();
-    #ifdef XITIMER_DISABLE_MULTIPLE
+    #ifdef XITIMER$DISABLE_MULTIPLE
         _XITIMER_QUEUE = [ // multiple timers not enabled, so set queue
             id,
             callback,
@@ -95,17 +81,16 @@ string XiTimer$Start( // adds a timer
     return id;
 }
 
-#define XiTimer$Cancel(...) _XiTimer_Cancel( __VA_ARGS__ )
 integer XiTimer$Cancel( // removes a timer
-    string id // required unless XITIMER_DISABLE_MULTIPLE is set
+    string id // required unless XITIMER$DISABLE_MULTIPLE is set
     )
 {
-    #ifdef XITIMER_ENABLE_XILOG_TRACE
+    #ifdef XITIMER$TRACE
         XiLog$TraceParams("XiTimer$Cancel", [ "id" ], [
             XiString$Elem( id )
             ]);
     #endif
-    #ifdef XITIMER_DISABLE_MULTIPLE
+    #ifdef XITIMER$DISABLE_MULTIPLE
         _XITIMER_QUEUE = []; // we only have one timer, so cancel it
         llSetTimerEvent( 0.0 );
     #else
@@ -119,12 +104,11 @@ integer XiTimer$Cancel( // removes a timer
     return 1;
 }
 
-#define XiTimer$Find(...) _XiTimer_Find( __VA_ARGS__ )
 string XiTimer$Find( // finds a timer by callback
     string callback
     )
 {
-    #ifdef XITIMER_ENABLE_XILOG_TRACE
+    #ifdef XITIMER$TRACE
         XiLog$TraceParams("XiTimer$Find", [ "callback" ], [
             XiString$Elem( callback )
             ]);
@@ -134,10 +118,9 @@ string XiTimer$Find( // finds a timer by callback
     return llList2String( XIMIT_TIMERS, i * XIMIT_TIMERS_STRIDE );
 }
 
-#define _XiTimer$Check(...) _XiTimer_Check( __VA_ARGS__ )
 _XiTimer$Check() // checks the MIT timers to see if any are triggered
 {
-    #ifdef XITIMER_ENABLE_XILOG_TRACE
+    #ifdef XITIMER$TRACE
         XiLog$TraceParams("_XiTimer$Check", [], []);
     #endif
     llSetTimerEvent(0.0);
@@ -161,7 +144,7 @@ _XiTimer$Check() // checks the MIT timers to see if any are triggered
             integer t_length = (integer)llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE + 2 );
             integer t_trigger = (integer)llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE + 3 );
             integer remain = XiDate$MSAdd( t_trigger, -now );
-            if ( remain * 0.001 < XITIMER_MINIMUM_INTERVAL )
+            if ( remain * 0.001 < XITIMER$MINIMUM_INTERVAL )
             { // timer triggered
                 if ( !t_length )
                 { // one-shot, so drop it from the queue
@@ -169,10 +152,12 @@ _XiTimer$Check() // checks the MIT timers to see if any are triggered
                     i--; l--; // shift for loop to account for lost queue stride
                 }
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
-                xi_xitimer( // fire function
-                    t_id,
-                    t_callback
-                    );
+                #ifdef XITIMER$ENABLE
+                    Xi$xitimer( // fire function
+                        t_id,
+                        t_callback
+                        );
+                #endif
             }
             else if ( remain < lowest ) lowest = remain; // timer not triggered, but it is currently the next timer to trigger
         }

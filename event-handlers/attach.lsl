@@ -29,28 +29,28 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_ATTACH
+		#define XI$ATTACH
 		Xi$attach( key id )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_ATTACH_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$ATTACH_TRACE || defined XI$ATTACH
 	attach( key id )
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_ATTACH_ENABLE_XILOG_TRACE
+        #ifdef XI$ATTACH_TRACE
             XiLog$TraceParams( "attach", [ "id" ], [ XiString$Elem( id ) ]);
         #endif
 
-        // check if any Xi libraries want to intercept this event
-
         // pass to user-defined function if requested
-		#ifdef XI_ATTACH
+		#ifdef XI$ATTACH
 			Xi$attach( id );
 		#endif
+
+#if defined XI$ATTACH_TRACE || defined XI$ATTACH
 	}
+#endif

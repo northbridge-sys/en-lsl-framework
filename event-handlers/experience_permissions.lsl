@@ -30,14 +30,14 @@
     optionally executes a user-defined function to handle event calls that are not
     intercepted by Xi libraries:
 
-		#define XI_EXPERIENCE_PERMISSIONS
+		#define XI$EXPERIENCE_PERMISSIONS
 		Xi$experience_permissions( key id )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_EXPERIENCE_PERMISSIONS
+#ifdef XI$EXPERIENCE_PERMISSIONS
 	experience_permissions( key id )
 	{
         // event unused, so the only reason to define it is to log it

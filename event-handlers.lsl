@@ -37,7 +37,7 @@
 */
 
 // each major revision of XI increments this value
-#define XI_EVENT_HANDLERS_LOADED 1
+#define XI$EVENT_HANDLERS_LOADED 1
 
 // include event handlers that Xi actually uses
 #include "xi-lsl-framework/event-handlers/attach.lsl"

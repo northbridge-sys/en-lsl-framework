@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_COLLISION_START
+		#define XI$COLLISION_START
 		Xi$collision_start( integer count )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_COLLISION_START
+#ifdef XI$COLLISION_START
 	collision_start( integer count )
 	{
         // event unused, so the only reason to define it is to log it

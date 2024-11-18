@@ -29,35 +29,43 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_ON_REZ
+		#define XI$ON_REZ
 		Xi$on_rez( integer param )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_ALL_ENABLE_XILOG_TRACE
-    #define XI_ON_REZ_ENABLE_XILOG_TRACE
-#endif
-
+#if defined XI$ON_REZ_TRACE || defined XI$ON_REZ || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
 	on_rez( integer param )
 	{
+#endif
+
         // log event if requested
-        #ifdef XI_ON_REZ_ENABLE_XILOG_TRACE
+        #ifdef XI$ON_REZ_TRACE
             XiLog$TraceParams( "on_rez", [], [ i ] );
         #endif
 
-        // check if any Xi libraries want to intercept this event
-        _XiChat$RefreshLinkset();
-        #ifdef XILSD_ENABLE_UUID_HEADER
+        // update XiChat channels if any are just the UUID
+        #ifdef XICHAT$ENABLE
+            _XiChat$RefreshLinkset();
+        #endif
+
+        // update XiLSD names if any use the UUID header
+        #ifdef XILSD$ENABLE_UUID_HEADER
             _XiLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI_ON_REZ
+		#ifdef XI$ON_REZ
 			Xi$on_rez(i);
 		#endif
 
-		// update XIOBJECT_UUIDS_SELF
-        _XiObject$UpdateUUIDs();
+		// update _XIOBJECT_UUIDS_SELF
+        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+            _XiObject$UpdateUUIDs();
+        #endif
+
+#if defined XI$ON_REZ_TRACE || defined XI$ON_REZ || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
 	}
+#endif

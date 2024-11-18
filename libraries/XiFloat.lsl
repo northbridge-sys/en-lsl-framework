@@ -29,18 +29,13 @@
 */
 
 // ==
-// == preprocessor options
+// == globals
 // ==
-
-#ifdef XIALL_ENABLE_XILOG_TRACE
-#define XIFLOAT_ENABLE_XILOG_TRACE
-#endif
 
 // ==
 // == functions
 // ==
 
-#define XiFloat$ToString(...) _XiFloat_( __VA_ARGS__ )
 string XiFloat$ToString( // rounds a float to a specified number of digits after the decimal
     float f,
     integer digits
@@ -53,7 +48,6 @@ string XiFloat$ToString( // rounds a float to a specified number of digits after
     return llGetSubString(s, 0, i + digits); // return string-cast float, but only up to the number of digits requested
 }
 
-#define XiFloat$Clamp(...) _XiFloat_( __VA_ARGS__ )
 float XiFloat$Clamp(
     float i,
     float m,
@@ -65,7 +59,6 @@ float XiFloat$Clamp(
     return i;
 }
 
-#define XiFloat$FlipCoin(...) _XiFloat_( __VA_ARGS__ )
 integer XiFloat$FlipCoin(
     float chance // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
     )
@@ -76,7 +69,6 @@ integer XiFloat$FlipCoin(
     return 1;
 }
 
-#define XiFloat$RandRange(...) _XiFloat_( __VA_ARGS__ )
 float XiFloat$RandRange(
     float min,
     float max

@@ -31,7 +31,7 @@
 
     Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
     can either set the loglevel to 6 as follows to permanently enable output:
-        #define XILOG_DEFAULT_LOGLEVEL 6
+        #define XILOG$DEFAULT_LOGLEVEL 6
     or you can set the "loglevel" linkset data pair to the desired loglevel as
     needed, so that inbound messages will only be reported when TRACE logging is
     enabled.  The utils/Loglevel.lsl script allows you to change the loglevel by
@@ -39,7 +39,7 @@
     can be set by any script.
 */
 
-#define XIIMP_ALLOWED_INBOUND_TARGETS_ALL
+#define XIIMP$ALLOWED_INBOUND_TARGETS_ALL
 
 #include "xi-lsl-framework/main.lsl"
 
@@ -49,7 +49,7 @@ Xi$imp_message(
                             //  - (the target script name): this script name
                             //  - "": all scripts in the prim
                             //  - (any other value): scripts with this value
-                            //      set in XIIMP_ALLOWED_TARGETS list
+                            //      set in XIIMP$ALLOWED_TARGETS list
     string status,      // one of the following:
                             // - ":": broadcast (no response requested)
                             // - "": request
@@ -65,7 +65,7 @@ Xi$imp_message(
                         //      (-1 if received via XiChat)
     string source       // the source script name
                         //      (can be pre-filtered by defining
-                        //      XIIMP_ALLOWED_SOURCES list)
+                        //      XIIMP$ALLOWED_SOURCES list)
     )
 {
     XiLog$TraceParams("Xi$imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [

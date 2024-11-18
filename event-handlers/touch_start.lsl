@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_TOUCH_START
+		#define XI$TOUCH_START
 		Xi$touch_start( integer num )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_TOUCH_START
+#ifdef XI$TOUCH_START
 	touch_start( integer num )
 	{
         // event unused, so the only reason to define it is to log it

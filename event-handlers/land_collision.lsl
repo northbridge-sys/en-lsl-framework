@@ -30,14 +30,14 @@
     user-defined function to handle event calls that are not intercepted by Xi
     libraries:
 
-		#define XI_LAND_COLLISION
+		#define XI$LAND_COLLISION
 		Xi$land_collision( vector pos )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_LAND_COLLISION
+#ifdef XI$LAND_COLLISION
 	land_collision( vector pos )
 	{
         // event unused, so the only reason to define it is to log it

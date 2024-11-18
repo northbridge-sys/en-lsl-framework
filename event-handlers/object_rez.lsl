@@ -29,14 +29,14 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_OBJECT_REZ
+		#define XI$OBJECT_REZ
 		Xi$object_rez( key id )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI_OBJECT_REZ
+#ifdef XI$OBJECT_REZ
 	object_rez( key id )
 	{
         // event unused, so the only reason to define it is to log it

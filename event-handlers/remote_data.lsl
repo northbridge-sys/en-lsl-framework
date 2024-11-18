@@ -29,7 +29,7 @@
     maintenance functions required by Xi libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by Xi libraries:
 
-		#define XI_REMOTE_DATA
+		#define XI$REMOTE_DATA
 		Xi$remote_data( integer type, key channel, key message_id, string sender,
             integer i, string s )
 		{
@@ -40,7 +40,7 @@
     fire; it is only included here for completeness and should not be enabled.
 */
 
-#ifdef XI_REMOTE_DATA
+#ifdef XI$REMOTE_DATA
 	remote_data( integer type, key channel, key message_id, string sender, integer i, string s )
 	{
         // event unused, so the only reason to define it is to log it
