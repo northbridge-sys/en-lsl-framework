@@ -24,7 +24,7 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This file #includes all eXisting Xi library scripts. Type the following:
+    This file #includes all existing Xi library scripts. Type the following:
 		#include "xi-lsl-framework/libraries.lsl"
     into the top of an LSL script with the LSL preprocessor enabled to be able to
     call Xi library functions.
