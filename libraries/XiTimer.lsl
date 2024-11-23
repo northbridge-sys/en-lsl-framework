@@ -76,7 +76,7 @@ string XiTimer$Start( // adds a timer
             (integer)( interval * 1000 ) * !!periodic,
             XiDate$MSAdd( XiDate$MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
-        _XITimer_Check(); // then reprocess queue
+        XiTimer$Check(); // then reprocess queue
     #endif
     return id;
 }
@@ -95,11 +95,11 @@ integer XiTimer$Cancel( // removes a timer
         llSetTimerEvent( 0.0 );
     #else
         // find timer by id
-        integer i = llListFindList( llList2ListSlice( XIMIT_TIMERS, 0, -1, XIMIT_TIMERS_STRIDE, 0 ), [ id ] );
+        integer i = llListFindList( llList2ListSlice( _XITIMER_QUEUE, 0, -1, _XITIMER_QUEUE_STRIDE, 0 ), [ id ] );
         if ( i == -1 ) return 0; // not found
         // found, delete it
-        XIMIT_TIMERS = llDeleteSubList( XIMIT_TIMERS, i, i + XIMIT_TIMERS_STRIDE - 1 );
-        _XiMIT_Check();
+        _XITIMER_QUEUE = llDeleteSubList( _XITIMER_QUEUE, i, i + _XITIMER_QUEUE_STRIDE - 1 );
+        XiTimer$Check(); // then reprocess queue
     #endif
     return 1;
 }
@@ -113,9 +113,9 @@ string XiTimer$Find( // finds a timer by callback
             XiString$Elem( callback )
             ]);
     #endif
-    integer i = llListFindList( llList2ListSlice( XIMIT_TIMERS, 0, -1, XIMIT_TIMERS_STRIDE, 1 ), [ callback ] );
+    integer i = llListFindList( llList2ListSlice( _XITIMER_QUEUE, 0, -1, _XITIMER_QUEUE_STRIDE, 1 ), [ callback ] );
     if ( i == -1 ) return "";
-    return llList2String( XIMIT_TIMERS, i * XIMIT_TIMERS_STRIDE );
+    return llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE );
 }
 
 _XiTimer$Check() // checks the MIT timers to see if any are triggered
