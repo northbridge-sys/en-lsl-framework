@@ -76,7 +76,7 @@ string XiTimer$Start( // adds a timer
             (integer)( interval * 1000 ) * !!periodic,
             XiDate$MSAdd( XiDate$MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
-        XiTimer$Check(); // then reprocess queue
+        _XiTimer$Check(); // then reprocess queue
     #endif
     return id;
 }
@@ -99,7 +99,7 @@ integer XiTimer$Cancel( // removes a timer
         if ( i == -1 ) return 0; // not found
         // found, delete it
         _XITIMER_QUEUE = llDeleteSubList( _XITIMER_QUEUE, i, i + _XITIMER_QUEUE_STRIDE - 1 );
-        XiTimer$Check(); // then reprocess queue
+        _XiTimer$Check(); // then reprocess queue
     #endif
     return 1;
 }
