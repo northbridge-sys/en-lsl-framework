@@ -223,10 +223,10 @@
 #define XiDate$MSNow(...) _XiDate_MSNow( __VA_ARGS__ )
 #define XiDate$MSAdd(...) _XiDate_MSAdd( __VA_ARGS__ )
 
-#define XiFloat$ToString(...) _XiFloat_( __VA_ARGS__ )
-#define XiFloat$Clamp(...) _XiFloat_( __VA_ARGS__ )
-#define XiFloat$FlipCoin(...) _XiFloat_( __VA_ARGS__ )
-#define XiFloat$RandRange(...) _XiFloat_( __VA_ARGS__ )
+#define XiFloat$ToString(...) _XiFloat_ToString( __VA_ARGS__ )
+#define XiFloat$Clamp(...) _XiFloat_Clamp( __VA_ARGS__ )
+#define XiFloat$FlipCoin(...) _XiFloat_FlipCoin( __VA_ARGS__ )
+#define XiFloat$RandRange(...) _XiFloat_RandRange( __VA_ARGS__ )
 
 #define XiHTTP$Request(...) _XiHTTP_Request( __VA_ARGS__ )
 #define _XiHTTP$ProcessResponse(...) _XiHTTP_ProcessResponse( __VA_ARGS__ )
@@ -271,6 +271,7 @@
 #define XiKVP$Read(...) _XiKVP_Read( __VA_ARGS__ )
 #define XiKVP$Delete(...) _XiKVP_Delete( __VA_ARGS__ )
 
+#define XiList$DeleteStrideByMatch(...) _XiList_DeleteStrideByMatch( __VA_ARGS__ )
 #define XiList$Elem(...) _XiList_Elem( __VA_ARGS__ )
 #define XiList$Empty(...) _XiList_Empty( __VA_ARGS__ )
 #define XiList$Collate(...) _XiList_Collate( __VA_ARGS__ )
@@ -318,14 +319,14 @@
 
 #define XiString$Elem(...) _XiString_Elem( __VA_ARGS__ )
 #define XiString$Plural(...) _XiString_Plural( __VA_ARGS__ )
-#define XiString$If(...) _XiString_( __VA_ARGS__ )
-#define XiString$Pad(...) _XiString_( __VA_ARGS__ )
+#define XiString$If(...) _XiString_If( __VA_ARGS__ )
+#define XiString$Pad(...) _XiString_Pad( __VA_ARGS__ )
 #define XiString$MultiByteUnit(...) _XiString_MultiByteUnit( __VA_ARGS__ )
 #define XiString$Escape(...) _XiString_Escape( __VA_ARGS__ )
 #define XiString$ParseCfgLine(...) _XiString_ParseCfgLine( __VA_ARGS__ )
 #define XiString$FindChars(...) _XiString_FindChars( __VA_ARGS__ )
 
-#define XiTest$Assert(...) _XiTest_( __VA_ARGS__ )
+#define XiTest$Assert(...) _XiTest_Assert( __VA_ARGS__ )
 #define XiTest$Type(...) _XiTest_Type( __VA_ARGS__ )
 #define XiTest$Method(...) _XiTest_Method( __VA_ARGS__ )
 #define _XiTest$Check(...) _XiTest_Check( __VA_ARGS__ )

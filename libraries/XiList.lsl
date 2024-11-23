@@ -141,6 +141,18 @@ integer XiList$FindPartial( // llListFindList but needle can be only part of the
     return -1;
 }
 
+list XiList$DeleteStrideByMatch(
+    list haystack,
+    integer stride,
+    integer index,
+    string needle
+    )
+{
+    integer i = llListFindList(llList2ListSlice(haystack, 0, -1, stride, index), [needle]);
+    if (i != -1) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1); // delete existing stride because we'll be re-adding it
+    return haystack;
+}
+
 // ==
 // == macros
 // ==
