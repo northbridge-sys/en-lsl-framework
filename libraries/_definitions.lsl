@@ -336,6 +336,7 @@
 #define XiTimer$Cancel(...) _XiTimer_Cancel( __VA_ARGS__ )
 #define XiTimer$Find(...) _XiTimer_Find( __VA_ARGS__ )
 #define _XiTimer$Check(...) _XiTimer_Check( __VA_ARGS__ )
+#define Xi$xitimer(...) _XiTimer_xitimer( __VA_ARGS__ )
 
 #define XiVector$RegionCornerToWorld(...) _XiVector_RegionCornerToWorld( __VA_ARGS__ )
 #define XiVector$RegionToWorld(...) _XiVector_RegionToWorld( __VA_ARGS__ )
