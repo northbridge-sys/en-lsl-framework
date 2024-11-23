@@ -124,7 +124,7 @@ _XiTimer$Check() // checks the MIT timers to see if any are triggered
         XiLog$TraceParams("_XiTimer$Check", [], []);
     #endif
     llSetTimerEvent(0.0);
-    if ( _XITIMER_QUEUE != [] ) return; // no timer to check
+    if ( _XITIMER_QUEUE == [] ) return; // no timer to check
     #ifdef XIMIT_DISABLE_MULTIPLE
         xi_xitimer(
             llList2String( _XITIMER_QUEUE, 0 ),
@@ -152,6 +152,7 @@ _XiTimer$Check() // checks the MIT timers to see if any are triggered
                     i--; l--; // shift for loop to account for lost queue stride
                 }
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
+                XiLog$Trace("XiTimer " + t_id + " triggered: " + t_callback);
                 #ifdef XITIMER$ENABLE
                     Xi$xitimer( // fire function
                         t_id,
@@ -164,6 +165,7 @@ _XiTimer$Check() // checks the MIT timers to see if any are triggered
         if ( lowest != 0x7FFFFFFF )
         { // a timer is still in the queue
             llSetTimerEvent( lowest * 0.001 );
+            XiLog$Trace("XiTimer set llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
         }
     #endif
 }

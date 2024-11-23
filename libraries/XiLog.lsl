@@ -173,8 +173,7 @@ XiLog$TraceVars( list var_names, list var_values )
     XiLog$TraceParams( "XiLog$TraceVars", var_names, var_values );
 }
 
-integer XiLog$GetLoglevel(
-)
+integer XiLog$GetLoglevel()
 {
     string lsd = llLinksetDataRead( "loglevel" ); // any valid log level number, 0 (uses default), or negative (suppresses all output)
     if ( (integer)lsd ) return (integer)lsd;

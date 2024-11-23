@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined XI$TIMER_TRACE || XI$TIMER || XITIMER$ENABLE
+#if defined XI$TIMER_TRACE || defined XI$TIMER || defined XITIMER$ENABLE
 	timer()
 	{
 #endif
@@ -56,6 +56,6 @@
 			Xi$timer();
 		#endif
 
-#if defined XI$TIMER_TRACE || XI$TIMER || XITIMER$ENABLE
+#if defined XI$TIMER_TRACE || defined XI$TIMER || defined XITIMER$ENABLE
 	}
 #endif
