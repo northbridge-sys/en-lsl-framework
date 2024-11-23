@@ -70,10 +70,10 @@ Xi$on_rez( integer param )
 // ...
 ```
 
-However, it's possible to exclusively use custom Xi "event functions" - for example, here's a script that responds to any "ping" requests made to it over XiIMP:
+You can also use custom Xi "event functions" that are defined by the libraries you enable - for example, here's a script that responds to any "ping" requests made to it over XiIMP:
 
 ```
-#define XIIMP_ENABLE
+#define XIIMP$ENABLE
 
 #include "xi-lsl-framework/libraries.lsl"
 
