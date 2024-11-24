@@ -340,6 +340,8 @@
 
 #define XiVector$RegionCornerToWorld(...) _XiVector_RegionCornerToWorld( __VA_ARGS__ )
 #define XiVector$RegionToWorld(...) _XiVector_RegionToWorld( __VA_ARGS__ )
+#define XiVector$Scale(...) _XiVector_Scale( __VA_ARGS__ )
+#define XiVector$ScaleInverse(...) _XiVector_Scale( __VA_ARGS__ )
 #define XiVector$ToString(...) _XiVector_ToString( __VA_ARGS__ )
 #define XiVector$WorldToCorner(...) _XiVector_WorldToCorner( __VA_ARGS__ )
 #define XiVector$WorldToRegion(...) _XiVector_WorldToRegion( __VA_ARGS__ )

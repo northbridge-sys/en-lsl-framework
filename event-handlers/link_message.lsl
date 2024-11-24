@@ -30,8 +30,8 @@
     defined function to handle event calls that are not intercepted by Xi libraries:
 
 		#define XI$LINK_MESSAGE
-		Xi$link_message( integer link, integer i, string s, key k )
-		{
+		Xi$link_message( integer link, integer i, string s, string k )
+		{ // NOTE: the key k is passed as a string, or can be passed as a key
             // code to run when event occurs that is not intercepted by Xi
 		}
 

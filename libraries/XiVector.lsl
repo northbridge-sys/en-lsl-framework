@@ -78,3 +78,21 @@ vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to
 }
 
 // TODO: local pos conversion stuff, pos from root with rot, all sorts of stuff
+
+// manipulation
+
+string XiVector$Scale( // scales a vector by multiplying with each element of another vector
+    vector a,
+    vector b
+)
+{
+    return <a.x * b.x, a.y * b.y, a.z * b.z>;
+}
+
+string XiVector$ScaleInverse( // scales a vector by dividing by each element of another vector
+    vector a,
+    vector b
+)
+{
+    return <a.x / b.x, a.y / b.y, a.z / b.z>;
+}
