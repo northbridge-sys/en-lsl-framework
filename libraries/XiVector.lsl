@@ -47,26 +47,27 @@ string XiVector$ToString( // removes the < & > from a vector and rounds each ele
 }
 
 // position scope translation
+// NOTE: these are mostly just here for reference, it is more efficient to hardcode these calculations than waste memory on "add two vectors"
 
 vector XiVector$WorldToCorner( // converts a world pos to a region CORNER
     vector world
     )
 {
-    // TODO
+    return <(integer)(world.x / 256.0) * 256, (integer)(world.y / 256.0) * 256, 0.0>;
 }
 
 vector XiVector$WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
     vector world
     )
 {
-    // TODO
+    return world - XiVector$WorldToCorner(world);
 }
 
 vector XiVector$RegionToWorld( // converts the current region position to world position
     vector region
     )
 {
-    return XiVector$RegionCornerToWorld( region, llGetRegionCorner() );
+    return XiVector$RegionCornerToWorld(region, llGetRegionCorner());
 }
 
 vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
@@ -74,7 +75,7 @@ vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to
     vector corner
     )
 {
-    // TODO
+    return region + corner;
 }
 
 // TODO: local pos conversion stuff, pos from root with rot, all sorts of stuff

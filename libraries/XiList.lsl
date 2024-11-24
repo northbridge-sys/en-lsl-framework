@@ -33,6 +33,13 @@
 // ==
 
 // ==
+// == macros
+// ==
+
+#define XiList$FindStrideByElem( list_haystack, stride_length, index_in_stride, string_needle ) \
+    llListFindList( llList2ListSlice( list_haystack, 0, -1, stride_length, index_in_stride ), [ string_needle ] )
+
+// ==
 // == functions
 // ==
 
@@ -152,10 +159,3 @@ list XiList$DeleteStrideByMatch(
     if (i != -1) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1); // delete existing stride because we'll be re-adding it
     return haystack;
 }
-
-// ==
-// == macros
-// ==
-
-#define XiList$FindStrideByElem( list_haystack, stride_length, index_in_stride, string_needle ) \
-    llListFindList( llList2ListSlice( list_haystack, 0, -1, stride_length, index_in_stride ), [ string_needle ] )
