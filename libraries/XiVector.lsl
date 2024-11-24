@@ -82,7 +82,7 @@ vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to
 
 // manipulation
 
-string XiVector$Scale( // scales a vector by multiplying with each element of another vector
+vector XiVector$Scale( // scales a vector by multiplying with each element of another vector
     vector a,
     vector b
 )
@@ -90,7 +90,7 @@ string XiVector$Scale( // scales a vector by multiplying with each element of an
     return <a.x * b.x, a.y * b.y, a.z * b.z>;
 }
 
-string XiVector$ScaleInverse( // scales a vector by dividing by each element of another vector
+vector XiVector$ScaleInverse( // scales a vector by dividing by each element of another vector
     vector a,
     vector b
 )
