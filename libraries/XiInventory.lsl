@@ -32,10 +32,12 @@
 // == globals
 // ==
 
-string _XIINVENTORY_NC_N;
-string _XIINVENTORY_NC_K;
-integer _XIINVENTORY_NC_L;
-string _XIINVENTORY_NC_H;
+string _XIINVENTORY_NC_N; // notecard name
+string _XIINVENTORY_NC_K; // notecard key
+integer _XIINVENTORY_NC_L; // notecard line being read
+integer _XIINVENTORY_NC_T; // notecard total lines
+string _XIINVENTORY_NC_H; // notecard read handle
+string _XIINVENTORY_NC_G; // llGetNumberOfNotecardLines handle
 
 list _XIINVENTORY_REMOTE; // start_param, script_name, running
 #define _XIINVENTORY_REMOTE_STRIDE 3
@@ -132,12 +134,15 @@ integer XiInventory$NCOpen( // opens a notecard for XiInventory$NC* operations
             ]);
     #endif
     #ifndef XIINVENTORY$ENABLE_NC
-        XiLog$(DEBUG, "XIINVENTORY_ENABLE_NC not defined.");
+        XiLog$(DEBUG, "XIINVENTORY$ENABLE_NC not defined.");
         return;
     #endif
     _XIINVENTORY_NC_N = name;
+    _XIINVENTORY_NC_L = -1;
+    _XIINVENTORY_NC_T = -1;
+    _XIINVENTORY_NC_G = llGetNumberOfNotecardLines(_XIINVENTORY_NC_N);
     key new_NC_K = llGetInventoryKey(_XIINVENTORY_NC_N);
-    if (new_NC_K == NULL_KEY) return 0; // notecard doesn't eXist
+    if (new_NC_K == NULL_KEY) return 0; // notecard doesn't exist
     if (new_NC_K == _XIINVENTORY_NC_K) return 0x1; // notecard opened, no changes since last opened
     _XIINVENTORY_NC_K = new_NC_K;
     return 0x3; // notecard opened, changes since last opened
@@ -153,13 +158,32 @@ XiInventory$NCRead( // reads a line from the open notecard
             ]);
     #endif
     #ifndef XIINVENTORY$ENABLE_NC
-        XiLog$(DEBUG, "XIINVENTORY_ENABLE_NC not defined.");
+        XiLog$(DEBUG, "XIINVENTORY$ENABLE_NC not defined.");
         return;
+    #else
+        string s = NAK;
+        if (llGetFreeMemory() > 4096) s = llGetNotecardLineSync(_XIINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free
+        if (s == NAK) _XIINVENTORY_NC_H = llGetNotecardLine(_XIINVENTORY_NC_N, i); // sync read failed, do dataserver read
+        else Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, _XIINVENTORY_NC_T, s);
     #endif
-    string s = NAK;
-    if (llGetFreeMemory() > 4096) s = llGetNotecardLineSync(_XIINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free
-    if (s == NAK) _XIINVENTORY_NC_H = llGetNotecardLine(_XIINVENTORY_NC_N, i); // sync read failed, do dataserver read
-    else Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, s);
+}
+
+integer _XiInventory$NCParse(
+    string query,
+    string data
+    )
+{
+    if (query == _XIINVENTORY_NC_K)
+    {
+        Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, _XIINVENTORY_NC_T, data);
+        return 1;
+    }
+    if (query == _XIINVENTORY_NC_G)
+    {
+        _XIINVENTORY_NC_T = (integer)data;
+        return 1;
+    }
+    return 0;
 }
 
 string XiInventory$TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(XiInventory$TypeToString(...)) to get actual flag name)

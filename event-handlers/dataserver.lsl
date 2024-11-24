@@ -48,7 +48,7 @@
 
         // check if any Xi libraries want to intercept this event
         #ifdef XIINVENTORY$ENABLE_NC
-            if ( query == XIINVENTORY$NC_K ) _XiInventory$NCParse( data ); // XiInventory$NCRead(...) response
+            if (_XiInventory$NCParse(query, data)) return;
         #endif
 
         // pass to user-defined function if requested

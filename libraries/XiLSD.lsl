@@ -50,7 +50,7 @@ XiLSD$Reset() // safely resets linkset data
     { // store values temporarily
         values += [ llLinksetDataRead( llList2String( protected, i ) ) ];
     }
-    llLinksetDataReset();
+    llLinksetDataDeleteFound("^" + XiString$Escape(XISTRING$ESCAPE_REGEX, XiLSD$Head()) + ".*$", "");
     for ( i = 0; i < l; i++ )
     { // write protected values back to datastore
         llLinksetDataWrite( llList2String( protected, i ), llList2String( values, i ) );
@@ -86,6 +86,11 @@ list XiLSD$Delete(string name)
             ]);
     #endif
 	return llLinksetDataDeleteFound("^" + XiLSD$Head() + name + "$", "");
+}
+
+integer XiLSD$Exists(string name)
+{
+    return (XiLSD$Find(name, 0, 1) != []);
 }
 
 list XiLSD$Find(string name, integer start, integer count)

@@ -54,6 +54,17 @@
 #define DEBUG 5
 #define TRACE 6
 
+// XiObject
+#define RED <1.0, 0.25, 0.0>
+#define ORANGE <1.0, 0.5, 0.0>
+#define YELLOW <1.0, 0.8, 0.0>
+#define GREEN <0.5, 1.0, 0.0>
+#define BLUE <0.0, 0.5, 1.0>
+#define PURPLE <0.5, 0.0, 1.0>
+#define PINK <1.0, 0.0, 0.5>
+#define WHITE <1.0, 1.0, 1.0>
+#define BLACK <0.0, 0.0, 0.0>
+
 #define XICHAT$LISTEN_OWNERONLY 0x1
 #define XICHAT$LISTEN_REMOVE 0x80000000
 
