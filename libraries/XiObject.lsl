@@ -104,8 +104,10 @@ integer XiObject$ClosestLink(string name)
             XiString$Elem(name)
             ]);
     #endif
-    integer i = llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-    if (i != -1) return (integer)llList2String(_XIOBJECT_LINK_CACHE, i + 1); // return cached linknum
+    #ifdef XIOBJECT$ENABLE_LINK_CACHE
+        integer i = llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]);
+        if (i != -1) return (integer)llList2String(_XIOBJECT_LINK_CACHE, i + 1); // return cached linknum
+    #endif
     return _XiObject$FindLink(name);
 }
 
