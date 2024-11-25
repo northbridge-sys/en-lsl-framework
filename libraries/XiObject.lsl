@@ -36,6 +36,11 @@
 
 list _XIOBJECT_UUIDS_SELF;
 
+#ifdef XIOBJECT$ENABLE_LINK_CACHE
+    list _XIOBJECT_LINK_CACHE; // prim name, current linknum
+    #define _XIOBJECT_LINK_CACHE_STRIDE 2
+#endif
+
 // ==
 // == functions
 // ==
@@ -64,45 +69,80 @@ XiObject$StopIfOwnerRezzed()
     if ( XiObject$Parent() == (string)llGetKey() ) XiLog$Fatal( "XiObject$StopIfOwnerRezzed()" );
 }
 
+XiObject$CacheClosestLink(
+    string name
+)
+{
+    #ifndef XIOBJECT$ENABLE_LINK_CACHE
+        XiLog$Error("XiObject$CacheClosestLink called but XIOBJECT$ENABLE_LINK_CACHE not defined.")
+    #else
+        if (llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
+        _XIOBJECT_LINK_CACHE += [name, -1];
+        _XiObject$LinkCacheUpdate();
+    #endif
+}
+
+_XiObject$LinkCacheUpdate()
+{
+    integer i;
+    integer l = llGetListLength(_XIOBJECT_LINK_CACHE);
+    for (i = 0; i < l; i+=2)
+    {
+        _XIOBJECT_LINK_CACHE = llListReplaceList(_XIOBJECT_LINK_CACHE, [XiObject$ClosestLink(llList2String(_XIOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+    }
+}
+
 XiObject$Text(
     integer flags,
     list lines
 )
 {
-    vector color = COLOR_WHITE;
+    vector color = WHITE;
     string icon = "";
     if (flags & XIOBJECT$TEXT_PROMPT)
     {
-        color = COLOR_YELLOW;
-        icon = "";
+        color = YELLOW;
+        icon = "🚩";
     }
     else if (flags & XIOBJECT$TEXT_ERROR)
     {
-        color = COLOR_RED;
-        icon = "";
+        color = RED;
+        icon = "❌";
     }
     else if (flags & XIOBJECT$TEXT_BUSY)
     {
-        color = COLOR_BLUE;
-        icon = "";
+        color = BLUE;
+        integer ind = (XiDate$MSNow() / 83) % 12; // approximately +1 ind every 1/12th of a second
+        icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
     else if (flags & XIOBJECT$TEXT_SUCCESS)
     {
-        color = COLOR_GREEN;
-        icon = "";
+        color = GREEN;
+        icon = "✅";
     }
     if (flags & 0x7)
     { // a XiLog level was passed in as a flag as well, so use its icon
         icon = llList2String(["", "🛑", "❌", "🚩", "💬", "🪲", "🚦"], flags & 0x7);
     }
-    llSetText(llDumpList2String(XiList$Reverse(lines) + [icon], "\n"), color, 1.0);
+    string progress = "▼";
+    if (flags & XIOBJECT$TEXT_PROGRESS_NC)
+    {
+        integer ind = llRound(((float)_XIINVENTORY_NC_L / _XIINVENTORY_NC_T) * 16);
+        if (_XIINVENTORY_NC_T > 0) progress = llGetSubString("████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁", 16 - ind, 31 - ind); // such a lazy hack!! who cares
+    }
+    if (flags & XIOBJECT$TEXT_PROGRESS_THROB)
+    {
+        integer ind = (XiDate$MSNow() / 62) % 16; // approximately +1 ind every 1/16th of a second
+        progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
+    }
+    llSetText(llDumpList2String(XiList$Reverse(lines) + [progress, "❘", icon, "❘"], "\n"), color, 1.0);
     if (flags & XIOBJECT$TEXT_TEMP) XiTimer$Start(2.0, 0, "_XiObject$TextTemp");
     else XiTimer$Cancel(XiTimer$Find("_XiObject$TextTemp"));
 }
 
 _XiObject$TextTemp()
 {
-    llSetText("", COLOR_BLACK, 0.0);
+    llSetText("", BLACK, 0.0);
 }
 
 integer XiObject$ClosestLink(string name)
@@ -112,7 +152,8 @@ integer XiObject$ClosestLink(string name)
             XiString$Elem(name)
             ]);
     #endif
-    integer i;
+    integer i = llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]);
+    if (i != -1) return (integer)llList2String(_XIOBJECT_LINK_CACHE, i + 1); // return cached linknum
     integer cl_i;
     float cl_dist = -1.0;
     list candidates = [];

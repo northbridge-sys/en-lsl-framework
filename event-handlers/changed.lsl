@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
 	changed( integer change )
 	{
 #endif
@@ -46,11 +46,11 @@
             XiLog$TraceParams( "changed", [ "change" ], [ XiInteger$ElemBitfield( change ) ] );
         #endif
 
-        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
             if ( change & CHANGED_LINK )
             {
         #endif
-
+        
                 #ifdef XICHAT$ENABLE
                     _XiChat$RefreshLinkset();
                 #endif
@@ -60,8 +60,11 @@
                 #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
                     _XiObject$UpdateUUIDs();
                 #endif
+                #ifdef XIOBJECT$ENABLE$LINK_CACHE
+                    _XiObject$LinkCacheUpdate();
+                #endif
 
-        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
             }
         #endif
 
@@ -70,6 +73,6 @@
 			Xi$changed( change );
 		#endif
 
-#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
 	}
 #endif

@@ -34,8 +34,8 @@
 
 string _XIINVENTORY_NC_N; // notecard name
 string _XIINVENTORY_NC_K; // notecard key
-integer _XIINVENTORY_NC_L; // notecard line being read
-integer _XIINVENTORY_NC_T; // notecard total lines
+integer _XIINVENTORY_NC_L = -1; // notecard line being read
+integer _XIINVENTORY_NC_T = -1; // notecard total lines
 string _XIINVENTORY_NC_H; // notecard read handle
 string _XIINVENTORY_NC_G; // llGetNumberOfNotecardLines handle
 
@@ -161,8 +161,9 @@ XiInventory$NCRead( // reads a line from the open notecard
         XiLog$(DEBUG, "XIINVENTORY$ENABLE_NC not defined.");
         return;
     #else
+        _XIINVENTORY_NC_L = i;
         string s = NAK;
-        if (llGetFreeMemory() > 4096) s = llGetNotecardLineSync(_XIINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free
+        if (llGetFreeMemory() > 4096 && _XIINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_XIINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
         if (s == NAK) _XIINVENTORY_NC_H = llGetNotecardLine(_XIINVENTORY_NC_N, i); // sync read failed, do dataserver read
         else Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, _XIINVENTORY_NC_T, s);
     #endif
@@ -173,7 +174,7 @@ integer _XiInventory$NCParse(
     string data
     )
 {
-    if (query == _XIINVENTORY_NC_K)
+    if (query == _XIINVENTORY_NC_H)
     {
         Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, _XIINVENTORY_NC_T, data);
         return 1;

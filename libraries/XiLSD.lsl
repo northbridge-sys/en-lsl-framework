@@ -50,7 +50,7 @@ XiLSD$Reset() // safely resets linkset data
     { // store values temporarily
         values += [ llLinksetDataRead( llList2String( protected, i ) ) ];
     }
-    llLinksetDataDeleteFound("^" + XiString$Escape(XISTRING$ESCAPE_REGEX, XiLSD$Head()) + ".*$", "");
+    llLinksetDataDeleteFound("^" + XiString$Escape(XISTRING$ESCAPE_FILTER_REGEX, XiLSD$Head()) + ".*$", "");
     for ( i = 0; i < l; i++ )
     { // write protected values back to datastore
         llLinksetDataWrite( llList2String( protected, i ), llList2String( values, i ) );
@@ -102,7 +102,7 @@ list XiLSD$Find(string name, integer start, integer count)
             count
             ]);
     #endif
-	return llLinksetDataFindKeys("^" + XiString$Escape(XISTRING$ESCAPE_REGEX, XiLSD$Head() + name) + "$", start, count);
+	return llLinksetDataFindKeys("^" + XiString$Escape(XISTRING$ESCAPE_FILTER_REGEX, XiLSD$Head() + name) + "$", start, count);
 }
 
 string XiLSD$Head() // gets LSD header
@@ -228,7 +228,7 @@ _XiLSD$CheckUUID() // updates LSD entries that use old UUID
         h = k + h;
         do
         {
-            list l = llLinksetDataFindKeys("^" + XiString$Escape(XISTRING$ESCAPE_REGEX, h) + ".*$", 0, 1);
+            list l = llLinksetDataFindKeys("^" + XiString$Escape(XISTRING$ESCAPE_FILTER_REGEX, h) + ".*$", 0, 1);
             if (l != [])
             {
                 llLinksetDataWrite(_XiLSD$Head() + llDeleteSubString(llList2String(l, 0), 0, llStringLength(h) - 1)); // write with updated header

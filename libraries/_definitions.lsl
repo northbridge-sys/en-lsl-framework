@@ -59,7 +59,7 @@
 #define ORANGE <1.0, 0.5, 0.0>
 #define YELLOW <1.0, 0.8, 0.0>
 #define GREEN <0.5, 1.0, 0.0>
-#define BLUE <0.0, 0.5, 1.0>
+#define BLUE <0.2, 0.8, 1.0>
 #define PURPLE <0.5, 0.0, 1.0>
 #define PINK <1.0, 0.0, 0.5>
 #define WHITE <1.0, 1.0, 1.0>
@@ -78,6 +78,8 @@
 #define XIOBJECT$TEXT_PROMPT 0x40
 #define XIOBJECT$TEXT_ERROR 0x80
 #define XIOBJECT$TEXT_TEMP 0x100
+#define XIOBJECT$TEXT_PROGRESS_NC 0x200
+#define XIOBJECT$TEXT_PROGRESS_THROB 0x400
 
 #define XISTRING$PAD_ALIGN_LEFT 0
 #define XISTRING$PAD_ALIGN_RIGHT 1
@@ -266,10 +268,12 @@
 #define XiInventory$OwnedByCreator(...) _XiInventory_OwnedByCreator( __VA_ARGS__ )
 #define XiInventory$RezRemote(...) _XiInventory_RezRemote( __VA_ARGS__ )
 #define XiInventory$NCOpen(...) _XiInventory_NCOpen( __VA_ARGS__ )
+#define _XiInventory$NCParse(...) _XiInventory_NCParse( __VA_ARGS__ )
 #define XiInventory$NCRead(...) _XiInventory_NCRead( __VA_ARGS__ )
 #define XiInventory$TypeToString(...) _XiInventory_TypeToString( __VA_ARGS__ )
 #define XiInventory$Push(...) _XiInventory_Push( __VA_ARGS__ )
 #define XiInventory$Pull(...) _XiInventory_Pull( __VA_ARGS__ )
+#define Xi$nc_line(...) _XiInventory_nc_line( __VA_ARGS__ )
 
 #define XiKey$Is(...) _XiKey_Is( __VA_ARGS__ )
 #define XiKey$IsNotNull(...) _XiKey_IsNotNull( __VA_ARGS__ )
@@ -292,6 +296,7 @@
 #define XiList$Empty(...) _XiList_Empty( __VA_ARGS__ )
 #define XiList$Collate(...) _XiList_Collate( __VA_ARGS__ )
 #define XiList$Concatenate(...) _XiList_Concatenate( __VA_ARGS__ )
+#define XiList$Reverse(...) _XiList_Reverse( __VA_ARGS__ )
 #define XiList$ToString(...) _XiList_ToString( __VA_ARGS__ )
 #define XiList$FromStr(...) _XiList_FromStr( __VA_ARGS__ )
 #define XiList$FindPartial(...) _XiList_FindPartial( __VA_ARGS__ )
@@ -313,6 +318,7 @@
 #define XiLSD$Write(...) _XiLSD_Write( __VA_ARGS__ )
 #define XiLSD$Read(...) _XiLSD_Read( __VA_ARGS__ )
 #define XiLSD$Delete(...) _XiLSD_Delete( __VA_ARGS__ )
+#define XiLSD$Exists(...) _XiLSD_Exists( __VA_ARGS__ )
 #define XiLSD$Find(...) _XiLSD_Find( __VA_ARGS__ )
 #define XiLSD$Head(...) _XiLSD_Head( __VA_ARGS__ )
 #define XiLSD$Pull(...) _XiLSD_Pull( __VA_ARGS__ )
@@ -326,6 +332,8 @@
 #define XiObject$StopIfOwnerRezzed(...) _XiObject_StopIfOwnerRezzed( __VA_ARGS__ )
 #define XiObject$ClosestLink(...) _XiObject_ClosestLink( __VA_ARGS__ )
 #define XiObject$Profile(...) _XiObject_Profile( __VA_ARGS__ )
+#define XiObject$Text(...) _XiObject_Text( __VA_ARGS__ )
+#define _XiObject$TextTemp(...) _XiObject_TextTemp( __VA_ARGS__ )
 #define _XiObject$UpdateUUIDs(...) _XiObject_UpdateUUIDs( __VA_ARGS__ )
 
 #define XiRotation$Elem(...) _XiRotation_Elem( __VA_ARGS__ )
@@ -352,6 +360,7 @@
 #define XiTimer$Cancel(...) _XiTimer_Cancel( __VA_ARGS__ )
 #define XiTimer$Find(...) _XiTimer_Find( __VA_ARGS__ )
 #define _XiTimer$Check(...) _XiTimer_Check( __VA_ARGS__ )
+#define _XiTimer$InternalLoopback(...) _XiTimer_InternalLoopback( __VA_ARGS__ )
 #define Xi$xitimer(...) _XiTimer_xitimer( __VA_ARGS__ )
 
 #define XiVector$RegionCornerToWorld(...) _XiVector_RegionCornerToWorld( __VA_ARGS__ )
