@@ -41,7 +41,7 @@
 	{
         // event unused, so the only reason to define it is to log it
         XiLog$TraceParams( "run_time_permissions", [ "perm" ], [
-            XiInteger$ElemBitwise( perm )
+            XiInteger$ElemBitfield( perm )
         ] );
 
         // event unused, so pass to user-defined function only
