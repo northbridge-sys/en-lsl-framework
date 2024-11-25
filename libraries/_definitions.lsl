@@ -348,6 +348,7 @@
 #define XiString$Elem(...) _XiString_Elem( __VA_ARGS__ )
 #define XiString$Plural(...) _XiString_Plural( __VA_ARGS__ )
 #define XiString$If(...) _XiString_If( __VA_ARGS__ )
+#define XiString$JsonAttempt(...) _XiString_JsonAttempt( __VA_ARGS__ )
 #define XiString$Pad(...) _XiString_Pad( __VA_ARGS__ )
 #define XiString$MultiByteUnit(...) _XiString_MultiByteUnit( __VA_ARGS__ )
 #define XiString$Escape(...) _XiString_Escape( __VA_ARGS__ )

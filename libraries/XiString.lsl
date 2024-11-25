@@ -177,3 +177,14 @@ integer XiString$FindChars( // finds the first instance of any of the specified 
     }
     return -1;
 }
+
+string XiString$JsonAttempt( // attempts to get a value from a json string, and if fails, returns preset value instead of JSON_INVALID
+    string json,
+    list specifiers,
+    string value
+)
+{
+    string new_val = llJsonGetValue(json, specifiers);
+    if (new_val != JSON_INVALID) return new_val;
+    return val;
+}
