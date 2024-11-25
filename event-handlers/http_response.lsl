@@ -36,18 +36,26 @@
 		}
 */
 
-#ifdef XI$HTTP_RESPONSE
+#if defined XI$HTTP_RESPONSE_TRACE || defined XI$HTTP_RESPONSE
 	http_response( key request, integer status, list metadata, string body )
 	{
-        // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
-            XiString$Elem( request ),
-            status,
-            XiList$Elem( metadata ),
-            XiString$Elem( body )
-        ] );
+#endif
 
-        // event unused, so pass to user-defined function only
-        Xi$http_response( request, status, metadata, body );
+        // log event if requested
+        #ifdef XI$HTTP_RESPONSE_TRACE
+            XiLog$TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
+                XiString$Elem( request ),
+                status,
+                XiList$Elem( metadata ),
+                XiString$Elem( body )
+            ] );
+        #endif
+
+        // pass to user-defined function if requested
+		#ifdef XI$HTTP_RESPONSE
+            Xi$http_response( request, status, metadata, body );
+		#endif
+
+#if defined XI$HTTP_RESPONSE_TRACE || defined XI$HTTP_RESPONSE
 	}
 #endif

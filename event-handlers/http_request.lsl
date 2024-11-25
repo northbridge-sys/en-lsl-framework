@@ -36,17 +36,25 @@
 		}
 */
 
-#ifdef XI$HTTP_REQUEST
+#if defined XI$HTTP_REQUEST_TRACE || defined XI$HTTP_REQUEST
 	http_request( key request, string method, string body )
 	{
-        // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "http_request", [ "request", "method", "body" ], [
-            XiString$Elem( request ),
-            XiString$Elem( method ),
-            XiString$Elem( body )
-        ] );
+#endif
 
-        // event unused, so pass to user-defined function only
-        Xi$http_request( request, method, body );
+        // log event if requested
+        #ifdef XI$HTTP_REQUEST_TRACE
+            XiLog$TraceParams( "http_request", [ "request", "method", "body" ], [
+                XiString$Elem( request ),
+                XiString$Elem( method ),
+                XiString$Elem( body )
+            ] );
+        #endif
+
+        // pass to user-defined function if requested
+		#ifdef XI$HTTP_REQUEST
+            Xi$http_request( request, method, body );
+		#endif
+
+#if defined XI$HTTP_REQUEST_TRACE || defined XI$HTTP_REQUEST
 	}
 #endif
