@@ -127,22 +127,27 @@ string XiString$Escape(
     string x
     )
 {
-    string y;
+    list y;
     string e;
     if (f & XISTRING$ESCAPE_FILTER_REGEX)
     {
-        y = "^$*+?.()|{}[]\\"; // note that \\ must be the last entry, otherwise previously escaped characters will be double-escaped
+        y = ["^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]", "\\"]; // note that \\ must be the last entry, otherwise previously escaped characters will be double-escaped
         e = "\\"; // regex escaped with single backwards slash
+    }
+    if (f & XISTRING$ESCAPE_FILTER_JSON)
+    {
+        y = ["\""];
+        e = "\\"; // json escaped with single backwards slash
     }
     if (f & XISTRING$ESCAPE_REVERSE)
     {
         // TODO: unescape
     }
     integer i;
-    integer l = llStringLength(y);
+    integer l = llGetListLength(y);
     for (i = 0; i < l; i++)
     {
-        x = llReplaceSubString(x, llGetSubString(y, i, i), e + llGetSubString(y, i, i), 0);
+        x = llReplaceSubString(x, llList2String(y, i), e + llList2String(y, i), 0);
     }
     return x;
 }

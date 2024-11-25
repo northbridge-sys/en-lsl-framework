@@ -60,6 +60,19 @@ list XiList$Empty( // if a list only has one element that is a blank string, con
     return in;
 }
 
+list XiList$Json( // returns a string with each element converted to an escaped JSON string
+    list in
+)
+{
+    list out;
+    integer i;
+    integer l = llGetListLength(in);
+    for (i = 0; i < l; i++)
+    {
+        out += llList2String(in, i)
+    }
+}
+
 list XiList$Reverse(
     list l
 )
