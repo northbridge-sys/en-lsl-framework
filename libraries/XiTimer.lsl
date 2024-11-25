@@ -118,6 +118,18 @@ string XiTimer$Find( // finds a timer by callback
     return llList2String( _XITIMER_QUEUE, i * _XITIMER_QUEUE_STRIDE );
 }
 
+integer _XiTimer$InternalLoopback(
+    string callback
+)
+{
+    if (callback == "_XiObject$TextTemp")
+    {
+        _XiObject$TextTemp();
+        return 1;
+    }
+    return 0;
+}
+
 _XiTimer$Check() // checks the MIT timers to see if any are triggered
 {
     #ifdef XITIMER$TRACE
@@ -152,13 +164,16 @@ _XiTimer$Check() // checks the MIT timers to see if any are triggered
                     i--; l--; // shift for loop to account for lost queue stride
                 }
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
-                XiLog$Trace("XiTimer " + t_id + " triggered: " + t_callback);
-                #ifdef XITIMER$ENABLE
-                    Xi$xitimer( // fire function
-                        t_id,
-                        t_callback
-                        );
-                #endif
+                if (!_XiTimer$InternalLoopback(t_callback))
+                {
+                    #ifdef XITIMER$ENABLE
+                        XiLog$Trace("XiTimer " + t_id + " triggered: " + t_callback);
+                        Xi$xitimer( // fire function
+                            t_id,
+                            t_callback
+                            );
+                    #endif
+                }
             }
             else if ( remain < lowest ) lowest = remain; // timer not triggered, but it is currently the next timer to trigger
         }

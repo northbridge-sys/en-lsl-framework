@@ -64,6 +64,47 @@ XiObject$StopIfOwnerRezzed()
     if ( XiObject$Parent() == (string)llGetKey() ) XiLog$Fatal( "XiObject$StopIfOwnerRezzed()" );
 }
 
+XiObject$Text(
+    integer flags,
+    list lines
+)
+{
+    vector color = COLOR_WHITE;
+    string icon = "";
+    if (flags & XIOBJECT$TEXT_PROMPT)
+    {
+        color = COLOR_YELLOW;
+        icon = "";
+    }
+    else if (flags & XIOBJECT$TEXT_ERROR)
+    {
+        color = COLOR_RED;
+        icon = "";
+    }
+    else if (flags & XIOBJECT$TEXT_BUSY)
+    {
+        color = COLOR_BLUE;
+        icon = "";
+    }
+    else if (flags & XIOBJECT$TEXT_SUCCESS)
+    {
+        color = COLOR_GREEN;
+        icon = "";
+    }
+    if (flags & 0x7)
+    { // a XiLog level was passed in as a flag as well, so use its icon
+        icon = llList2String(["", "🛑", "❌", "🚩", "💬", "🪲", "🚦"], flags & 0x7);
+    }
+    llSetText(llDumpList2String(XiList$Reverse(lines) + [icon], "\n"), color, 1.0);
+    if (flags & XIOBJECT$TEXT_TEMP) XiTimer$Start(2.0, 0, "_XiObject$TextTemp");
+    else XiTimer$Cancel(XiTimer$Find("_XiObject$TextTemp"));
+}
+
+_XiObject$TextTemp()
+{
+    llSetText("", COLOR_BLACK, 0.0);
+}
+
 integer XiObject$ClosestLink(string name)
 { // finds the linknum of the closest prim in the linkset with the specified name
     #ifdef XIOBJECT$TRACE

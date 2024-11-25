@@ -60,6 +60,18 @@ list XiList$Empty( // if a list only has one element that is a blank string, con
     return in;
 }
 
+list XiList$Reverse(
+    list l
+)
+{
+    integer n = (l != []);
+    while (n)
+    {
+        l += llList2List(l, (n = ~-n), n);
+    }
+    return llList2List(l, (l != []) >> 1, -1);
+}
+
 list XiList$Collate(
     list a,
     list b
