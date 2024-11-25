@@ -131,7 +131,7 @@
 
 #ifndef XIOBJECT$LIMIT_SELF
     // number of own object UUIDs to store, retrievable via XiObject$Self
-    #define XIOBJECT$LIMIT_SELF 1
+    #define XIOBJECT$LIMIT_SELF 2
 #endif
 
 #ifndef XITEST$PRECISION_FLOAT
