@@ -1,5 +1,5 @@
 /*
-    run_time_permissions.lsl
+    linkset_data.lsl
     Event Handler
     Xi LSL Framework
     Copyright (C) 2024  BuildTronics
@@ -25,35 +25,33 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This snippet replaces the run_time_permissions event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    This snippet replaces the linkset_data event handler with a version that
+    calls maintenance functions required by Xi libraries, then optionally executes a
+    user-defined function to handle event calls that are not intercepted by Xi
+    libraries:
 
-		#define XI$RUN_TIME_PERMISSIONS
-		Xi$run_time_permissions( integer perm )
+		#define XI$LINKSET_DATA
+		Xi$linkset_data( integer action, string name, string value )
 		{
             // code to run when event occurs that is not intercepted by Xi
 		}
 */
 
-#ifdef XI$RUN_TIME_PERMISSIONS
-	run_time_permissions( integer perm )
-	{
-        // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "run_time_permissions", [ "perm" ], [
-            XiInteger$ElemBitwise( perm )
-        ] );
+#if defined XI$LINKSET_DATA_TRACE || defined XI$LINKSET_DATA
+    linkset_data( integer action, string name, string value )
+    {
+#endif
 
-        // if attaches are blocked, perform auto-detach procedure
-        #ifdef XI$ATTACH_BLOCK
-            if (perm & PERMISSION_ATTACH)
-            {
-                llDetachFromAvatar();
-                return;
-            }
+        // log event if requested
+        #ifdef XI$LINKSET_DATA_TRACE
+            XiLog$TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, XiString$Elem(name), XiString$Elem(value) ] );
         #endif
 
-        // event unused, so pass to user-defined function only
-        Xi$run_time_permissions( perm );
+        // pass to user-defined function if requested
+		#ifdef XI$LINKSET_DATA
+			Xi$linkset_data(action, name, value);
+		#endif
+
+#if defined XI$LINKSET_DATA_TRACE || defined XI$LINKSET_DATA
 	}
 #endif

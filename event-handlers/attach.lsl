@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined XI$ATTACH_TRACE || defined XI$ATTACH
+#if defined XI$ATTACH_TRACE || defined XI$ATTACH || defined XI$ATTACH_BLOCK
 	attach( key id )
 	{
 #endif
@@ -46,11 +46,21 @@
             XiLog$TraceParams( "attach", [ "id" ], [ XiString$Elem( id ) ]);
         #endif
 
+        // if attaches are blocked, perform auto-detach procedure
+        #ifdef XI$ATTACH_BLOCK
+            if ((string)id != NULL_KEY)
+            {
+                XiLog$Error("Please rez me to use me. Self-detaching.");
+                llRequestPermissions(id, PERMISSION_ATTACH);
+                return;
+            }
+        #endif
+
         // pass to user-defined function if requested
 		#ifdef XI$ATTACH
 			Xi$attach( id );
 		#endif
 
-#if defined XI$ATTACH_TRACE || defined XI$ATTACH
+#if defined XI$ATTACH_TRACE || defined XI$ATTACH || defined XI$ATTACH_BLOCK
 	}
 #endif

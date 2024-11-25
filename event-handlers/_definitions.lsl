@@ -52,6 +52,7 @@
 #define Xi$land_collision_start(...) _Xi_land_collision_start( __VA_ARGS__ )
 #define Xi$land_collision(...) _Xi_land_collision( __VA_ARGS__ )
 #define Xi$link_message(...) _Xi_link_message( __VA_ARGS__ )
+#define Xi$linkset_data(...) _Xi_linkset_data( __VA_ARGS__ )
 #define Xi$listen(...) _Xi_listen( __VA_ARGS__ )
 #define Xi$money(...) _Xi_money( __VA_ARGS__ )
 #define Xi$moving_end(...) _Xi_moving_end( __VA_ARGS__ )

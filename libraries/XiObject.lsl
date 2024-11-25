@@ -69,16 +69,76 @@ XiObject$StopIfOwnerRezzed()
     if ( XiObject$Parent() == (string)llGetKey() ) XiLog$Fatal( "XiObject$StopIfOwnerRezzed()" );
 }
 
+integer XiObject$ClosestLinkDesc(
+    string desc
+)
+{
+    #ifdef XIOBJECT$TRACE
+        XiLog$TraceParams("XiObject$ClosestLinkDesc", ["desc"], [
+            XiString$Elem(desc)
+            ]);
+    #endif
+    integer i;
+    integer cl_i;
+    float cl_dist = -1.0;
+    for (i = 1; i <= llGetNumberOfPrims(); i++)
+    { // iterate through each prim
+        if (llGetSubString(llList2String(llGetObjectDetails(llGetLinkKey(i), [OBJECT_DESC]), 0), -llStringLength(desc), -1) == desc)
+        { // start of desc match
+			float dist = llVecDist(llGetPos(), llList2Vector(llGetLinkPrimitiveParams(i, [PRIM_POSITION]), 0));
+			if (cl_dist < 0.0 || dist < cl_dist)
+			{ // closet so far
+				cl_i = i;
+				cl_dist = dist;
+			}
+        }
+    }
+    if (cl_i) return cl_i; // match
+    return 0; // no match
+}
+
+integer XiObject$ClosestLink(string name)
+{ // finds the linknum of the closest prim in the linkset with the specified name
+    #ifdef XIOBJECT$TRACE
+        XiLog$TraceParams("XiObject$ClosestLink", ["name"], [
+            XiString$Elem(name)
+            ]);
+    #endif
+    integer i = llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]);
+    if (i != -1) return (integer)llList2String(_XIOBJECT_LINK_CACHE, i + 1); // return cached linknum
+    return _XiObject$FindLink(name);
+}
+
+integer _XiObject$FindLink(string name)
+{
+    integer i;
+    integer cl_i;
+    float cl_dist = -1.0;
+    for (i = 1; i <= llGetNumberOfPrims(); i++)
+    { // iterate through each prim
+        if (llGetLinkName(i) == name)
+        { // name match
+			float dist = llVecDist(llGetPos(), llList2Vector(llGetLinkPrimitiveParams(i, [PRIM_POSITION]), 0));
+			if (cl_dist < 0.0 || dist < cl_dist)
+			{ // closet so far
+				cl_i = i;
+				cl_dist = dist;
+			}
+        }
+    }
+    if (cl_i) return cl_i; // match
+    return 0; // no match
+}
+
 XiObject$CacheClosestLink(
     string name
 )
 {
     #ifndef XIOBJECT$ENABLE_LINK_CACHE
-        XiLog$Error("XiObject$CacheClosestLink called but XIOBJECT$ENABLE_LINK_CACHE not defined.")
+        XiLog$Error("XiObject$CacheClosestLink called but XIOBJECT$ENABLE_LINK_CACHE not defined.");
     #else
         if (llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
-        _XIOBJECT_LINK_CACHE += [name, -1];
-        _XiObject$LinkCacheUpdate();
+        _XIOBJECT_LINK_CACHE += [name, _XiObject$FindLink(name)];
     #endif
 }
 
@@ -88,7 +148,7 @@ _XiObject$LinkCacheUpdate()
     integer l = llGetListLength(_XIOBJECT_LINK_CACHE);
     for (i = 0; i < l; i+=2)
     {
-        _XIOBJECT_LINK_CACHE = llListReplaceList(_XIOBJECT_LINK_CACHE, [XiObject$ClosestLink(llList2String(_XIOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+        _XIOBJECT_LINK_CACHE = llListReplaceList(_XIOBJECT_LINK_CACHE, [_XiObject$FindLink(llList2String(_XIOBJECT_LINK_CACHE, i))], i + 1, i + 1);
     }
 }
 
@@ -143,34 +203,6 @@ XiObject$Text(
 _XiObject$TextTemp()
 {
     llSetText("", BLACK, 0.0);
-}
-
-integer XiObject$ClosestLink(string name)
-{ // finds the linknum of the closest prim in the linkset with the specified name
-    #ifdef XIOBJECT$TRACE
-        XiLog$TraceParams("XiObject$ClosestLink", ["name"], [
-            XiString$Elem(name)
-            ]);
-    #endif
-    integer i = llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-    if (i != -1) return (integer)llList2String(_XIOBJECT_LINK_CACHE, i + 1); // return cached linknum
-    integer cl_i;
-    float cl_dist = -1.0;
-    list candidates = [];
-    for (i = 1; i <= llGetNumberOfPrims(); i++)
-    { // iterate through each prim
-        if (llGetLinkName(i) == name)
-        { // name match
-			float dist = llVecDist(llGetPos(), llList2Vector(llGetLinkPrimitiveParams(i, [PRIM_POSITION]), 0));
-			if (cl_dist < 0.0 || dist < cl_dist)
-			{ // closet so far
-				cl_i = i;
-				cl_dist = dist;
-			}
-        }
-    }
-    if (cl_i) return cl_i; // match
-    return 0; // no match
 }
 
 integer XiObject$Profile( // returns various bitwise flags for the state of an object
