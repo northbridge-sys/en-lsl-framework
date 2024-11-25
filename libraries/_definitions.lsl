@@ -270,6 +270,7 @@
 #define XiInventory$OwnedByCreator(...) _XiInventory_OwnedByCreator( __VA_ARGS__ )
 #define XiInventory$RezRemote(...) _XiInventory_RezRemote( __VA_ARGS__ )
 #define XiInventory$NCOpen(...) _XiInventory_NCOpen( __VA_ARGS__ )
+#define XiInventory$NCOpenByPartialName(...) _XiInventory_NCOpenByPartialName( __VA_ARGS__ )
 #define _XiInventory$NCParse(...) _XiInventory_NCParse( __VA_ARGS__ )
 #define XiInventory$NCRead(...) _XiInventory_NCRead( __VA_ARGS__ )
 #define XiInventory$TypeToString(...) _XiInventory_TypeToString( __VA_ARGS__ )

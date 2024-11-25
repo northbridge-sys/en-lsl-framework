@@ -124,6 +124,16 @@ integer XiInventory$RezRemote( // rezzes a remote object with Remote.lsl
     return 1;
 }
 
+integer XiInventory$NCOpenByPartialName( // opens a notecard for XiInventory$NC* operations using a partial name
+    string name
+)
+{
+    list ncs = XiInventory$List(INVENTORY_NOTECARD);
+    integer nc = XiList$FindPartial(ncs, name);
+    if (nc == -1) return 0;
+    else return XiInventory$NCOpen(llList2String(ncs, nc));
+}
+
 integer XiInventory$NCOpen( // opens a notecard for XiInventory$NC* operations
     string name
     )
