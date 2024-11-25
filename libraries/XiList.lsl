@@ -69,7 +69,7 @@ list XiList$Json( // returns a string with each element converted to an escaped 
     integer l = llGetListLength(in);
     for (i = 0; i < l; i++)
     {
-        out += llList2String(in, i)
+        out += ["\"" + XiString$Escape(XISTRING$ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""];
     }
 }
 
