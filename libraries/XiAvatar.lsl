@@ -45,9 +45,9 @@ string XiAvatar$GetGroup(
     string id
 )
 {
-    list attach = llGetAttachedList(id);
+    list attaches = llGetAttachedList(id);
     string group = NULL_KEY;
-    string first = llList2String(attach, 0);
-    if (attach != [] && first != "NOT ON REGION" && first != "NOT FOUND") group = llList2String(llGetObjectDetails(llList2String(attaches, 0), [OBJECT_GROUP]), 0);
+    string first = llList2String(attaches, 0);
+    if (attaches != [] && first != "NOT ON REGION" && first != "NOT FOUND") group = llList2String(llGetObjectDetails(llList2String(attaches, 0), [OBJECT_GROUP]), 0);
     return group;
 }
