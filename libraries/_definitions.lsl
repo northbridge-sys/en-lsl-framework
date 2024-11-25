@@ -302,6 +302,7 @@
 #define XiList$FromStr(...) _XiList_FromStr( __VA_ARGS__ )
 #define XiList$FindPartial(...) _XiList_FindPartial( __VA_ARGS__ )
 #define XiList$Json(...) _XiList_Json( __VA_ARGS__ )
+#define XiList$ReplaceExact(...) _XiList_ReplaceExact(__VA_ARGS__)
 #define XiList$Reverse(...) _XiList_Reverse( __VA_ARGS__ )
 #define XiList$ToString(...) _XiList_ToString( __VA_ARGS__ )
 

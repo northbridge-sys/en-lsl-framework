@@ -197,7 +197,8 @@ XiObject$Text(
         integer ind = (XiDate$MSNow() / 62) % 16; // approximately +1 ind every 1/16th of a second
         progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
     }
-    llSetText(llDumpList2String(XiList$Reverse(lines) + [progress, "❘", icon, "❘"], "\n"), color, 1.0);
+                                                                                           // this is a nbsp
+    llSetText(llDumpList2String([icon] + XiList$Reverse(XiList$ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
     if (flags & XIOBJECT$TEXT_TEMP) XiTimer$Start(2.0, 0, "_XiObject$TextTemp");
     else XiTimer$Cancel(XiTimer$Find("_XiObject$TextTemp"));
 }

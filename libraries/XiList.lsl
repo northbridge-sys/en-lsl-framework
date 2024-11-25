@@ -185,3 +185,20 @@ list XiList$DeleteStrideByMatch(
     if (i != -1) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1); // delete existing stride because we'll be re-adding it
     return haystack;
 }
+
+list XiList$ReplaceExact(
+    list haystack,
+    list needle,
+    list new
+    )
+{
+    integer l = llGetListLength(needle);
+    integer ind;
+    do
+    {
+        ind = llListFindList(haystack, needle);
+        if (ind != -1) haystack = llListReplaceList(haystack, new, ind, ind + l - 1);
+    }
+    while (ind != -1);
+    return haystack;
+}
