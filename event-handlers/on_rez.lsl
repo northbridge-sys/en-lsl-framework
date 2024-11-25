@@ -43,7 +43,7 @@
 
         // log event if requested
         #ifdef XI$ON_REZ_TRACE
-            XiLog$TraceParams( "on_rez", [], [ i ] );
+            XiLog$TraceParams( "on_rez", [], [ param ] );
         #endif
 
         // update XiChat channels if any are just the UUID
@@ -58,7 +58,7 @@
 
         // pass to user-defined function if requested
 		#ifdef XI$ON_REZ
-			Xi$on_rez(i);
+			Xi$on_rez(param);
 		#endif
 
 		// update _XIOBJECT_UUIDS_SELF
