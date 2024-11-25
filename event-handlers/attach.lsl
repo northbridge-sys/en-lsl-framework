@@ -48,10 +48,9 @@
 
         // if attaches are blocked, perform auto-detach procedure
         #ifdef XI$ATTACH_BLOCK
-            if ((string)id != NULL_KEY)
+            if ((string)id != NULL_KEY && llGetAttached()) // check both to be safe, never know
             {
-                XiLog$Error("Please rez me to use me. Self-detaching.");
-                llRequestPermissions(id, PERMISSION_ATTACH);
+                XiLog$FatalDie("This object cannot be used as an attachment.");
                 return;
             }
         #endif

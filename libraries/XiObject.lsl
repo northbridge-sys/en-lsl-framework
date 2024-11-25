@@ -207,6 +207,70 @@ _XiObject$TextTemp()
     llSetText("", BLACK, 0.0);
 }
 
+string XiObject$GetAttachedString(
+    integer i
+    )
+{
+    return llList2String([
+        "(not attached)",
+        "Chest",
+        "Skull",
+        "Left Shoulder",
+        "Right Shoulder",
+        "Left Hand",
+        "Right Hand",
+        "Left Foot",
+        "Right Foot",
+        "Spine",
+        "Pelvis",
+        "Mouth",
+        "Chin",
+        "Left Ear",
+        "Right Ear",
+        "Left Eye",
+        "Right Eye",
+        "Nose",
+        "R Upper Arm",
+        "R Lower Arm",
+        "L Upper Arm",
+        "L Lower Arm",
+        "Right Hip",
+        "R Upper Leg",
+        "R Lower Leg",
+        "Left Hip",
+        "L Upper Leg",
+        "L LOwer Leg",
+        "Stomach",
+        "Left Pec",
+        "Right Pec",
+        "HUD Center 2",
+        "HUD Top Right",
+        "HUD Top",
+        "HUD Top Left",
+        "HUD Center",
+        "HUD Bottom Left",
+        "HUD Bottom",
+        "HUD Bottom Right",
+        "Neck",
+        "Avatar Center",
+        "Left Ring Finger",
+        "Right Ring Finger",
+        "Tail Base",
+        "Tail Tip",
+        "Left Wing",
+        "Right Wing",
+        "Jaw",
+        "Alt Left Ear",
+        "Alt Right Ear",
+        "Alt Left Eye",
+        "Alt Right Eye",
+        "Tongue",
+        "Groin",
+        "Left Hind Foot",
+        "Right Hind Foot"
+        ], i);
+}
+
 integer XiObject$Profile( // returns various bitwise flags for the state of an object
     string k
     )

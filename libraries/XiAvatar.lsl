@@ -40,3 +40,14 @@ string XiAvatar$Elem( string id )
 {
     return "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)";
 }
+
+string XiAvatar$GetGroup(
+    string id
+)
+{
+    list attach = llGetAttachedList(id);
+    string group = NULL_KEY;
+    string first = llList2String(attach, 0);
+    if (attach != [] && first != "NOT ON REGION" && first != "NOT FOUND") group = llList2String(llGetObjectDetails(llList2String(attaches, 0), [OBJECT_GROUP]), 0);
+    return group;
+}

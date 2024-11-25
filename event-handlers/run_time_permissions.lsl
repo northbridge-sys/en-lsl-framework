@@ -44,15 +44,6 @@
             XiInteger$ElemBitwise( perm )
         ] );
 
-        // if attaches are blocked, perform auto-detach procedure
-        #ifdef XI$ATTACH_BLOCK
-            if (perm & PERMISSION_ATTACH)
-            {
-                llDetachFromAvatar();
-                return;
-            }
-        #endif
-
         // event unused, so pass to user-defined function only
         Xi$run_time_permissions( perm );
 	}

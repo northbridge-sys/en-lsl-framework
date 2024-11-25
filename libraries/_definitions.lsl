@@ -225,6 +225,7 @@
 // ==
 
 #define XiAvatar$Elem(...) _XiAvatar_Elem( __VA_ARGS__ )
+#define XiAvatar$GetGroup(...) _XiAvatar_GetGroup( __VA_ARGS__ )
 
 #define XiChat$GetService(...) _XiChat_GetService( __VA_ARGS__ )
 #define XiChat$SetService(...) _XiChat_SetService( __VA_ARGS__ )

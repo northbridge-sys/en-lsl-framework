@@ -111,12 +111,12 @@ XiLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
     llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
 }
 
-XiLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE)
+XiLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
     string m // message
 )
 {
     if ( m != "" ) m += " ";
-    XiLog$( FATAL, m + "Object deleted." );
+    XiLog$Fatal( m + "Object " + llList2String(["deleted", "detached from " + XiObject$GetAttachedString(llGetAttached())], !!llGetAttached()) + "." );
     llSetScriptState( llGetScriptName(), FALSE );
     // delete object if XILOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef XILOG$ENABLE_FATALDIE_OWNEDBYCREATOR
@@ -126,9 +126,12 @@ XiLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
     #ifdef XILOG$DISABLE_FATALDIE
         1;
     #else
-        llDie();
+        {
+            if (llGetAttached()) llDetachFromAvatar();
+            else llDie();
+        }
     #endif
-    llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
+    llSleep( 1.0 ); // give the simulator time
 }
 
 string XiLog$LevelToString( // converts integer level number into string representation
