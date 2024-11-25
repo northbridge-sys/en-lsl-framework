@@ -71,6 +71,7 @@ list XiList$Json( // returns a string with each element converted to an escaped 
     {
         out += ["\"" + XiString$Escape(XISTRING$ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""];
     }
+    return out;
 }
 
 list XiList$Reverse(
