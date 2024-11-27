@@ -318,6 +318,7 @@
 #define XiLog$SetLoglevel(...) _XiLog_SetLoglevel( __VA_ARGS__ )
 #define XiLog$GetLogtarget(...) _XiLog_GetLogtarget( __VA_ARGS__ )
 #define XiLog$SetLogtarget(...) _XiLog_SetLogtarget( __VA_ARGS__ )
+#define XiLog$To(...) _XiLog_To( __VA_ARGS__ )
 
 #define XiLSD$Reset(...) _XiLSD_Reset( __VA_ARGS__ )
 #define XiLSD$Write(...) _XiLSD_Write( __VA_ARGS__ )

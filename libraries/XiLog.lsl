@@ -39,6 +39,24 @@ XiLog$( // custom logging function
     string message
     )
 {
+    XiLog$To("", level, message);
+    #ifndef XILOG$DISABLE_LOGTARGET
+        string t = XiLog$GetLogtarget();
+        string prim = llGetSubString( t, 0, 35 );
+        if ( XiKey$IsPrimInRegion( prim ) )
+        { // log via XiChat to logtarget
+            string domain = llDeleteSubString( t, 0, 35 );
+            XiChat$RegionSayTo( prim, XiChat$Channel( domain ), XiList$ToString([ "XiChat", XiChat$GetService(), prim, domain, "$XiLog", message ] ) );
+        }
+    #endif
+}
+
+XiLog$To(
+    string target,
+    integer level,
+    string message
+    )
+{
     // can use level 0 to always send, or a level constant for loglevel support
     integer lsd_level = XiLog$GetLoglevel();
     list debug_header;
@@ -57,28 +75,18 @@ XiLog$( // custom logging function
     }
     if ( lsd_level >= level )
     {
-        llOwnerSay(
-            llDumpList2String(debug_header, "")
-            + llList2String([ // loglevel header, usually an icon but can be anything
-                "", // no level
-                "🛑 FATAL ERROR: ", // FATAL
-                "❌ ERROR: ", // ERROR
-                "🚩 WARNING: ", // WARN
-                "💬 ", // INFO
-                "🪲 ", // DEBUG
-                "🚦 " // TRACE
-                ], level)
-            + message);
+        message = llDumpList2String(debug_header, "") + llList2String([ // loglevel header, usually an icon but can be anything
+            "", // no level
+            "🛑 FATAL ERROR: ", // FATAL
+            "❌ ERROR: ", // ERROR
+            "🚩 WARNING: ", // WARN
+            "💬 ", // INFO
+            "🪲 ", // DEBUG
+            "🚦 " // TRACE
+            ], level) + message;
+        if (target == "") llOwnerSay(message);
+        else llRegionSayTo(target, 0, message);
     }
-    #ifndef XILOG$DISABLE_LOGTARGET
-        string t = XiLog$GetLogtarget();
-        string prim = llGetSubString( t, 0, 35 );
-        if ( XiKey$IsPrimInRegion( prim ) )
-        { // log via XiChat to logtarget
-            string domain = llDeleteSubString( t, 0, 35 );
-            XiChat$RegionSayTo( prim, XiChat$Channel( domain ), XiList$ToString([ "XiChat", XiChat$GetService(), prim, domain, "$XiLog", message ] ) );
-        }
-    #endif
 }
 
 XiLog$FatalStop( // logs a fatal error and stops the script
