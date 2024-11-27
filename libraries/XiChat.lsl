@@ -227,7 +227,7 @@ integer _XiChat$Process(
             XiString$Elem(message)
             ]);
     #endif
-    list data = XiList$FromStr(message);
+    list data = XiList$FromString(message);
     #ifdef XICHAT$TRACE
         XiLog$TraceVars(["data"], [
             XiList$Elem(data)
@@ -289,7 +289,7 @@ integer _XiChat$Process(
     #ifdef XI$IMP_MESSAGE
         if (llList2String(data, 4) == "XiIMP")
         { // IMP message
-                data = XiList$FromStr(llList2String(data, 5));
+                data = XiList$FromString(llList2String(data, 5));
                 if (llGetListLength(data) != 3) return 1; // error in IMP unserialize operation
                 _XiIMP$Process(
                     id,
@@ -305,7 +305,7 @@ integer _XiChat$Process(
         string domain = llList2String(data, 3);
         if (llList2String(data, 4) == "XiLSD$Pull")
         { // send LSD pair
-            data = XiList$FromStr(llList2String(data, 5));
+            data = XiList$FromString(llList2String(data, 5));
             if (llGetListLength(data) != 2) return 1; // error in operation unserialize operation
             XiLSD$Push(
                 id, // prim
@@ -318,7 +318,7 @@ integer _XiChat$Process(
         if (llList2String(data, 4) == "XiLSD$Push")
         { // save LSD pair
             string prim = llList2String(data, 2);
-            data = XiList$FromStr(llList2String(data, 5));
+            data = XiList$FromString(llList2String(data, 5));
             if (llGetListLength(data) != 5) return 1; // error in operation unserialize operation
             _XiLSD$Process(
                 prim, // target prim from XiLSD$Push
@@ -336,7 +336,7 @@ integer _XiChat$Process(
         string domain = llList2String(data, 3);
         if (llList2String(data, 4) == "XiInventory$Push")
         { // send inventory
-            data = XiList$FromStr(llList2String(data, 5));
+            data = XiList$FromString(llList2String(data, 5));
             if (llGetListLength(data) != 5) return 1; // error in operation unserialize operation
             XiInventory$Pull(
                 id, // prim
@@ -351,7 +351,7 @@ integer _XiChat$Process(
         }
         if (llList2String(data, 4) == "XiInventory$Pull")
         { // send inventory
-            data = XiList$FromStr(llList2String(data, 5));
+            data = XiList$FromString(llList2String(data, 5));
             if (llGetListLength(data) != 5) return 1; // error in operation unserialize operation
             XiInventory$Push(
                 id, // prim
@@ -369,7 +369,7 @@ integer _XiChat$Process(
         if (llList2String( data, 4 ) == "XiInventory$RezRemote")
         { // we have rezzed an object with Remote.lsl
             integer param = (integer)llList2String( XIINVENTORY$REMOTE, 0 );
-            list scripts = XiList$Collate( XiList$FromStr( llList2String( XIINVENTORY$REMOTE, 1 ) ), XiList$FromStr( llList2String( XIINVENTORY$REMOTE, 2 ) ) ); // script_name, running
+            list scripts = XiList$Collate( XiList$FromString( llList2String( XIINVENTORY$REMOTE, 1 ) ), XiList$FromString( llList2String( XIINVENTORY$REMOTE, 2 ) ) ); // script_name, running
             XIINVENTORY$REMOTE = llDeleteSubList( XIINVENTORY$REMOTE, 0, XIINVENTORY$REMOTE_STRIDE - 1 );
             integer i;
             integer l = llGetListLength( scripts ) / 2;

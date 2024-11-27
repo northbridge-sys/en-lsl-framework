@@ -299,7 +299,7 @@
 #define XiList$DeleteStrideByMatch(...) _XiList_DeleteStrideByMatch( __VA_ARGS__ )
 #define XiList$Elem(...) _XiList_Elem( __VA_ARGS__ )
 #define XiList$Empty(...) _XiList_Empty( __VA_ARGS__ )
-#define XiList$FromStr(...) _XiList_FromStr( __VA_ARGS__ )
+#define XiList$FromString(...) _XiList_FromStr( __VA_ARGS__ )
 #define XiList$FindPartial(...) _XiList_FindPartial( __VA_ARGS__ )
 #define XiList$Json(...) _XiList_Json( __VA_ARGS__ )
 #define XiList$ReplaceExact(...) _XiList_ReplaceExact(__VA_ARGS__)
