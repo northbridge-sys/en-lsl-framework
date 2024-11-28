@@ -59,7 +59,7 @@ string XiTimer$Start( // adds a timer
     #endif
 
     // check inputs
-    if ( interval < 0.00001 ) return NULL_KEY; // invalid interval
+    if ( interval < 0.01 ) return NULL_KEY; // invalid interval
     if ( interval < XITIMER$MINIMUM_INTERVAL ) interval = XITIMER$MINIMUM_INTERVAL; // clamp to minimum interval
     string id = llGenerateKey();
     #ifdef XITIMER$DISABLE_MULTIPLE
