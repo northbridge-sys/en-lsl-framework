@@ -31,7 +31,7 @@ Some of the useful features En provides:
 
 - If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
 - Create a directory called `en-lsl-framework` in your LSL preprocessor include directory.
-- Unpack the repository into the `en-lsl-framework`, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-library/libraries.lsl`.
+- Unpack the repository into the `en-lsl-framework`, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-framework/libraries.lsl`.
 - Include the framework libraries by placing the following line at the top of your script:
 
 ```
