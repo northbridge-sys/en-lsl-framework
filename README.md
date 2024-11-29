@@ -51,12 +51,15 @@ default
 
 ```
 #define EN$STATE_ENTRY
+#define EN$ON_REZ
+
+#include "en-lsl-framework/libraries.lsl"
+
 en$state_entry()
 {
     // runs on state_entry if EN$STATE_ENTRY has been defined
 }
 
-#define EN$ON_REZ
 en$on_rez( integer param )
 {
     // runs on on_rez if EN$ON_REZ has been defined
@@ -65,50 +68,14 @@ en$on_rez( integer param )
 // ...
 ```
 
-You can also use custom En "event functions" that are defined by the libraries you enable - for example, here's a script that responds to any "ping" requests made to it over enIMP:
-
-```
-#define ENIMP$ENABLE
-
-#include "en-lsl-framework/libraries.lsl"
-
-en$imp_message(
-    string prim, // source prim
-    string target, // target script
-    string status, // status string
-    integer ident, // IMP ident (optional)
-    list params, // IMP request parameters
-    string data, // IMP data (optional)
-    integer linknum, // -1 if not part of linkset
-    string source // source script name
-    )
-{
-    if ( status != "" ) return; // only respond to requests
-    if ( llList2String( params, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
-    enIMP$Send( // respond via IMP
-        prim,
-        source,
-        "ok",
-        ident,
-        params,
-        "Hello, \"" + source + "\"!"
-        );
-}
-
-default
-{
-    #include "en-lsl-framework/event-handlers.lsl"
-}
-```
-
-En only injects its own trace logging if the following macros are defined:
+En also injects its own trace logging if the following macros are defined:
 
 - `EN$TRACE_LIBRARIES` enables all *library* logging
 - `EN*$TRACE` enables logging for a *specific* library (such as `ENCHAT$TRACE`)
 - `EN$TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
 - `EN$*_TRACE` enables logging for a *specific* event (such as `EN$LINK_MESSAGE_TRACE`)
 
-If you need to define any preprocessor values *other* than event definitions, make sure you do so *above* `#include "en-lsl-framework/libraries.lsl"`.
+If you need to define any preprocessor values, make sure you do so *above* `#include "en-lsl-framework/libraries.lsl"`.
 
 Here's an example of a script that does nothing but log En function calls and events used by En:
 
@@ -185,34 +152,52 @@ or, if you change the runtime loglevel to TRACE (such as with `enLog$SetLoglevel
 
 You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` value.
 
-En also implements structured protocols for communication between scripts. For example, you can send a message to a specific script like so:
+En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
 
 ```
 enIMP$Send(
     "", // sends via link_message, but can also be sent to a specific link number, specific prim via chat, or all scripts listening to a specified channel
     "Target Script Name",
     "", // signals a request, as opposed to a broadcast or response
-    0, // integer passed to target
-    ["parameter", "etc."], // list passed to target
-    "Hello world!" // string passed to target
+    0, // ident integer passed to target
+    ["ping"], // params list passed to target
+    "" // data string passed to target
     );
 ```
 
 and the other script - if compiled with En - will call the `en$imp_message` function defined by the script:
 
 ```
+#define ENIMP$ENABLE
+
+#include "en-lsl-framework/libraries.lsl"
+
 en$imp_message(
-    string source_prim,
-    string target_script,
-    string status,
-    integer i,
-    list l,
-    string s,
-    integer source_linknum,
-    string source_script
+    string prim, // source prim
+    string target, // target script
+    string status, // status string
+    integer ident, // IMP ident (optional)
+    list params, // IMP request parameters
+    string data, // IMP data (optional)
+    integer linknum, // -1 if not part of linkset
+    string source // source script name
     )
 {
-    // process message
+    if ( status != "" ) return; // only respond to requests
+    if ( llList2String( params, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
+    enIMP$Send( // respond via IMP
+        prim,
+        source,
+        "ok",
+        ident,
+        params,
+        "Hello, \"" + source + "\"!"
+        );
+}
+
+default
+{
+    #include "en-lsl-framework/event-handlers.lsl"
 }
 ```
 
