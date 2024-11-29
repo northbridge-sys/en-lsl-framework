@@ -1,9 +1,9 @@
 /*
-    XiInteger.lsl
+    enInteger.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -36,24 +36,24 @@
 // == functions
 // ==
 
-string XiInteger$ElemBitfield(integer var)
+string enInteger$ElemBitfield(integer var)
 {
     integer test = 1;
     list flags;
     while (test <= var)
     {
-        if (test & var) flags += ["0x" + XiInteger$ToHex(test, 1) + " (" + (string)test + ")"];
+        if (test & var) flags += ["0x" + enInteger$ToHex(test, 1) + " (" + (string)test + ")"];
         test *= 2;
     }
     return "{" + llList2CSV(flags) + "}";
 }
 
-integer XiInteger$Rand() // random integer
+integer enInteger$Rand() // random integer
 {
     return (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ));
 }
 
-string XiInteger$ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
+string enInteger$ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
     integer i, // integer
     integer digits // number of hex digits
     )
@@ -63,7 +63,7 @@ string XiInteger$ToHex( // converts a 32-bit signed integer in its entirety to h
     string hex;
     do
     {
-        hex = llGetSubString( XIINTEGER$CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
+        hex = llGetSubString( ENINTEGER$CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
         digits--;
     }
     while ( i = ( 0xFFFFFFF & ( i >> 4 ) ) );
@@ -74,7 +74,7 @@ string XiInteger$ToHex( // converts a 32-bit signed integer in its entirety to h
     return hex;
 }
 
-integer XiInteger$ToNybbles( // grabs the specified nybbles out of an integer
+integer enInteger$ToNybbles( // grabs the specified nybbles out of an integer
     integer i, // integer
     integer start_index, // start index
     integer digits // number of nybbles to return
@@ -89,7 +89,7 @@ integer XiInteger$ToNybbles( // grabs the specified nybbles out of an integer
     return nybbles;
 }
 
-string XiInteger$ToString64( // converts int to string of length using 64-character charset, XITYPE_CHARSET_64
+string enInteger$ToString64( // converts int to string of length using 64-character charset, ENTYPE_CHARSET_64
     integer int,
     integer length
     )
@@ -102,36 +102,36 @@ string XiInteger$ToString64( // converts int to string of length using 64-charac
         x = ( (0x7FFFFFFF & int) % 64 ) - ( 0x80000000 % 64 );
         y = x % 64;
         int = ( x / 64 ) + ( ( 0x7FFFFFFF & int ) / 64 ) - ( 0x80000000 / 64 );
-        o = llGetSubString( XIVAR_CHARSET_64, y, y );
+        o = llGetSubString( ENVAR_CHARSET_64, y, y );
     }
-    do o = llGetSubString( XIVAR_CHARSET_64, x = int % 64, x ) + o;
+    do o = llGetSubString( ENVAR_CHARSET_64, x = int % 64, x ) + o;
     while ( int /= 64 );
     while ( llStringLength(o) < length ) o = "0" + o;
     return o;
 }
 
-integer XiInteger$FromStr64( // inverse of XiInteger$ToString64
+integer enInteger$FromStr64( // inverse of enInteger$ToString64
     string str
     )
 {
     integer i = -llStringLength(str);
     integer x = 0;
-    while (i) x = (x * 64) + llSubStringIndex(XIVAR_CHARSET_64, llGetSubString(str, i, i++));
+    while (i) x = (x * 64) + llSubStringIndex(ENVAR_CHARSET_64, llGetSubString(str, i, i++));
     return x;
 }
 
-integer XiInteger$Clamp(
+integer enInteger$Clamp(
     integer i,
     integer m,
     integer x
     )
 {
     if (i < m) i = m; // clamp to minimum
-    if (i > x) i = x; // clamp to maXimum
+    if (i > x) i = x; // clamp to maximum
     return i;
 }
 
-integer XiInteger$Reset(
+integer enInteger$Reset(
     integer i,
     integer m,
     integer x,

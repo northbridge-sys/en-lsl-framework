@@ -1,6 +1,6 @@
 /*
-    control.lsl
-    Event Handler
+    enKVP.lsl
+    Library
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
     https://docs.northbridgesys.com/en-lsl-framework
@@ -25,28 +25,69 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This snippet replaces the control event handler with a version that calls
-    maintenance functions required by En libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by En libraries:
-
-		#define EN$CONTROL
-		en$control( key id, integer level, integer edge )
-		{
-            // code to run when event occurs that is not intercepted by En
-		}
+    These functions allow scripts to access an in-memory key-value pair list.  This
+    is mainly used for dynamic configuration value options in situations where
+    linkset data cannot be used and the values only need to be known at runtime.
 */
 
-#ifdef EN$CONTROL
-	control( key id, integer level, integer edge )
-	{
-        // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "control", [ "id", "level", "edge" ], [
-            enAvatar$Elem( id ),
-            enInteger$ElemBitfield( level ),
-            enInteger$ElemBitfield( edge )
-        ] );
+// ==
+// == globals
+// ==
 
-        // event unused, so pass to user-defined function only
-        en$control( id, level, edge );
-	}
-#endif
+// these are done as separate lists for speed, the memory difference is negligible
+list _ENKVP_NAMES;
+list _ENKVP_DATA;
+
+// ==
+// == functions
+// ==
+
+integer enKVP$Eensts(string name)
+{ // checks if a KVP pair eensts by name
+    #ifdef ENKVP$TRACE
+        enLog$TraceParams("enKVP$Eensts", ["name"], [
+            enString$Elem(name)
+            ]);
+    #endif
+	return llListFindList(_ENKVP_NAMES, [name]) != -1;
+}
+
+integer enKVP$Write(string name, string data)
+{ // writes a KVP pair value
+    #ifdef ENKVP$TRACE
+        enLog$TraceParams("enKVP$Write", ["name", "data"], [
+            enString$Elem(name),
+            enString$Elem(data)
+            ]);
+    #endif
+	integer i = llListFindList(_ENKVP_NAMES, [name]);
+	if (i != -1) enKVP$Delete(name); // delete value, then reappend
+	_ENKVP_NAMES += [name];
+	_ENKVP_DATA += [data];
+	return 1;
+}
+
+string enKVP$Read(string name)
+{ // reads a KVP pair value
+    #ifdef ENKVP$TRACE
+        enLog$TraceParams("enKVP$Read", ["name"], [
+            enString$Elem(name)
+            ]);
+    #endif
+	integer i = llListFindList(_ENKVP_NAMES, [name]);
+	if (i == -1) return ""; // doesn't eenst
+	return llList2String(_ENKVP_DATA, i);
+}
+
+enKVP$Delete(string name)
+{ // deletes a KVP pair
+    #ifdef ENKVP$TRACE
+        enLog$TraceParams("enKVP$Delete", ["name"], [
+            enString$Elem(name)
+            ]);
+    #endif
+	integer i = llListFindList(_ENKVP_NAMES, [name]);
+	if (i == -1) return; // doesn't eenst
+	_ENKVP_NAMES = llDeleteSubList(_ENKVP_NAMES, i, i);
+	_ENKVP_DATA = llDeleteSubList(_ENKVP_DATA, i, i);
+}

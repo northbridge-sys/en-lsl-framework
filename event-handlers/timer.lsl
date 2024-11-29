@@ -1,9 +1,9 @@
 /*
     timer.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,36 +26,36 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the timer event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$TIMER
-		Xi$timer(  )
+		#define EN$TIMER
+		en$timer(  )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$TIMER_TRACE || defined XI$TIMER || defined XITIMER$ENABLE
+#if defined EN$TIMER_TRACE || defined EN$TIMER || defined ENTIMER$ENABLE
 	timer()
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$TIMER_TRACE
-            XiLog$TraceParams( "timer", [], [] );
+        #ifdef EN$TIMER_TRACE
+            enLog$TraceParams( "timer", [], [] );
         #endif
 
-        // forward timers directly to XiTimer if enabled
-        #ifdef XITIMER$ENABLE
-            _XiTimer$Check();
+        // forward timers directly to enTimer if enabled
+        #ifdef ENTIMER$ENABLE
+            _enTimer$Check();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$TIMER
-			Xi$timer();
+		#ifdef EN$TIMER
+			en$timer();
 		#endif
 
-#if defined XI$TIMER_TRACE || defined XI$TIMER || defined XITIMER$ENABLE
+#if defined EN$TIMER_TRACE || defined EN$TIMER || defined ENTIMER$ENABLE
 	}
 #endif

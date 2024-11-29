@@ -1,9 +1,9 @@
 /*
     dataserver.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,36 +26,36 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the dataserver event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$DATASERVER
-		Xi$dataserver( key query, string data )
+		#define EN$DATASERVER
+		en$dataserver( key query, string data )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$DATASERVER_TRACE || defined XI$DATASERVER || defined XIINVENTORY$ENABLE_NC
+#if defined EN$DATASERVER_TRACE || defined EN$DATASERVER || defined ENINVENTORY$ENABLE_NC
 	dataserver( key query, string data )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$DATASERVER_TRACE
-            XiLog$TraceParams( "dataserver", [ "query", "data" ], [ XiString$Elem( query ), XiString$Elem( data ) ] );
+        #ifdef EN$DATASERVER_TRACE
+            enLog$TraceParams( "dataserver", [ "query", "data" ], [ enString$Elem( query ), enString$Elem( data ) ] );
         #endif
 
-        // check if any Xi libraries want to intercept this event
-        #ifdef XIINVENTORY$ENABLE_NC
-            if (_XiInventory$NCParse(query, data)) return;
+        // check if any En libraries want to intercept this event
+        #ifdef ENINVENTORY$ENABLE_NC
+            if (_enInventory$NCParse(query, data)) return;
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$DATASERVER
-			Xi$dataserver( query, data );
+		#ifdef EN$DATASERVER
+			en$dataserver( query, data );
 		#endif
 
-#if defined XI$DATASERVER_TRACE || defined XI$DATASERVER || defined XIINVENTORY$ENABLE_NC
+#if defined EN$DATASERVER_TRACE || defined EN$DATASERVER || defined ENINVENTORY$ENABLE_NC
 	}
 #endif

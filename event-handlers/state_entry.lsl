@@ -1,9 +1,9 @@
 /*
     state_entry.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,41 +26,41 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the state_entry event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$STATE_ENTRY
-		Xi$state_entry()
+		#define EN$STATE_ENTRY
+		en$state_entry()
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$STATE_ENTRY_TRACE || defined XI$STATE_ENTRY || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	state_entry()
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$STATE_ENTRY_TRACE
-            XiLog$TraceParams( "state_entry", [], [] );
+        #ifdef EN$STATE_ENTRY_TRACE
+            enLog$TraceParams( "state_entry", [], [] );
         #endif
 
-        // check if any Xi libraries want to intercept this event
-        #ifdef XILSD$ENABLE_UUID_HEADER
-            _XiLSD$CheckUUID();
+        // check if any En libraries want to intercept this event
+        #ifdef ENLSD$ENABLE_UUID_HEADER
+            _enLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$STATE_ENTRY
-			Xi$state_entry();
+		#ifdef EN$STATE_ENTRY
+			en$state_entry();
 		#endif
 
-		// update _XIOBJECT_UUIDS_SELF if needed
-        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
-            _XiObject$UpdateUUIDs();
+		// update _ENOBJECT_UUIDS_SELF if needed
+        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+            _enObject$UpdateUUIDs();
         #endif
 
-#if defined XI$STATE_ENTRY_TRACE || defined XI$STATE_ENTRY || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	}
 #endif

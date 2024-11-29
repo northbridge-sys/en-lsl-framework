@@ -1,9 +1,9 @@
 /*
     attach.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,40 +26,40 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the attach event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$ATTACH
-		Xi$attach( key id )
+		#define EN$ATTACH
+		en$attach( key id )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$ATTACH_TRACE || defined XI$ATTACH || defined XI$ATTACH_BLOCK
+#if defined EN$ATTACH_TRACE || defined EN$ATTACH || defined EN$ATTACH_BLOCK
 	attach( key id )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$ATTACH_TRACE
-            XiLog$TraceParams( "attach", [ "id" ], [ XiString$Elem( id ) ]);
+        #ifdef EN$ATTACH_TRACE
+            enLog$TraceParams( "attach", [ "id" ], [ enString$Elem( id ) ]);
         #endif
 
         // if attaches are blocked, perform auto-detach procedure
-        #ifdef XI$ATTACH_BLOCK
+        #ifdef EN$ATTACH_BLOCK
             if ((string)id != NULL_KEY && llGetAttached()) // check both to be safe, never know
             {
-                XiLog$FatalDie("This object cannot be used as an attachment.");
+                enLog$FatalDie("This object cannot be used as an attachment.");
                 return;
             }
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$ATTACH
-			Xi$attach( id );
+		#ifdef EN$ATTACH
+			en$attach( id );
 		#endif
 
-#if defined XI$ATTACH_TRACE || defined XI$ATTACH || defined XI$ATTACH_BLOCK
+#if defined EN$ATTACH_TRACE || defined EN$ATTACH || defined EN$ATTACH_BLOCK
 	}
 #endif

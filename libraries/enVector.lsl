@@ -1,9 +1,9 @@
 /*
-    XiVector.lsl
+    enVector.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -38,39 +38,39 @@
 
 // typecasting
 
-string XiVector$ToString( // removes the < & > from a vector and rounds each element, good for displaying positions
+string enVector$ToString( // removes the < & > from a vector and rounds each element, good for displaying positions
     vector pos,
     integer digits
     )
 {
-    return XiFloat$ToString(pos.x, digits) + ", " + XiFloat$ToString(pos.y, digits) + ", " + XiFloat$ToString(pos.z, digits);
+    return enFloat$ToString(pos.x, digits) + ", " + enFloat$ToString(pos.y, digits) + ", " + enFloat$ToString(pos.z, digits);
 }
 
 // position scope translation
 // NOTE: these are mostly just here for reference, it is more efficient to hardcode these calculations than waste memory on "add two vectors"
 
-vector XiVector$WorldToCorner( // converts a world pos to a region CORNER
+vector enVector$WorldToCorner( // converts a world pos to a region CORNER
     vector world
     )
 {
     return <(integer)(world.x / 256.0) * 256, (integer)(world.y / 256.0) * 256, 0.0>;
 }
 
-vector XiVector$WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
+vector enVector$WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
     vector world
     )
 {
-    return world - XiVector$WorldToCorner(world);
+    return world - enVector$WorldToCorner(world);
 }
 
-vector XiVector$RegionToWorld( // converts the current region position to world position
+vector enVector$RegionToWorld( // converts the current region position to world position
     vector region
     )
 {
-    return XiVector$RegionCornerToWorld(region, llGetRegionCorner());
+    return enVector$RegionCornerToWorld(region, llGetRegionCorner());
 }
 
-vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
+vector enVector$RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
     vector region,
     vector corner
     )
@@ -82,7 +82,7 @@ vector XiVector$RegionCornerToWorld( // converts a region CORNER and POSITION to
 
 // manipulation
 
-vector XiVector$Scale( // scales a vector by multiplying with each element of another vector
+vector enVector$Scale( // scales a vector by multiplying with each element of another vector
     vector a,
     vector b
 )
@@ -90,7 +90,7 @@ vector XiVector$Scale( // scales a vector by multiplying with each element of an
     return <a.x * b.x, a.y * b.y, a.z * b.z>;
 }
 
-vector XiVector$ScaleInverse( // scales a vector by dividing by each element of another vector
+vector enVector$ScaleInverse( // scales a vector by dividing by each element of another vector
     vector a,
     vector b
 )

@@ -1,9 +1,9 @@
 /*
     email.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,30 +26,30 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the email event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$EMAIL
-		Xi$email( string time, string address, string subject, string message,
+		#define EN$EMAIL
+		en$email( string time, string address, string subject, string message,
             integer remaining )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$EMAIL
+#ifdef EN$EMAIL
 	email( string time, string address, string subject, string message, integer remaining )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
-            XiString$Elem( time ),
-            XiString$Elem( address ),
-            XiString$Elem( subject ),
-            XiString$Elem( message ),
+        enLog$TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
+            enString$Elem( time ),
+            enString$Elem( address ),
+            enString$Elem( subject ),
+            enString$Elem( message ),
             remaining
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi$email( time, address, subject, message, remaining );
+        en$email( time, address, subject, message, remaining );
 	}
 #endif

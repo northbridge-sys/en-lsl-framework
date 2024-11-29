@@ -1,9 +1,9 @@
 /*
-    XiKVP.lsl
+    enDate.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -25,69 +25,40 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    These functions allow scripts to access an in-memory key-value pair list.  This
-    is mainly used for dynamic configuration value options in situations where
-    linkset data cannot be used and the values only need to be known at runtime.
+	TBD
 */
 
 // ==
 // == globals
 // ==
 
-// these are done as separate lists for speed, the memory difference is negligible
-list _XIKVP_NAMES;
-list _XIKVP_DATA;
-
 // ==
 // == functions
 // ==
 
-integer XiKVP$Exists(string name)
-{ // checks if a KVP pair eXists by name
-    #ifdef XIKVP$TRACE
-        XiLog$TraceParams("XiKVP$Exists", ["name"], [
-            XiString$Elem(name)
-            ]);
-    #endif
-	return llListFindList(_XIKVP_NAMES, [name]) != -1;
+integer enDate$MS( // gets an integer that represents the current millisecond of a month
+    string timestamp // llGetTimestamp string (use enDate$MSNow() for the current value)
+    )
+{
+    return 0x80000000 + // start at -2147483648
+        (integer)llGetSubString( timestamp, 8, 9 ) * 86400000 + // days * ms_per_day (-2147483648 + (31 * 86400000) = 530916352)
+        (integer)llGetSubString( timestamp, 11, 12 ) * 3600000 + // hours * ms_per_hour (530916352 + (23 * 3600000) = 613716352)
+        (integer)llGetSubString( timestamp, 14, 15 ) * 60000 + // minutes * ms_per_minute (613716352 + (59 * 60000) = 617256352)
+        (integer)( (float)llGetSubString( timestamp, 17, -2 ) * 1000.0 ); // seconds.ms * ms_per_second (617256352 + 60000 = 617316352)
+    // total range is 2764800000 ms, or ms in 31 days
 }
 
-integer XiKVP$Write(string name, string data)
-{ // writes a KVP pair value
-    #ifdef XIKVP$TRACE
-        XiLog$TraceParams("XiKVP$Write", ["name", "data"], [
-            XiString$Elem(name),
-            XiString$Elem(data)
-            ]);
-    #endif
-	integer i = llListFindList(_XIKVP_NAMES, [name]);
-	if (i != -1) XiKVP$Delete(name); // delete value, then reappend
-	_XIKVP_NAMES += [name];
-	_XIKVP_DATA += [data];
-	return 1;
+integer enDate$MSNow() // gets the value of enDate$MS( ... ) for the current datetime
+{
+    return enDate$MS( llGetTimestamp() );
 }
 
-string XiKVP$Read(string name)
-{ // reads a KVP pair value
-    #ifdef XIKVP$TRACE
-        XiLog$TraceParams("XiKVP$Read", ["name"], [
-            XiString$Elem(name)
-            ]);
-    #endif
-	integer i = llListFindList(_XIKVP_NAMES, [name]);
-	if (i == -1) return ""; // doesn't eXist
-	return llList2String(_XIKVP_DATA, i);
-}
-
-XiKVP$Delete(string name)
-{ // deletes a KVP pair
-    #ifdef XIKVP$TRACE
-        XiLog$TraceParams("XiKVP$Delete", ["name"], [
-            XiString$Elem(name)
-            ]);
-    #endif
-	integer i = llListFindList(_XIKVP_NAMES, [name]);
-	if (i == -1) return; // doesn't eXist
-	_XIKVP_NAMES = llDeleteSubList(_XIKVP_NAMES, i, i);
-	_XIKVP_DATA = llDeleteSubList(_XIKVP_DATA, i, i);
+integer enDate$MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
+    integer ms, // enDate$MS result
+    integer add // milliseconds to add - note this is limited to 
+)
+{
+    // check if adding takes us into the "dead zone" of 617316352 to 2147483647
+    if ( ms + add > 617316352 ) return ( ms + add ) + 2764800000 * ( -1 * ( add > 0 ) ); // if we are adding +, subtract the entire range; otherwise, add it
+    return ms + add; // no adjustment needed
 }

@@ -1,9 +1,9 @@
 /*
     ManageLoglevel.lsl
 	Utility Script
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -25,23 +25,23 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This is a full script that sets the loglevel used by XiLog functions. This value
+    This is a full script that sets the loglevel used by enLog functions. This value
     is stored in the "loglevel" linkset data pair. Unlike SetLoglevel, this script
     will remain in the object and editing its name will change the loglevel.
 
     This script must be named with the desired loglevel as the last element of the
-    script's name. For example, "[BuildTronics] Xi ManageLoglevel.lsl INFO" causes
-    Xi scripts in the same linkset to use the default loglevel (INFO). The text in
+    script's name. For example, "[Northbridge Business Systems] En ManageLoglevel.lsl INFO" causes
+    En scripts in the same linkset to use the default loglevel (INFO). The text in
     front of the desired loglevel can be anything (or nothing).
 
     Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 */
 
-#include "xi-lsl-framework/main.lsl"
+#include "en-lsl-framework/main.lsl"
 
 setLoglevel()
 {
-    integer loglevel = XiLog$StrToLevel(
+    integer loglevel = enLog$StrToLevel(
         llList2String(
             llParseStringKeepNulls(
                 llStringTrim(
@@ -56,13 +56,13 @@ setLoglevel()
         );
     if ( !loglevel )
     {
-        XiLog$( ERROR, "Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
+        enLog$( ERROR, "Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
         return;
     }
     string lsd = llLinksetDataRead( "loglevel" );
     llLinksetDataWrite( "loglevel", (string)loglevel );
-    if ( lsd != "0" && !(integer)lsd ) XiLog$( 0, "Set loglevel to " + XiLog$LevelToString( loglevel ) + "." );
-    else if ( lsd != (string)loglevel ) XiLog$( 0, "Changed loglevel from " + XiLog$LevelToString( (integer)lsd ) + " to " + XiLog$LevelToString( loglevel ) + "." );
+    if ( lsd != "0" && !(integer)lsd ) enLog$( 0, "Set loglevel to " + enLog$LevelToString( loglevel ) + "." );
+    else if ( lsd != (string)loglevel ) enLog$( 0, "Changed loglevel from " + enLog$LevelToString( (integer)lsd ) + " to " + enLog$LevelToString( loglevel ) + "." );
 }
 
 default

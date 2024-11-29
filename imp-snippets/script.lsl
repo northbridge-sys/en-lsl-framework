@@ -1,9 +1,9 @@
 /*
     script.lsl
     IMP Processor Snippet
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -30,7 +30,7 @@
 
 if (status == "" && llList2String(params, 0) == "script")
 { // return script info
-    XiIMP$Send( // sends an IMP message
+    enIMP$Send( // sends an IMP message
         "",
         source,
         0, // signed

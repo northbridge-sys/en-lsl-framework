@@ -1,9 +1,9 @@
 /*
     land_collision.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,26 +26,26 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the land_collision event handler with a version that
-    calls maintenance functions required by Xi libraries, then optionally executes a
-    user-defined function to handle event calls that are not intercepted by Xi
+    calls maintenance functions required by En libraries, then optionally executes a
+    user-defined function to handle event calls that are not intercepted by En
     libraries:
 
-		#define XI$LAND_COLLISION
-		Xi$land_collision( vector pos )
+		#define EN$LAND_COLLISION
+		en$land_collision( vector pos )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$LAND_COLLISION
+#ifdef EN$LAND_COLLISION
 	land_collision( vector pos )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "land_collision", [ "pos" ], [
+        enLog$TraceParams( "land_collision", [ "pos" ], [
             pos
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi$land_collision( pos );
+        en$land_collision( pos );
 	}
 #endif

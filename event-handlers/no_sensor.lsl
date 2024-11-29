@@ -1,9 +1,9 @@
 /*
     no_sensor.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,23 +26,23 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the no_sensor event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$NO_SENSOR
-		Xi$no_sensor( key id, integer level, integer edge )
+		#define EN$NO_SENSOR
+		en$no_sensor( key id, integer level, integer edge )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$NO_SENSOR
+#ifdef EN$NO_SENSOR
 	no_sensor()
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "no_sensor", [], [] );
+        enLog$TraceParams( "no_sensor", [], [] );
 
         // event unused, so pass to user-defined function only
-        Xi$no_sensor();
+        en$no_sensor();
 	}
 #endif

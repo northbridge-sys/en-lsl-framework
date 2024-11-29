@@ -1,9 +1,9 @@
 /*
     kvp.lsl
     IMP Processor Snippet
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -33,28 +33,28 @@ if (status == "" && llList2String(params, 0) == "kvp")
 	string kvp_check_op = llList2String(params, 1);
 	if (kvp_check_op == "list")
 	{ // return list of KVP pairs
-		XiIMP$Send("", source, 0, "ok", ident, params, llDumpList2String(XIKVP_NAMES, "\n"));
+		enIMP$Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVP_NAMES, "\n"));
 	}
 	if (kvp_check_op == "set" || kvp_check_op == "get")
 	{ // check name for set or get operation first
-		if (!XiKVP$EXists(llList2String(params, 1)))
+		if (!enKVP$Eensts(llList2String(params, 1)))
 		{ // invalid name
-			XiIMP$Send("", source, 0, "err:undefined", ident, params, data);
+			enIMP$Send("", source, 0, "err:undefined", ident, params, data);
 			return;
 		}
 	}
 	if (kvp_check_op == "set")
-	{ // setting an XiKVP pair
-		if (!XiKVP$Set(llList2String(params, 1), data))
+	{ // setting an enKVP pair
+		if (!enKVP$Set(llList2String(params, 1), data))
 		{ // write failed due to protect
-			XiIMP$Send("", source, 0, "err:readonly", ident, params, data);
+			enIMP$Send("", source, 0, "err:readonly", ident, params, data);
 			return;
 		}
-		XiIMP$Send("", source, 0, "ok", ident, params, data);
+		enIMP$Send("", source, 0, "ok", ident, params, data);
 		return;
 	}
 	if (kvp_check_op == "get")
-	{ // getting an XiKVP pair
-		XiIMP$Send("", source, 0, "ok", ident, params, XiKVP$Get(llList2String(params, 1)));
+	{ // getting an enKVP pair
+		enIMP$Send("", source, 0, "ok", ident, params, enKVP$Get(llList2String(params, 1)));
 	}
 }

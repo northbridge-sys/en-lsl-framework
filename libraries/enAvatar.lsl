@@ -1,9 +1,9 @@
-/*
-    XiDate.lsl
+ /*
+    enAvatar.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -25,7 +25,7 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-	TBD
+    TBD
 */
 
 // ==
@@ -36,29 +36,18 @@
 // == functions
 // ==
 
-integer XiDate$MS( // gets an integer that represents the current millisecond of a month
-    string timestamp // llGetTimestamp string (use XiDate$MSNow() for the current value)
-    )
+string enAvatar$Elem( string id )
 {
-    return 0x80000000 + // start at -2147483648
-        (integer)llGetSubString( timestamp, 8, 9 ) * 86400000 + // days * ms_per_day (-2147483648 + (31 * 86400000) = 530916352)
-        (integer)llGetSubString( timestamp, 11, 12 ) * 3600000 + // hours * ms_per_hour (530916352 + (23 * 3600000) = 613716352)
-        (integer)llGetSubString( timestamp, 14, 15 ) * 60000 + // minutes * ms_per_minute (613716352 + (59 * 60000) = 617256352)
-        (integer)( (float)llGetSubString( timestamp, 17, -2 ) * 1000.0 ); // seconds.ms * ms_per_second (617256352 + 60000 = 617316352)
-    // total range is 2764800000 ms, or ms in 31 days
+    return "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)";
 }
 
-integer XiDate$MSNow() // gets the value of XiDate$MS( ... ) for the current datetime
-{
-    return XiDate$MS( llGetTimestamp() );
-}
-
-integer XiDate$MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
-    integer ms, // XiDate$MS result
-    integer add // milliseconds to add - note this is limited to 
+string enAvatar$GetGroup(
+    string id
 )
 {
-    // check if adding takes us into the "dead zone" of 617316352 to 2147483647
-    if ( ms + add > 617316352 ) return ( ms + add ) + 2764800000 * ( -1 * ( add > 0 ) ); // if we are adding +, subtract the entire range; otherwise, add it
-    return ms + add; // no adjustment needed
+    list attaches = llGetAttachedList(id);
+    string group = NULL_KEY;
+    string first = llList2String(attaches, 0);
+    if (attaches != [] && first != "NOT ON REGION" && first != "NOT FOUND") group = llList2String(llGetObjectDetails(llList2String(attaches, 0), [OBJECT_GROUP]), 0);
+    return group;
 }

@@ -1,8 +1,8 @@
 /*
     libraries.lsl
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -24,42 +24,41 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This file #includes all existing Xi library scripts. Type the following:
-		#include "xi-lsl-framework/libraries.lsl"
+    This file #includes all existing En library scripts. Type the following:
+		#include "en-lsl-framework/libraries.lsl"
     into the top of an LSL script with the LSL preprocessor enabled to be able to
-    call Xi library functions.
+    call En library functions.
 
     Make sure to #define any desired preprocessor flags BEFORE #include-ing this
     script, or the libraries may be loaded incorrectly.
 
-    Make sure the "Script optimizer" setting is enabled in your preprocessor,
-    otherwise the entire contents of the Xi library will be added to your script!
+    Make sure the "Script optimizer" setting is enabled in your preprocessor!
 */
 
-// each major revision of XI increments this value
-#define XI$LIBRARIES_LOADED 1
+// each major revision of En increments this value
+#define EN$LIBRARIES_LOADED 1
 
 // definition files, since we are at the top of the script
-#include "xi-lsl-framework/event-handlers/_definitions.lsl"
-#include "xi-lsl-framework/libraries/_definitions.lsl"
+#include "en-lsl-framework/event-handlers/_definitions.lsl"
+#include "en-lsl-framework/libraries/_definitions.lsl"
 
 // libraries
-#include "xi-lsl-framework/libraries/XiAvatar.lsl"
-#include "xi-lsl-framework/libraries/XiChat.lsl"
-#include "xi-lsl-framework/libraries/XiDate.lsl"
-#include "xi-lsl-framework/libraries/XiFloat.lsl"
-#include "xi-lsl-framework/libraries/XiHTTP.lsl"
-#include "xi-lsl-framework/libraries/XiIMP.lsl"
-#include "xi-lsl-framework/libraries/XiInteger.lsl"
-#include "xi-lsl-framework/libraries/XiInventory.lsl"
-#include "xi-lsl-framework/libraries/XiKey.lsl"
-#include "xi-lsl-framework/libraries/XiKVP.lsl"
-#include "xi-lsl-framework/libraries/XiList.lsl"
-#include "xi-lsl-framework/libraries/XiLog.lsl"
-#include "xi-lsl-framework/libraries/XiLSD.lsl"
-#include "xi-lsl-framework/libraries/XiObject.lsl"
-#include "xi-lsl-framework/libraries/XiRotation.lsl"
-#include "xi-lsl-framework/libraries/XiString.lsl"
-#include "xi-lsl-framework/libraries/XiTimer.lsl"
-#include "xi-lsl-framework/libraries/XiTest.lsl"
-#include "xi-lsl-framework/libraries/XiVector.lsl"
+#include "en-lsl-framework/libraries/enAvatar.lsl"
+#include "en-lsl-framework/libraries/enChat.lsl"
+#include "en-lsl-framework/libraries/enDate.lsl"
+#include "en-lsl-framework/libraries/enFloat.lsl"
+#include "en-lsl-framework/libraries/enHTTP.lsl"
+#include "en-lsl-framework/libraries/enIMP.lsl"
+#include "en-lsl-framework/libraries/enInteger.lsl"
+#include "en-lsl-framework/libraries/enInventory.lsl"
+#include "en-lsl-framework/libraries/enKey.lsl"
+#include "en-lsl-framework/libraries/enKVP.lsl"
+#include "en-lsl-framework/libraries/enList.lsl"
+#include "en-lsl-framework/libraries/enLog.lsl"
+#include "en-lsl-framework/libraries/enLSD.lsl"
+#include "en-lsl-framework/libraries/enObject.lsl"
+#include "en-lsl-framework/libraries/enRotation.lsl"
+#include "en-lsl-framework/libraries/enString.lsl"
+#include "en-lsl-framework/libraries/enTimer.lsl"
+#include "en-lsl-framework/libraries/enTest.lsl"
+#include "en-lsl-framework/libraries/enVector.lsl"

@@ -1,9 +1,9 @@
 /*
     IMPTap.lsl
     Utility Script
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -27,11 +27,11 @@
 
     This is a full script that reports all IMP messages sent via link message in the
     prim. These will be reported via "imp_message" event reports through
-    XiLog$TraceParams.
+    enLog$TraceParams.
 
     Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
     can either set the loglevel to 6 as follows to permanently enable output:
-        #define XILOG$DEFAULT_LOGLEVEL 6
+        #define ENLOG$DEFAULT_LOGLEVEL 6
     or you can set the "loglevel" linkset data pair to the desired loglevel as
     needed, so that inbound messages will only be reported when TRACE logging is
     enabled.  The utils/Loglevel.lsl script allows you to change the loglevel by
@@ -39,17 +39,17 @@
     can be set by any script.
 */
 
-#define XIIMP$ALLOWED_INBOUND_TARGETS_ALL
+#define ENIMP$ALLOWED_INBOUND_TARGETS_ALL
 
-#include "xi-lsl-framework/main.lsl"
+#include "en-lsl-framework/main.lsl"
 
-Xi$imp_message(
+en$imp_message(
     string prim,        // the SOURCE prim UUID
     string target,      // one of the following:
                             //  - (the target script name): this script name
                             //  - "": all scripts in the prim
                             //  - (any other value): scripts with this value
-                            //      set in XIIMP$ALLOWED_TARGETS list
+                            //      set in ENIMP$ALLOWED_TARGETS list
     string status,      // one of the following:
                             // - ":": broadcast (no response requested)
                             // - "": request
@@ -61,26 +61,26 @@ Xi$imp_message(
     integer ident,      // IMP message ident (link_message integer)
     list params,        // list of parameter strings
     string data,        // IMP data (link_message key)
-    integer linknum,    // linknum of prim that sent XiIMP(...)
-                        //      (-1 if received via XiChat)
+    integer linknum,    // linknum of prim that sent enIMP(...)
+                        //      (-1 if received via enChat)
     string source       // the source script name
                         //      (can be pre-filtered by defining
-                        //      XIIMP$ALLOWED_SOURCES list)
+                        //      ENIMP$ALLOWED_SOURCES list)
     )
 {
-    XiLog$TraceParams("Xi$imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
-        XiObject$Elem(prim),
-        XiString$Elem(target),
-        XiString$Elem(status),
+    enLog$TraceParams("en$imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
+        enObject$Elem(prim),
+        enString$Elem(target),
+        enString$Elem(status),
         ident,
-        XiList$Elem(params),
-        XiString$Elem(data),
+        enList$Elem(params),
+        enString$Elem(data),
         linknum,
-        XiString$Elem(source)
+        enString$Elem(source)
         ]);
 }
 
 default
 {
-    #include "Xi-LSL-Framework/Event-Handlers/link_message.lsl"
+    #include "en-LSL-Framework/Event-Handlers/link_message.lsl"
 }

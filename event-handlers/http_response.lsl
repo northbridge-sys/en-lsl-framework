@@ -1,9 +1,9 @@
 /*
     http_response.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,36 +26,36 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the http_response event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$HTTP_RESPONSE
-		Xi$http_response( key request, integer status, list metadata, string body )
+		#define EN$HTTP_RESPONSE
+		en$http_response( key request, integer status, list metadata, string body )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$HTTP_RESPONSE_TRACE || defined XI$HTTP_RESPONSE
+#if defined EN$HTTP_RESPONSE_TRACE || defined EN$HTTP_RESPONSE
 	http_response( key request, integer status, list metadata, string body )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$HTTP_RESPONSE_TRACE
-            XiLog$TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
-                XiString$Elem( request ),
+        #ifdef EN$HTTP_RESPONSE_TRACE
+            enLog$TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
+                enString$Elem( request ),
                 status,
-                XiList$Elem( metadata ),
-                XiString$Elem( body )
+                enList$Elem( metadata ),
+                enString$Elem( body )
             ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$HTTP_RESPONSE
-            Xi$http_response( request, status, metadata, body );
+		#ifdef EN$HTTP_RESPONSE
+            en$http_response( request, status, metadata, body );
 		#endif
 
-#if defined XI$HTTP_RESPONSE_TRACE || defined XI$HTTP_RESPONSE
+#if defined EN$HTTP_RESPONSE_TRACE || defined EN$HTTP_RESPONSE
 	}
 #endif

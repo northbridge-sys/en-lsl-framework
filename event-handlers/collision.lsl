@@ -1,9 +1,9 @@
 /*
     collision.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,25 +26,25 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the collision event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$COLLISION
-		Xi$collision( integer count )
+		#define EN$COLLISION
+		en$collision( integer count )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$COLLISION
+#ifdef EN$COLLISION
 	collision( integer count )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "collision", [ "count" ], [
+        enLog$TraceParams( "collision", [ "count" ], [
             count
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi$collision( integer count );
+        en$collision( integer count );
 	}
 #endif

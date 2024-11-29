@@ -1,8 +1,8 @@
 /*
     event-handlers.lsl
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -24,61 +24,64 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This file #includes all existing Xi library scripts. Type the following:
-		#include "xi-lsl-framework/libraries.lsl"
-    into the top of an LSL script with the LSL preprocessor enabled to be able to
-    call Xi library functions.
+    This file #includes all possible event handlers. Only event handlers that are
+    necessary for the script to run will be included in the compiled script.
 
-    Make sure to #define any desired preprocessor flags BEFORE #include-ing this
-    script, or the libraries may be loaded incorrectly.
+    At the bottom of the script, add:
 
-    Make sure the "Script optimizer" setting is enabled in your preprocessor,
-    otherwise the entire contents of the Xi library will be added to your script!
+    default
+    {
+		    #include "en-lsl-framework/event-handlers.lsl"
+    }
+
+    to allow the En framework to handle events.
+
+    Make sure the "Script optimizer" setting is enabled in your preprocessor!
 */
 
-// each major revision of XI increments this value
-#define XI$EVENT_HANDLERS_LOADED 1
+// each major revision of En increments this value
+#define EN$EVENT_HANDLERS_LOADED 1
 
-// include event handlers that Xi actually uses
-#include "xi-lsl-framework/event-handlers/at_rot_target.lsl"
-#include "xi-lsl-framework/event-handlers/at_target.lsl"
-#include "xi-lsl-framework/event-handlers/attach.lsl"
-#include "xi-lsl-framework/event-handlers/changed.lsl"
-#include "xi-lsl-framework/event-handlers/collision_end.lsl"
-#include "xi-lsl-framework/event-handlers/collision_start.lsl"
-#include "xi-lsl-framework/event-handlers/collision.lsl"
-#include "xi-lsl-framework/event-handlers/control.lsl"
-#include "xi-lsl-framework/event-handlers/dataserver.lsl"
-#include "xi-lsl-framework/event-handlers/email.lsl"
-#include "xi-lsl-framework/event-handlers/experience_permissions_denied.lsl"
-#include "xi-lsl-framework/event-handlers/experience_permissions.lsl"
-#include "xi-lsl-framework/event-handlers/final_damage.lsl"
-#include "xi-lsl-framework/event-handlers/game_control.lsl"
-#include "xi-lsl-framework/event-handlers/http_request.lsl"
-#include "xi-lsl-framework/event-handlers/http_response.lsl"
-#include "xi-lsl-framework/event-handlers/land_collision_end.lsl"
-#include "xi-lsl-framework/event-handlers/land_collision_start.lsl"
-#include "xi-lsl-framework/event-handlers/land_collision.lsl"
-#include "xi-lsl-framework/event-handlers/link_message.lsl"
-#include "xi-lsl-framework/event-handlers/listen.lsl"
-#include "xi-lsl-framework/event-handlers/money.lsl"
-#include "xi-lsl-framework/event-handlers/moving_end.lsl"
-#include "xi-lsl-framework/event-handlers/moving_start.lsl"
-#include "xi-lsl-framework/event-handlers/no_sensor.lsl"
-#include "xi-lsl-framework/event-handlers/not_at_rot_target.lsl"
-#include "xi-lsl-framework/event-handlers/not_at_target.lsl"
-#include "xi-lsl-framework/event-handlers/object_rez.lsl"
-#include "xi-lsl-framework/event-handlers/on_damage.lsl"
-#include "xi-lsl-framework/event-handlers/on_death.lsl"
-#include "xi-lsl-framework/event-handlers/on_rez.lsl"
-#include "xi-lsl-framework/event-handlers/path_update.lsl"
-#include "xi-lsl-framework/event-handlers/remote_data.lsl"
-#include "xi-lsl-framework/event-handlers/run_time_permissions.lsl"
-#include "xi-lsl-framework/event-handlers/sensor.lsl"
-#include "xi-lsl-framework/event-handlers/state_entry.lsl"
-#include "xi-lsl-framework/event-handlers/state_exit.lsl"
-#include "xi-lsl-framework/event-handlers/timer.lsl"
-#include "xi-lsl-framework/event-handlers/touch_end.lsl"
-#include "xi-lsl-framework/event-handlers/touch_start.lsl"
-#include "xi-lsl-framework/event-handlers/touch.lsl"
-#include "xi-lsl-framework/event-handlers/transaction_result.lsl"
+// include event handlers that En actually uses
+#include "en-lsl-framework/event-handlers/at_rot_target.lsl"
+#include "en-lsl-framework/event-handlers/at_target.lsl"
+#include "en-lsl-framework/event-handlers/attach.lsl"
+#include "en-lsl-framework/event-handlers/changed.lsl"
+#include "en-lsl-framework/event-handlers/collision_end.lsl"
+#include "en-lsl-framework/event-handlers/collision_start.lsl"
+#include "en-lsl-framework/event-handlers/collision.lsl"
+#include "en-lsl-framework/event-handlers/control.lsl"
+#include "en-lsl-framework/event-handlers/dataserver.lsl"
+#include "en-lsl-framework/event-handlers/email.lsl"
+#include "en-lsl-framework/event-handlers/experience_permissions_denied.lsl"
+#include "en-lsl-framework/event-handlers/experience_permissions.lsl"
+#include "en-lsl-framework/event-handlers/final_damage.lsl"
+#include "en-lsl-framework/event-handlers/game_control.lsl"
+#include "en-lsl-framework/event-handlers/http_request.lsl"
+#include "en-lsl-framework/event-handlers/http_response.lsl"
+#include "en-lsl-framework/event-handlers/land_collision_end.lsl"
+#include "en-lsl-framework/event-handlers/land_collision_start.lsl"
+#include "en-lsl-framework/event-handlers/land_collision.lsl"
+#include "en-lsl-framework/event-handlers/link_message.lsl"
+#include "en-lsl-framework/event-handlers/listen.lsl"
+#include "en-lsl-framework/event-handlers/money.lsl"
+#include "en-lsl-framework/event-handlers/moving_end.lsl"
+#include "en-lsl-framework/event-handlers/moving_start.lsl"
+#include "en-lsl-framework/event-handlers/no_sensor.lsl"
+#include "en-lsl-framework/event-handlers/not_at_rot_target.lsl"
+#include "en-lsl-framework/event-handlers/not_at_target.lsl"
+#include "en-lsl-framework/event-handlers/object_rez.lsl"
+#include "en-lsl-framework/event-handlers/on_damage.lsl"
+#include "en-lsl-framework/event-handlers/on_death.lsl"
+#include "en-lsl-framework/event-handlers/on_rez.lsl"
+#include "en-lsl-framework/event-handlers/path_update.lsl"
+#include "en-lsl-framework/event-handlers/remote_data.lsl"
+#include "en-lsl-framework/event-handlers/run_time_permissions.lsl"
+#include "en-lsl-framework/event-handlers/sensor.lsl"
+#include "en-lsl-framework/event-handlers/state_entry.lsl"
+#include "en-lsl-framework/event-handlers/state_eent.lsl"
+#include "en-lsl-framework/event-handlers/timer.lsl"
+#include "en-lsl-framework/event-handlers/touch_end.lsl"
+#include "en-lsl-framework/event-handlers/touch_start.lsl"
+#include "en-lsl-framework/event-handlers/touch.lsl"
+#include "en-lsl-framework/event-handlers/transaction_result.lsl"

@@ -1,9 +1,9 @@
 /*
     at_rot_target.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,35 +26,35 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the at_rot_target event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$AT_ROT_TARGET
-		Xi$at_rot_target( integer handle, rotation target, rotation current )
+		#define EN$AT_ROT_TARGET
+		en$at_rot_target( integer handle, rotation target, rotation current )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$AT_ROT_TARGET_TRACE || defined XI$AT_ROT_TARGET
+#if defined EN$AT_ROT_TARGET_TRACE || defined EN$AT_ROT_TARGET
 	at_rot_target( integer handle, rotation target, rotation current )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$AT_ROT_TARGET_TRACE
-            XiLog$TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
+        #ifdef EN$AT_ROT_TARGET_TRACE
+            enLog$TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
                 handle,
-                XiRotation$Elem( target ),
-                XiRotation$Elem( current )
+                enRotation$Elem( target ),
+                enRotation$Elem( current )
             ] );
         #endif
 
         // event unused, so pass to user-defined function only
-        #ifdef XI$AT_ROT_TARGET
-            Xi$at_rot_target( handle, target, current );
+        #ifdef EN$AT_ROT_TARGET
+            en$at_rot_target( handle, target, current );
         #endif
 
-#if defined XI$AT_ROT_TARGET_TRACE || defined XI$AT_ROT_TARGET
+#if defined EN$AT_ROT_TARGET_TRACE || defined EN$AT_ROT_TARGET
 	}
 #endif

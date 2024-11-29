@@ -1,9 +1,9 @@
 /*
     on_rez.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,46 +26,46 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the on_rez event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$ON_REZ
-		Xi$on_rez( integer param )
+		#define EN$ON_REZ
+		en$on_rez( integer param )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$ON_REZ_TRACE || defined XI$ON_REZ || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	on_rez( integer param )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$ON_REZ_TRACE
-            XiLog$TraceParams( "on_rez", [], [ param ] );
+        #ifdef EN$ON_REZ_TRACE
+            enLog$TraceParams( "on_rez", [], [ param ] );
         #endif
 
-        // update XiChat channels if any are just the UUID
-        #ifdef XICHAT$ENABLE
-            _XiChat$RefreshLinkset();
+        // update enChat channels if any are just the UUID
+        #ifdef ENCHAT$ENABLE
+            _enChat$RefreshLinkset();
         #endif
 
-        // update XiLSD names if any use the UUID header
-        #ifdef XILSD$ENABLE_UUID_HEADER
-            _XiLSD$CheckUUID();
+        // update enLSD names if any use the UUID header
+        #ifdef ENLSD$ENABLE_UUID_HEADER
+            _enLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$ON_REZ
-			Xi$on_rez(param);
+		#ifdef EN$ON_REZ
+			en$on_rez(param);
 		#endif
 
-		// update _XIOBJECT_UUIDS_SELF
-        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
-            _XiObject$UpdateUUIDs();
+		// update _ENOBJECT_UUIDS_SELF
+        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+            _enObject$UpdateUUIDs();
         #endif
 
-#if defined XI$ON_REZ_TRACE || defined XI$ON_REZ || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
+#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	}
 #endif

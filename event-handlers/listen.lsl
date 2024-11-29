@@ -1,9 +1,9 @@
 /*
     listen.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,35 +26,35 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the listen event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$LISTEN
-		Xi$listen( integer channel, string name, key id, string message )
+		#define EN$LISTEN
+		en$listen( integer channel, string name, key id, string message )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$LISTEN_TRACE || defined XI$LISTEN || defined XICHAT$ENABLE
+#if defined EN$LISTEN_TRACE || defined EN$LISTEN || defined ENCHAT$ENABLE
 	listen( integer channel, string name, key id, string message )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$LISTEN_TRACE
-            XiLog$TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, XiString$Elem( name ), XiObject$Elem( id ), XiString$Elem( message ) ] );
+        #ifdef EN$LISTEN_TRACE
+            enLog$TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, enString$Elem( name ), enObject$Elem( id ), enString$Elem( message ) ] );
         #endif
 
-        #ifdef XICHAT$ENABLE
-		    if ( _XiChat$Process( channel, name, id, message ) ) return; // valid XiChat message
+        #ifdef ENCHAT$ENABLE
+		    if ( _enChat$Process( channel, name, id, message ) ) return; // valid enChat message
         #endif
         
         // pass to user-defined function if requested
-		#ifdef XI$LISTEN
-			Xi$listen( channel, name, id, message );
+		#ifdef EN$LISTEN
+			en$listen( channel, name, id, message );
 		#endif
 
-#if defined XI$LISTEN_TRACE || defined XI$LISTEN || defined XICHAT$ENABLE
+#if defined EN$LISTEN_TRACE || defined EN$LISTEN || defined ENCHAT$ENABLE
 	}
 #endif

@@ -1,9 +1,9 @@
 /*
     _definitions.lsl
     Library Definitions
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -25,9 +25,9 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This code provides definitions used when calling Xi libraries.
+    This code provides definitions used when calling En libraries.
 
-    Since libraries within the Xi framework call functions from other libraries,
+    Since libraries within the En framework call functions from other libraries,
     these definitions need to be loaded into the preprocessor before the libraries
     themselves, or the compiler will throw errors.
 */
@@ -36,7 +36,7 @@
 // == static preprocessor constants
 // ==
 
-// XiTest
+// enTest
 #define INTEGER 0
 #define FLOAT 1
 #define VECTOR 2
@@ -45,7 +45,7 @@
 #define KEY 5
 #define LIST 6
 
-// XiLog
+// enLog
 #define PRINT 0
 #define FATAL 1
 #define ERROR 2
@@ -54,7 +54,7 @@
 #define DEBUG 5
 #define TRACE 6
 
-// XiObject
+// enObject
 #define RED <1.0, 0.25, 0.0>
 #define ORANGE <1.0, 0.5, 0.0>
 #define YELLOW <1.0, 0.8, 0.0>
@@ -65,334 +65,334 @@
 #define WHITE <1.0, 1.0, 1.0>
 #define BLACK <0.0, 0.0, 0.0>
 
-#define XICHAT$LISTEN_OWNERONLY 0x1
-#define XICHAT$LISTEN_REMOVE 0x80000000
+#define ENCHAT$LISTEN_OWNERONLY 0x1
+#define ENCHAT$LISTEN_REMOVE 0x80000000
 
-#define XIOBJECT$PROFILE_EXISTS 0x80000000
-#define XIOBJECT$PROFILE_PHYSICS 0x1
-#define XIOBJECT$PROFILE_PHANTOM 0x2
-#define XIOBJECT$PROFILE_TEMP_ON_REZ 0x4
-#define XIOBJECT$PROFILE_TEMP_ATTACHED 0x8
-#define XIOBJECT$TEXT_SUCCESS 0x10
-#define XIOBJECT$TEXT_BUSY 0x20
-#define XIOBJECT$TEXT_PROMPT 0x40
-#define XIOBJECT$TEXT_ERROR 0x80
-#define XIOBJECT$TEXT_TEMP 0x100
-#define XIOBJECT$TEXT_PROGRESS_NC 0x200
-#define XIOBJECT$TEXT_PROGRESS_THROB 0x400
+#define ENOBJECT$PROFILE_EENSTS 0x80000000
+#define ENOBJECT$PROFILE_PHYSICS 0x1
+#define ENOBJECT$PROFILE_PHANTOM 0x2
+#define ENOBJECT$PROFILE_TEMP_ON_REZ 0x4
+#define ENOBJECT$PROFILE_TEMP_ATTACHED 0x8
+#define ENOBJECT$TEXT_SUCCESS 0x10
+#define ENOBJECT$TEXT_BUSY 0x20
+#define ENOBJECT$TEXT_PROMPT 0x40
+#define ENOBJECT$TEXT_ERROR 0x80
+#define ENOBJECT$TEXT_TEMP 0x100
+#define ENOBJECT$TEXT_PROGRESS_NC 0x200
+#define ENOBJECT$TEXT_PROGRESS_THROB 0x400
 
-#define XISTRING$PAD_ALIGN_LEFT 0
-#define XISTRING$PAD_ALIGN_RIGHT 1
-#define XISTRING$PAD_ALIGN_CENTER 2
-#define XISTRING$ESCAPE_FILTER_REGEX 0x1
-#define XISTRING$ESCAPE_FILTER_JSON 0x2
-#define XISTRING$ESCAPE_REVERSE 0x40000000
+#define ENSTRING$PAD_ALIGN_LEFT 0
+#define ENSTRING$PAD_ALIGN_RIGHT 1
+#define ENSTRING$PAD_ALIGN_CENTER 2
+#define ENSTRING$ESCAPE_FILTER_REGEX 0x1
+#define ENSTRING$ESCAPE_FILTER_JSON 0x2
+#define ENSTRING$ESCAPE_REVERSE 0x40000000
 
-#define XITEST$EQUAL 0
-#define XITEST$NOT_EQUAL 1
-#define XITEST$GREATER 2
-#define XITEST$LESS 3
+#define ENTEST$EQUAL 0
+#define ENTEST$NOT_EQUAL 1
+#define ENTEST$GREATER 2
+#define ENTEST$LESS 3
 
 // ==
 // == configurable preprocessor constants
 // ==
 
-#ifndef XICHAT$RESERVE_LISTENS
-    #define XICHAT$RESERVE_LISTENS 0
+#ifndef ENCHAT$RESERVE_LISTENS
+    #define ENCHAT$RESERVE_LISTENS 0
 #endif
 
-#ifndef XICHAT$PTP_SIZE
+#ifndef ENCHAT$PTP_SIZE
     // note that this value is set to the maximum number of UTF-8 characters that can be sent via llRegionSayTo
     // if you are positive you will ALWAYS have ASCII-7 characters, this can be raised to 1024 for better performance and lower memory usage
-    #define XICHAT$PTP_SIZE 512
+    #define ENCHAT$PTP_SIZE 512
 #endif
 
-#ifndef XIIMP$LINK_MESSAGE_SCOPE
-    #define XIIMP$LINK_MESSAGE_SCOPE LINK_THIS
+#ifndef ENIMP$LINK_MESSAGE_SCOPE
+    #define ENIMP$LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
-#ifndef XIINTEGER$CHARSET_16
-    #define XIINTEGER$CHARSET_16 "0123456789abcdef"
+#ifndef ENINTEGER$CHARSET_16
+    #define ENINTEGER$CHARSET_16 "0123456789abcdef"
 #endif
-#ifndef XIINTEGER$CHARSET_64
-    #define XIINTEGER$CHARSET_64 "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-="
+#ifndef ENINTEGER$CHARSET_64
+    #define ENINTEGER$CHARSET_64 "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-="
 #endif
-#ifndef XIINTEGER$CHARSET_256
-    #define XIINTEGER$CHARSET_256 ""
-#endif
-
-#ifndef XILOG$DEFAULT_LOGLEVEL
-    #define XILOG$DEFAULT_LOGLEVEL 4
+#ifndef ENINTEGER$CHARSET_256
+    #define ENINTEGER$CHARSET_256 ""
 #endif
 
-#ifndef XILSD$HEADER
-    #define XILSD$HEADER ""
+#ifndef ENLOG$DEFAULT_LOGLEVEL
+    #define ENLOG$DEFAULT_LOGLEVEL 4
 #endif
 
-#ifndef XIOBJECT$LIMIT_SELF
-    // number of own object UUIDs to store, retrievable via XiObject$Self
-    #define XIOBJECT$LIMIT_SELF 2
+#ifndef ENLSD$HEADER
+    #define ENLSD$HEADER ""
 #endif
 
-#ifndef XITEST$PRECISION_FLOAT
+#ifndef ENOBJECT$LIMIT_SELF
+    // number of own object UUIDs to store, retrievable via enObject$Self
+    #define ENOBJECT$LIMIT_SELF 2
+#endif
+
+#ifndef ENTEST$PRECISION_FLOAT
     // default exact precision for floats - adjust this in script if desired
-    #define XITEST$PRECISION_FLOAT 0.0
+    #define ENTEST$PRECISION_FLOAT 0.0
 #endif
 
-#ifndef XITEST$PRECISION_VECTOR
+#ifndef ENTEST$PRECISION_VECTOR
     // default exact precision for vectors - adjust this in script if desired
-    #define XITEST$PRECISION_VECTOR 0.0
+    #define ENTEST$PRECISION_VECTOR 0.0
 #endif
 
-#ifndef XITEST$PRECISION_ROTATION
+#ifndef ENTEST$PRECISION_ROTATION
     // default exact precision for vectors - adjust this in script if desired
-    #define XITEST$PRECISION_ROTATION 0.0
+    #define ENTEST$PRECISION_ROTATION 0.0
 #endif
 
-#ifndef XITIMER$MINIMUM_INTERVAL
-    #define XITIMER$MINIMUM_INTERVAL 0.1
+#ifndef ENTIMER$MINIMUM_INTERVAL
+    #define ENTIMER$MINIMUM_INTERVAL 0.1
 #endif
 
-#ifdef XI$TRACE_LIBRARIES
-    #define XIAVATAR$TRACE
-    #define XICHAT$TRACE
-    #define XIDATE$TRACE
-    #define XIFLOAT$TRACE
-    #define XIHTTP$TRACE
-    #define XIIMP$TRACE
-    #define XIINTEGER$TRACE
-    #define XIINVENTORY$TRACE
-    #define XIKEY$TRACE
-    #define XIKVP$TRACE
-    #define XILIST$TRACE
-    #define XILOG$TRACE
-    #define XILSD$TRACE
-    #define XIOBJECT$TRACE
-    #define XIROTATION$TRACE
-    #define XISTRING$TRACE
-    #define XITEST$TRACE
-    #define XITIMER$TRACE
-    #define XIVECTOR$TRACE
+#ifdef EN$TRACE_LIBRARIES
+    #define ENAVATAR$TRACE
+    #define ENCHAT$TRACE
+    #define ENDATE$TRACE
+    #define ENFLOAT$TRACE
+    #define ENHTTP$TRACE
+    #define ENIMP$TRACE
+    #define ENINTEGER$TRACE
+    #define ENINVENTORY$TRACE
+    #define ENKEY$TRACE
+    #define ENKVP$TRACE
+    #define ENLIST$TRACE
+    #define ENLOG$TRACE
+    #define ENLSD$TRACE
+    #define ENOBJECT$TRACE
+    #define ENROTATION$TRACE
+    #define ENSTRING$TRACE
+    #define ENTEST$TRACE
+    #define ENTIMER$TRACE
+    #define ENVECTOR$TRACE
 #endif
 
-#ifdef XI$TRACE_EVENT_HANDLERS
-    #define XI$AT_ROT_TARGET_TRACE
-    #define XI$AT_TARGET_TRACE
-    #define XI$ATTACH_TRACE
-    #define XI$CHANGED_TRACE
-    #define XI$COLLISION_END_TRACE
-    #define XI$COLLISION_START_TRACE
-    #define XI$COLLISION_TRACE
-    #define XI$CONTROL_TRACE
-    #define XI$DATASERVER_TRACE
-    #define XI$EMAIL_TRACE
-    #define XI$EXPERIENCE_PERMISSIONS_DENIED_TRACE
-    #define XI$EXPERIENCE_PERMISSIONS_TRACE
-    #define XI$FINAL_DAMAGE_TRACE
-    #define XI$GAME_CONTROL_TRACE
-    #define XI$HTTP_REQUEST_TRACE
-    #define XI$HTTP_RESPONSE_TRACE
-    #define XI$LAND_COLLISION_END_TRACE
-    #define XI$LAND_COLLISION_START_TRACE
-    #define XI$LAND_COLLISION_TRACE
-    #define XI$LINK_MESSAGE_TRACE
-    #define XI$LISTEN_TRACE
-    #define XI$MONEY_TRACE
-    #define XI$MOVING_END_TRACE
-    #define XI$MOVING_START_TRACE
-    #define XI$NO_SENSOR_TRACE
-    #define XI$NOT_AT_ROT_TARGET_TRACE
-    #define XI$NOT_AT_TARGET_TRACE
-    #define XI$OBJECT_REZ_TRACE
-    #define XI$ON_DAMAGE_TRACE
-    #define XI$ON_DEATH_TRACE
-    #define XI$ON_REZ_TRACE
-    #define XI$PATH_UPDATE_TRACE
-    #define XI$REMOTE_DATA_TRACE
-    #define XI$RUN_TIME_PERMISSIONS_TRACE
-    #define XI$SENSOR_TRACE
-    #define XI$STATE_ENTRY_TRACE
-    #define XI$STATE_EXIT_TRACE
-    #define XI$TIMER_TRACE
-    #define XI$TOUCH_END_TRACE
-    #define XI$TOUCH_START_TRACE
-    #define XI$TOUCH_TRACE
-    #define XI$TRANSACTION_RESULT_TRACE
+#ifdef EN$TRACE_EVENT_HANDLERS
+    #define EN$AT_ROT_TARGET_TRACE
+    #define EN$AT_TARGET_TRACE
+    #define EN$ATTACH_TRACE
+    #define EN$CHANGED_TRACE
+    #define EN$COLLISION_END_TRACE
+    #define EN$COLLISION_START_TRACE
+    #define EN$COLLISION_TRACE
+    #define EN$CONTROL_TRACE
+    #define EN$DATASERVER_TRACE
+    #define EN$EMAIL_TRACE
+    #define EN$EXPERIENCE_PERMISSIONS_DENIED_TRACE
+    #define EN$EXPERIENCE_PERMISSIONS_TRACE
+    #define EN$FINAL_DAMAGE_TRACE
+    #define EN$GAME_CONTROL_TRACE
+    #define EN$HTTP_REQUEST_TRACE
+    #define EN$HTTP_RESPONSE_TRACE
+    #define EN$LAND_COLLISION_END_TRACE
+    #define EN$LAND_COLLISION_START_TRACE
+    #define EN$LAND_COLLISION_TRACE
+    #define EN$LINK_MESSAGE_TRACE
+    #define EN$LISTEN_TRACE
+    #define EN$MONEY_TRACE
+    #define EN$MOVING_END_TRACE
+    #define EN$MOVING_START_TRACE
+    #define EN$NO_SENSOR_TRACE
+    #define EN$NOT_AT_ROT_TARGET_TRACE
+    #define EN$NOT_AT_TARGET_TRACE
+    #define EN$OBJECT_REZ_TRACE
+    #define EN$ON_DAMAGE_TRACE
+    #define EN$ON_DEATH_TRACE
+    #define EN$ON_REZ_TRACE
+    #define EN$PATH_UPDATE_TRACE
+    #define EN$REMOTE_DATA_TRACE
+    #define EN$RUN_TIME_PERMISSIONS_TRACE
+    #define EN$SENSOR_TRACE
+    #define EN$STATE_ENTRY_TRACE
+    #define EN$STATE_EENT_TRACE
+    #define EN$TIMER_TRACE
+    #define EN$TOUCH_END_TRACE
+    #define EN$TOUCH_START_TRACE
+    #define EN$TOUCH_TRACE
+    #define EN$TRANSACTION_RESULT_TRACE
 #endif
 
 // ==
 // == functions
 // ==
 
-#define XiAvatar$Elem(...) _XiAvatar_Elem( __VA_ARGS__ )
-#define XiAvatar$GetGroup(...) _XiAvatar_GetGroup( __VA_ARGS__ )
+#define enAvatar$Elem(...) _enAvatar_Elem( __VA_ARGS__ )
+#define enAvatar$GetGroup(...) _enAvatar_GetGroup( __VA_ARGS__ )
 
-#define XiChat$GetService(...) _XiChat_GetService( __VA_ARGS__ )
-#define XiChat$SetService(...) _XiChat_SetService( __VA_ARGS__ )
-#define XiChat$Channel(...) _XiChat_Channel( __VA_ARGS__ )
-#define XiChat$RegionSayTo(...) _XiChat_RegionSayTo( __VA_ARGS__ )
-#define XiChat$Listen(...) _XiChat_Listen( __VA_ARGS__ )
-#define XiChat$Send(...) _XiChat_Send( __VA_ARGS__ )
-#define XiChat$SendPTP(...) _XiChat_SendPTP( __VA_ARGS__ )
-#define _XiChat$Process(...) _XiChat_Process( __VA_ARGS__ )
-#define _XiChat$UnListenDomains(...) _XiChat_UnListenDomains( __VA_ARGS__ )
-#define _XiChat$ListenDomains(...) _XiChat_ListenDomains( __VA_ARGS__ )
-#define _XiChat$RefreshLinkset(...) _XiChat_RefreshLinkset( __VA_ARGS__ )
+#define enChat$GetService(...) _enChat_GetService( __VA_ARGS__ )
+#define enChat$SetService(...) _enChat_SetService( __VA_ARGS__ )
+#define enChat$Channel(...) _enChat_Channel( __VA_ARGS__ )
+#define enChat$RegionSayTo(...) _enChat_RegionSayTo( __VA_ARGS__ )
+#define enChat$Listen(...) _enChat_Listen( __VA_ARGS__ )
+#define enChat$Send(...) _enChat_Send( __VA_ARGS__ )
+#define enChat$SendPTP(...) _enChat_SendPTP( __VA_ARGS__ )
+#define _enChat$Process(...) _enChat_Process( __VA_ARGS__ )
+#define _enChat$UnListenDomains(...) _enChat_UnListenDomains( __VA_ARGS__ )
+#define _enChat$ListenDomains(...) _enChat_ListenDomains( __VA_ARGS__ )
+#define _enChat$RefreshLinkset(...) _enChat_RefreshLinkset( __VA_ARGS__ )
 
-#define XiDate$MS(...) _XiDate_MS( __VA_ARGS__ )
-#define XiDate$MSNow(...) _XiDate_MSNow( __VA_ARGS__ )
-#define XiDate$MSAdd(...) _XiDate_MSAdd( __VA_ARGS__ )
+#define enDate$MS(...) _enDate_MS( __VA_ARGS__ )
+#define enDate$MSNow(...) _enDate_MSNow( __VA_ARGS__ )
+#define enDate$MSAdd(...) _enDate_MSAdd( __VA_ARGS__ )
 
-#define XiFloat$ToString(...) _XiFloat_ToString( __VA_ARGS__ )
-#define XiFloat$Clamp(...) _XiFloat_Clamp( __VA_ARGS__ )
-#define XiFloat$FlipCoin(...) _XiFloat_FlipCoin( __VA_ARGS__ )
-#define XiFloat$RandRange(...) _XiFloat_RandRange( __VA_ARGS__ )
+#define enFloat$ToString(...) _enFloat_ToString( __VA_ARGS__ )
+#define enFloat$Clamp(...) _enFloat_Clamp( __VA_ARGS__ )
+#define enFloat$FlipCoin(...) _enFloat_FlipCoin( __VA_ARGS__ )
+#define enFloat$RandRange(...) _enFloat_RandRange( __VA_ARGS__ )
 
-#define XiHTTP$Request(...) _XiHTTP_Request( __VA_ARGS__ )
-#define _XiHTTP$ProcessResponse(...) _XiHTTP_ProcessResponse( __VA_ARGS__ )
-#define _XiHTTP$Timer(...) _XiHTTP_Timer( __VA_ARGS__ )
-#define _XiHTTP$NextRequest(...) _XiHTTP_NextRequest( __VA_ARGS__ )
+#define enHTTP$Request(...) _enHTTP_Request( __VA_ARGS__ )
+#define _enHTTP$ProcessResponse(...) _enHTTP_ProcessResponse( __VA_ARGS__ )
+#define _enHTTP$Timer(...) _enHTTP_Timer( __VA_ARGS__ )
+#define _enHTTP$NextRequest(...) _enHTTP_NextRequest( __VA_ARGS__ )
 
-#define XiIMP$Send(...) _XiIMP_Send( __VA_ARGS__ )
-#define _XiIMP$Process(...) _XiIMP_Process( __VA_ARGS__ )
+#define enIMP$Send(...) _enIMP_Send( __VA_ARGS__ )
+#define _enIMP$Process(...) _enIMP_Process( __VA_ARGS__ )
 
-#define XiInteger$ElemBitfield(...) _XiInteger_ElemBitfield( __VA_ARGS__ )
-#define XiInteger$Rand(...) _XiInteger_Rand( __VA_ARGS__ )
-#define XiInteger$ToHex(...) _XiInteger_ToHex( __VA_ARGS__ )
-#define XiInteger$ToNybbles(...) _XiInteger_ToNybbles( __VA_ARGS__ )
-#define XiInteger$ToString64(...) _XiInteger_ToString64( __VA_ARGS__ )
-#define XiInteger$FromStr64(...) _XiInteger_FromStr64( __VA_ARGS__ )
-#define XiInteger$Clamp(...) _XiInteger_Clamp( __VA_ARGS__ )
-#define XiInteger$Reset(...) _XiInteger_Reset( __VA_ARGS__ )
+#define enInteger$ElemBitfield(...) _enInteger_ElemBitfield( __VA_ARGS__ )
+#define enInteger$Rand(...) _enInteger_Rand( __VA_ARGS__ )
+#define enInteger$ToHex(...) _enInteger_ToHex( __VA_ARGS__ )
+#define enInteger$ToNybbles(...) _enInteger_ToNybbles( __VA_ARGS__ )
+#define enInteger$ToString64(...) _enInteger_ToString64( __VA_ARGS__ )
+#define enInteger$FromStr64(...) _enInteger_FromStr64( __VA_ARGS__ )
+#define enInteger$Clamp(...) _enInteger_Clamp( __VA_ARGS__ )
+#define enInteger$Reset(...) _enInteger_Reset( __VA_ARGS__ )
 
-#define XiInventory$List(...) _XiInventory_List( __VA_ARGS__ )
-#define XiInventory$Copy(...) _XiInventory_Copy( __VA_ARGS__ )
-#define XiInventory$OwnedByCreator(...) _XiInventory_OwnedByCreator( __VA_ARGS__ )
-#define XiInventory$RezRemote(...) _XiInventory_RezRemote( __VA_ARGS__ )
-#define XiInventory$NCOpen(...) _XiInventory_NCOpen( __VA_ARGS__ )
-#define XiInventory$NCOpenByPartialName(...) _XiInventory_NCOpenByPartialName( __VA_ARGS__ )
-#define _XiInventory$NCParse(...) _XiInventory_NCParse( __VA_ARGS__ )
-#define XiInventory$NCRead(...) _XiInventory_NCRead( __VA_ARGS__ )
-#define XiInventory$TypeToString(...) _XiInventory_TypeToString( __VA_ARGS__ )
-#define XiInventory$Push(...) _XiInventory_Push( __VA_ARGS__ )
-#define XiInventory$Pull(...) _XiInventory_Pull( __VA_ARGS__ )
-#define Xi$nc_line(...) _XiInventory_nc_line( __VA_ARGS__ )
+#define enInventory$List(...) _enInventory_List( __VA_ARGS__ )
+#define enInventory$Copy(...) _enInventory_Copy( __VA_ARGS__ )
+#define enInventory$OwnedByCreator(...) _enInventory_OwnedByCreator( __VA_ARGS__ )
+#define enInventory$RezRemote(...) _enInventory_RezRemote( __VA_ARGS__ )
+#define enInventory$NCOpen(...) _enInventory_NCOpen( __VA_ARGS__ )
+#define enInventory$NCOpenByPartialName(...) _enInventory_NCOpenByPartialName( __VA_ARGS__ )
+#define _enInventory$NCParse(...) _enInventory_NCParse( __VA_ARGS__ )
+#define enInventory$NCRead(...) _enInventory_NCRead( __VA_ARGS__ )
+#define enInventory$TypeToString(...) _enInventory_TypeToString( __VA_ARGS__ )
+#define enInventory$Push(...) _enInventory_Push( __VA_ARGS__ )
+#define enInventory$Pull(...) _enInventory_Pull( __VA_ARGS__ )
+#define en$nc_line(...) _enInventory_nc_line( __VA_ARGS__ )
 
-#define XiKey$Is(...) _XiKey_Is( __VA_ARGS__ )
-#define XiKey$IsNotNull(...) _XiKey_IsNotNull( __VA_ARGS__ )
-#define XiKey$IsNull(...) _XiKey_IsNull( __VA_ARGS__ )
-#define XiKey$IsInRegion(...) _XiKey_IsInRegion( __VA_ARGS__ )
-#define XiKey$IsAvatarInRegion(...) _XiKey_IsAvatarInRegion( __VA_ARGS__ )
-#define XiKey$IsPrimInRegion(...) _XiKey_IsPrimInRegion( __VA_ARGS__ )
-#define XiKey$Strip(...) _XiKey_Strip( __VA_ARGS__ )
-#define XiKey$Unstrip(...) _XiKey_Unstrip( __VA_ARGS__ )
-#define XiKey$Compress(...) _XiKey_Compress( __VA_ARGS__ )
-#define XiKey$Decompress(...) _XiKey_Decompress( __VA_ARGS__ )
+#define enKey$Is(...) _enKey_Is( __VA_ARGS__ )
+#define enKey$IsNotNull(...) _enKey_IsNotNull( __VA_ARGS__ )
+#define enKey$IsNull(...) _enKey_IsNull( __VA_ARGS__ )
+#define enKey$IsInRegion(...) _enKey_IsInRegion( __VA_ARGS__ )
+#define enKey$IsAvatarInRegion(...) _enKey_IsAvatarInRegion( __VA_ARGS__ )
+#define enKey$IsPrimInRegion(...) _enKey_IsPrimInRegion( __VA_ARGS__ )
+#define enKey$Strip(...) _enKey_Strip( __VA_ARGS__ )
+#define enKey$Unstrip(...) _enKey_Unstrip( __VA_ARGS__ )
+#define enKey$Compress(...) _enKey_Compress( __VA_ARGS__ )
+#define enKey$Decompress(...) _enKey_Decompress( __VA_ARGS__ )
 
-#define XiKVP$Exists(...) _XiKVP_Exists( __VA_ARGS__ )
-#define XiKVP$Write(...) _XiKVP_Write( __VA_ARGS__ )
-#define XiKVP$Read(...) _XiKVP_Read( __VA_ARGS__ )
-#define XiKVP$Delete(...) _XiKVP_Delete( __VA_ARGS__ )
+#define enKVP$Eensts(...) _enKVP_Eensts( __VA_ARGS__ )
+#define enKVP$Write(...) _enKVP_Write( __VA_ARGS__ )
+#define enKVP$Read(...) _enKVP_Read( __VA_ARGS__ )
+#define enKVP$Delete(...) _enKVP_Delete( __VA_ARGS__ )
 
-#define XiList$Collate(...) _XiList_Collate( __VA_ARGS__ )
-#define XiList$Concatenate(...) _XiList_Concatenate( __VA_ARGS__ )
-#define XiList$DeleteStrideByMatch(...) _XiList_DeleteStrideByMatch( __VA_ARGS__ )
-#define XiList$Elem(...) _XiList_Elem( __VA_ARGS__ )
-#define XiList$Empty(...) _XiList_Empty( __VA_ARGS__ )
-#define XiList$FromString(...) _XiList_FromStr( __VA_ARGS__ )
-#define XiList$FindPartial(...) _XiList_FindPartial( __VA_ARGS__ )
-#define XiList$Json(...) _XiList_Json( __VA_ARGS__ )
-#define XiList$ReplaceExact(...) _XiList_ReplaceExact(__VA_ARGS__)
-#define XiList$Reverse(...) _XiList_Reverse( __VA_ARGS__ )
-#define XiList$ToString(...) _XiList_ToString( __VA_ARGS__ )
+#define enList$Collate(...) _enList_Collate( __VA_ARGS__ )
+#define enList$Concatenate(...) _enList_Concatenate( __VA_ARGS__ )
+#define enList$DeleteStrideByMatch(...) _enList_DeleteStrideByMatch( __VA_ARGS__ )
+#define enList$Elem(...) _enList_Elem( __VA_ARGS__ )
+#define enList$Empty(...) _enList_Empty( __VA_ARGS__ )
+#define enList$FromString(...) _enList_FromStr( __VA_ARGS__ )
+#define enList$FindPartial(...) _enList_FindPartial( __VA_ARGS__ )
+#define enList$Json(...) _enList_Json( __VA_ARGS__ )
+#define enList$ReplaceExact(...) _enList_ReplaceExact(__VA_ARGS__)
+#define enList$Reverse(...) _enList_Reverse( __VA_ARGS__ )
+#define enList$ToString(...) _enList_ToString( __VA_ARGS__ )
 
-#define XiLog$(...) _XiLog_( __VA_ARGS__ )
-#define XiLog$FatalStop(...) _XiLog_FatalStop( __VA_ARGS__ )
-#define XiLog$FatalDelete(...) _XiLog_FatalDelete( __VA_ARGS__ )
-#define XiLog$FatalDie(...) _XiLog_FatalDie_( __VA_ARGS__ )
-#define XiLog$LevelToString(...) _XiLog_LevelToString( __VA_ARGS__ )
-#define XiLog$StringToLevel(...) _XiLog_StringToLevel( __VA_ARGS__ )
-#define XiLog$TraceParams(...) _XiLog_TraceParams( __VA_ARGS__ )
-#define XiLog$TraceVars(...) _XiLog_TraceVars( __VA_ARGS__ )
-#define XiLog$GetLoglevel(...) _XiLog_GetLoglevel( __VA_ARGS__ )
-#define XiLog$SetLoglevel(...) _XiLog_SetLoglevel( __VA_ARGS__ )
-#define XiLog$GetLogtarget(...) _XiLog_GetLogtarget( __VA_ARGS__ )
-#define XiLog$SetLogtarget(...) _XiLog_SetLogtarget( __VA_ARGS__ )
-#define XiLog$To(...) _XiLog_To( __VA_ARGS__ )
+#define enLog$(...) _enLog_( __VA_ARGS__ )
+#define enLog$FatalStop(...) _enLog_FatalStop( __VA_ARGS__ )
+#define enLog$FatalDelete(...) _enLog_FatalDelete( __VA_ARGS__ )
+#define enLog$FatalDie(...) _enLog_FatalDie_( __VA_ARGS__ )
+#define enLog$LevelToString(...) _enLog_LevelToString( __VA_ARGS__ )
+#define enLog$StringToLevel(...) _enLog_StringToLevel( __VA_ARGS__ )
+#define enLog$TraceParams(...) _enLog_TraceParams( __VA_ARGS__ )
+#define enLog$TraceVars(...) _enLog_TraceVars( __VA_ARGS__ )
+#define enLog$GetLoglevel(...) _enLog_GetLoglevel( __VA_ARGS__ )
+#define enLog$SetLoglevel(...) _enLog_SetLoglevel( __VA_ARGS__ )
+#define enLog$GetLogtarget(...) _enLog_GetLogtarget( __VA_ARGS__ )
+#define enLog$SetLogtarget(...) _enLog_SetLogtarget( __VA_ARGS__ )
+#define enLog$To(...) _enLog_To( __VA_ARGS__ )
 
-#define XiLSD$Reset(...) _XiLSD_Reset( __VA_ARGS__ )
-#define XiLSD$Write(...) _XiLSD_Write( __VA_ARGS__ )
-#define XiLSD$Read(...) _XiLSD_Read( __VA_ARGS__ )
-#define XiLSD$Delete(...) _XiLSD_Delete( __VA_ARGS__ )
-#define XiLSD$Exists(...) _XiLSD_Exists( __VA_ARGS__ )
-#define XiLSD$Find(...) _XiLSD_Find( __VA_ARGS__ )
-#define XiLSD$Head(...) _XiLSD_Head( __VA_ARGS__ )
-#define XiLSD$Pull(...) _XiLSD_Pull( __VA_ARGS__ )
-#define XiLSD$Push(...) _XiLSD_Push( __VA_ARGS__ )
-#define _XiLSD$Process(...) _XiLSD_Process( __VA_ARGS__ )
-#define _XiLSD$CheckUUID(...) _XiLSD_CheckUUID( __VA_ARGS__ )
+#define enLSD$Reset(...) _enLSD_Reset( __VA_ARGS__ )
+#define enLSD$Write(...) _enLSD_Write( __VA_ARGS__ )
+#define enLSD$Read(...) _enLSD_Read( __VA_ARGS__ )
+#define enLSD$Delete(...) _enLSD_Delete( __VA_ARGS__ )
+#define enLSD$Eensts(...) _enLSD_Eensts( __VA_ARGS__ )
+#define enLSD$Find(...) _enLSD_Find( __VA_ARGS__ )
+#define enLSD$Head(...) _enLSD_Head( __VA_ARGS__ )
+#define enLSD$Pull(...) _enLSD_Pull( __VA_ARGS__ )
+#define enLSD$Push(...) _enLSD_Push( __VA_ARGS__ )
+#define _enLSD$Process(...) _enLSD_Process( __VA_ARGS__ )
+#define _enLSD$CheckUUID(...) _enLSD_CheckUUID( __VA_ARGS__ )
 
-#define XiObject$CacheClosestLink(...) _XiObject_CacheClosestLink( __VA_ARGS__ )
-#define XiObject$ClosestLink(...) _XiObject_ClosestLink( __VA_ARGS__ )
-#define XiObject$ClosestLinkDesc(...) _XiObject_ClosestLinkDesc( __VA_ARGS__ )
-#define XiObject$Elem(...) _XiObject_Elem( __VA_ARGS__ )
-#define _XiObject$FindLink(...) _XiObject_FindLink( __VA_ARGS__ )
-#define XiObject$GetAttachedString(...) _XiObject_GetAttachedString( __VA_ARGS__ )
-#define _XiObject$LinkCacheUpdate(...) _XiObject_LinkCacheUpdate( __VA_ARGS__ )
-#define XiObject$Self(...) _XiObject_Self( __VA_ARGS__ )
-#define XiObject$Parent(...) _XiObject_Parent( __VA_ARGS__ )
-#define XiObject$StopIfOwnerRezzed(...) _XiObject_StopIfOwnerRezzed( __VA_ARGS__ )
-#define XiObject$Profile(...) _XiObject_Profile( __VA_ARGS__ )
-#define XiObject$Text(...) _XiObject_Text( __VA_ARGS__ )
-#define _XiObject$TextTemp(...) _XiObject_TextTemp( __VA_ARGS__ )
-#define _XiObject$UpdateUUIDs(...) _XiObject_UpdateUUIDs( __VA_ARGS__ )
+#define enObject$CacheClosestLink(...) _enObject_CacheClosestLink( __VA_ARGS__ )
+#define enObject$ClosestLink(...) _enObject_ClosestLink( __VA_ARGS__ )
+#define enObject$ClosestLinkDesc(...) _enObject_ClosestLinkDesc( __VA_ARGS__ )
+#define enObject$Elem(...) _enObject_Elem( __VA_ARGS__ )
+#define _enObject$FindLink(...) _enObject_FindLink( __VA_ARGS__ )
+#define enObject$GetAttachedString(...) _enObject_GetAttachedString( __VA_ARGS__ )
+#define _enObject$LinkCacheUpdate(...) _enObject_LinkCacheUpdate( __VA_ARGS__ )
+#define enObject$Self(...) _enObject_Self( __VA_ARGS__ )
+#define enObject$Parent(...) _enObject_Parent( __VA_ARGS__ )
+#define enObject$StopIfOwnerRezzed(...) _enObject_StopIfOwnerRezzed( __VA_ARGS__ )
+#define enObject$Profile(...) _enObject_Profile( __VA_ARGS__ )
+#define enObject$Text(...) _enObject_Text( __VA_ARGS__ )
+#define _enObject$TextTemp(...) _enObject_TextTemp( __VA_ARGS__ )
+#define _enObject$UpdateUUIDs(...) _enObject_UpdateUUIDs( __VA_ARGS__ )
 
-#define XiRotation$Elem(...) _XiRotation_Elem( __VA_ARGS__ )
-#define XiRotation$Normalize(...) _XiRotation_Normalize( __VA_ARGS__ )
-#define XiRotation$Slerp(...) _XiRotation_Slerp( __VA_ARGS__ )
-#define XiRotation$Nlerp(...) _XiRotation_Nlerp( __VA_ARGS__ )
+#define enRotation$Elem(...) _enRotation_Elem( __VA_ARGS__ )
+#define enRotation$Normalize(...) _enRotation_Normalize( __VA_ARGS__ )
+#define enRotation$Slerp(...) _enRotation_Slerp( __VA_ARGS__ )
+#define enRotation$Nlerp(...) _enRotation_Nlerp( __VA_ARGS__ )
 
-#define XiString$Elem(...) _XiString_Elem( __VA_ARGS__ )
-#define XiString$Plural(...) _XiString_Plural( __VA_ARGS__ )
-#define XiString$If(...) _XiString_If( __VA_ARGS__ )
-#define XiString$JsonAttempt(...) _XiString_JsonAttempt( __VA_ARGS__ )
-#define XiString$Pad(...) _XiString_Pad( __VA_ARGS__ )
-#define XiString$MultiByteUnit(...) _XiString_MultiByteUnit( __VA_ARGS__ )
-#define XiString$Escape(...) _XiString_Escape( __VA_ARGS__ )
-#define XiString$ParseCfgLine(...) _XiString_ParseCfgLine( __VA_ARGS__ )
-#define XiString$FindChars(...) _XiString_FindChars( __VA_ARGS__ )
+#define enString$Elem(...) _enString_Elem( __VA_ARGS__ )
+#define enString$Plural(...) _enString_Plural( __VA_ARGS__ )
+#define enString$If(...) _enString_If( __VA_ARGS__ )
+#define enString$JsonAttempt(...) _enString_JsonAttempt( __VA_ARGS__ )
+#define enString$Pad(...) _enString_Pad( __VA_ARGS__ )
+#define enString$MultiByteUnit(...) _enString_MultiByteUnit( __VA_ARGS__ )
+#define enString$Escape(...) _enString_Escape( __VA_ARGS__ )
+#define enString$ParseCfgLine(...) _enString_ParseCfgLine( __VA_ARGS__ )
+#define enString$FindChars(...) _enString_FindChars( __VA_ARGS__ )
 
-#define XiTest$Assert(...) _XiTest_Assert( __VA_ARGS__ )
-#define XiTest$Type(...) _XiTest_Type( __VA_ARGS__ )
-#define XiTest$Method(...) _XiTest_Method( __VA_ARGS__ )
-#define _XiTest$Check(...) _XiTest_Check( __VA_ARGS__ )
-#define XiTest$StopOnFail(...) _XiTest_StopOnFail( __VA_ARGS__ )
+#define enTest$Assert(...) _enTest_Assert( __VA_ARGS__ )
+#define enTest$Type(...) _enTest_Type( __VA_ARGS__ )
+#define enTest$Method(...) _enTest_Method( __VA_ARGS__ )
+#define _enTest$Check(...) _enTest_Check( __VA_ARGS__ )
+#define enTest$StopOnFail(...) _enTest_StopOnFail( __VA_ARGS__ )
 
-#define XiTimer$Start(...) _XiTimer_Start( __VA_ARGS__ )
-#define XiTimer$Cancel(...) _XiTimer_Cancel( __VA_ARGS__ )
-#define XiTimer$Find(...) _XiTimer_Find( __VA_ARGS__ )
-#define _XiTimer$Check(...) _XiTimer_Check( __VA_ARGS__ )
-#define _XiTimer$InternalLoopback(...) _XiTimer_InternalLoopback( __VA_ARGS__ )
-#define Xi$xitimer(...) _XiTimer_xitimer( __VA_ARGS__ )
+#define enTimer$Start(...) _enTimer_Start( __VA_ARGS__ )
+#define enTimer$Cancel(...) _enTimer_Cancel( __VA_ARGS__ )
+#define enTimer$Find(...) _enTimer_Find( __VA_ARGS__ )
+#define _enTimer$Check(...) _enTimer_Check( __VA_ARGS__ )
+#define _enTimer$InternalLoopback(...) _enTimer_InternalLoopback( __VA_ARGS__ )
+#define en$entimer(...) _enTimer_entimer( __VA_ARGS__ )
 
-#define XiVector$RegionCornerToWorld(...) _XiVector_RegionCornerToWorld( __VA_ARGS__ )
-#define XiVector$RegionToWorld(...) _XiVector_RegionToWorld( __VA_ARGS__ )
-#define XiVector$Scale(...) _XiVector_Scale( __VA_ARGS__ )
-#define XiVector$ScaleInverse(...) _XiVector_Scale( __VA_ARGS__ )
-#define XiVector$ToString(...) _XiVector_ToString( __VA_ARGS__ )
-#define XiVector$WorldToCorner(...) _XiVector_WorldToCorner( __VA_ARGS__ )
-#define XiVector$WorldToRegion(...) _XiVector_WorldToRegion( __VA_ARGS__ )
+#define enVector$RegionCornerToWorld(...) _enVector_RegionCornerToWorld( __VA_ARGS__ )
+#define enVector$RegionToWorld(...) _enVector_RegionToWorld( __VA_ARGS__ )
+#define enVector$Scale(...) _enVector_Scale( __VA_ARGS__ )
+#define enVector$ScaleInverse(...) _enVector_Scale( __VA_ARGS__ )
+#define enVector$ToString(...) _enVector_ToString( __VA_ARGS__ )
+#define enVector$WorldToCorner(...) _enVector_WorldToCorner( __VA_ARGS__ )
+#define enVector$WorldToRegion(...) _enVector_WorldToRegion( __VA_ARGS__ )
 
 // ==
 // == macros
 // ==
 
-#define Xi$imp_message(...) _Xi_imp_message( __VA_ARGS__ )
+#define en$imp_message(...) _en_imp_message( __VA_ARGS__ )
 
-#define XiLog$Print(...) _XiLog_( 0, __VA_ARGS__ )
-#define XiLog$Fatal(...) _XiLog_( 1, __VA_ARGS__ )
-#define XiLog$Error(...) _XiLog_( 2, __VA_ARGS__ )
-#define XiLog$Warn(...) _XiLog_( 3, __VA_ARGS__ )
-#define XiLog$Info(...) _XiLog_( 4, __VA_ARGS__ )
-#define XiLog$Debug(...) _XiLog_( 5, __VA_ARGS__ )
-#define XiLog$Trace(...) _XiLog_( 6, __VA_ARGS__ )
+#define enLog$Print(...) _enLog_( 0, __VA_ARGS__ )
+#define enLog$Fatal(...) _enLog_( 1, __VA_ARGS__ )
+#define enLog$Error(...) _enLog_( 2, __VA_ARGS__ )
+#define enLog$Warn(...) _enLog_( 3, __VA_ARGS__ )
+#define enLog$Info(...) _enLog_( 4, __VA_ARGS__ )
+#define enLog$Debug(...) _enLog_( 5, __VA_ARGS__ )
+#define enLog$Trace(...) _enLog_( 6, __VA_ARGS__ )

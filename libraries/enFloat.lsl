@@ -1,9 +1,9 @@
 /*
-    XiFloat.lsl
+    enFloat.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -36,7 +36,7 @@
 // == functions
 // ==
 
-string XiFloat$ToString( // rounds a float to a specified number of digits after the decimal
+string enFloat$ToString( // rounds a float to a specified number of digits after the decimal
     float f,
     integer digits
     )
@@ -48,18 +48,18 @@ string XiFloat$ToString( // rounds a float to a specified number of digits after
     return llGetSubString(s, 0, i + digits); // return string-cast float, but only up to the number of digits requested
 }
 
-float XiFloat$Clamp(
+float enFloat$Clamp(
     float i,
     float m,
     float x
     )
 {
     if (i < m) i = m; // clamp to minimum
-    if (i > x) i = x; // clamp to maXimum
+    if (i > x) i = x; // clamp to maximum
     return i;
 }
 
-integer XiFloat$FlipCoin(
+integer enFloat$FlipCoin(
     float chance // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
     )
 {
@@ -69,7 +69,7 @@ integer XiFloat$FlipCoin(
     return 1;
 }
 
-float XiFloat$RandRange(
+float enFloat$RandRange(
     float min,
     float max
     )

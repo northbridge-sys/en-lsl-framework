@@ -1,9 +1,9 @@
 /*
-    XiRotation.lsl
+    enRotation.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -36,12 +36,12 @@
 // == functions
 // ==
 
-string XiRotation$Elem( rotation r )
+string enRotation$Elem( rotation r )
 {
     return (string)r + " (" + (string)llRot2Euler( r ) + ")";
 }
 
-rotation XiRotation$Normalize(
+rotation enRotation$Normalize(
     rotation r
     )
 {
@@ -49,16 +49,16 @@ rotation XiRotation$Normalize(
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
 }
 
-rotation XiRotation$Slerp(
+rotation enRotation$Slerp(
     rotation a,
     rotation b,
     float t
     )
 {
-    return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
+    return llAensAngle2Rot( llRot2Aens( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
-rotation XiRotation$Nlerp(
+rotation enRotation$Nlerp(
     rotation a,
     rotation b,
     float t
@@ -66,5 +66,5 @@ rotation XiRotation$Nlerp(
 {
     float ti = 1 - t;
     rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
-    return XiRotation$Normalize( r );
+    return enRotation$Normalize( r );
 }

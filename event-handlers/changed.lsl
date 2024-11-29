@@ -1,9 +1,9 @@
 /*
     changed.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,53 +26,53 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the changed event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$CHANGED
-		Xi$changed( integer change )
+		#define EN$CHANGED
+		en$changed( integer change )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
+#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
 	changed( integer change )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$CHANGED_TRACE
-            XiLog$TraceParams( "changed", [ "change" ], [ XiInteger$ElemBitfield( change ) ] );
+        #ifdef EN$CHANGED_TRACE
+            enLog$TraceParams( "changed", [ "change" ], [ enInteger$ElemBitfield( change ) ] );
         #endif
 
-        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
+        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
             if ( change & CHANGED_LINK )
             {
         #endif
         
-                #ifdef XICHAT$ENABLE
-                    _XiChat$RefreshLinkset();
+                #ifdef ENCHAT$ENABLE
+                    _enChat$RefreshLinkset();
                 #endif
-                #ifdef XILSD$ENABLE_UUID_HEADER
-                    _XiLSD$CheckUUID();
+                #ifdef ENLSD$ENABLE_UUID_HEADER
+                    _enLSD$CheckUUID();
                 #endif
-                #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF
-                    _XiObject$UpdateUUIDs();
+                #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+                    _enObject$UpdateUUIDs();
                 #endif
-                #ifdef XIOBJECT$ENABLE$LINK_CACHE
-                    _XiObject$LinkCacheUpdate();
+                #ifdef ENOBJECT$ENABLE$LINK_CACHE
+                    _enObject$LinkCacheUpdate();
                 #endif
 
-        #if defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
+        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
             }
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$ATTACH
-			Xi$changed( change );
+		#ifdef EN$ATTACH
+			en$changed( change );
 		#endif
 
-#if defined XI$CHANGED_TRACE || defined XI$CHANGED || defined XICHAT$ENABLE || defined XILSD$ENABLE_UUID_HEADER || defined XIOBJECT$ENABLE_SELF || defined XIOBJECT$ENABLE_LINK_CACHE
+#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
 	}
 #endif

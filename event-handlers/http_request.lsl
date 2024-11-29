@@ -1,9 +1,9 @@
 /*
     http_request.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,35 +26,35 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the http_request event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$HTTP_REQUEST
-		Xi$http_request( key request, string method, string body )
+		#define EN$HTTP_REQUEST
+		en$http_request( key request, string method, string body )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$HTTP_REQUEST_TRACE || defined XI$HTTP_REQUEST
+#if defined EN$HTTP_REQUEST_TRACE || defined EN$HTTP_REQUEST
 	http_request( key request, string method, string body )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$HTTP_REQUEST_TRACE
-            XiLog$TraceParams( "http_request", [ "request", "method", "body" ], [
-                XiString$Elem( request ),
-                XiString$Elem( method ),
-                XiString$Elem( body )
+        #ifdef EN$HTTP_REQUEST_TRACE
+            enLog$TraceParams( "http_request", [ "request", "method", "body" ], [
+                enString$Elem( request ),
+                enString$Elem( method ),
+                enString$Elem( body )
             ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$HTTP_REQUEST
-            Xi$http_request( request, method, body );
+		#ifdef EN$HTTP_REQUEST
+            en$http_request( request, method, body );
 		#endif
 
-#if defined XI$HTTP_REQUEST_TRACE || defined XI$HTTP_REQUEST
+#if defined EN$HTTP_REQUEST_TRACE || defined EN$HTTP_REQUEST
 	}
 #endif

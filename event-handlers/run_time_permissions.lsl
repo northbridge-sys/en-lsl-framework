@@ -1,9 +1,9 @@
 /*
     run_time_permissions.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,25 +26,25 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the run_time_permissions event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$RUN_TIME_PERMISSIONS
-		Xi$run_time_permissions( integer perm )
+		#define EN$RUN_TIME_PERMISSIONS
+		en$run_time_permissions( integer perm )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$RUN_TIME_PERMISSIONS
+#ifdef EN$RUN_TIME_PERMISSIONS
 	run_time_permissions( integer perm )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "run_time_permissions", [ "perm" ], [
-            XiInteger$ElemBitfield( perm )
+        enLog$TraceParams( "run_time_permissions", [ "perm" ], [
+            enInteger$ElemBitfield( perm )
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi$run_time_permissions( perm );
+        en$run_time_permissions( perm );
 	}
 #endif

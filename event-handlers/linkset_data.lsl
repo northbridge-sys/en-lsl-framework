@@ -1,9 +1,9 @@
 /*
     linkset_data.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,32 +26,32 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the linkset_data event handler with a version that
-    calls maintenance functions required by Xi libraries, then optionally executes a
-    user-defined function to handle event calls that are not intercepted by Xi
+    calls maintenance functions required by En libraries, then optionally executes a
+    user-defined function to handle event calls that are not intercepted by En
     libraries:
 
-		#define XI$LINKSET_DATA
-		Xi$linkset_data( integer action, string name, string value )
+		#define EN$LINKSET_DATA
+		en$linkset_data( integer action, string name, string value )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$LINKSET_DATA_TRACE || defined XI$LINKSET_DATA
+#if defined EN$LINKSET_DATA_TRACE || defined EN$LINKSET_DATA
     linkset_data( integer action, string name, string value )
     {
 #endif
 
         // log event if requested
-        #ifdef XI$LINKSET_DATA_TRACE
-            XiLog$TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, XiString$Elem(name), XiString$Elem(value) ] );
+        #ifdef EN$LINKSET_DATA_TRACE
+            enLog$TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, enString$Elem(name), enString$Elem(value) ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef XI$LINKSET_DATA
-			Xi$linkset_data(action, name, value);
+		#ifdef EN$LINKSET_DATA
+			en$linkset_data(action, name, value);
 		#endif
 
-#if defined XI$LINKSET_DATA_TRACE || defined XI$LINKSET_DATA
+#if defined EN$LINKSET_DATA_TRACE || defined EN$LINKSET_DATA
 	}
 #endif

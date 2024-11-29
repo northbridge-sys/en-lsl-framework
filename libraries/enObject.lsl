@@ -1,9 +1,9 @@
  /*
-    XiObject.lsl
+    enObject.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -25,7 +25,7 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This script exposes the XiObject$* functions and XIOBJECT$* globals, which allows code
+    This script exposes the enObject$* functions and ENOBJECT$* globals, which allows code
     to monitor metadata about the prim and linkset that the script is in, and get
     information about other prims.
 */
@@ -34,48 +34,48 @@
 // == globals
 // ==
 
-list _XIOBJECT_UUIDS_SELF;
+list _ENOBJECT_UUIDS_SELF;
 
-#ifdef XIOBJECT$ENABLE_LINK_CACHE
-    list _XIOBJECT_LINK_CACHE; // prim name, current linknum
-    #define _XIOBJECT_LINK_CACHE_STRIDE 2
+#ifdef ENOBJECT$ENABLE_LINK_CACHE
+    list _ENOBJECT_LINK_CACHE; // prim name, current linknum
+    #define _ENOBJECT_LINK_CACHE_STRIDE 2
 #endif
 
 // ==
 // == functions
 // ==
 
-string XiObject$Elem( string id )
+string enObject$Elem( string id )
 {
     list details = llGetObjectDetails( id, [ OBJECT_NAME, OBJECT_POS ] );
     if ( details == [] ) return "\"" + id + "\" (not in region)";
-    return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + XiVector$ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
+    return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + enVector$ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
 }
 
-string XiObject$Self( // returns either own object's current UUID or one of its previous UUIDs
+string enObject$Self( // returns either own object's current UUID or one of its previous UUIDs
     integer last
     )
 {
-    return llList2String( _XIOBJECT_UUIDS_SELF, last );
+    return llList2String( _ENOBJECT_UUIDS_SELF, last );
 }
 
-string XiObject$Parent() // gets UUID of entity that rezzed the object
+string enObject$Parent() // gets UUID of entity that rezzed the object
 {
     return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
 }
 
-XiObject$StopIfOwnerRezzed()
+enObject$StopIfOwnerRezzed()
 { // TODO: move this to a definition macro that runs automatically on_rez
-    if ( XiObject$Parent() == (string)llGetKey() ) XiLog$Fatal( "XiObject$StopIfOwnerRezzed()" );
+    if ( enObject$Parent() == (string)llGetKey() ) enLog$Fatal( "enObject$StopIfOwnerRezzed()" );
 }
 
-integer XiObject$ClosestLinkDesc(
+integer enObject$ClosestLinkDesc(
     string desc
 )
 {
-    #ifdef XIOBJECT$TRACE
-        XiLog$TraceParams("XiObject$ClosestLinkDesc", ["desc"], [
-            XiString$Elem(desc)
+    #ifdef ENOBJECT$TRACE
+        enLog$TraceParams("enObject$ClosestLinkDesc", ["desc"], [
+            enString$Elem(desc)
             ]);
     #endif
     integer i;
@@ -97,21 +97,21 @@ integer XiObject$ClosestLinkDesc(
     return 0; // no match
 }
 
-integer XiObject$ClosestLink(string name)
+integer enObject$ClosestLink(string name)
 { // finds the linknum of the closest prim in the linkset with the specified name
-    #ifdef XIOBJECT$TRACE
-        XiLog$TraceParams("XiObject$ClosestLink", ["name"], [
-            XiString$Elem(name)
+    #ifdef ENOBJECT$TRACE
+        enLog$TraceParams("enObject$ClosestLink", ["name"], [
+            enString$Elem(name)
             ]);
     #endif
-    #ifdef XIOBJECT$ENABLE_LINK_CACHE
-        integer i = llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-        if (i != -1) return (integer)llList2String(_XIOBJECT_LINK_CACHE, i + 1); // return cached linknum
+    #ifdef ENOBJECT$ENABLE_LINK_CACHE
+        integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
+        if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i + 1); // return cached linknum
     #endif
-    return _XiObject$FindLink(name);
+    return _enObject$FindLink(name);
 }
 
-integer _XiObject$FindLink(string name)
+integer _enObject$FindLink(string name)
 {
     integer i;
     integer cl_i;
@@ -132,83 +132,83 @@ integer _XiObject$FindLink(string name)
     return 0; // no match
 }
 
-XiObject$CacheClosestLink(
+enObject$CacheClosestLink(
     string name
 )
 {
-    #ifndef XIOBJECT$ENABLE_LINK_CACHE
-        XiLog$Error("XiObject$CacheClosestLink called but XIOBJECT$ENABLE_LINK_CACHE not defined.");
+    #ifndef ENOBJECT$ENABLE_LINK_CACHE
+        enLog$Error("enObject$CacheClosestLink called but ENOBJECT$ENABLE_LINK_CACHE not defined.");
     #else
-        if (llListFindList(llList2ListSlice(_XIOBJECT_LINK_CACHE, 0, -1, _XIOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
-        _XIOBJECT_LINK_CACHE += [name, _XiObject$FindLink(name)];
+        if (llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
+        _ENOBJECT_LINK_CACHE += [name, _enObject$FindLink(name)];
     #endif
 }
 
-_XiObject$LinkCacheUpdate()
+_enObject$LinkCacheUpdate()
 {
     integer i;
-    integer l = llGetListLength(_XIOBJECT_LINK_CACHE);
+    integer l = llGetListLength(_ENOBJECT_LINK_CACHE);
     for (i = 0; i < l; i+=2)
     {
-        _XIOBJECT_LINK_CACHE = llListReplaceList(_XIOBJECT_LINK_CACHE, [_XiObject$FindLink(llList2String(_XIOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [_enObject$FindLink(llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
     }
 }
 
-XiObject$Text(
+enObject$Text(
     integer flags,
     list lines
 )
 {
     vector color = WHITE;
     string icon = "";
-    if (flags & XIOBJECT$TEXT_PROMPT)
+    if (flags & ENOBJECT$TEXT_PROMPT)
     {
         color = YELLOW;
         icon = "🚩";
     }
-    else if (flags & XIOBJECT$TEXT_ERROR)
+    else if (flags & ENOBJECT$TEXT_ERROR)
     {
         color = RED;
         icon = "❌";
     }
-    else if (flags & XIOBJECT$TEXT_BUSY)
+    else if (flags & ENOBJECT$TEXT_BUSY)
     {
         color = BLUE;
-        integer ind = (XiDate$MSNow() / 83) % 12; // approximately +1 ind every 1/12th of a second
+        integer ind = (enDate$MSNow() / 83) % 12; // approenmately +1 ind every 1/12th of a second
         icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
-    else if (flags & XIOBJECT$TEXT_SUCCESS)
+    else if (flags & ENOBJECT$TEXT_SUCCESS)
     {
         color = GREEN;
         icon = "✅";
     }
     if (flags & 0x7)
-    { // a XiLog level was passed in as a flag as well, so use its icon
+    { // a enLog level was passed in as a flag as well, so use its icon
         icon = llList2String(["", "🛑", "❌", "🚩", "💬", "🪲", "🚦"], flags & 0x7);
     }
     string progress = "▼";
-    if (flags & XIOBJECT$TEXT_PROGRESS_NC)
+    if (flags & ENOBJECT$TEXT_PROGRESS_NC)
     {
-        integer ind = llRound(((float)_XIINVENTORY_NC_L / _XIINVENTORY_NC_T) * 16);
-        if (_XIINVENTORY_NC_T > 0) progress = llGetSubString("████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁", 16 - ind, 31 - ind); // such a lazy hack!! who cares
+        integer ind = llRound(((float)_ENINVENTORY_NC_L / _ENINVENTORY_NC_T) * 16);
+        if (_ENINVENTORY_NC_T > 0) progress = llGetSubString("████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁", 16 - ind, 31 - ind); // such a lazy hack!! who cares
     }
-    if (flags & XIOBJECT$TEXT_PROGRESS_THROB)
+    if (flags & ENOBJECT$TEXT_PROGRESS_THROB)
     {
-        integer ind = (XiDate$MSNow() / 62) % 16; // approximately +1 ind every 1/16th of a second
+        integer ind = (enDate$MSNow() / 62) % 16; // approenmately +1 ind every 1/16th of a second
         progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
     }
                                                                                            // this is a nbsp
-    llSetText(llDumpList2String([icon] + XiList$Reverse(XiList$ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
-    if (flags & XIOBJECT$TEXT_TEMP) XiTimer$Start(2.0, 0, "_XiObject$TextTemp");
-    else XiTimer$Cancel(XiTimer$Find("_XiObject$TextTemp"));
+    llSetText(llDumpList2String([icon] + enList$Reverse(enList$ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
+    if (flags & ENOBJECT$TEXT_TEMP) enTimer$Start(2.0, 0, "_enObject$TextTemp");
+    else enTimer$Cancel(enTimer$Find("_enObject$TextTemp"));
 }
 
-_XiObject$TextTemp()
+_enObject$TextTemp()
 {
     llSetText("", BLACK, 0.0);
 }
 
-string XiObject$GetAttachedString(
+string enObject$GetAttachedString(
     integer i
     )
 {
@@ -272,30 +272,30 @@ string XiObject$GetAttachedString(
         ], i);
 }
 
-integer XiObject$Profile( // returns various bitwise flags for the state of an object
+integer enObject$Profile( // returns various bitwise flags for the state of an object
     string k
     )
 {
     list l = llGetObjectDetails(k, [OBJECT_PHYSICS, OBJECT_PHANTOM, OBJECT_TEMP_ON_REZ, OBJECT_TEMP_ATTACHED]);
     if (l == []) return 0;
-    integer f = XIOBJECT$PROFILE_EXISTS;
-    if ((integer)llList2String(l, 0)) f += XIOBJECT$PROFILE_PHYSICS;
-    if ((integer)llList2String(l, 1)) f += XIOBJECT$PROFILE_PHANTOM;
-    if ((integer)llList2String(l, 2)) f += XIOBJECT$PROFILE_TEMP_ON_REZ;
-    if ((integer)llList2String(l, 3)) f += XIOBJECT$PROFILE_TEMP_ATTACHED;
+    integer f = ENOBJECT$PROFILE_EENSTS;
+    if ((integer)llList2String(l, 0)) f += ENOBJECT$PROFILE_PHYSICS;
+    if ((integer)llList2String(l, 1)) f += ENOBJECT$PROFILE_PHANTOM;
+    if ((integer)llList2String(l, 2)) f += ENOBJECT$PROFILE_TEMP_ON_REZ;
+    if ((integer)llList2String(l, 3)) f += ENOBJECT$PROFILE_TEMP_ATTACHED;
     return f;
 }
 
-_XiObject$UpdateUUIDs()
+_enObject$UpdateUUIDs()
 {
-    #ifdef XIOBJECT$TRACE
-        XiLog$TraceParams("_XiObject$UpdateUUIDs", [], []);
+    #ifdef ENOBJECT$TRACE
+        enLog$TraceParams("_enObject$UpdateUUIDs", [], []);
     #endif
-	if (XIOBJECT$LIMIT_SELF)
+	if (ENOBJECT$LIMIT_SELF)
 	{ // check own UUID
-		if ((string)llGetKey() != llList2String(_XIOBJECT_UUIDS_SELF, 0))
+		if ((string)llGetKey() != llList2String(_ENOBJECT_UUIDS_SELF, 0))
 		{ // key change
-			_XIOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _XIOBJECT_UUIDS_SELF, 0, XIOBJECT$LIMIT_SELF - 1);
+			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, ENOBJECT$LIMIT_SELF - 1);
 		}
 	}
 }

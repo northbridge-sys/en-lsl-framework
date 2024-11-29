@@ -1,9 +1,9 @@
 /*
-    state_exit.lsl
+    state_eent.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -25,24 +25,24 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This snippet replaces the state_exit event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    This snippet replaces the state_eent event handler with a version that calls
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$STATE_EXIT
-		Xi$state_exit( key id, integer level, integer edge )
+		#define EN$STATE_EENT
+		en$state_eent( key id, integer level, integer edge )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$STATE_EXIT
-	state_exit()
+#ifdef EN$STATE_EENT
+	state_eent()
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "state_exit", [], [] );
+        enLog$TraceParams( "state_eent", [], [] );
 
         // event unused, so pass to user-defined function only
-        Xi$state_exit();
+        en$state_eent();
 	}
 #endif

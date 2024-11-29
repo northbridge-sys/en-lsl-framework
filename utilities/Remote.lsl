@@ -1,9 +1,9 @@
 /*
     Remote.lsl
 	Utility Script
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,51 +26,51 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This is a full script that sets llRemoteLoadScriptPin( ... ) and notifies its
-    parent object of the pin via XiChat on rez, then deletes itself.  This can be
+    parent object of the pin via enChat on rez, then deletes itself.  This can be
     used to load one or more scripts dynamically into the newly rezzed object.
 */
 
-#define XI$ALL_TRACE
+#define EN$ALL_TRACE
 
-#include "xi-lsl-framework/main.lsl"
+#include "en-lsl-framework/main.lsl"
 
 default
 {
-    // we don't need full Xi support in this script, so the state_entry and on_rez event handlers are defined manually
+    // we don't need full En support in this script, so the state_entry and on_rez event handlers are defined manually
     state_entry()
     {
-        XiLog$TraceParams( "state_entry", [], [] );
+        enLog$TraceParams( "state_entry", [], [] );
 
         // force temp off
         llSetLinkPrimitiveParamsFast( LINK_SET, [ PRIM_TEMP_ON_REZ, FALSE ] );
-        XiLog$( WARN, "Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
+        enLog$( WARN, "Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
     }
 
     on_rez( integer param )
     {
-        // calling XiInventory$RezRemote in the parent causes the loglevel to be sent as the start parameter,
+        // calling enInventory$RezRemote in the parent causes the loglevel to be sent as the start parameter,
         // so immediately write loglevel based on llRez* start parameter
         llLinksetDataWrite( "loglevel", (string)param );
 
         // trace event params after setting loglevel
-        XiLog$TraceParams( "on_rez", [ "param" ], [ param ] );
+        enLog$TraceParams( "on_rez", [ "param" ], [ param ] );
 
-        XiObject$StopIfOwnerRezzed(); // if owner rezzed us from inventory, stop script for inspection
+        enObject$StopIfOwnerRezzed(); // if owner rezzed us from inventory, stop script for inspection
 
         // check that object is temp-on-rez and, if not, warn the owner that it was packaged improperly
-        if ( !(integer)llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_TEMP_ON_REZ ] ), 0 ) ) XiLog$Fatal( "Object is not temp-on-rez; set temp-on-rez and repackage." );
+        if ( !(integer)llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_TEMP_ON_REZ ] ), 0 ) ) enLog$Fatal( "Object is not temp-on-rez; set temp-on-rez and repackage." );
 
         // generate and llRemoteLoadScriptPin pin
-        integer pin = XiInteger$Rand();
+        integer pin = enInteger$Rand();
         if ( !pin ) pin++; // need a nonzero pin
         llSetRemoteScriptAccessPin( pin );
 
         // notify parent that we are rezzed and ready to receive script(s)
-        XiChat$SetService( "XiInventory$RezRemote" );
-        XiChat$Send( // send via XiChat
-            XiObject$Parent(), // prim
-            XiObject$Parent(), // domain
-            "XiInventory$RezRemote", // type
+        enChat$SetService( "enInventory$RezRemote" );
+        enChat$Send( // send via enChat
+            enObject$Parent(), // prim
+            enObject$Parent(), // domain
+            "enInventory$RezRemote", // type
             (string)pin // message
             );
 

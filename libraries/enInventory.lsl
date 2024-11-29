@@ -1,9 +1,9 @@
 /*
-    XiInventory.lsl
+    enInventory.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -32,21 +32,21 @@
 // == globals
 // ==
 
-string _XIINVENTORY_NC_N; // notecard name
-string _XIINVENTORY_NC_K; // notecard key
-integer _XIINVENTORY_NC_L = -1; // notecard line being read
-integer _XIINVENTORY_NC_T = -1; // notecard total lines
-string _XIINVENTORY_NC_H; // notecard read handle
-string _XIINVENTORY_NC_G; // llGetNumberOfNotecardLines handle
+string _ENINVENTORY_NC_N; // notecard name
+string _ENINVENTORY_NC_K; // notecard key
+integer _ENINVENTORY_NC_L = -1; // notecard line being read
+integer _ENINVENTORY_NC_T = -1; // notecard total lines
+string _ENINVENTORY_NC_H; // notecard read handle
+string _ENINVENTORY_NC_G; // llGetNumberOfNotecardLines handle
 
-list _XIINVENTORY_REMOTE; // start_param, script_name, running
-#define _XIINVENTORY_REMOTE_STRIDE 3
+list _ENINVENTORY_REMOTE; // start_param, script_name, running
+#define _ENINVENTORY_REMOTE_STRIDE 3
 
 // ==
 // == functions
 // ==
 
-list XiInventory$List(
+list enInventory$List(
     integer t
     )
 {
@@ -60,7 +60,7 @@ list XiInventory$List(
     return x;
 }
 
-integer XiInventory$Copy( // copies an inventory item to another object
+integer enInventory$Copy( // copies an inventory item to another object
     string prim,
     string name,
     integer type,
@@ -69,10 +69,10 @@ integer XiInventory$Copy( // copies an inventory item to another object
     integer param
     )
 {
-    #ifdef XIINVENTORY$TRACE
-        XiLog$TraceParams("XiInventory$Copy", ["prim", "name", "type", "pin", "run", "param"], [
-            XiObject$Elem(prim),
-            XiString$Elem(name),
+    #ifdef ENINVENTORY$TRACE
+        enLog$TraceParams("enInventory$Copy", ["prim", "name", "type", "pin", "run", "param"], [
+            enObject$Elem(prim),
+            enString$Elem(name),
             type,
             pin,
             run,
@@ -89,14 +89,14 @@ integer XiInventory$Copy( // copies an inventory item to another object
     return 1;
 }
 
-integer XiInventory$OwnedByCreator(
+integer enInventory$OwnedByCreator(
     string name
 )
 {
     return llGetInventoryCreator( name ) == llGetOwner();
 }
 
-integer XiInventory$RezRemote( // rezzes a remote object with Remote.lsl
+integer enInventory$RezRemote( // rezzes a remote object with Remote.lsl
     string name,
     vector pos,
     vector vel,
@@ -106,98 +106,98 @@ integer XiInventory$RezRemote( // rezzes a remote object with Remote.lsl
     list runs
     )
 {
-    #ifdef XIINVENTORY$TRACE
-        XiLog$TraceParams( "XiInventory$RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
-            XiString$Elem( name ),
+    #ifdef ENINVENTORY$TRACE
+        enLog$TraceParams( "enInventory$RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
+            enString$Elem( name ),
             (string)pos,
             (string)vel,
             (string)rot,
             (string)param,
-            XiList$Elem( scripts ),
-            XiList$Elem( runs )
+            enList$Elem( scripts ),
+            enList$Elem( runs )
             ] );
     #endif
-    XiLog$( DEBUG, "Rezzing remote object with loglevel " + XiLog$LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
+    enLog$( DEBUG, "Rezzing remote object with loglevel " + enLog$LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
     llRezAtRoot( name, pos, vel, rot, (integer)llLinksetDataRead( "loglevel" ) );
-    _XIINVENTORY_REMOTE += [ param, XiList$ToString( scripts ), XiList$ToString( runs ) ];
-    // TODO: somehow timeout _XIINVENTORY_REMOTE
+    _ENINVENTORY_REMOTE += [ param, enList$ToString( scripts ), enList$ToString( runs ) ];
+    // TODO: somehow timeout _ENINVENTORY_REMOTE
     return 1;
 }
 
-integer XiInventory$NCOpenByPartialName( // opens a notecard for XiInventory$NC* operations using a partial name
+integer enInventory$NCOpenByPartialName( // opens a notecard for enInventory$NC* operations using a partial name
     string name
 )
 {
-    list ncs = XiInventory$List(INVENTORY_NOTECARD);
-    integer nc = XiList$FindPartial(ncs, name);
+    list ncs = enInventory$List(INVENTORY_NOTECARD);
+    integer nc = enList$FindPartial(ncs, name);
     if (nc == -1) return 0;
-    else return XiInventory$NCOpen(llList2String(ncs, nc));
+    else return enInventory$NCOpen(llList2String(ncs, nc));
 }
 
-integer XiInventory$NCOpen( // opens a notecard for XiInventory$NC* operations
+integer enInventory$NCOpen( // opens a notecard for enInventory$NC* operations
     string name
     )
 {
-    #ifdef XIINVENTORY$TRACE
-        XiLog$TraceParams("XiInventory$NCOpen", ["name"], [
-            XiString$Elem(name)
+    #ifdef ENINVENTORY$TRACE
+        enLog$TraceParams("enInventory$NCOpen", ["name"], [
+            enString$Elem(name)
             ]);
     #endif
-    #ifndef XIINVENTORY$ENABLE_NC
-        XiLog$(DEBUG, "XIINVENTORY$ENABLE_NC not defined.");
+    #ifndef ENINVENTORY$ENABLE_NC
+        enLog$(DEBUG, "ENINVENTORY$ENABLE_NC not defined.");
         return;
     #endif
-    _XIINVENTORY_NC_N = name;
-    _XIINVENTORY_NC_L = -1;
-    _XIINVENTORY_NC_T = -1;
-    _XIINVENTORY_NC_G = llGetNumberOfNotecardLines(_XIINVENTORY_NC_N);
-    key new_NC_K = llGetInventoryKey(_XIINVENTORY_NC_N);
-    if (new_NC_K == NULL_KEY) return 0; // notecard doesn't exist
-    if (new_NC_K == _XIINVENTORY_NC_K) return 0x1; // notecard opened, no changes since last opened
-    _XIINVENTORY_NC_K = new_NC_K;
+    _ENINVENTORY_NC_N = name;
+    _ENINVENTORY_NC_L = -1;
+    _ENINVENTORY_NC_T = -1;
+    _ENINVENTORY_NC_G = llGetNumberOfNotecardLines(_ENINVENTORY_NC_N);
+    key new_NC_K = llGetInventoryKey(_ENINVENTORY_NC_N);
+    if (new_NC_K == NULL_KEY) return 0; // notecard doesn't eenst
+    if (new_NC_K == _ENINVENTORY_NC_K) return 0x1; // notecard opened, no changes since last opened
+    _ENINVENTORY_NC_K = new_NC_K;
     return 0x3; // notecard opened, changes since last opened
 }
 
-XiInventory$NCRead( // reads a line from the open notecard
+enInventory$NCRead( // reads a line from the open notecard
     integer i // line number, starting from 0
     )
 {
-    #ifdef XIINVENTORY$TRACE
-        XiLog$TraceParams("XiInventory$NCRead", ["i"], [
+    #ifdef ENINVENTORY$TRACE
+        enLog$TraceParams("enInventory$NCRead", ["i"], [
             i
             ]);
     #endif
-    #ifndef XIINVENTORY$ENABLE_NC
-        XiLog$(DEBUG, "XIINVENTORY$ENABLE_NC not defined.");
+    #ifndef ENINVENTORY$ENABLE_NC
+        enLog$(DEBUG, "ENINVENTORY$ENABLE_NC not defined.");
         return;
     #else
-        _XIINVENTORY_NC_L = i;
+        _ENINVENTORY_NC_L = i;
         string s = NAK;
-        if (llGetFreeMemory() > 4096 && _XIINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_XIINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
-        if (s == NAK) _XIINVENTORY_NC_H = llGetNotecardLine(_XIINVENTORY_NC_N, i); // sync read failed, do dataserver read
-        else Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, _XIINVENTORY_NC_T, s);
+        if (llGetFreeMemory() > 4096 && _ENINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_ENINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
+        if (s == NAK) _ENINVENTORY_NC_H = llGetNotecardLine(_ENINVENTORY_NC_N, i); // sync read failed, do dataserver read
+        else en$nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, s);
     #endif
 }
 
-integer _XiInventory$NCParse(
+integer _enInventory$NCParse(
     string query,
     string data
     )
 {
-    if (query == _XIINVENTORY_NC_H)
+    if (query == _ENINVENTORY_NC_H)
     {
-        Xi$nc_line(_XIINVENTORY_NC_N, _XIINVENTORY_NC_L, _XIINVENTORY_NC_T, data);
+        en$nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, data);
         return 1;
     }
-    if (query == _XIINVENTORY_NC_G)
+    if (query == _ENINVENTORY_NC_G)
     {
-        _XIINVENTORY_NC_T = (integer)data;
+        _ENINVENTORY_NC_T = (integer)data;
         return 1;
     }
     return 0;
 }
 
-string XiInventory$TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(XiInventory$TypeToString(...)) to get actual flag name)
+string enInventory$TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(enInventory$TypeToString(...)) to get actual flag name)
     integer f // INVENTORY_* flag
     )
 {
@@ -216,7 +216,7 @@ string XiInventory$TypeToString( // converts an INVENTORY_* flag into a string (
         INVENTORY_SETTING,
         INVENTORY_MATERIAL
         ], [f]);
-    if (i == -1) return "Unknown"; // return "Unknown" for a flag that is not known by XiInventory at compile time
+    if (i == -1) return "Unknown"; // return "Unknown" for a flag that is not known by enInventory at compile time
     return llList2String([
         "Texture",
         "Sound",
@@ -233,7 +233,7 @@ string XiInventory$TypeToString( // converts an INVENTORY_* flag into a string (
         ], i);
 }
 
-XiInventory$Push( // pushes an inventory item via XiChat
+enInventory$Push( // pushes an inventory item via enChat
     string prim,
     string domain,
     string name,
@@ -243,11 +243,11 @@ XiInventory$Push( // pushes an inventory item via XiChat
     integer param
     )
 {
-    #ifdef XIINVENTORY$TRACE
-        XiLog$TraceParams("XiInventory$Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
-            XiObject$Elem(prim),
-            XiString$Elem(domain),
-            XiString$Elem(name),
+    #ifdef ENINVENTORY$TRACE
+        enLog$TraceParams("enInventory$Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
+            enObject$Elem(prim),
+            enString$Elem(domain),
+            enString$Elem(name),
             type,
             pin,
             run,
@@ -257,7 +257,7 @@ XiInventory$Push( // pushes an inventory item via XiChat
     // TODO
 }
 
-XiInventory$Pull( // pulls an inventory item via XiChat
+enInventory$Pull( // pulls an inventory item via enChat
     string prim,
     string domain,
     string name,
@@ -267,11 +267,11 @@ XiInventory$Pull( // pulls an inventory item via XiChat
     integer param
     )
 {
-    #ifdef XIINVENTORY$TRACE
-        XiLog$TraceParams("XiInventory$Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
-            XiObject$Elem(prim),
-            XiString$Elem(domain),
-            XiString$Elem(name),
+    #ifdef ENINVENTORY$TRACE
+        enLog$TraceParams("enInventory$Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
+            enObject$Elem(prim),
+            enString$Elem(domain),
+            enString$Elem(name),
             type,
             pin,
             run,

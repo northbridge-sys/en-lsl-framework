@@ -1,9 +1,9 @@
  /*
-    XiHTTP.lsl
+    enHTTP.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -27,7 +27,7 @@
 
     TODO
 
-    WARNING: XiHTTP uses the llSetTimerEvent() timer. TODO: allow using either SIT
+    WARNING: enHTTP uses the llSetTimerEvent() timer. TODO: allow using either SIT
     or MIT
 */
 
@@ -35,15 +35,15 @@
 // == globals
 // ==
 
-integer _XIHTTP_PAUSE; // pause for rate limit
-list _XIHTTP_REQUESTS; // Xihttp_id, req_id, url, http_params, body
-#define _XIHTTP_REQUESTS_STRIDE 5
+integer _ENHTTP_PAUSE; // pause for rate limit
+list _ENHTTP_REQUESTS; // enhttp_id, req_id, url, http_params, body
+#define _ENHTTP_REQUESTS_STRIDE 5
 
 // ==
 // == functions
 // ==
 
-key XiHTTP$Request( // sends an HTTP request to a URL
+key enHTTP$Request( // sends an HTTP request to a URL
     string url,         // url to pass to llHTTPRequest
     list http_params,   // parameters to pass to llHTTPRequest
                         //  do not specify the following parameters:
@@ -52,123 +52,123 @@ key XiHTTP$Request( // sends an HTTP request to a URL
     string body         // body to pass to llHTTPRequest
     )
 {
-    #ifdef XIHTTP$TRACE
-        XiLog$TraceParams("XiHTTP$Request", ["url", "http_params", "body"], [
-            XiString$Elem(url),
-            XiList$Elem(http_params),
-            XiString$Elem(body)
+    #ifdef ENHTTP$TRACE
+        enLog$TraceParams("enHTTP$Request", ["url", "http_params", "body"], [
+            enString$Elem(url),
+            enList$Elem(http_params),
+            enString$Elem(body)
             ]);
     #endif
-    #ifndef XIHTTP$ENABLE_REQUESTS
-        XiLog$(DEBUG, "XiHTTP$Request failed due to XIHTTP$ENABLE_REQUESTS not being defined.");
+    #ifndef ENHTTP$ENABLE_REQUESTS
+        enLog$(DEBUG, "enHTTP$Request failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer len = llStringLength(url) + llStringLength(body);
     if (len * 4 + 2048 > llGetFreeMemory())
     { // refuse request due to low memory
-        XiLog$(DEBUG, "XiHTTP$Request failed due to low memory.");
+        enLog$(DEBUG, "enHTTP$Request failed due to low memory.");
         return NULL_KEY;
     }
     // populate pending requests stack
-    string Xi_id = llGenerateKey();
-    _XIHTTP_REQUESTS += [
-        Xi_id,
+    string en_id = llGenerateKey();
+    _ENHTTP_REQUESTS += [
+        en_id,
         NULL_KEY,
         url,
         llDumpList2String(http_params, "\n"),
         body
         ];
-    if (!_XIHTTP_PAUSE) _XiHTTP$NextRequest(); // not being throttled, so request now
-    return Xi_id;
+    if (!_ENHTTP_PAUSE) _enHTTP$NextRequest(); // not being throttled, so request now
+    return en_id;
 }
 
-_XiHTTP$ProcessResponse( // processes http_response
+_enHTTP$ProcessResponse( // processes http_response
     string req_id,
     integer status,
     list metadata,
     string body
     )
 {
-    #ifdef XIHTTP$TRACE
-        XiLog$TraceParams("_XiHTTP$ProcessResponse", ["req_id", "status", "metadata", "body"], [
-            XiString$Elem(req_id),
+    #ifdef ENHTTP$TRACE
+        enLog$TraceParams("_enHTTP$ProcessResponse", ["req_id", "status", "metadata", "body"], [
+            enString$Elem(req_id),
             status,
-            XiList$Elem(metadata),
-            XiString$Elem(body)
+            enList$Elem(metadata),
+            enString$Elem(body)
             ]);
     #endif
-    #ifndef XIHTTP$ENABLE_REQUESTS
-        XiLog$(DEBUG, "_XiHTTP$ProcessResponse failed due to XIHTTP$ENABLE_REQUESTS not being defined.");
+    #ifndef ENHTTP$ENABLE_REQUESTS
+        enLog$(DEBUG, "_enHTTP$ProcessResponse failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
         return;
     #endif
-    integer req_ind = llListFindList(llList2ListSlice(_XIHTTP_REQUESTS, 0, -1, _XIHTTP_REQUESTS_STRIDE, 1), [req_id]);
+    integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [req_id]);
     if (req_ind == -1) return; // not a response to a known request
-    #ifdef XIHTTP$ENABLE
-        Xi$http_response(
+    #ifdef ENHTTP$ENABLE
+        en$http_response(
             orig_id,
-            llList2String(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS_STRIDE + 2), // url
-            llParseStringKeepNulls(llList2String(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS_STRIDE + 3), ["\n"], []), // http_params
-            llList2String(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS_STRIDE + 4), // request_body
+            llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE + 2), // url
+            llParseStringKeepNulls(llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE + 3), ["\n"], []), // http_params
+            llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE + 4), // request_body
             status,
             metadata,
             body
             );
     #endif
-    _XIHTTP_REQUESTS = llDeleteSubList(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS_STRIDE, (req_ind + 1) * _XIHTTP_REQUESTS_STRIDE - 1);
+    _ENHTTP_REQUESTS = llDeleteSubList(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE, (req_ind + 1) * _ENHTTP_REQUESTS_STRIDE - 1);
 }
 
-_XiHTTP$Timer() // request queue timer
+_enHTTP$Timer() // request queue timer
 {
-    #ifdef XIHTTP$TRACE
-        XiLog$TraceParams("_XiHTTP$Timer", [], []);
+    #ifdef ENHTTP$TRACE
+        enLog$TraceParams("_enHTTP$Timer", [], []);
     #endif
-    #ifdef XIHTTP$ENABLE_REQUESTS
+    #ifdef ENHTTP$ENABLE_REQUESTS
         // TODO: allow using either SIT or MIT instead of directly calling llSetTimerEvent
         llSetTimerEvent(0.0);
-        if (_XIHTTP_REQUESTS == [])
+        if (_ENHTTP_REQUESTS == [])
         { // no requests to process
-            _XIHTTP_PAUSE = 0;
+            _ENHTTP_PAUSE = 0;
             return;
         }
         // keep firing off queued requests
         integer resp;
-        do resp = _XiHTTP$NextRequest();
+        do resp = _enHTTP$NextRequest();
         while (resp == 1);
         // can't fire off any more queued requests
         if (resp == -1)
         { // throttled while processing queue
-            _XIHTTP_PAUSE *= 2; // double _XIHTTP_PAUSE
-            XiLog$(DEBUG, "XiHTTP$Request retry throttled, pausing " + (string)_XIHTTP_PAUSE + " seconds.");
-            llSetTimerEvent(_XIHTTP_PAUSE);
+            _ENHTTP_PAUSE *= 2; // double _ENHTTP_PAUSE
+            enLog$(DEBUG, "enHTTP$Request retry throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
+            llSetTimerEvent(_ENHTTP_PAUSE);
             return;
         }
         // not throttled
-        _XIHTTP_PAUSE = 0;
+        _ENHTTP_PAUSE = 0;
     #endif
 }
 
-integer _XiHTTP$NextRequest() // fire off next request in queue (used internally by _XiHTTP$Timer)
+integer _enHTTP$NextRequest() // fire off next request in queue (used internally by _enHTTP$Timer)
 {
-    #ifdef XIHTTP$TRACE
-        XiLog$TraceParams("_XiHTTP$NextRequest", [], []);
+    #ifdef ENHTTP$TRACE
+        enLog$TraceParams("_enHTTP$NextRequest", [], []);
     #endif
-    integer req_ind = llListFindList(llList2ListSlice(_XIHTTP_REQUESTS, 0, -1, _XIHTTP_REQUESTS_STRIDE, 1), [NULL_KEY]);
+    integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [NULL_KEY]);
     if (req_ind == -1) return 0; // no more requests to make
     string req_id = llHTTPRequest(
-        llList2String(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS + 2),
-        llParseStringKeepNulls(llList2String(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS + 3), ["\n"], []) + [HTTP_VERBOSE_THROTTLE, FALSE],
-        llList2String(_XIHTTP_REQUESTS, req_ind * _XIHTTP_REQUESTS + 4)
+        llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS + 2),
+        llParseStringKeepNulls(llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS + 3), ["\n"], []) + [HTTP_VERBOSE_THROTTLE, FALSE],
+        llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS + 4)
         );
     if (req_id == NULL_KEY)
     {
-        if (!_XIHTTP_PAUSE)
+        if (!_ENHTTP_PAUSE)
         {
-            _XIHTTP_PAUSE = 40;
-            llSetTimerEvent(_XIHTTP_PAUSE);
-            XiLog$(DEBUG, "XiHTTP$Request throttled, pausing " + (string)_XIHTTP_PAUSE + " seconds.");
+            _ENHTTP_PAUSE = 40;
+            llSetTimerEvent(_ENHTTP_PAUSE);
+            enLog$(DEBUG, "enHTTP$Request throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
         }
         return -1; // throttled
     }
-    _XIHTTP_REQUESTS = llListReplaceList(_XIHTTP_REQUESTS, [req_id], req_ind * _XIHTTP_REQUESTS + 1, req_ind * _XIHTTP_REQUESTS + 1);
+    _ENHTTP_REQUESTS = llListReplaceList(_ENHTTP_REQUESTS, [req_id], req_ind * _ENHTTP_REQUESTS + 1, req_ind * _ENHTTP_REQUESTS + 1);
     return 1;
 }

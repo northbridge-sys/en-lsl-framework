@@ -1,9 +1,9 @@
 /*
-    XiKey.lsl
+    enKey.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -36,7 +36,7 @@
 // == functions
 // ==
 
-integer XiKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
+integer enKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
     string k
     )
 {
@@ -44,7 +44,7 @@ integer XiKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the
     return k == NULL_KEY;
 }
 
-integer XiKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
+integer enKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     string k
     )
 {
@@ -52,29 +52,29 @@ integer XiKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     return 0;
 }
 
-integer XiKey$IsNull( // returns 1 if is NULL_KEY
+integer enKey$IsNull( // returns 1 if is NULL_KEY
     string k
     )
 {
     return k == NULL_KEY;
 }
 
-integer XiKey$IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
+integer enKey$IsInRegion( // returns 1 if is a key of something that eensts IN THIS REGION
     string k
     )
 {
-    if ( XiKey$IsAvatarInRegion( k ) ) return 1;
-    return XiKey$IsPrimInRegion( k );
+    if ( enKey$IsAvatarInRegion( k ) ) return 1;
+    return enKey$IsPrimInRegion( k );
 }
 
-integer XiKey$IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
+integer enKey$IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
     string k
 )
 {
     return llGetAgentSize() != ZERO_VECTOR;
 }
 
-integer XiKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
+integer enKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     string k
     )
 {
@@ -84,15 +84,15 @@ integer XiKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     return 1; // must be a prim
 }
 
-string XiKey$Strip( // strips dashes out of a key
+string enKey$Strip( // strips dashes out of a key
     string k
     )
 {
-    if ( !XiKey$Is( k ) ) return k; // not a valid key
+    if ( !enKey$Is( k ) ) return k; // not a valid key
     return llReplaceSubString( k, "-", "", 0 ); // valid key, so strip dashes
 }
 
-string XiKey$Unstrip( // adds dashes into a 32-character hex string to turn it into a key
+string enKey$Unstrip( // adds dashes into a 32-character hex string to turn it into a key
     string k
     )
 {
@@ -106,29 +106,29 @@ string XiKey$Unstrip( // adds dashes into a 32-character hex string to turn it i
         llGetSubString(k, 20, 31);
 }
 
-string XiKey$Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
+string enKey$Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
     string k
     )
 {
-    if ( !XiKey$Is( k ) ) return k; // not a valid key
-    k = XiKey$Strip( k );
+    if ( !enKey$Is( k ) ) return k; // not a valid key
+    k = enKey$Strip( k );
     return llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 0, 7))), 0, 5) // concatenate the first 6 characters of Base64 encoding of each 8 nybbles (the remaining is always padding)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 8, 15))), 0, 5)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 16, 23))), 0, 5)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 24, 31))), 0, 5);
 }
 
-string XiKey$Decompress( // adds dashes back into a key that was sent through XiKey$Compress(...)
+string enKey$Decompress( // adds dashes back into a key that was sent through enKey$Compress(...)
     string k
     )
 {
     if (llStringLength(k) != 24) return k; // not a compressed key
     // presumptively valid key at this point (no point k checking any further)
     // convert from Base64 to a 32-nybble hex string
-    k = XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)))
-        + XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)))
-        + XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)))
-        + XiInteger$ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)));
+    k = enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)))
+        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)))
+        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)))
+        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)));
     // inject dashes and return
-    return XiKey$Unstrip( k );
+    return enKey$Unstrip( k );
 }

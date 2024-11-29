@@ -1,9 +1,9 @@
 /*
-    XiString.lsl
+    enString.lsl
     Library
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -36,12 +36,12 @@
 // == functions
 // ==
 
-string XiString$Elem(string var)
+string enString$Elem(string var)
 {
     return "\"" + var + "\"";
 }
 
-string XiString$Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
+string enString$Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
     integer x,
     string s
     )
@@ -51,7 +51,7 @@ string XiString$Plural( // returns pluralization ("s"/"es"/etc.) for specified i
     return s;
 }
 
-string XiString$If( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
+string enString$If( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
     integer x,
     string s
     )
@@ -60,7 +60,7 @@ string XiString$If( // returns specified string if x is 1; can be used for text 
     return "";
 }
 
-string XiString$Pad( // pads a string to length l_target
+string enString$Pad( // pads a string to length l_target
 	string src,
 	string pad,
 	integer l_target,
@@ -98,18 +98,18 @@ string XiString$Pad( // pads a string to length l_target
         { // trim the pad back down to diff
             pad = llDeleteSubString(pad, -l_pad + l_diff, -1);
         }
-        if (align == XISTRING$PAD_ALIGN_CENTER)
+        if (align == ENSTRING$PAD_ALIGN_CENTER)
         { // center align
             if (l_diff == 1) src += llGetSubString(pad, 0, 0);
             else src = llGetSubString(pad, 0, (l_diff / 2) - 1) + src + llGetSubString(pad, 0, (l_diff - (l_diff / 2)) - 1);
         }
-        else if (align == XISTRING$PAD_ALIGN_RIGHT) src = pad + src; // right align
+        else if (align == ENSTRING$PAD_ALIGN_RIGHT) src = pad + src; // right align
         else src += pad; // left align
     }
     return src; // return src as-modified
 }
 
-string XiString$MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
+string enString$MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
 	integer bytes
 	)
 {
@@ -122,24 +122,24 @@ string XiString$MultiByteUnit( // appends the SI prefix to a specified number of
     return (string)bytes + llList2String(["", "K", "M", "G"], mult);
 }
 
-string XiString$Escape(
+string enString$Escape(
     integer f, // filter string flag
     string x
     )
 {
     list y;
     string e;
-    if (f & XISTRING$ESCAPE_FILTER_REGEX)
+    if (f & ENSTRING$ESCAPE_FILTER_REGEX)
     {
         y = ["^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]", "\\"]; // note that \\ must be the last entry, otherwise previously escaped characters will be double-escaped
         e = "\\"; // regex escaped with single backwards slash
     }
-    if (f & XISTRING$ESCAPE_FILTER_JSON)
+    if (f & ENSTRING$ESCAPE_FILTER_JSON)
     {
         y = ["\""];
         e = "\\"; // json escaped with single backwards slash
     }
-    if (f & XISTRING$ESCAPE_REVERSE)
+    if (f & ENSTRING$ESCAPE_REVERSE)
     {
         // TODO: unescape
     }
@@ -152,7 +152,7 @@ string XiString$Escape(
     return x;
 }
 
-list XiString$ParseCfgLine( // parses a notecard line using a basic configuration markup format
+list enString$ParseCfgLine( // parses a notecard line using a basic configuration markup format
     string s
     )
 {
@@ -167,7 +167,7 @@ list XiString$ParseCfgLine( // parses a notecard line using a basic configuratio
     return [n, v];
 }
 
-integer XiString$FindChars( // finds the first instance of any of the specified characters, used for user input validation
+integer enString$FindChars( // finds the first instance of any of the specified characters, used for user input validation
     string in,
     string chars
     )
@@ -183,7 +183,7 @@ integer XiString$FindChars( // finds the first instance of any of the specified 
     return -1;
 }
 
-string XiString$JsonAttempt( // attempts to get a value from a json string, and if fails, returns preset value instead of JSON_INVALID
+string enString$JsonAttempt( // attempts to get a value from a json string, and if fails, returns preset value instead of JSON_INVALID
     string json,
     list specifiers,
     string value

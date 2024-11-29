@@ -1,9 +1,9 @@
 /*
     money.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,26 +26,26 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the money event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$MONEY
-		Xi$money( key id, integer amount )
+		#define EN$MONEY
+		en$money( key id, integer amount )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$MONEY
+#ifdef EN$MONEY
 	money( key id, integer amount )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "money", [ "id", "amount" ], [
-            XiAvatar$Elem( id ),
+        enLog$TraceParams( "money", [ "id", "amount" ], [
+            enAvatar$Elem( id ),
             amount
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi$money( id, amount );
+        en$money( id, amount );
 	}
 #endif

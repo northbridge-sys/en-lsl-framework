@@ -1,9 +1,9 @@
 /*
     object_rez.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,25 +26,25 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the object_rez event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$OBJECT_REZ
-		Xi$object_rez( key id )
+		#define EN$OBJECT_REZ
+		en$object_rez( key id )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef XI$OBJECT_REZ
+#ifdef EN$OBJECT_REZ
 	object_rez( key id )
 	{
         // event unused, so the only reason to define it is to log it
-        XiLog$TraceParams( "object_rez", [ "id" ], [
-            XiObject$Elem( id ),
+        enLog$TraceParams( "object_rez", [ "id" ], [
+            enObject$Elem( id ),
         ] );
 
         // event unused, so pass to user-defined function only
-        Xi$object_rez( id );
+        en$object_rez( id );
 	}
 #endif

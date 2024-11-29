@@ -1,9 +1,9 @@
 /*
     at_target.lsl
     Event Handler
-    Xi LSL Framework
-    Copyright (C) 2024  BuildTronics
-    https://docs.buildtronics.net/xi-lsl-framework
+    En LSL Framework
+    Copyright (C) 2024  Northbridge Business Systems
+    https://docs.northbridgesys.com/en-lsl-framework
 
     ╒══════════════════════════════════════════════════════════════════════════════╕
     │ LICENSE                                                                      │
@@ -26,24 +26,24 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This snippet replaces the at_target event handler with a version that calls
-    maintenance functions required by Xi libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by Xi libraries:
+    maintenance functions required by En libraries, then optionally executes a user-
+    defined function to handle event calls that are not intercepted by En libraries:
 
-		#define XI$AT_TARGET
-		Xi$at_target( integer handle, vector target, vector current )
+		#define EN$AT_TARGET
+		en$at_target( integer handle, vector target, vector current )
 		{
-            // code to run when event occurs that is not intercepted by Xi
+            // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined XI$AT_TARGET_TRACE || defined XI$AT_TARGET
+#if defined EN$AT_TARGET_TRACE || defined EN$AT_TARGET
 	at_target( integer handle, vector target, vector current )
 	{
 #endif
 
         // log event if requested
-        #ifdef XI$AT_TARGET_TRACE
-            XiLog$TraceParams( "at_target", [ "handle", "target", "current" ], [
+        #ifdef EN$AT_TARGET_TRACE
+            enLog$TraceParams( "at_target", [ "handle", "target", "current" ], [
                 handle,
                 target
                 current
@@ -51,10 +51,10 @@
         #endif
 
         // event unused, so pass to user-defined function only
-        #ifdef XI$AT_TARGET
-            Xi$at_target( handle, target, current );
+        #ifdef EN$AT_TARGET
+            en$at_target( handle, target, current );
         #endif
 
-#if defined XI$AT_TARGET_TRACE || defined XI$AT_TARGET
+#if defined EN$AT_TARGET_TRACE || defined EN$AT_TARGET
 	}
 #endif
