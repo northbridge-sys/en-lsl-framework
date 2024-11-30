@@ -29,7 +29,7 @@ Some of the useful features En provides:
 
 ## Installation
 
-- If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
+If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
 
 For the latest **development** release:
 - Clone the repository directly into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
