@@ -27,18 +27,32 @@ Some of the useful features En provides:
 - Other helper libraries for time functions, object manipulation, and inventory management
 - Complete utility scripts, as well as drop-in `#import`able snippets for special use cases
 
-## Instructions
+## Installation
 
 - If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
+
+For the latest **development** release:
+- Clone the repository directly into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
+
+Or, for the latest **stable** release, or if you don't want to use git:
 - Create a directory called `en-lsl-framework` in your LSL preprocessor include directory.
-- Unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-framework/libraries.lsl`.
-- Include the framework libraries by placing the following line at the top of your script:
+- [Download](https://github.com/northbridge-sys/en-lsl-framework/archive/refs/heads/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-framework/libraries.lsl`. **Do not** name the folder "en-lsl-framework-main"!
+
+## Usage
+
+### Function Reference
+
+TBD - moving to wiki
+
+### Overview
+
+Include the framework libraries by placing the following line at the top of your script:
 
 ```
 #include "en-lsl-framework/libraries.lsl"
 ```
 
-- Then, in the script body, include the framework event handlers in each state
+Then, in the script body, include the framework event handlers in each state
 
 ```
 default
@@ -47,7 +61,7 @@ default
 }
 ```
 
-- To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
+To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
 
 ```
 #define EN$STATE_ENTRY
@@ -90,10 +104,6 @@ default
     #include "en-lsl-framework/event-handlers.lsl"
 }
 ```
-
-## Function Reference
-
-TBD - moving to wiki
 
 ## Why?
 
@@ -205,10 +215,10 @@ and all other En scripts in the object will ignore the message.
 
 ## Why "En"?
 
+"En" is a reference to the Sumerian cuneiform of the same name, inspired by the term's thematic presence in *Snow Crash*, the novel that directly inspired the creation of Second Life.
+
 >" . . . Primitive societies were controlled by verbal rules called *me*. The *me* were like little programs for humans. They were a necessary part of the transition from caveman society to an organized, agricultural society. For example, there was a program for plowing a furrow in the ground and planting grain. There was a program for baking bread and another one for making a house. There were also *me* for higher-level functions such as war, diplomacy, and religious ritual. All the skills required to operate a self-sustaining culture were contained in these *me*, which were written down on tablets or passed around in an oral tradition. In any case, the repository for the *me* was the local temple, which was a database of *me*, controlled by a priest/king called an *en*. When someone needed bread, they would go to the *en* or one of his underlings and download the bread-making *me* from the temple. Then they would carry out the instructions -- run the program -- and when they were finished, they'd have a loaf of bread.
 >
 >"A central database was necessary, among other reasons, because some of the *me* had to be properly timed. If people carried out the plowing-and-planting *me* at the wrong time of year, the harvest would fail and everyone would starve. The only way to make sure that the *me* were properly timed was to build astronomical observatories to watch the skies for the changes of season. So the Sumerians built towers 'with their tops with the heavens' -- topped with astronomical diagrams. The *en* would watch the skies and dispense the agricultural *me* at the proper times of year to keep the economy running."
 
 - Neal Stephenson, *Snow Crash* (1992).
-
-In summary, this framework is called "En" because naming it "Me" would be confusing. "Me LSL Framework"? Doesn't work. You'd probably mispronounce it, as well.
