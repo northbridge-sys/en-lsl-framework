@@ -79,7 +79,7 @@
 #include "en-lsl-framework/event-handlers/run_time_permissions.lsl"
 #include "en-lsl-framework/event-handlers/sensor.lsl"
 #include "en-lsl-framework/event-handlers/state_entry.lsl"
-#include "en-lsl-framework/event-handlers/state_eent.lsl"
+#include "en-lsl-framework/event-handlers/state_exit.lsl"
 #include "en-lsl-framework/event-handlers/timer.lsl"
 #include "en-lsl-framework/event-handlers/touch_end.lsl"
 #include "en-lsl-framework/event-handlers/touch_start.lsl"
