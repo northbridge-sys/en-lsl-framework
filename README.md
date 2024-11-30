@@ -105,7 +105,9 @@ default
 }
 ```
 
-## Why?
+## Frequently Asked Questions
+
+### Why?
 
 LSL is over twenty years old and still has no function that returns a random integer. While it's still fun, coding in any other language makes LSL feel... barbaric.
 
@@ -113,7 +115,7 @@ En augments LSL with features that should have been in LSL a decade ago, but are
 
 En is centralizes all of these handy snippets into one omnibus framework. With all the tricks at your fingertips, there's no need to reinvent the wheel in every new script. Focus on the code, not the infrastructure. Thanks to the LSL preprocessor, these additional functions and background routines just work.
 
-## How?
+### How?
 
 The LSL preprocessor makes all of the helper functions defined in the En libraries available within LSL scripts. Additionally, the En framework creates and redirects event handlers (`state_entry`, `link_message`, etc.) dynamically based on the functionality you enable to optimize script performance.
 
@@ -213,7 +215,7 @@ default
 
 and all other En scripts in the object will ignore the message.
 
-## Why "En"?
+### Why "En"?
 
 "En" is a reference to the Sumerian cuneiform of the same name, inspired by the term's thematic presence in *Snow Crash*, the novel that directly inspired the creation of Second Life.
 
