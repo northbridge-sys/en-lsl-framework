@@ -224,3 +224,5 @@ and all other En scripts in the object will ignore the message.
 >"A central database was necessary, among other reasons, because some of the *me* had to be properly timed. If people carried out the plowing-and-planting *me* at the wrong time of year, the harvest would fail and everyone would starve. The only way to make sure that the *me* were properly timed was to build astronomical observatories to watch the skies for the changes of season. So the Sumerians built towers 'with their tops with the heavens' -- topped with astronomical diagrams. The *en* would watch the skies and dispense the agricultural *me* at the proper times of year to keep the economy running."
 
 - Neal Stephenson, *Snow Crash* (1992).
+
+In short, the En framework provides a repository of these "little programs" for all sorts of operations in the "society" of LSL, of which many need to be timed to run on certain events to keep the script running.
