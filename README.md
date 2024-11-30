@@ -40,9 +40,9 @@ Or, for the latest **stable** release, or if you don't want to use git:
 
 ## Usage
 
-### Function Reference
+### Reference Guide
 
-TBD - moving to wiki
+**The complete reference guide for En is located on the [NBS Documentation portal](https://docs.northbridgesys.com/en-lsl-framework).**
 
 ### Overview
 
