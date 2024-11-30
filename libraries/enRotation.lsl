@@ -68,3 +68,17 @@ rotation enRotation$Nlerp(
     rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
     return enRotation$Normalize( r );
 }
+
+string enRotation$Compress( // converts a rotation to a Base64 string, can be converted back with enRotation$Decompress
+    rotation r
+)
+{
+    return enFloat$Compress(r.x) + enFloat$Compress(r.y) + enFloat$Compress(r.z) + enFloat$Compress(r.s);
+}
+
+rotation enRotation$Decompress( // converts the string result from enRotation$Compress back to a rotation
+    string s
+)
+{
+    return <enFloat$Decompress(llGetSubString(s, 0, 5)), enFloat$Decompress(llGetSubString(s, 6, 11)), enFloat$Decompress(llGetSubString(s, 12, 17)), enFloat$Decompress(llGetSubString(s, 18, 23))>;
+}

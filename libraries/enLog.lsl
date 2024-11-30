@@ -108,11 +108,12 @@ enLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
     llSetScriptState( llGetScriptName(), FALSE );
     // remove inventory if ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR
-        if ( !enInventory$OwnedByCreator( llGetScriptName() ) )
+        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$ERROR("Script deletion failed because ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is not defined.");
+        else
     #endif
     // only remove inventory if ENLOG$DISABLE_FATALDELETE is NOT defined
     #ifdef ENLOG$DISABLE_FATALDELETE
-        1;
+        enLog$ERROR("Script deletion failed because ENLOG$DISABLE_FATALDELETE is defined.");
     #else
         llRemoveInventory( llGetScriptName() );
     #endif
@@ -128,11 +129,12 @@ enLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
     llSetScriptState( llGetScriptName(), FALSE );
     // delete object if ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR
-        if ( !enInventory$OwnedByCreator( llGetScriptName() ) )
+        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$ERROR("Object delete/detach failed because ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR is not defined.");
+        else
     #endif
     // only delete object if ENLOG$DISABLE_FATALDELETE is NOT defined
     #ifdef ENLOG$DISABLE_FATALDIE
-        1;
+        enLog$ERROR("Object delete/detach failed because ENLOG$DISABLE_FATALDIE is defined.");
     #else
         {
             if (llGetAttached()) llDetachFromAvatar();

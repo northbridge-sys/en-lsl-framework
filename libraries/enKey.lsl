@@ -125,10 +125,10 @@ string enKey$Decompress( // adds dashes back into a key that was sent through en
     if (llStringLength(k) != 24) return k; // not a compressed key
     // presumptively valid key at this point (no point k checking any further)
     // convert from Base64 to a 32-nybble hex string
-    k = enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)))
-        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)))
-        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)))
-        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)));
+    k = enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)), 8)
+        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)), 8)
+        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)), 8)
+        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)), 8);
     // inject dashes and return
     return enKey$Unstrip( k );
 }

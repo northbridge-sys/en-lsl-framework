@@ -154,7 +154,7 @@ list _enTest$Check( // internal function called for each test
         {
             if ( av != bv ) f = "!";
         }
-        if ( m == ENTEST$NOT_EQUAL ) f = enString$Bool( (f == ""), "!" ); // invert result
+        if ( m == ENTEST$NOT_EQUAL ) f = enString$If( (f == ""), "!" ); // invert result
     }
     else if ( m == ENTEST$GREATER )
     {
@@ -206,6 +206,6 @@ enTest$StopOnFail(
     )
 {
     if ( a = [] ) return; // no need to crash
-    enLog$TraceParams( "enTest$Crash", [ "enTest$Assert(...)" ], [ enList$Elem( a ) ); // log crash
+    enLog$TraceParams( "enTest$Crash", [ "enTest$Assert(...)" ], [ enList$Elem( a ) ] ); // log crash
     llSetScriptState( llGetScriptName(), FALSE ); // stop script
 }

@@ -46,6 +46,20 @@ string enVector$ToString( // removes the < & > from a vector and rounds each ele
     return enFloat$ToString(pos.x, digits) + ", " + enFloat$ToString(pos.y, digits) + ", " + enFloat$ToString(pos.z, digits);
 }
 
+string enVector$Compress( // converts a vector to a Base64 string, can be converted back with enVector$Decompress
+    vector v
+)
+{
+    return enFloat$Compress(v.x) + enFloat$Compress(v.y) + enFloat$Compress(v.z);
+}
+
+vector enVector$Decompress( // converts the string result from enVector$Compress back to a vector
+    string s
+)
+{
+    return <enFloat$Decompress(llGetSubString(s, 0, 5)), enFloat$Decompress(llGetSubString(s, 6, 11)), enFloat$Decompress(llGetSubString(s, 12, 17))>;
+}
+
 // position scope translation
 // NOTE: these are mostly just here for reference, it is more efficient to hardcode these calculations than waste memory on "add two vectors"
 

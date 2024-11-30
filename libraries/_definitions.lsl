@@ -245,6 +245,8 @@
 
 #define enFloat$ToString(...) _enFloat_ToString( __VA_ARGS__ )
 #define enFloat$Clamp(...) _enFloat_Clamp( __VA_ARGS__ )
+#define enFloat$Compress(...) _enFloat_Compress( __VA_ARGS__ )
+#define enFloat$Decompress(...) _enFloat_Decompress( __VA_ARGS__ )
 #define enFloat$FlipCoin(...) _enFloat_FlipCoin( __VA_ARGS__ )
 #define enFloat$RandRange(...) _enFloat_RandRange( __VA_ARGS__ )
 
@@ -347,6 +349,8 @@
 #define _enObject$TextTemp(...) _enObject_TextTemp( __VA_ARGS__ )
 #define _enObject$UpdateUUIDs(...) _enObject_UpdateUUIDs( __VA_ARGS__ )
 
+#define enRotation$Compress(...) _enRotation_Compress( __VA_ARGS__ )
+#define enRotation$Decompress(...) _enRotation_Decompress( __VA_ARGS__ )
 #define enRotation$Elem(...) _enRotation_Elem( __VA_ARGS__ )
 #define enRotation$Normalize(...) _enRotation_Normalize( __VA_ARGS__ )
 #define enRotation$Slerp(...) _enRotation_Slerp( __VA_ARGS__ )
@@ -375,6 +379,8 @@
 #define _enTimer$InternalLoopback(...) _enTimer_InternalLoopback( __VA_ARGS__ )
 #define en$entimer(...) _enTimer_entimer( __VA_ARGS__ )
 
+#define enVector$Compress(...) _enVector_Compress( __VA_ARGS__ )
+#define enVector$Decompress(...) _enVector_Decompress( __VA_ARGS__ )
 #define enVector$RegionCornerToWorld(...) _enVector_RegionCornerToWorld( __VA_ARGS__ )
 #define enVector$RegionToWorld(...) _enVector_RegionToWorld( __VA_ARGS__ )
 #define enVector$Scale(...) _enVector_Scale( __VA_ARGS__ )
