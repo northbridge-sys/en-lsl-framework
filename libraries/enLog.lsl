@@ -105,18 +105,18 @@ enLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
 {
     if ( m != "" ) m += " ";
     enLog$( FATAL, m + "Script deleted." );
-    llSetScriptState( llGetScriptName(), FALSE );
     // remove inventory if ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR
-        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$ERROR("Script deletion failed because ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is not defined.");
+        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Script deletion failed because ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is not defined.");
         else
     #endif
     // only remove inventory if ENLOG$DISABLE_FATALDELETE is NOT defined
     #ifdef ENLOG$DISABLE_FATALDELETE
-        enLog$ERROR("Script deletion failed because ENLOG$DISABLE_FATALDELETE is defined.");
+        enLog$Error("Script deletion failed because ENLOG$DISABLE_FATALDELETE is defined.");
     #else
         llRemoveInventory( llGetScriptName() );
     #endif
+    llSetScriptState( llGetScriptName(), FALSE );
     llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
 }
 
@@ -126,21 +126,21 @@ enLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
 {
     if ( m != "" ) m += " ";
     enLog$Fatal( m + "Object " + llList2String(["deleted", "detached from " + enObject$GetAttachedString(llGetAttached())], !!llGetAttached()) + "." );
-    llSetScriptState( llGetScriptName(), FALSE );
     // delete object if ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR
-        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$ERROR("Object delete/detach failed because ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR is not defined.");
+        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Object delete/detach failed because ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR is not defined.");
         else
     #endif
     // only delete object if ENLOG$DISABLE_FATALDELETE is NOT defined
     #ifdef ENLOG$DISABLE_FATALDIE
-        enLog$ERROR("Object delete/detach failed because ENLOG$DISABLE_FATALDIE is defined.");
+        enLog$Error("Object delete/detach failed because ENLOG$DISABLE_FATALDIE is defined.");
     #else
         {
             if (llGetAttached()) llDetachFromAvatar();
             else llDie();
         }
     #endif
+    llSetScriptState( llGetScriptName(), FALSE );
     llSleep( 1.0 ); // give the simulator time
 }
 
