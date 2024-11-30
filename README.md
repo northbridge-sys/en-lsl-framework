@@ -40,8 +40,6 @@ Or, for the latest **stable** release, or if you don't want to use git:
 
 ## Usage
 
-### Reference Guide
-
 **The complete reference guide for En is located on the [NBS Documentation portal](https://docs.northbridgesys.com/en-lsl-framework).**
 
 The following information is only an overview meant to describe how the En framework works at a basic level. We strongly recommend using the reference guide when writing En scripts!
