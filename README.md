@@ -225,4 +225,4 @@ and all other En scripts in the object will ignore the message.
 
 - Neal Stephenson, *Snow Crash* (1992).
 
-In short, the En framework provides a "central database" of these "little programs" for all sorts of "functions" in the "society" of LSL, of which many need to be "properly timed" to run on certain events.
+In short, the En framework provides a "central database" of "little programs" for all sorts of "functions" in the "society" of LSL, of which many need to be "properly timed" to run on certain events.
