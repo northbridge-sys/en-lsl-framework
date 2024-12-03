@@ -46,6 +46,18 @@ string enVector$ToString( // removes the < & > from a vector and rounds each ele
     return enFloat$ToString(pos.x, digits) + ", " + enFloat$ToString(pos.y, digits) + ", " + enFloat$ToString(pos.z, digits);
 }
 
+vector enVector$FromString( // converts a string to a vector while being a little loose with what counts as a vector (all spaces removed, brackets optional)
+    string s
+)
+{
+    s = llStringTrim(llReplaceSubString(s, " ", "", 0), STRING_TRIM); // remove all spaces, then trim to clean off any stray newlines
+    if (llGetSubString(s, 0, 0) == "<") s = llDeleteSubString(s, 0, 0);
+    if (llGetSubString(s, -1, -1) == ">") s = llDeleteSubString(s, -1, -1);
+    list l = llParseStringKeepNulls(s, [","], []);
+    if (llGetListLength(l) != 3) return ZERO_VECTOR;
+    return <(float)llList2String(l, 0), (float)llList2String(l, 1), (float)llList2String(l, 2)>;
+}
+
 string enVector$Compress( // converts a vector to a Base64 string, can be converted back with enVector$Decompress
     vector v
 )

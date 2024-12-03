@@ -352,6 +352,7 @@
 #define enRotation$Compress(...) _enRotation_Compress( __VA_ARGS__ )
 #define enRotation$Decompress(...) _enRotation_Decompress( __VA_ARGS__ )
 #define enRotation$Elem(...) _enRotation_Elem( __VA_ARGS__ )
+#define enRotation$FromString(...) _enRotation_FromString( __VA_ARGS__ )
 #define enRotation$Normalize(...) _enRotation_Normalize( __VA_ARGS__ )
 #define enRotation$Slerp(...) _enRotation_Slerp( __VA_ARGS__ )
 #define enRotation$Nlerp(...) _enRotation_Nlerp( __VA_ARGS__ )
@@ -381,6 +382,7 @@
 
 #define enVector$Compress(...) _enVector_Compress( __VA_ARGS__ )
 #define enVector$Decompress(...) _enVector_Decompress( __VA_ARGS__ )
+#define enVector$FromString(...) _enVector_FromString( __VA_ARGS__ )
 #define enVector$RegionCornerToWorld(...) _enVector_RegionCornerToWorld( __VA_ARGS__ )
 #define enVector$RegionToWorld(...) _enVector_RegionToWorld( __VA_ARGS__ )
 #define enVector$Scale(...) _enVector_Scale( __VA_ARGS__ )

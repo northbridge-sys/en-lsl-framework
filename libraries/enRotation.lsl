@@ -55,7 +55,7 @@ rotation enRotation$Slerp(
     float t
     )
 {
-    return llAensAngle2Rot( llRot2Aens( b /= a ), t * llRot2Angle( b ) ) * a;
+    return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
 rotation enRotation$Nlerp(
@@ -81,4 +81,18 @@ rotation enRotation$Decompress( // converts the string result from enRotation$Co
 )
 {
     return <enFloat$Decompress(llGetSubString(s, 0, 5)), enFloat$Decompress(llGetSubString(s, 6, 11)), enFloat$Decompress(llGetSubString(s, 12, 17)), enFloat$Decompress(llGetSubString(s, 18, 23))>;
+}
+
+vector enRotation$FromString( // converts a string to a rotation while being a little loose with what counts as a rotation (all spaces removed, brackets optional, automatic translation from vector)
+    string s,
+    integer use_degrees // set TRUE if you want llEuler2Rot translation to presume a vector in degrees instead of radians
+)
+{
+    s = llStringTrim(llReplaceSubString(s, " ", "", 0), STRING_TRIM); // remove all spaces, then trim to clean off any stray newlines
+    if (llGetSubString(s, 0, 0) == "<") s = llDeleteSubString(s, 0, 0);
+    if (llGetSubString(s, -1, -1) == ">") s = llDeleteSubString(s, -1, -1);
+    list l = llParseStringKeepNulls(s, [","], []);
+    if (llGetListLength(l) == 3) return llEuler2Rot(<(float)llList2String(l, 0), (float)llList2String(l, 1), (float)llList2String(l, 2)> * (1.0 + use_degrees * (DEG_TO_RAD - 1)));
+    if (llGetListLength(l) != 4) return ZERO_ROTATION;
+    return <(float)llList2String(l, 0), (float)llList2String(l, 1), (float)llList2String(l, 2), (float)llList2String(l, 3)>;
 }

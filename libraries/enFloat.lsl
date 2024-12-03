@@ -55,11 +55,14 @@ string enFloat$Compress( // converts a float to a non-equivalent string, can be 
     integer i = 0x80000000 & ~llSubStringIndex(llList2CSV([f]), "-");
     if ((f))
     {
-        if ((f = llFabs(f)) < 2.3509887016445750159374730744445e-38) return i | (integer)(f / 1.4012984643248170709237295832899e-45);// denormalized range check & last stride of normalized range
-        if(f > 3.4028234663852885981170418348452e+38) return i | 0x7F800000;// positive or negative infinity
-        if(f <= 1.4012984643248170709237295832899e-45) return i | 0x7FC00000; // NaN
-        integer temp = ~-llFloor(llLog(f) * 1.4426950408889634073599246810019); // extremes will error towards extremes
-        return i | (0x7FFFFF & (integer)(f * (0x1000000 >> c))) | ((126 + (c = ((integer)f - (3 <= (f *= llPow(2, -c))))) + c) * 0x800000); // what the fuck?
+        if ((f = llFabs(f)) < 2.3509887016445750159374730744445e-38) i = i | (integer)(f / 1.4012984643248170709237295832899e-45);// denormalized range check & last stride of normalized range
+        else if (f > 3.4028234663852885981170418348452e+38) i = i | 0x7F800000;// positive or negative infinity
+        else if (f <= 1.4012984643248170709237295832899e-45) i = i | 0x7FC00000; // NaN
+        else
+        {
+            integer temp = ~-llFloor(llLog(f) * 1.4426950408889634073599246810019); // extremes will error towards extremes
+            i = i | (0x7FFFFF & (integer)(f * (0x1000000 >> temp))) | ((126 + (temp = ((integer)f - (3 <= (f *= llPow(2, -temp))))) + temp) * 0x800000); // what the fuck?
+        }
     }
     return llGetSubString(llIntegerToBase64(i), 0, 5);
 }
