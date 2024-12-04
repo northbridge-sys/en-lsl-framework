@@ -309,6 +309,8 @@
 #define enList$ToString(...) _enList_ToString( __VA_ARGS__ )
 
 #define enLog$(...) _enLog_( __VA_ARGS__ )
+#define enLog$Die(...) _enLog_Die( __VA_ARGS__ )
+#define enLog$Delete(...) _enLog_Delete( __VA_ARGS__ )
 #define enLog$FatalStop(...) _enLog_FatalStop( __VA_ARGS__ )
 #define enLog$FatalDelete(...) _enLog_FatalDelete( __VA_ARGS__ )
 #define enLog$FatalDie(...) _enLog_FatalDie_( __VA_ARGS__ )

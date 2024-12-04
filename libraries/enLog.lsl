@@ -105,14 +105,19 @@ enLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
 {
     if ( m != "" ) m += " ";
     enLog$( FATAL, m + "Script deleted." );
-    // remove inventory if ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
-    #ifndef ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR
-        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Script deletion failed because ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is not defined.");
+    enLog$Delete();
+}
+
+enLog$Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+{
+    // remove inventory if ENLOG$ENABLE_DELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef ENLOG$ENABLE_DELETE_OWNEDBYCREATOR
+        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Script deletion failed because ENLOG$ENABLE_DELETE_OWNEDBYCREATOR is not defined.");
         else
     #endif
-    // only remove inventory if ENLOG$DISABLE_FATALDELETE is NOT defined
-    #ifdef ENLOG$DISABLE_FATALDELETE
-        enLog$Error("Script deletion failed because ENLOG$DISABLE_FATALDELETE is defined.");
+    // only remove inventory if ENLOG$DISABLE_DELETE is NOT defined
+    #ifdef ENLOG$DISABLE_DELETE
+        enLog$Error("Script deletion failed because ENLOG$DISABLE_DELETE is defined.");
     #else
         llRemoveInventory( llGetScriptName() );
     #endif
@@ -126,14 +131,19 @@ enLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
 {
     if ( m != "" ) m += " ";
     enLog$Fatal( m + "Object " + llList2String(["deleted", "detached from " + enObject$GetAttachedString(llGetAttached())], !!llGetAttached()) + "." );
-    // delete object if ENLOG$ENABLE_FATALDELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
-    #ifndef ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR
-        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Object delete/detach failed because ENLOG$ENABLE_FATALDIE_OWNEDBYCREATOR is not defined.");
+    enLog$Die();
+}
+
+enLog$Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+{
+    // delete object if ENLOG$ENABLE_DIE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef ENLOG$ENABLE_DIE_OWNEDBYCREATOR
+        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Object delete/detach failed because ENLOG$ENABLE_DIE_OWNEDBYCREATOR is not defined.");
         else
     #endif
-    // only delete object if ENLOG$DISABLE_FATALDELETE is NOT defined
-    #ifdef ENLOG$DISABLE_FATALDIE
-        enLog$Error("Object delete/detach failed because ENLOG$DISABLE_FATALDIE is defined.");
+    // only delete object if ENLOG$DISABLE_DIE is NOT defined
+    #ifdef ENLOG$DISABLE_DIE
+        enLog$Error("Object delete/detach failed because ENLOG$DISABLE_DIE is defined.");
     #else
         {
             if (llGetAttached()) llDetachFromAvatar();
@@ -141,7 +151,7 @@ enLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
         }
     #endif
     llSetScriptState( llGetScriptName(), FALSE );
-    llSleep( 1.0 ); // give the simulator time
+    llSleep( 1.0 ); // give the simulator time to remove the object to be safe
 }
 
 string enLog$LevelToString( // converts integer level number into string representation
