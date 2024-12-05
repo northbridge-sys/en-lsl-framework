@@ -226,3 +226,11 @@ and all other En scripts in the object will ignore the message.
 - Neal Stephenson, *Snow Crash* (1992).
 
 The En framework provides a "central database" of "little programs" for all sorts of "functions" in the "society" of LSL, of which many need to be "properly timed" to run on certain events... so the name just made sense.
+
+### Is it efficient?
+
+The En framework is designed to be efficient in a code factoring sense - that is, by using En functions and macros, a script is not unnecessarily duplicating code that could be consolidated into a single function.
+
+However, En does not strive to absolutely maximize script efficiency. En is intended to be human-readable and easy to maintain.
+
+Efforts are taken to use macros instead of functions where possible to reduce the overhead of so many function definitions. (Note that functions have not implicitly allocated 512 bytes in Mono since at least 2013; the actual amount is lower.)
