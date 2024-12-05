@@ -229,8 +229,8 @@ The En framework provides a "central database" of "little programs" for all sort
 
 ### Is it efficient?
 
-The En framework is designed to be efficient in a code factoring sense - that is, by using En functions and macros, a script is not unnecessarily duplicating code that could be consolidated into a single function.
+En does not strive to absolutely maximize script efficiency. En is intended to be human-readable and easy to maintain.
 
-However, En does not strive to absolutely maximize script efficiency. En is intended to be human-readable and easy to maintain.
+Specifically, the En framework is designed to be efficient in a code factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
 
-Efforts are taken to use macros instead of functions where possible to reduce the overhead of so many function definitions. (Note that functions have not implicitly allocated 512 bytes in Mono since at least 2013; the actual amount is lower.)
+Efforts are taken to use macros instead of functions where possible to reduce the overhead of so many function definitions. (Note that functions have not implicitly allocated 512 bytes in Mono since at least 2013.)
