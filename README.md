@@ -229,7 +229,7 @@ The En framework provides a "central database" of "little programs" for all sort
 
 ### Is it efficient?
 
-En does not strive to absolutely maximize script efficiency. En is intended to be human-readable and easy to maintain.
+En does not strive to absolutely maximize script efficiency. En is intended to be flexible and human-readable.
 
 Specifically, the En framework is designed to be efficient in a code factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
 
