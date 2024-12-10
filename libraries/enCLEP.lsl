@@ -320,7 +320,7 @@ integer _enCLEP$Process(
             string prim = llList2String(data, 2);
             data = enList$FromString(llList2String(data, 5));
             if (llGetListLength(data) != 5) return 1; // error in operation unserialize operation
-            _enLSD$Process(
+            enLSD$Process(
                 prim, // target prim from enLSD$Push
                 (integer)llList2String(data, 0), // use_uuid
                 (integer)llList2String(data, 1), // use_header

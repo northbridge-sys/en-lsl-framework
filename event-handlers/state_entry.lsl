@@ -48,7 +48,7 @@
 
         // check if any En libraries want to intercept this event
         #ifdef ENLSD$ENABLE_UUID_HEADER
-            _enLSD$CheckUUID();
+            enLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested

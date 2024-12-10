@@ -53,7 +53,7 @@
 
         // update enLSD names if any use the UUID header
         #ifdef ENLSD$ENABLE_UUID_HEADER
-            _enLSD$CheckUUID();
+            enLSD$CheckUUID();
         #endif
 
         // pass to user-defined function if requested

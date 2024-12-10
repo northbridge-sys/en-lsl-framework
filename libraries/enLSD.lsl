@@ -88,7 +88,7 @@ list enLSD$Delete(string name)
 	return llLinksetDataDeleteFound("^" + enLSD$Head() + name + "$", "");
 }
 
-integer enLSD$Eensts(string name)
+integer enLSD$Exists(string name)
 {
     return (enLSD$Find(name, 0, 1) != []);
 }
@@ -157,7 +157,7 @@ enLSD$Push( // writes a linkset data name-value pair TO another script, optional
     enCLEP$Send(prim, domain, "enLSD$Push", enList$ToString([u, use_header, ENLSD$HEADER, name, v]));
 }
 
-_enLSD$Process( // writes a linkset data name-value pair FROM another script
+enLSD$Process( // writes a linkset data name-value pair FROM another script
     string prim,
     integer use_uuid,
     integer use_header,
@@ -168,7 +168,7 @@ _enLSD$Process( // writes a linkset data name-value pair FROM another script
     )
 {
     #ifdef ENLSD$TRACE
-        enLog$TraceParams("_enLSD$Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
+        enLog$TraceParams("enLSD$Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
             enObject$Elem(prim),
             use_uuid,
             use_header,
@@ -216,10 +216,10 @@ _enLSD$Process( // writes a linkset data name-value pair FROM another script
     #endif
 }
 
-_enLSD$CheckUUID() // updates LSD entries that use old UUID
+enLSD$CheckUUID() // updates LSD entries that use old UUID
 {
     #ifdef ENLSD$TRACE
-        enLog$TraceParams("_enLSD$CheckUUID", [], []);
+        enLog$TraceParams("enLSD$CheckUUID", [], []);
     #endif
     #ifdef ENLSD$ENABLE_UUID_HEADER
         string k = enObject$Self( 0 );

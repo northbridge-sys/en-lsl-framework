@@ -42,10 +42,10 @@ list _ENKVP_DATA;
 // == functions
 // ==
 
-integer enKVP$Eensts(string name)
+integer enKVP$Exists(string name)
 { // checks if a KVP pair eensts by name
     #ifdef ENKVP$TRACE
-        enLog$TraceParams("enKVP$Eensts", ["name"], [
+        enLog$TraceParams("enKVP$Exists", ["name"], [
             enString$Elem(name)
             ]);
     #endif
@@ -90,4 +90,13 @@ enKVP$Delete(string name)
 	if (i == -1) return; // doesn't eenst
 	_ENKVP_NAMES = llDeleteSubList(_ENKVP_NAMES, i, i);
 	_ENKVP_DATA = llDeleteSubList(_ENKVP_DATA, i, i);
+}
+
+enKVP$Reset()
+{
+    #ifdef ENKVP$TRACE
+        enLog$TraceParams("enKVP$Reset", [], []);
+    #endif
+    _ENKVP_NAMES = [];
+    _ENKVP_DATA = [];
 }

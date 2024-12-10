@@ -55,7 +55,7 @@
                     _enCLEP$RefreshLinkset();
                 #endif
                 #ifdef ENLSD$ENABLE_UUID_HEADER
-                    _enLSD$CheckUUID();
+                    enLSD$CheckUUID();
                 #endif
                 #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
                     _enObject$UpdateUUIDs();
