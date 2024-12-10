@@ -1,5 +1,5 @@
 /*
-    enChat.lsl
+    enCLEP.lsl
     Library
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
@@ -41,26 +41,26 @@
             which are sent plain-text inside the message, as well as the message
             itself.
         - An authentication mechanism.
-        - A method of obfuscating text sent via chat or llMessageLinked. enChat is
-            intended to pass human-readable and easily-parsed IMP traffic over chat.
+        - A method of obfuscating text sent via chat or llMessageLinked. enCLEP is
+            intended to pass human-readable and easily-parsed LEP traffic over chat.
             If security is required, consider encrypting separately before sending
-            IMP messages, ideally signed, but be aware that the domain & service are
+            LEP messages, ideally signed, but be aware that the domain & service are
             not hidden. (Or just use an external HTTPS server.)
         - A method of sending infinite-length strings. PTP has no memory overflow
             protection and should only be used for strings that you know will fit in
             memory for both the source and the target scripts.
 
-    To define the service string, call enChat$SetService( service ). Any string
+    To define the service string, call enCLEP$SetService( service ). Any string
     supported by llSHA256String can be used. This will be used twice:
         - Appended to the start of all chat messages in plain text for filtering.
         - Hashed against the domain to generate the integer channel for llListen.
 
-    enChat$Listen(...) will return 0 and fail to add the listen if you attempt to
+    enCLEP$Listen(...) will return 0 and fail to add the listen if you attempt to
     add more than 65 listeners (the maximum allowed per script). If you call
-    llListen separately, set the number of listens you want reserved for non-enChat\
+    llListen separately, set the number of listens you want reserved for non-enCLEP\
     use by adding the following line:
         #define ENCHAT$RESERVE_LISTENS x
-    where x is the number of listens you want to allocate for non-enChat use.
+    where x is the number of listens you want to allocate for non-enCLEP use.
 
     Note: domains can be set as the local prim's UUID, in which case they will be
     automatically refreshed on key or link change. However, this ONLY works if the
@@ -90,34 +90,34 @@ list _ENCHAT_DOMAINS; // domain, flags, channel, handle
 // == functions
 // ==
 
-string enChat$GetService()
+string enCLEP$GetService()
 {
     // cannot log this function because it is used by enLog
     return _ENCHAT_SERVICE;
 }
 
-enChat$SetService(
+enCLEP$SetService(
     string service
     )
 {
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams( "enChat$SetService", [ "service" ], [
+        enLog$TraceParams( "enCLEP$SetService", [ "service" ], [
             enString$Elem( service )
             ] );
     #endif
     _ENCHAT_SERVICE = service;
 }
 
-integer enChat$Channel( // converts a string into an integer, hashed with _ENCHAT_SERVICE, can be called externally for dialog listeners
+integer enCLEP$Channel( // converts a string into an integer, hashed with _ENCHAT_SERVICE, can be called externally for dialog listeners
     string domain  // domain string to use to generate integer channel
     )
 {
-    integer chan = (integer)("0x" + llGetSubString(llSHA256String(domain + enChat$GetService()), -8, -1));
+    integer chan = (integer)("0x" + llGetSubString(llSHA256String(domain + enCLEP$GetService()), -8, -1));
     if (chan == PUBLIC_CHANNEL || chan == DEBUG_CHANNEL) chan++; // filter out channels that can be seen in the viewer by default
     return chan;
 }
 
-enChat$RegionSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of silently failing
+enCLEP$RegionSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of silently failing
     string prim,
     integer channel,
     string message
@@ -127,7 +127,7 @@ enChat$RegionSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of si
     else llRegionSayTo(prim, channel, message);
 }
 
-enChat$Send( // send via enChat
+enCLEP$Send( // send via enCLEP
     string prim,
     string domain,
     string type,
@@ -135,7 +135,7 @@ enChat$Send( // send via enChat
     )
 {
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("enChat$Send", ["prim", "domain", "type", "message", "(service)" ], [
+        enLog$TraceParams("enCLEP$Send", ["prim", "domain", "type", "message", "(service)" ], [
             enObject$Elem(prim),
             enString$Elem(domain),
             enString$Elem(type),
@@ -143,10 +143,10 @@ enChat$Send( // send via enChat
             enString$Elem(_ENCHAT_SERVICE)
             ]);
     #endif
-    enChat$RegionSayTo(prim, enChat$Channel(domain), enList$ToString(["enChat", _ENCHAT_SERVICE, prim, domain, type, message]));
+    enCLEP$RegionSayTo(prim, enCLEP$Channel(domain), enList$ToString(["enCLEP", _ENCHAT_SERVICE, prim, domain, type, message]));
 }
 
-enChat$SendPTP( // send via enChat using the Packet Transfer Protocol
+enCLEP$SendPTP( // send via enCLEP using the Packet Transfer Protocol
     string prim,
     string domain,
     string type,
@@ -154,7 +154,7 @@ enChat$SendPTP( // send via enChat using the Packet Transfer Protocol
     )
 {
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("enChat$SendPTP", ["prim", "domain", "type", "message", "(service)" ], [
+        enLog$TraceParams("enCLEP$SendPTP", ["prim", "domain", "type", "message", "(service)" ], [
             enObject$Elem(prim),
             enString$Elem(domain),
             enString$Elem(type),
@@ -163,56 +163,56 @@ enChat$SendPTP( // send via enChat using the Packet Transfer Protocol
             ]);
     #endif
     #ifndef ENCHAT$ENABLE_PTP
-        enLog$(WARN, "enChat$SendPTP called but ENCHAT$ENABLE_PTP not defined.");
+        enLog$(WARN, "enCLEP$SendPTP called but ENCHAT$ENABLE_PTP not defined.");
     #else
-        message = enList$ToString(["enChat", _ENCHAT_SERVICE, prim, domain, type, message]); // add enChat$PTP header to message to be sent
-        // 51 + llStringLength(...) is length of "10\nenChat$PTP32\n00000000000000000000000000000000" + {packet_size} + "\n"
-        max = ENCHAT$PTP_SIZE - (51 + llStringLength((string)llStringLength(ENCHAT$PTP_SIZE))); // get maximum length of packet after enChat$PTP header via enList$ToString
+        message = enList$ToString(["enCLEP", _ENCHAT_SERVICE, prim, domain, type, message]); // add enCLEP$PTP header to message to be sent
+        // 51 + llStringLength(...) is length of "10\nenCLEP$PTP32\n00000000000000000000000000000000" + {packet_size} + "\n"
+        max = ENCHAT$PTP_SIZE - (51 + llStringLength((string)llStringLength(ENCHAT$PTP_SIZE))); // get maximum length of packet after enCLEP$PTP header via enList$ToString
         string k = llGenerateKey(); // transfer key for identifying a specific message in transit
-        string c = enChat$Channel(domain);
-        enChat$RegionSayTo(prim, c, enList$ToString(["enChat$PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
+        string c = enCLEP$Channel(domain);
+        enCLEP$RegionSayTo(prim, c, enList$ToString(["enCLEP$PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
         if (llStringLength(message) > max) ENCHAT$PTP += [k, prim, "", llDeleteSubString(message, 0, max - 2)]; // we don't need to save domain here
         // TODO: some cleanup function that clears stalled transfers (in and out) from ENCHAT$PTP_QUEUE
     #endif
 }
 
-integer enChat$Listen(  // initializes or updates a dynamically managed llListen
+integer enCLEP$Listen(  // initializes or updates a dynamically managed llListen
     string domain,  // domain to listen to "within" _ENCHAT_SERVICE
     integer flags   // ENCHAT$LISTEN_* flags
     )
 {
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("enChat$Listen", ["domain", "flags", "(service)"], [
+        enLog$TraceParams("enCLEP$Listen", ["domain", "flags", "(service)"], [
             enString$Elem(domain),
             enInteger$ElemBitfield(flags),
             enString$Elem(_ENCHAT_SERVICE)
             ]);
     #endif
-    _enChat$UnListenDomains();
+    _enCLEP$UnListenDomains();
     integer index = llListFindList(llList2ListSlice(_ENCHAT_DOMAINS, 0, -1, _ENCHAT_DOMAINS_STRIDE, 0), [domain]);
     if (index == -1 && flags & ENCHAT$LISTEN_REMOVE)
     { // nothing to remove, so return error
-        _enChat$ListenDomains();
+        _enCLEP$ListenDomains();
         return 0;
     }
     if (index != -1)
-    { // delete eensting domain enChat, so it can be cleanly appended to the end
+    { // delete eensting domain enCLEP, so it can be cleanly appended to the end
         _ENCHAT_DOMAINS = llDeleteSubList(_ENCHAT_DOMAINS, index * _ENCHAT_DOMAINS_STRIDE, (index + 1) * _ENCHAT_DOMAINS_STRIDE - 1);
     }
     if (llGetListLength(_ENCHAT_DOMAINS) + 1 > 65 - ENCHAT$RESERVE_LISTENS)
     { // too many listens
-        _enChat$ListenDomains();
+        _enCLEP$ListenDomains();
         return 0;
     }
     if (!(flags & ENCHAT$LISTEN_REMOVE))
     { // add to _ENCHAT_DOMAINS only if we aren't removing it
-        _ENCHAT_DOMAINS += [domain, flags, enChat$Channel(domain), 0];
+        _ENCHAT_DOMAINS += [domain, flags, enCLEP$Channel(domain), 0];
     }
-    _enChat$ListenDomains();
+    _enCLEP$ListenDomains();
     return 1;
 }
 
-integer _enChat$Process(
+integer _enCLEP$Process(
     integer channel,
     string name,
     key id,
@@ -220,7 +220,7 @@ integer _enChat$Process(
     )
 {
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("_enChat$Process", ["channel", "name", "id", "message"], [
+        enLog$TraceParams("_enCLEP$Process", ["channel", "name", "id", "message"], [
             channel,
             enString$Elem(name),
             enString$Elem(id),
@@ -233,9 +233,9 @@ integer _enChat$Process(
             enList$Elem(data)
             ]);
     #endif
-    if (llGetListLength(data) != 6) return 0; // error in enChat unserialize operation
+    if (llGetListLength(data) != 6) return 0; // error in enCLEP unserialize operation
     #ifdef ENCHAT$ENABLE_PTP
-        if (llList2String(data, 0) == "enChat$PTP")
+        if (llList2String(data, 0) == "enCLEP$PTP")
         { // we have a PTP packet
             string d = llList2String(data, 1); // domain
             string k = llList2String(data, 2); // transfer key
@@ -244,27 +244,27 @@ integer _enChat$Process(
             if (m == "")
             { // end of received message
                 if (i == -1) return 1; // nothing in queue
-                _enChat$Process(channel, name, id, llList2String(ENCHAT$PTP, i * ENCHAT$PTP_STRIDE + 3)); // release buffer from queue
+                _enCLEP$Process(channel, name, id, llList2String(ENCHAT$PTP, i * ENCHAT$PTP_STRIDE + 3)); // release buffer from queue
                 ENCHAT$PTP = llDeleteSubList(ENCHAT$PTP, i * ENCHAT$PTP_STRIDE, (i + 1) * ENCHAT$PTP_STRIDE - 1); // clear transfer from queue
                 return 1;
             }
             if (i == -1) ENCHAT$PTP = [k, "", channel, m]; // create new buffer
             else ENCHAT$PTP = llListReplaceList(ENCHAT$PTP, [llList2String(ENCHAT$PTP, i * ENCHAT$PTP_STRIDE + 3) + m], i * ENCHAT$PTP_STRIDE + 3, i * ENCHAT$PTP_STRIDE + 3); // append to eensting buffer
-            enChat$RegionSayTo(id, enChat$Channel(d), enList$ToString(["enChat$PTP_More", d, k])); // request next message fragment
+            enCLEP$RegionSayTo(id, enCLEP$Channel(d), enList$ToString(["enCLEP$PTP_More", d, k])); // request next message fragment
             return 1;
         }
-        if (llList2String(data, 0) == "enChat$PTP_More")
+        if (llList2String(data, 0) == "enCLEP$PTP_More")
         { // someone is requesting the next message fragment
             string d = llList2String(data, 1); // domain
             string k = llList2String(data, 2); // transfer key
             integer i = llListFindList(llList2ListSlice(ENCHAT$PTP, 0, -1, ENCHAT$PTP_STRIDE, 0), [k]);
             if (i == -1)
             { // we have nothing to send, because this transfer_key does not eenst in the queue
-                enChat$RegionSayTo(id, c, enList$ToString(["enChat$PTP", d, k, ""])); // send empty packet to signal end of transfer
+                enCLEP$RegionSayTo(id, c, enList$ToString(["enCLEP$PTP", d, k, ""])); // send empty packet to signal end of transfer
                 return 1;
             }
             string m = llList2String(ENCHAT$PTP, i * ENCHAT$PTP_STRIDE + 3);
-            enChat$RegionSayTo(id, c, enList$ToString(["enChat$PTP", d, k, llGetSubString(m, 0, max - 2)])); // send next packet
+            enCLEP$RegionSayTo(id, c, enList$ToString(["enCLEP$PTP", d, k, llGetSubString(m, 0, max - 2)])); // send next packet
             if (llStringLength(m) > max)
             { // trim from buffer
                 ENCHAT$PTP = llListReplaceList(ENCHAT$PTP, [llDeleteSubString(llList2String(ENCHAT$PTP, i * ENCHAT$PTP_STRIDE + 3), 0, max - 1)], i * ENCHAT$PTP_STRIDE + 3, i * ENCHAT$PTP_STRIDE + 3);
@@ -276,8 +276,8 @@ integer _enChat$Process(
             return 1;
         }
     #endif
-    if (llList2String(data, 0) != "enChat") return 0; // not a valid enChat message
-    // note: at this point we have a valid enChat message, so all returns should be 1 to indicate that the enChat message was processed
+    if (llList2String(data, 0) != "enCLEP") return 0; // not a valid enCLEP message
+    // note: at this point we have a valid enCLEP message, so all returns should be 1 to indicate that the enCLEP message was processed
     if (llList2String(data, 1) != _ENCHAT_SERVICE) return 1; // not for our service
     integer domain_ind = llListFindList(llList2ListSlice(_ENCHAT_DOMAINS, 0, -1, _ENCHAT_DOMAINS_STRIDE, 0), [llList2String(data, 3)]);
     if (domain_ind == -1) return 0; // not listening to this domain
@@ -286,12 +286,12 @@ integer _enChat$Process(
     { // owner only flag enabled for this listener
         if (llGetOwnerKey(id) != llGetOwner()) return 1; // not sent by same-owner object/agent
     }
-    #ifdef EN$IMP_MESSAGE
-        if (llList2String(data, 4) == "enIMP")
-        { // IMP message
+    #ifdef EN$LEP_MESSAGE
+        if (llList2String(data, 4) == "enLEP")
+        { // LEP message
                 data = enList$FromString(llList2String(data, 5));
-                if (llGetListLength(data) != 3) return 1; // error in IMP unserialize operation
-                _enIMP$Process(
+                if (llGetListLength(data) != 3) return 1; // error in LEP unserialize operation
+                _enLEP$Process(
                     id,
                     -1,
                     (integer)llList2String(data, 0),
@@ -389,7 +389,7 @@ integer _enChat$Process(
     #endif
     // generic message
     #ifndef EN$CHAT_MESSAGE
-        enLog$( DEBUG, "Raw enChat message received from " + enObject$Elem( id ) + " on domain \"" + llList2String( data, 2 ) + "\", but EN$CHAT_MESSAGE not defined: " + llList2String( data, 4 ) );
+        enLog$( DEBUG, "Raw enCLEP message received from " + enObject$Elem( id ) + " on domain \"" + llList2String( data, 2 ) + "\", but EN$CHAT_MESSAGE not defined: " + llList2String( data, 4 ) );
     #else
         en$chat_message(
             id, // source id
@@ -400,10 +400,10 @@ integer _enChat$Process(
     return 1;
 }
 
-_enChat$UnListenDomains()
+_enCLEP$UnListenDomains()
 { // internal function that runs llListenRemove on everything in _ENCHAT_DOMAINS
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("_enChat$UnListenDomains", [], []);
+        enLog$TraceParams("_enCLEP$UnListenDomains", [], []);
     #endif
     integer i;
     integer l = llGetListLength(_ENCHAT_DOMAINS) / _ENCHAT_DOMAINS_STRIDE;
@@ -413,10 +413,10 @@ _enChat$UnListenDomains()
     }
 }
 
-_enChat$ListenDomains()
-{ // internal function that runs llListen on everything in _ENCHAT_DOMAINS - DON'T run this without running enChat$UnListenDomains() first!
+_enCLEP$ListenDomains()
+{ // internal function that runs llListen on everything in _ENCHAT_DOMAINS - DON'T run this without running enCLEP$UnListenDomains() first!
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("_enChat$ListenDomains", [], []);
+        enLog$TraceParams("_enCLEP$ListenDomains", [], []);
     #endif
     integer i;
     integer l = llGetListLength(_ENCHAT_DOMAINS) / _ENCHAT_DOMAINS_STRIDE;
@@ -427,12 +427,12 @@ _enChat$ListenDomains()
     }
 }
 
-_enChat$RefreshLinkset()
+_enCLEP$RefreshLinkset()
 { // internal function that runs after key change to reset any listens based on previous UUID
     #ifdef ENCHAT$TRACE
-        enLog$TraceParams("_enChat$RefreshLinkset", [], []);
+        enLog$TraceParams("_enCLEP$RefreshLinkset", [], []);
     #endif
-    _enChat$UnListenDomains();
+    _enCLEP$UnListenDomains();
     if (ENOBJECT$LIMIT_SELF)
     { // we can check for self prim domains
         string new = (string)llGetKey();
@@ -444,10 +444,10 @@ _enChat$RefreshLinkset()
                 _ENCHAT_DOMAINS = llListReplaceList(_ENCHAT_DOMAINS, [
                     new,
                     (integer)llList2String(_ENCHAT_DOMAINS, index * _ENCHAT_DOMAINS_STRIDE + 1),
-                    enChat$Channel(new)
+                    enCLEP$Channel(new)
                     ], index + _ENCHAT_DOMAINS_STRIDE, index + _ENCHAT_DOMAINS_STRIDE + 2);
             }
         }
     }
-    _enChat$ListenDomains();
+    _enCLEP$ListenDomains();
 }

@@ -27,7 +27,7 @@
 
     This is an LSL preprocessor include file that implements a set of fleenble
     logging functions that can output different loglevels via llOwnerSay and,
-    optionally, via enChat to a specified UUID and service.
+    optionally, via enCLEP to a specified UUID and service.
 */
 
 // ==
@@ -44,9 +44,9 @@ enLog$( // custom logging function
         string t = enLog$GetLogtarget();
         string prim = llGetSubString( t, 0, 35 );
         if ( enKey$IsPrimInRegion( prim ) )
-        { // log via enChat to logtarget
+        { // log via enCLEP to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            enChat$RegionSayTo( prim, enChat$Channel( domain ), enList$ToString([ "enChat", enChat$GetService(), prim, domain, "$enLog", message ] ) );
+            enCLEP$RegionSayTo( prim, enCLEP$Channel( domain ), enList$ToString([ "enCLEP", enCLEP$GetService(), prim, domain, "$enLog", message ] ) );
         }
     #endif
 }

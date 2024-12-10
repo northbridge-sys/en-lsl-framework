@@ -30,18 +30,18 @@
     script will automatically delete itself once added.
 
     This script must be named with the desired loglevel as the last element of the
-    script's name. For example, "[Northbridge Business Systems] En SetLoglevel.lsl INFO" causes En
-    scripts in the same linkset to use the default loglevel (INFO). The text in
-    front of the desired loglevel can be anything (or nothing).
+    script's name. For example, "En SetLoglevel.lsl INFO" causes En scripts in the
+    same linkset to use the default loglevel (INFO). The text in front of the
+    desired loglevel can be anything (or nothing).
 
     Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 */
 
-#include "en-lsl-framework/main.lsl"
+#include "en-lsl-framework/libraries.lsl"
 
 setLoglevel()
 {
-    integer loglevel = enLog$StrToLevel(
+    integer loglevel = enLog$StringToLevel(
         llList2String(
             llParseStringKeepNulls(
                 llStringTrim(

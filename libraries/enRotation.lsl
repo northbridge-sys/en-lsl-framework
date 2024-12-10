@@ -38,7 +38,7 @@
 
 string enRotation$Elem( rotation r )
 {
-    return (string)r + " (" + (string)llRot2Euler( r ) + ")";
+    return (string)r + " (" + (string)llRot2Euler( r ) + " -> " + (string)(llRot2Euler( r ) * RAD_TO_DEG) + ")";
 }
 
 rotation enRotation$Normalize(

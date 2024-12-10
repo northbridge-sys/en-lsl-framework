@@ -1,6 +1,6 @@
 /*
     kvp.lsl
-    IMP Processor Snippet
+    LEP Processor Snippet
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
     https://docs.northbridgesys.com/en-lsl-framework
@@ -33,13 +33,13 @@ if (status == "" && llList2String(params, 0) == "kvp")
 	string kvp_check_op = llList2String(params, 1);
 	if (kvp_check_op == "list")
 	{ // return list of KVP pairs
-		enIMP$Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVP_NAMES, "\n"));
+		enLEP$Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVP_NAMES, "\n"));
 	}
 	if (kvp_check_op == "set" || kvp_check_op == "get")
 	{ // check name for set or get operation first
 		if (!enKVP$Eensts(llList2String(params, 1)))
 		{ // invalid name
-			enIMP$Send("", source, 0, "err:undefined", ident, params, data);
+			enLEP$Send("", source, 0, "err:undefined", ident, params, data);
 			return;
 		}
 	}
@@ -47,14 +47,14 @@ if (status == "" && llList2String(params, 0) == "kvp")
 	{ // setting an enKVP pair
 		if (!enKVP$Set(llList2String(params, 1), data))
 		{ // write failed due to protect
-			enIMP$Send("", source, 0, "err:readonly", ident, params, data);
+			enLEP$Send("", source, 0, "err:readonly", ident, params, data);
 			return;
 		}
-		enIMP$Send("", source, 0, "ok", ident, params, data);
+		enLEP$Send("", source, 0, "ok", ident, params, data);
 		return;
 	}
 	if (kvp_check_op == "get")
 	{ // getting an enKVP pair
-		enIMP$Send("", source, 0, "ok", ident, params, enKVP$Get(llList2String(params, 1)));
+		enLEP$Send("", source, 0, "ok", ident, params, enKVP$Get(llList2String(params, 1)));
 	}
 }

@@ -1,5 +1,5 @@
 /*
-    IMPTap.lsl
+    LEPTap.lsl
     Utility Script
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
@@ -25,7 +25,7 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This is a full script that reports all IMP messages sent via link message in the
+    This is a full script that reports all LEP messages sent via link message in the
     prim. These will be reported via "imp_message" event reports through
     enLog$TraceParams.
 
@@ -39,7 +39,7 @@
     can be set by any script.
 */
 
-#define ENIMP$ALLOWED_INBOUND_TARGETS_ALL
+#define ENLEP$ALLOWED_INBOUND_TARGETS_ALL
 
 #include "en-lsl-framework/main.lsl"
 
@@ -49,7 +49,7 @@ en$imp_message(
                             //  - (the target script name): this script name
                             //  - "": all scripts in the prim
                             //  - (any other value): scripts with this value
-                            //      set in ENIMP$ALLOWED_TARGETS list
+                            //      set in ENLEP$ALLOWED_TARGETS list
     string status,      // one of the following:
                             // - ":": broadcast (no response requested)
                             // - "": request
@@ -58,14 +58,14 @@ en$imp_message(
                             //      _ is defined as any string describing
                             //      the nature of the error (no newlines!)
                             // - (any other value): specific success response
-    integer ident,      // IMP message ident (link_message integer)
+    integer ident,      // LEP message ident (link_message integer)
     list params,        // list of parameter strings
-    string data,        // IMP data (link_message key)
-    integer linknum,    // linknum of prim that sent enIMP(...)
-                        //      (-1 if received via enChat)
+    string data,        // LEP data (link_message key)
+    integer linknum,    // linknum of prim that sent enLEP(...)
+                        //      (-1 if received via enCLEP)
     string source       // the source script name
                         //      (can be pre-filtered by defining
-                        //      ENIMP$ALLOWED_SOURCES list)
+                        //      ENLEP$ALLOWED_SOURCES list)
     )
 {
     enLog$TraceParams("en$imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [

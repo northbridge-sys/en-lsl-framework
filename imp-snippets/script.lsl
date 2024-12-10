@@ -1,6 +1,6 @@
 /*
     script.lsl
-    IMP Processor Snippet
+    LEP Processor Snippet
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
     https://docs.northbridgesys.com/en-lsl-framework
@@ -30,7 +30,7 @@
 
 if (status == "" && llList2String(params, 0) == "script")
 { // return script info
-    enIMP$Send( // sends an IMP message
+    enLEP$Send( // sends an LEP message
         "",
         source,
         0, // signed

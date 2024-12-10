@@ -233,7 +233,7 @@ string enInventory$TypeToString( // converts an INVENTORY_* flag into a string (
         ], i);
 }
 
-enInventory$Push( // pushes an inventory item via enChat
+enInventory$Push( // pushes an inventory item via enCLEP
     string prim,
     string domain,
     string name,
@@ -257,7 +257,7 @@ enInventory$Push( // pushes an inventory item via enChat
     // TODO
 }
 
-enInventory$Pull( // pulls an inventory item via enChat
+enInventory$Pull( // pulls an inventory item via enCLEP
     string prim,
     string domain,
     string name,

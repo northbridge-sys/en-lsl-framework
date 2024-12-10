@@ -26,7 +26,7 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This is a full script that sets llRemoteLoadScriptPin( ... ) and notifies its
-    parent object of the pin via enChat on rez, then deletes itself.  This can be
+    parent object of the pin via enCLEP on rez, then deletes itself.  This can be
     used to load one or more scripts dynamically into the newly rezzed object.
 */
 
@@ -66,8 +66,8 @@ default
         llSetRemoteScriptAccessPin( pin );
 
         // notify parent that we are rezzed and ready to receive script(s)
-        enChat$SetService( "enInventory$RezRemote" );
-        enChat$Send( // send via enChat
+        enCLEP$SetService( "enInventory$RezRemote" );
+        enCLEP$Send( // send via enCLEP
             enObject$Parent(), // prim
             enObject$Parent(), // domain
             "enInventory$RezRemote", // type

@@ -46,9 +46,9 @@
             enLog$TraceParams( "on_rez", [], [ param ] );
         #endif
 
-        // update enChat channels if any are just the UUID
+        // update enCLEP channels if any are just the UUID
         #ifdef ENCHAT$ENABLE
-            _enChat$RefreshLinkset();
+            _enCLEP$RefreshLinkset();
         #endif
 
         // update enLSD names if any use the UUID header

@@ -52,7 +52,7 @@
         #endif
         
                 #ifdef ENCHAT$ENABLE
-                    _enChat$RefreshLinkset();
+                    _enCLEP$RefreshLinkset();
                 #endif
                 #ifdef ENLSD$ENABLE_UUID_HEADER
                     _enLSD$CheckUUID();

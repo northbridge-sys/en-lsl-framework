@@ -68,6 +68,10 @@
 #define ENCHAT$LISTEN_OWNERONLY 0x1
 #define ENCHAT$LISTEN_REMOVE 0x80000000
 
+#define ENLEP$TYPE_REQUEST 0x1
+#define ENLEP$TYPE_RESPONSE 0x2
+#define ENLEP$STATUS_ERROR 0x4
+
 #define ENOBJECT$PROFILE_EENSTS 0x80000000
 #define ENOBJECT$PROFILE_PHYSICS 0x1
 #define ENOBJECT$PROFILE_PHANTOM 0x2
@@ -107,8 +111,8 @@
     #define ENCHAT$PTP_SIZE 512
 #endif
 
-#ifndef ENIMP$LINK_MESSAGE_SCOPE
-    #define ENIMP$LINK_MESSAGE_SCOPE LINK_THIS
+#ifndef ENLEP$LINK_MESSAGE_SCOPE
+    #define ENLEP$LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
 #ifndef ENINTEGER$CHARSET_16
@@ -159,7 +163,7 @@
     #define ENDATE$TRACE
     #define ENFLOAT$TRACE
     #define ENHTTP$TRACE
-    #define ENIMP$TRACE
+    #define ENLEP$TRACE
     #define ENINTEGER$TRACE
     #define ENINVENTORY$TRACE
     #define ENKEY$TRACE
@@ -227,17 +231,17 @@
 #define enAvatar$Elem(...) _enAvatar_Elem( __VA_ARGS__ )
 #define enAvatar$GetGroup(...) _enAvatar_GetGroup( __VA_ARGS__ )
 
-#define enChat$GetService(...) _enChat_GetService( __VA_ARGS__ )
-#define enChat$SetService(...) _enChat_SetService( __VA_ARGS__ )
-#define enChat$Channel(...) _enChat_Channel( __VA_ARGS__ )
-#define enChat$RegionSayTo(...) _enChat_RegionSayTo( __VA_ARGS__ )
-#define enChat$Listen(...) _enChat_Listen( __VA_ARGS__ )
-#define enChat$Send(...) _enChat_Send( __VA_ARGS__ )
-#define enChat$SendPTP(...) _enChat_SendPTP( __VA_ARGS__ )
-#define _enChat$Process(...) _enChat_Process( __VA_ARGS__ )
-#define _enChat$UnListenDomains(...) _enChat_UnListenDomains( __VA_ARGS__ )
-#define _enChat$ListenDomains(...) _enChat_ListenDomains( __VA_ARGS__ )
-#define _enChat$RefreshLinkset(...) _enChat_RefreshLinkset( __VA_ARGS__ )
+#define enCLEP$GetService(...) _enCLEP_GetService( __VA_ARGS__ )
+#define enCLEP$SetService(...) _enCLEP_SetService( __VA_ARGS__ )
+#define enCLEP$Channel(...) _enCLEP_Channel( __VA_ARGS__ )
+#define enCLEP$RegionSayTo(...) _enCLEP_RegionSayTo( __VA_ARGS__ )
+#define enCLEP$Listen(...) _enCLEP_Listen( __VA_ARGS__ )
+#define enCLEP$Send(...) _enCLEP_Send( __VA_ARGS__ )
+#define enCLEP$SendPTP(...) _enCLEP_SendPTP( __VA_ARGS__ )
+#define _enCLEP$Process(...) _enCLEP_Process( __VA_ARGS__ )
+#define _enCLEP$UnListenDomains(...) _enCLEP_UnListenDomains( __VA_ARGS__ )
+#define _enCLEP$ListenDomains(...) _enCLEP_ListenDomains( __VA_ARGS__ )
+#define _enCLEP$RefreshLinkset(...) _enCLEP_RefreshLinkset( __VA_ARGS__ )
 
 #define enDate$MS(...) _enDate_MS( __VA_ARGS__ )
 #define enDate$MSNow(...) _enDate_MSNow( __VA_ARGS__ )
@@ -254,9 +258,6 @@
 #define _enHTTP$ProcessResponse(...) _enHTTP_ProcessResponse( __VA_ARGS__ )
 #define _enHTTP$Timer(...) _enHTTP_Timer( __VA_ARGS__ )
 #define _enHTTP$NextRequest(...) _enHTTP_NextRequest( __VA_ARGS__ )
-
-#define enIMP$Send(...) _enIMP_Send( __VA_ARGS__ )
-#define _enIMP$Process(...) _enIMP_Process( __VA_ARGS__ )
 
 #define enInteger$ElemBitfield(...) _enInteger_ElemBitfield( __VA_ARGS__ )
 #define enInteger$Rand(...) _enInteger_Rand( __VA_ARGS__ )
@@ -295,6 +296,9 @@
 #define enKVP$Write(...) _enKVP_Write( __VA_ARGS__ )
 #define enKVP$Read(...) _enKVP_Read( __VA_ARGS__ )
 #define enKVP$Delete(...) _enKVP_Delete( __VA_ARGS__ )
+
+#define enLEP$Process(...) _enLEP_Process( __VA_ARGS__ )
+#define enLEP$Send(...) _enLEP_Send( __VA_ARGS__ )
 
 #define enList$Collate(...) _enList_Collate( __VA_ARGS__ )
 #define enList$Concatenate(...) _enList_Concatenate( __VA_ARGS__ )

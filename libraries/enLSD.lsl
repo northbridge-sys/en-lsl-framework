@@ -129,7 +129,7 @@ enLSD$Pull( // reads a linkset data name-value pair FROM another script, optiona
             enString$Elem(name)
             ]);
     #endif
-    enChat$Send(prim, domain, "enLSD$PullLSD", enList$ToString([use_header, name]));
+    enCLEP$Send(prim, domain, "enLSD$PullLSD", enList$ToString([use_header, name]));
 }
 
 enLSD$Push( // writes a linkset data name-value pair TO another script, optionally using the active enLSD header
@@ -154,7 +154,7 @@ enLSD$Push( // writes a linkset data name-value pair TO another script, optional
     #ifdef ENLSD$ENABLE_UUID_HEADER
         u = 1; // if ENLSD$ENABLE_UUID_HEADER defined, note in response
     #endif
-    enChat$Send(prim, domain, "enLSD$Push", enList$ToString([u, use_header, ENLSD$HEADER, name, v]));
+    enCLEP$Send(prim, domain, "enLSD$Push", enList$ToString([u, use_header, ENLSD$HEADER, name, v]));
 }
 
 _enLSD$Process( // writes a linkset data name-value pair FROM another script

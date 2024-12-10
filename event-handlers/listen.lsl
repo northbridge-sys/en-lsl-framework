@@ -47,7 +47,7 @@
         #endif
 
         #ifdef ENCHAT$ENABLE
-		    if ( _enChat$Process( channel, name, id, message ) ) return; // valid enChat message
+		    if ( _enCLEP$Process( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
         // pass to user-defined function if requested

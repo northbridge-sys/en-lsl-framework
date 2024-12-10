@@ -17,8 +17,8 @@ LSL is the native scripting language used to control Second Life objects. Certai
 Some of the useful features En provides:
 
 - enLog - a standardized logging interface that encourages better scripting
-- enChat - `llListen`/`llRegionSayTo` with hash channels, packetization, and LSD/KVP/inventory transfers
-- enIMP - `llMessageLinked` (or enChat) with lists, script filtering, and a request-response protocol
+- enCLEP - `llListen`/`llRegionSayTo` with hash channels, packetization, and LSD/KVP/inventory transfers
+- enLEP - `llMessageLinked` (or enCLEP) with lists, script filtering, and a request-response protocol
 - enLSD - functions to safely write, read, and manipulate key-value pairs in the `llLinksetData*` store
 - enKVP - simple in-memory key-value pair database, particularly useful for backing up critical linkset data
 - enTimer - `llSetTimerEvent` with string callbacks, multiple concurrent timers, and one-shot timers
@@ -167,7 +167,7 @@ You can also send a copy of all logs as they are written to a separate object by
 En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
 
 ```
-enIMP$Send(
+enLEP$Send(
     "", // sends via link_message, but can also be sent to a specific link number, specific prim via chat, or all scripts listening to a specified channel
     "Target Script Name",
     "", // signals a request, as opposed to a broadcast or response
@@ -180,7 +180,7 @@ enIMP$Send(
 and the other script - if compiled with En - will call the `en$imp_message` function defined by the script:
 
 ```
-#define ENIMP$ENABLE
+#define ENLEP$ENABLE
 
 #include "en-lsl-framework/libraries.lsl"
 
@@ -188,16 +188,16 @@ en$imp_message(
     string prim, // source prim
     string target, // target script
     string status, // status string
-    integer ident, // IMP ident (optional)
-    list params, // IMP request parameters
-    string data, // IMP data (optional)
+    integer ident, // LEP ident (optional)
+    list params, // LEP request parameters
+    string data, // LEP data (optional)
     integer linknum, // -1 if not part of linkset
     string source // source script name
     )
 {
     if ( status != "" ) return; // only respond to requests
     if ( llList2String( params, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
-    enIMP$Send( // respond via IMP
+    enLEP$Send( // respond via LEP
         prim,
         source,
         "ok",

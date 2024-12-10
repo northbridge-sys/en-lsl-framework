@@ -40,10 +40,10 @@
     OLD INSTRUCTIONS:
 
     This snippet replaces the link_message event definition with a verion that
-    filters for Interface Message Protocol messages.  Valid IMP messages will be
+    filters for Interface Message Protocol messages.  Valid LEP messages will be
     passed to a user-defined imp_message(...) function.
 
-    Valid IMP messages are defined, by default, as the following link message:
+    Valid LEP messages are defined, by default, as the following link message:
         integer: ident, should be returned with response, if any
         string: newline-separated message
             The message value is defined as a list with the following elements:
@@ -51,7 +51,7 @@
                     - "" (empty string): broadcast targeted at all scripts
                     - (script name): message targeted at a specific script
                     - (any other value): message targeted at any script with this
-                                         value in its EN$IMP_WHITELIST list
+                                         value in its EN$LEP_WHITELIST list
                 - source: script name of source script
                 - status: one of the following:
                     - "" (empty string): the script requests a response
@@ -66,7 +66,7 @@
                 - params: zero or more command/parameter strings
         key: newline-separated data
             The data value can be any data and is defined by the interface's
-            specification.  However, in general, responses over IMP should append
+            specification.  However, in general, responses over LEP should append
             any response data as a new line (or new lines) at the end of the data
             value that was received in the request.
 
@@ -77,7 +77,7 @@
                                     //  - (the target script name): this script name
                                     //  - "": all scripts in the prim
                                     //  - (any other value): scripts with this value
-                                    //      set in ENIMP$ALLOWED_TARGETS list
+                                    //      set in ENLEP$ALLOWED_TARGETS list
 			string status,      // one of the following:
                                     // - ":": broadcast (no response requested)
                                     // - "": request
@@ -86,19 +86,19 @@
                                     //      _ is defined as any string describing
                                     //      the nature of the error (no newlines!)
                                     // - (any other value): specific success response
-			integer ident,      // IMP message ident (link_message integer)
+			integer ident,      // LEP message ident (link_message integer)
 			list params,        // list of parameter strings
-			string data,        // IMP data (link_message key)
-			integer linknum,    // linknum of prim that sent enIMP(...)
-                                //      (-1 if received via enChat)
+			string data,        // LEP data (link_message key)
+			integer linknum,    // linknum of prim that sent enLEP(...)
+                                //      (-1 if received via enCLEP)
             string source       // the source script name
                                 //      (can be pre-filtered by defining
-                                //      ENIMP$ALLOWED_SOURCES list)
+                                //      ENLEP$ALLOWED_SOURCES list)
 			)
-    Define this function directly in the script to process IMP messages.
+    Define this function directly in the script to process LEP messages.
 */
 
-#if defined EN$LINK_MESSAGE_TRACE || defined EN$LINK_MESSAGE || defined EN$IMP_MESSAGE
+#if defined EN$LINK_MESSAGE_TRACE || defined EN$LINK_MESSAGE || defined EN$LEP_MESSAGE
     link_message( integer link, integer i, string s, key k )
     {
 #endif
@@ -108,8 +108,8 @@
             enLog$TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, enString$Elem( s ), enString$Elem( k ) ] );
         #endif
 
-        #ifdef EN$IMP_MESSAGE
-            if ( _enIMP$Process( llGetLinkKey( link ), link, i, s, k )) return; // valid IMP message
+        #ifdef EN$LEP_MESSAGE
+            if ( enLEP$Process(link, i, s, k)) return; // valid LEP message
         #endif
 
         // pass to user-defined function if requested
@@ -117,6 +117,6 @@
 			en$link_message( link, i, s, k );
 		#endif
 
-#if defined EN$LINK_MESSAGE_TRACE || defined EN$LINK_MESSAGE || defined ENIMP$ENABLE
+#if defined EN$LINK_MESSAGE_TRACE || defined EN$LINK_MESSAGE || defined EN$LEP_MESSAGE
 	}
 #endif
