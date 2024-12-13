@@ -145,26 +145,28 @@ and when you call `someFunction( 1, 2 );`, you'll see:
 or, if you change the runtime loglevel to TRACE (such as with `enLog$SetLoglevel( TRACE );`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
 
 ```
-🔽 [12:11:24.81] (13a1 17% 25) New Script
+🔽 [12:11:24.81] (16% 13a1 @25) New Script
 🚦 someFunction(
         x = 1,
         y = 2
     )
-🔽 [12:11:24.86] (13a1 16% 26) New Script
+🔽 [12:11:24.86] (16% 13a1 @26) New Script
 🪲 This will only appear if loglevel is DEBUG or above.
-🔽 [12:11:24.89] (13a1 16% 27) New Script
+🔽 [12:11:24.89] (16% 13a1 @27) New Script
 💬 Function called with parameters 1 and 2.
-🔽 [12:11:24.91] (13a1 17% 28) New Script
+🔽 [12:11:24.91] (16% 13a1 @28) New Script
 🚩 WARNING: Non-zero values of x are discouraged.
-🔽 [12:11:24.98] (13a1 16% 29) New Script
+🔽 [12:11:24.98] (16% 13a1 @29) New Script
 ❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
-🔽 [12:11:25.05] (13a1 16% 30) New Script
+🔽 [12:11:25.05] (16% 13a1 @30) New Script
 🛑 FATAL ERROR: Everything is terrible. Script stopped.
 ```
 
 You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` value.
 
 En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
+
+**TODO: fix this, enLEP$Send format changed**
 
 ```
 enLEP$Send(
@@ -184,7 +186,9 @@ and the other script - if compiled with En - will call the `en$imp_message` func
 
 #include "en-lsl-framework/libraries.lsl"
 
-en$imp_message(
+**TODO: fix this, lep_message format changed**
+
+en$lep_message(
     string prim, // source prim
     string target, // target script
     string status, // status string

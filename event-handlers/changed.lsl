@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
 	changed( integer change )
 	{
 #endif
@@ -68,11 +68,18 @@
             }
         #endif
 
+        #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+            if ( change & CHANGED_INVENTORY )
+            {
+                enLSD$CheckScriptName();
+            }
+        #endif
+
         // pass to user-defined function if requested
 		#ifdef EN$ATTACH
 			en$changed( change );
 		#endif
 
-#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
 	}
 #endif

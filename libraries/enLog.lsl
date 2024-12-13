@@ -47,7 +47,7 @@ enLog$( // custom logging function
         if ( enKey$IsPrimInRegion( prim ) )
         { // log via enCLEP to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP$RegionSayTo( prim, enCLEP$Channel( domain ), enList$ToString([ "enCLEP", enCLEP$GetService(), prim, domain, "$enLog", enList$ToString([level, line, message]) ] ) );
+            enCLEP$RegionSayTo( prim, enCLEP$Channel( domain ), enList$ToString([ "enCLEP", enCLEP$GetService(), prim, domain, "$enLog", enList$ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
         }
     #endif
 }
@@ -61,7 +61,7 @@ enLog$To(
 {
     // can use level 0 to always send, or a level constant for loglevel support
     integer lsd_level = enLog$GetLoglevel();
-    list debug_header;
+    string debug_header;
     if (lsd_level >= 5)
     { // use debug header
         list script_name = llParseStringKeepNulls(llGetScriptName(), [" "], []);
@@ -73,11 +73,11 @@ enLog$To(
         { // remove any elements at end of script_name that start with "r" or "v" (hides revision/version number)
             script_name = llDeleteSubList(script_name, -1, -1);
         }
-        debug_header = ["🔽 [", llGetSubString(llGetTimestamp(), 11, 21), "] (", llGetSubString(llGetKey(), 0, 3), " ", (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())), "% " + (string)line + ") ", llDumpList2String(script_name, " "), "\n"];
+        debug_header = "🔽 [" + llGetSubString(llGetTimestamp(), 11, 21) + "] (" + (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())) + "% " + llGetSubString(llGetKey(), 0, 3) + " @" + (string)line + ") " + llDumpList2String(script_name, " ") + "\n";
     }
     if ( lsd_level >= level )
     {
-        message = llDumpList2String(debug_header, "") + llList2String([ // loglevel header, usually an icon but can be anything
+        message = debug_header + llList2String([ // loglevel header, usually an icon but can be anything
             "", // no level
             "🛑 FATAL ERROR: ", // FATAL
             "❌ ERROR: ", // ERROR

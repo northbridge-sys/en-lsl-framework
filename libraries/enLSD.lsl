@@ -29,10 +29,23 @@
 */
 
 // ==
-// == functions
+// == globals
 // ==
 
-// TODO: automatic LSD backup to KVP
+#ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+    string _ENLSD_SCRIPT_NAME;
+#endif
+
+// ==
+// == macros
+// ==
+
+#define enLSD$Head() \
+    _enLSD_BuildHead(llGetScriptName(), llGetKey())
+
+// ==
+// == functions
+// ==
 
 enLSD$Reset() // safely resets linkset data
 {
@@ -105,13 +118,22 @@ list enLSD$Find(string name, integer start, integer count)
 	return llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, enLSD$Head() + name) + "$", start, count);
 }
 
-string enLSD$Head() // gets LSD header
+string enLSD$BuildHead(
+    string script_name,
+    string uuid
+)
 {
-    string h = ENLSD$HEADER;
-    #ifdef ENLSD$ENABLE_UUID_HEADER
-        h = (string)llGetKey() + h; // if ENLSD$ENABLE_UUID_HEADER defined, append llGetKey to start of string to avoid linkset conflicts
+    string h = ENLSD$HEADER + "\n";
+    integer count = 1;
+    #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+        h = llGetSubString(llSHA256String(script_name), 0, 7) + "\n" + h; // prepend first 8 chars of SHA256 hashed script name
+        count++;
     #endif
-    return h;
+    #ifdef ENLSD$ENABLE_UUID_HEADER
+        h = llGetSubString(uuid, 0, 7) + "\n" + h; // prepend first 8 chars of llGetKey to start of string to avoid linkset conflicts
+        count++;
+    #endif
+    return (string)count + "\n" + h;
 }
 
 enLSD$Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
@@ -155,6 +177,15 @@ enLSD$Push( // writes a linkset data name-value pair TO another script, optional
         u = 1; // if ENLSD$ENABLE_UUID_HEADER defined, note in response
     #endif
     enCLEP$Send(prim, domain, "enLSD$Push", enList$ToString([u, use_header, ENLSD$HEADER, name, v]));
+}
+
+list enLSD$GetPairHead( // returns the header from a specified LSD pair name
+    string pair
+)
+{
+    list parts = llParseStringKeepNulls(pair, ["\n"], []);
+    if ((integer)llList2String(parts, 0) < 2) return []; // number of elements must be at least 2 (number of elements, ENLSD$HEADER)
+    return llList2List(parts, 1, (integer)llList2String(parts, 0) - 1);
 }
 
 enLSD$Process( // writes a linkset data name-value pair FROM another script
@@ -216,25 +247,51 @@ enLSD$Process( // writes a linkset data name-value pair FROM another script
     #endif
 }
 
+enLSD$MoveAllPairs( // utility function for enLSD$Check*
+    string k
+)
+{
+    list l;
+    string old_head = enLSD$BuildHead(_ENLSD_SCRIPT_NAME, k);
+    do
+    {
+        l = llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
+        if (l != [])
+        {
+            string old_pair = llList2String(l, 0);
+            string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
+            enLog$Trace("LSD pair \"" + pair_name + "\" moved");
+            llLinksetDataWrite(enLSD$Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
+            llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
+        }
+    } while (l != []); // repeat until we didn't find any keys left with old header
+}
+
 enLSD$CheckUUID() // updates LSD entries that use old UUID
 {
     #ifdef ENLSD$TRACE
         enLog$TraceParams("enLSD$CheckUUID", [], []);
     #endif
     #ifdef ENLSD$ENABLE_UUID_HEADER
-        string k = enObject$Self( 0 );
-        if (k == (string)llGetKey()) return; // no UUID change
-        string h = ENLSD$HEADER;
-        h = k + h;
-        list l;
-        do
+        string k = enObject$Self( 0 ); // get last key
+        if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
+        enLog$Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
+        enLSD$MoveAllPairs(k);
+    #endif
+}
+
+enLSD$CheckScriptName() // updates LSD entries that use old script name
+{
+    #ifdef ENLSD$TRACE
+        enLog$TraceParams("enLSD$CheckScriptName", [], []);
+    #endif
+    #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+        if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
+        if (_ENLSD_SCRIPT_NAME != "")
         {
-            l = llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, h) + ".*$", 0, 1);
-            if (l != [])
-            {
-                llLinksetDataWrite(enLSD$Head() + llDeleteSubString(llList2String(l, 0), 0, llStringLength(h) - 1), llLinksetDataRead(llList2String(l, 0))); // write with updated header
-                llLinksetDataDelete(llList2String(l, 0)); // immediately delete old pair to save memory
-            }
-        } while (l != []); // repeat until we didn't find any keys left with old header
+            enLog$Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
+            enLSD$MoveAllPairs(llGetKey());
+        }
+        _ENLSD_SCRIPT_NAME = llGetScriptName();
     #endif
 }

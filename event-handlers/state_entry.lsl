@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT$ENABLE_SELF
 	state_entry()
 	{
 #endif
@@ -51,6 +51,10 @@
             enLSD$CheckUUID();
         #endif
 
+        #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+            enLSD$CheckScriptName();
+        #endif
+
         // pass to user-defined function if requested
 		#ifdef EN$STATE_ENTRY
 			en$state_entry();
@@ -61,6 +65,6 @@
             _enObject$UpdateUUIDs();
         #endif
 
-#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT$ENABLE_SELF
 	}
 #endif

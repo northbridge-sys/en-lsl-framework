@@ -44,6 +44,7 @@
 
 // libraries
 #include "en-lsl-framework/libraries/enAvatar.lsl"
+#include "en-lsl-framework/libraries/enLEP.lsl" // must be defined before enCLEP
 #include "en-lsl-framework/libraries/enCLEP.lsl"
 #include "en-lsl-framework/libraries/enDate.lsl"
 #include "en-lsl-framework/libraries/enFloat.lsl"
@@ -52,7 +53,6 @@
 #include "en-lsl-framework/libraries/enInventory.lsl"
 #include "en-lsl-framework/libraries/enKey.lsl"
 #include "en-lsl-framework/libraries/enKVP.lsl"
-#include "en-lsl-framework/libraries/enLEP.lsl"
 #include "en-lsl-framework/libraries/enList.lsl"
 #include "en-lsl-framework/libraries/enLog.lsl"
 #include "en-lsl-framework/libraries/enLSD.lsl"
