@@ -65,8 +65,8 @@
 #define WHITE <1.0, 1.0, 1.0>
 #define BLACK <0.0, 0.0, 0.0>
 
-#define ENCHAT$LISTEN_OWNERONLY 0x1
-#define ENCHAT$LISTEN_REMOVE 0x80000000
+#define ENCLEP$LISTEN_OWNERONLY 0x1
+#define ENCLEP$LISTEN_REMOVE 0x80000000
 
 #define ENLEP$TYPE_REQUEST 0x1
 #define ENLEP$TYPE_RESPONSE 0x2
@@ -101,14 +101,14 @@
 // == configurable preprocessor constants
 // ==
 
-#ifndef ENCHAT$RESERVE_LISTENS
-    #define ENCHAT$RESERVE_LISTENS 0
+#ifndef ENCLEP$RESERVE_LISTENS
+    #define ENCLEP$RESERVE_LISTENS 0
 #endif
 
-#ifndef ENCHAT$PTP_SIZE
+#ifndef ENCLEP$PTP_SIZE
     // note that this value is set to the maximum number of UTF-8 characters that can be sent via llRegionSayTo
     // if you are positive you will ALWAYS have ASCII-7 characters, this can be raised to 1024 for better performance and lower memory usage
-    #define ENCHAT$PTP_SIZE 512
+    #define ENCLEP$PTP_SIZE 512
 #endif
 
 #ifndef ENLEP$LINK_MESSAGE_SCOPE
@@ -159,7 +159,7 @@
 
 #ifdef EN$TRACE_LIBRARIES
     #define ENAVATAR$TRACE
-    #define ENCHAT$TRACE
+    #define ENCLEP$TRACE
     #define ENDATE$TRACE
     #define ENFLOAT$TRACE
     #define ENHTTP$TRACE

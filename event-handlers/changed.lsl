@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
 	changed( integer change )
 	{
 #endif
@@ -46,25 +46,25 @@
             enLog$TraceParams( "changed", [ "change" ], [ enInteger$ElemBitfield( change ) ] );
         #endif
 
-        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
             if ( change & CHANGED_LINK )
             {
         #endif
         
-                #ifdef ENCHAT$ENABLE
+                #ifdef ENCLEP$ENABLE
                     _enCLEP$RefreshLinkset();
                 #endif
                 #ifdef ENLSD$ENABLE_UUID_HEADER
                     enLSD$CheckUUID();
                 #endif
-                #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+                #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
                     _enObject$UpdateUUIDs();
                 #endif
                 #ifdef ENOBJECT$ENABLE$LINK_CACHE
                     _enObject$LinkCacheUpdate();
                 #endif
 
-        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
             }
         #endif
 
@@ -73,6 +73,6 @@
 			en$changed( change );
 		#endif
 
-#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
 	}
 #endif

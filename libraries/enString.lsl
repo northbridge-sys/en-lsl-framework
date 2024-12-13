@@ -186,7 +186,7 @@ integer enString$FindChars( // finds the first instance of any of the specified 
 string enString$JsonAttempt( // attempts to get a value from a json string, and if fails, returns preset value instead of JSON_INVALID
     string json,
     list specifiers,
-    string value
+    string val
 )
 {
     string new_val = llJsonGetValue(json, specifiers);

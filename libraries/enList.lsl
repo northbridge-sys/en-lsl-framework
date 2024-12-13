@@ -183,7 +183,7 @@ list enList$DeleteStrideByMatch(
     )
 {
     integer i = llListFindList(llList2ListSlice(haystack, 0, -1, stride, index), needle);
-    if (i != -1) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1); // delete eensting stride because we'll be re-adding it
+    if (i != -1) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1); // delete existing stride because we'll be re-adding it
     return haystack;
 }
 

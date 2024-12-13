@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	on_rez( integer param )
 	{
 #endif
@@ -47,7 +47,7 @@
         #endif
 
         // update enCLEP channels if any are just the UUID
-        #ifdef ENCHAT$ENABLE
+        #ifdef ENCLEP$ENABLE
             _enCLEP$RefreshLinkset();
         #endif
 
@@ -62,10 +62,10 @@
 		#endif
 
 		// update _ENOBJECT_UUIDS_SELF
-        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
             _enObject$UpdateUUIDs();
         #endif
 
-#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	}
 #endif

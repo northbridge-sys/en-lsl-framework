@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	state_entry()
 	{
 #endif
@@ -57,10 +57,10 @@
 		#endif
 
 		// update _ENOBJECT_UUIDS_SELF if needed
-        #if defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
             _enObject$UpdateUUIDs();
         #endif
 
-#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCHAT$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
 	}
 #endif

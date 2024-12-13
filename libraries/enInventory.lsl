@@ -152,7 +152,7 @@ integer enInventory$NCOpen( // opens a notecard for enInventory$NC* operations
     _ENINVENTORY_NC_T = -1;
     _ENINVENTORY_NC_G = llGetNumberOfNotecardLines(_ENINVENTORY_NC_N);
     key new_NC_K = llGetInventoryKey(_ENINVENTORY_NC_N);
-    if (new_NC_K == NULL_KEY) return 0; // notecard doesn't eenst
+    if (new_NC_K == NULL_KEY) return 0; // notecard doesn't exist
     if (new_NC_K == _ENINVENTORY_NC_K) return 0x1; // notecard opened, no changes since last opened
     _ENINVENTORY_NC_K = new_NC_K;
     return 0x3; // notecard opened, changes since last opened

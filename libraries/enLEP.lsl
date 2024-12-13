@@ -84,7 +84,7 @@ enLEP$Send( // sends a LEP message
     #endif
     string message = "\n" + llGetScriptName() + "\n" + status + "\n" + llDumpList2String(params, "\n");
     integer enable;
-    #ifdef ENLEP$ENABLE_ENCHAT
+    #ifdef ENLEP$ENABLE_ENCLEP
         enable = 1;
         if (enKey$Is(prim))
         { // enCLEP via specified URL and domain

@@ -85,7 +85,7 @@ en$on_rez( integer param )
 En also injects its own trace logging if the following macros are defined:
 
 - `EN$TRACE_LIBRARIES` enables all *library* logging
-- `EN*$TRACE` enables logging for a *specific* library (such as `ENCHAT$TRACE`)
+- `EN*$TRACE` enables logging for a *specific* library (such as `ENCLEP$TRACE`)
 - `EN$TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
 - `EN$*_TRACE` enables logging for a *specific* event (such as `EN$LINK_MESSAGE_TRACE`)
 

@@ -59,7 +59,7 @@ integer enKey$IsNull( // returns 1 if is NULL_KEY
     return k == NULL_KEY;
 }
 
-integer enKey$IsInRegion( // returns 1 if is a key of something that eensts IN THIS REGION
+integer enKey$IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
     string k
     )
 {

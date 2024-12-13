@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN$LISTEN_TRACE || defined EN$LISTEN || defined ENCHAT$ENABLE
+#if defined EN$LISTEN_TRACE || defined EN$LISTEN || defined ENCLEP$ENABLE
 	listen( integer channel, string name, key id, string message )
 	{
 #endif
@@ -46,7 +46,7 @@
             enLog$TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, enString$Elem( name ), enObject$Elem( id ), enString$Elem( message ) ] );
         #endif
 
-        #ifdef ENCHAT$ENABLE
+        #ifdef ENCLEP$ENABLE
 		    if ( _enCLEP$Process( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
@@ -55,6 +55,6 @@
 			en$listen( channel, name, id, message );
 		#endif
 
-#if defined EN$LISTEN_TRACE || defined EN$LISTEN || defined ENCHAT$ENABLE
+#if defined EN$LISTEN_TRACE || defined EN$LISTEN || defined ENCLEP$ENABLE
 	}
 #endif
