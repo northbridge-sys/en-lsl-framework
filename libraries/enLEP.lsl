@@ -33,6 +33,13 @@
 // ==
 
 // ==
+// == macros
+// ==
+
+#define enLEP$Generate(target_script, parameters) \
+    llDumpList2String([llGetScriptName(), target_script] + parameters, "\n")
+
+// ==
 // == functions
 // ==
 
@@ -54,7 +61,7 @@ enLEP$Send( // sends a LEP message
             ]);
     #endif
     if (!target_link) target_link = ENLEP$LINK_MESSAGE_SCOPE;
-    llMessageLinked(target_link, flags, llDumpList2String([llGetScriptName(), target_script] + parameters, "\n"), data);
+    llMessageLinked(target_link, flags, enLEP$Generate(target_script, parameters), data);
 }
 
 /*enLEP$Send( // sends an LEP message
@@ -104,7 +111,7 @@ enLEP$Send( // sends a LEP message
     #endif
     #ifndef ENLEP$ENABLE_LINK_MESSAGE
         // only add this code if ENLEP$ENABLE_LINK_MESSAGE is not defined (to save memory)
-        if (!enable) enLog$(WARN, "ENLEP$ENABLE_* not defined.");
+        if (!enable) enLog$Warn("ENLEP$ENABLE_* not defined.");
     #endif
 }*/
 

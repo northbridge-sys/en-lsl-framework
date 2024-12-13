@@ -109,7 +109,7 @@ string enLSD$Head() // gets LSD header
 {
     string h = ENLSD$HEADER;
     #ifdef ENLSD$ENABLE_UUID_HEADER
-        h = llGetKey() + h; // if ENLSD$ENABLE_UUID_HEADER defined, append llGetKey to start of string to avoid linkset conflicts
+        h = (string)llGetKey() + h; // if ENLSD$ENABLE_UUID_HEADER defined, append llGetKey to start of string to avoid linkset conflicts
     #endif
     return h;
 }
@@ -226,12 +226,13 @@ enLSD$CheckUUID() // updates LSD entries that use old UUID
         if (k == (string)llGetKey()) return; // no UUID change
         string h = ENLSD$HEADER;
         h = k + h;
+        list l;
         do
         {
-            list l = llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, h) + ".*$", 0, 1);
+            l = llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, h) + ".*$", 0, 1);
             if (l != [])
             {
-                llLinksetDataWrite(_enLSD$Head() + llDeleteSubString(llList2String(l, 0), 0, llStringLength(h) - 1)); // write with updated header
+                llLinksetDataWrite(enLSD$Head() + llDeleteSubString(llList2String(l, 0), 0, llStringLength(h) - 1), llLinksetDataRead(llList2String(l, 0))); // write with updated header
                 llLinksetDataDelete(llList2String(l, 0)); // immediately delete old pair to save memory
             }
         } while (l != []); // repeat until we didn't find any keys left with old header

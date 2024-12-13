@@ -36,17 +36,18 @@
 
 enLog$( // custom logging function
     integer level,
+    integer line,
     string message
     )
 {
-    enLog$To("", level, message);
+    enLog$To("", level, line, message);
     #ifndef ENLOG$DISABLE_LOGTARGET
         string t = enLog$GetLogtarget();
         string prim = llGetSubString( t, 0, 35 );
         if ( enKey$IsPrimInRegion( prim ) )
         { // log via enCLEP to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP$RegionSayTo( prim, enCLEP$Channel( domain ), enList$ToString([ "enCLEP", enCLEP$GetService(), prim, domain, "$enLog", message ] ) );
+            enCLEP$RegionSayTo( prim, enCLEP$Channel( domain ), enList$ToString([ "enCLEP", enCLEP$GetService(), prim, domain, "$enLog", enList$ToString([level, line, message]) ] ) );
         }
     #endif
 }
@@ -54,6 +55,7 @@ enLog$( // custom logging function
 enLog$To(
     string target,
     integer level,
+    integer line,
     string message
     )
 {
@@ -71,7 +73,7 @@ enLog$To(
         { // remove any elements at end of script_name that start with "r" or "v" (hides revision/version number)
             script_name = llDeleteSubList(script_name, -1, -1);
         }
-        debug_header = ["🔽 [", llGetSubString(llGetTimestamp(), 11, 21), "] (", llGetSubString(llGetKey(), 0, 3), " ", (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())), "%) ", llDumpList2String(script_name, " "), "\n"];
+        debug_header = ["🔽 [", llGetSubString(llGetTimestamp(), 11, 21), "] (", llGetSubString(llGetKey(), 0, 3), " ", (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())), "% " + (string)line + ") ", llDumpList2String(script_name, " "), "\n"];
     }
     if ( lsd_level >= level )
     {
@@ -94,7 +96,7 @@ enLog$FatalStop( // logs a fatal error and stops the script
     )
 {
     if ( m != "" ) m += " ";
-    enLog$( FATAL, m + "Script stopped." );
+    enLog$Fatal(m + "Script stopped." );
     llSetScriptState( llGetScriptName(), FALSE );
     llSleep( 1.0 ); // give the simulator time to stop the script to be safe
 }
@@ -104,7 +106,7 @@ enLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
 )
 {
     if ( m != "" ) m += " ";
-    enLog$( FATAL, m + "Script deleted." );
+    enLog$Fatal(m + "Script deleted." );
     enLog$Delete();
 }
 

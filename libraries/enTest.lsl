@@ -62,7 +62,7 @@ list enTest$Assert( // unit test
         f += " at line " + (string)n + ".";
         // log error
         if ( l == FATAL ) enLog$Fatal( f );
-        else enLog$( l, f );
+        else enLog$( l, __LINE__, f );
     #endif
 }
 

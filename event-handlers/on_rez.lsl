@@ -48,7 +48,7 @@
 
         // update enCLEP channels if any are just the UUID
         #ifdef ENCLEP$ENABLE
-            _enCLEP$RefreshLinkset();
+            enCLEP$RefreshLinkset();
         #endif
 
         // update enLSD names if any use the UUID header

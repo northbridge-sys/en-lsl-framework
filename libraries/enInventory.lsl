@@ -117,7 +117,7 @@ integer enInventory$RezRemote( // rezzes a remote object with Remote.lsl
             enList$Elem( runs )
             ] );
     #endif
-    enLog$( DEBUG, "Rezzing remote object with loglevel " + enLog$LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
+    enLog$Debug("Rezzing remote object with loglevel " + enLog$LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
     llRezAtRoot( name, pos, vel, rot, (integer)llLinksetDataRead( "loglevel" ) );
     _ENINVENTORY_REMOTE += [ param, enList$ToString( scripts ), enList$ToString( runs ) ];
     // TODO: somehow timeout _ENINVENTORY_REMOTE
@@ -144,7 +144,7 @@ integer enInventory$NCOpen( // opens a notecard for enInventory$NC* operations
             ]);
     #endif
     #ifndef ENINVENTORY$ENABLE_NC
-        enLog$(DEBUG, "ENINVENTORY$ENABLE_NC not defined.");
+        enLog$Debug("ENINVENTORY$ENABLE_NC not defined.");
         return;
     #endif
     _ENINVENTORY_NC_N = name;
@@ -168,7 +168,7 @@ enInventory$NCRead( // reads a line from the open notecard
             ]);
     #endif
     #ifndef ENINVENTORY$ENABLE_NC
-        enLog$(DEBUG, "ENINVENTORY$ENABLE_NC not defined.");
+        enLog$Debug("ENINVENTORY$ENABLE_NC not defined.");
         return;
     #else
         _ENINVENTORY_NC_L = i;

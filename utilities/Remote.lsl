@@ -43,7 +43,7 @@ default
 
         // force temp off
         llSetLinkPrimitiveParamsFast( LINK_SET, [ PRIM_TEMP_ON_REZ, FALSE ] );
-        enLog$( WARN, "Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
+        enLog$Warn("Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
     }
 
     on_rez( integer param )

@@ -193,3 +193,11 @@ string enString$JsonAttempt( // attempts to get a value from a json string, and 
     if (new_val != JSON_INVALID) return new_val;
     return val;
 }
+
+list enString$ParseVersion( // version number parser
+    string s
+)
+{
+    // TODO: this needs to strip any characters not compliant with Semantic Versioning
+    return llParseStringKeepNulls(s, ["."], []);
+}

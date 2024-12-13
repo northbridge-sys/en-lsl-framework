@@ -47,7 +47,7 @@
         #endif
 
         #ifdef ENCLEP$ENABLE
-		    if ( _enCLEP$Process( channel, name, id, message ) ) return; // valid enCLEP message
+		    if ( enCLEP$Process( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
         // pass to user-defined function if requested

@@ -52,7 +52,7 @@
         #endif
         
                 #ifdef ENCLEP$ENABLE
-                    _enCLEP$RefreshLinkset();
+                    enCLEP$RefreshLinkset();
                 #endif
                 #ifdef ENLSD$ENABLE_UUID_HEADER
                     enLSD$CheckUUID();

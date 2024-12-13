@@ -60,13 +60,13 @@ key enHTTP$Request( // sends an HTTP request to a URL
             ]);
     #endif
     #ifndef ENHTTP$ENABLE_REQUESTS
-        enLog$(DEBUG, "enHTTP$Request failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
+        enLog$Debug("enHTTP$Request failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer len = llStringLength(url) + llStringLength(body);
     if (len * 4 + 2048 > llGetFreeMemory())
     { // refuse request due to low memory
-        enLog$(DEBUG, "enHTTP$Request failed due to low memory.");
+        enLog$Debug("enHTTP$Request failed due to low memory.");
         return NULL_KEY;
     }
     // populate pending requests stack
@@ -98,7 +98,7 @@ _enHTTP$ProcessResponse( // processes http_response
             ]);
     #endif
     #ifndef ENHTTP$ENABLE_REQUESTS
-        enLog$(DEBUG, "_enHTTP$ProcessResponse failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
+        enLog$Debug("_enHTTP$ProcessResponse failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [req_id]);
@@ -138,7 +138,7 @@ _enHTTP$Timer() // request queue timer
         if (resp == -1)
         { // throttled while processing queue
             _ENHTTP_PAUSE *= 2; // double _ENHTTP_PAUSE
-            enLog$(DEBUG, "enHTTP$Request retry throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
+            enLog$Debug("enHTTP$Request retry throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
             llSetTimerEvent(_ENHTTP_PAUSE);
             return;
         }
@@ -165,7 +165,7 @@ integer _enHTTP$NextRequest() // fire off next request in queue (used internally
         {
             _ENHTTP_PAUSE = 40;
             llSetTimerEvent(_ENHTTP_PAUSE);
-            enLog$(DEBUG, "enHTTP$Request throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
+            enLog$Debug("enHTTP$Request throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
         }
         return -1; // throttled
     }
