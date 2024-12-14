@@ -64,6 +64,29 @@ enLEP$Send( // sends a LEP message
     llMessageLinked(target_link, flags, enLEP$Generate(target_script, parameters), data);
 }
 
+enLEP$SendAs( // sends a LEP message as a specific source_script name
+    string source_script,
+    integer target_link,
+    string target_script,
+    integer flags,
+    list parameters,
+    string data
+)
+{
+    #ifdef ENLEP$TRACE
+        enLog$TraceParams("enLEP$SendAs", ["source_script", "target_link", "target_script", "flags", "paramters", "data"], [
+            enString$Elem(source_script),
+            target_link,
+            enString$Elem(target_script),
+            enInteger$ElemBitfield(flags),
+            enList$Elem(parameters),
+            enString$Elem(data)
+            ]);
+    #endif
+    if (!target_link) target_link = ENLEP$LINK_MESSAGE_SCOPE;
+    llMessageLinked(target_link, flags, llDumpList2String([source_script, target_script] + parameters, "\n"), data);
+}
+
 /*enLEP$Send( // sends an LEP message
     string prim,        // the TARGET prim, valid values:
                             //  - "" (empty string): send via llMessageLinked(ENLEP$LINK_MESSAGE_SCOPE, ...)

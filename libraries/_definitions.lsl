@@ -301,6 +301,7 @@
 
 #define enLEP$Process(...) _enLEP_Process( __VA_ARGS__ )
 #define enLEP$Send(...) _enLEP_Send( __VA_ARGS__ )
+#define enLEP$SendAs(...) _enLEP_SendAs(__VA_ARGS__)
 
 #define enList$Collate(...) _enList_Collate( __VA_ARGS__ )
 #define enList$Concatenate(...) _enList_Concatenate( __VA_ARGS__ )
