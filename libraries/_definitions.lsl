@@ -309,9 +309,9 @@
 #define enList$Empty(...) _enList_Empty( __VA_ARGS__ )
 #define enList$FromString(...) _enList_FromStr( __VA_ARGS__ )
 #define enList$FindPartial(...) _enList_FindPartial( __VA_ARGS__ )
-#define enList$Json(...) _enList_Json( __VA_ARGS__ )
 #define enList$ReplaceExact(...) _enList_ReplaceExact(__VA_ARGS__)
 #define enList$Reverse(...) _enList_Reverse( __VA_ARGS__ )
+#define enList$ToJson(...) _enList_ToJson( __VA_ARGS__ )
 #define enList$ToString(...) _enList_ToString( __VA_ARGS__ )
 
 #define enLog$(...) _enLog_( __VA_ARGS__ )

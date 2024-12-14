@@ -60,7 +60,7 @@ list enList$Empty( // if a list only has one element that is a blank string, con
     return in;
 }
 
-list enList$Json( // returns a string with each element converted to an escaped JSON string
+list enList$ToJson( // returns a string with each element converted to an escaped JSON string
     list in
 )
 {

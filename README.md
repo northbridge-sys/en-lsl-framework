@@ -179,7 +179,7 @@ enLEP$Send(
     );
 ```
 
-and the other script - if compiled with En - will call the `en$imp_message` function defined by the script:
+and the other script - if compiled with En - will call the `en$lep_message` function defined by the script:
 
 ```
 #define ENLEP$ENABLE
