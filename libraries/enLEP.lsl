@@ -180,7 +180,7 @@ integer enLEP_Process(
     return 1;
 }
 
-/*integer _enLEP_Process(
+/*integer enLEP_Process(
     string prim,
     integer linknum,
     integer num,
@@ -189,7 +189,7 @@ integer enLEP_Process(
     )
 {
     #ifdef ENLEP_TRACE
-        enLog_TraceParams("_enLEP_Process", ["prim", "linknum", "num", "message", "id"], [
+        enLog_TraceParams("enLEP_Process", ["prim", "linknum", "num", "message", "id"], [
             enObject_Elem(prim),
             linknum,
             num,

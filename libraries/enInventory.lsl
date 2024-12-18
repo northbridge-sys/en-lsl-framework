@@ -179,7 +179,7 @@ enInventory_NCRead( // reads a line from the open notecard
     #endif
 }
 
-integer _enInventory_NCParse(
+integer enInventory_NCParse(
     string query,
     string data
     )

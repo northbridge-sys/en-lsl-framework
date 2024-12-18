@@ -76,7 +76,7 @@ string enTimer_Start( // adds a timer
             (integer)( interval * 1000 ) * !!periodic,
             enDate_MSAdd( enDate_MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
-        _enTimer_Check(); // then reprocess queue
+        enTimer_Check(); // then reprocess queue
     #endif
     return id;
 }
@@ -99,7 +99,7 @@ integer enTimer_Cancel( // removes a timer
         if ( i == -1 ) return 0; // not found
         // found, delete it
         _ENTIMER_QUEUE = llDeleteSubList( _ENTIMER_QUEUE, i, i + _ENTIMER_QUEUE_STRIDE - 1 );
-        _enTimer_Check(); // then reprocess queue
+        enTimer_Check(); // then reprocess queue
     #endif
     return 1;
 }
@@ -118,22 +118,22 @@ string enTimer_Find( // finds a timer by callback
     return llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE );
 }
 
-integer _enTimer_InternalLoopback(
+integer enTimer_InternalLoopback(
     string callback
 )
 {
-    if (callback == "_enObject_TextTemp")
+    if (callback == "enObject_TextTemp")
     {
-        _enObject_TextTemp();
+        enObject_TextTemp();
         return 1;
     }
     return 0;
 }
 
-_enTimer_Check() // checks the MIT timers to see if any are triggered
+enTimer_Check() // checks the MIT timers to see if any are triggered
 {
     #ifdef ENTIMER_TRACE
-        enLog_TraceParams("_enTimer_Check", [], []);
+        enLog_TraceParams("enTimer_Check", [], []);
     #endif
     llSetTimerEvent(0.0);
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
@@ -164,7 +164,7 @@ _enTimer_Check() // checks the MIT timers to see if any are triggered
                     i--; l--; // shift for loop to account for lost queue stride
                 }
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
-                if (!_enTimer_InternalLoopback(t_callback))
+                if (!enTimer_InternalLoopback(t_callback))
                 {
                     #ifdef ENTIMER_ENABLE
                         enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);

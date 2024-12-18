@@ -49,10 +49,10 @@ list enTest_Assert( // unit test
     #ifndef ENTEST_ENABLE
         return []; // enTest not enabled
     #else
-        list r = _enTest_Check( at, av, m, bt, bv );
+        list r = enTest_Check( at, av, m, bt, bv );
         if ( r == [] ) return []; // tested ok
         string e = llList2String( r, -1 ); // error type
-        string f = "enTest_Assert( " + enLog_Level( l ) + ", " + (string)n + ", " + _enTest_Type( at ) + ", \"" + av + "\", ENTEST_" + _enTest_Method( m ) + ", " + _enTest_Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
+        string f = "enTest_Assert( " + enLog_Level( l ) + ", " + (string)n + ", " + enTest_Type( at ) + ", \"" + av + "\", ENTEST_" + enTest_Method( m ) + ", " + enTest_Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
         // generate extended failure reason if error type is not "!"
         if ( e == "!Match") f = " due to input parameter type mismatch";
         else if ( e == "!Type" ) f = " due to incompatible input types for this method";
@@ -95,7 +95,7 @@ string enTest_Method( // converts integer method number into string representati
         ], m);
 }
 
-list _enTest_Check( // internal function called for each test
+list enTest_Check( // internal function called for each test
     integer at, // value A type
     string av, // value A value
     integer m, // method

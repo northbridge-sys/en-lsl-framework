@@ -63,7 +63,7 @@
 
 		// update _ENOBJECT_UUIDS_SELF
         #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
-            _enObject_UpdateUUIDs();
+            enObject_UpdateUUIDs();
         #endif
 
 #if defined EN_ON_REZ_TRACE || defined EN_ON_REZ || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF

@@ -228,10 +228,10 @@
 // == macros
 // ==
 
-#define enLog_Print(...) _enLog_( 0, __LINE__, __VA_ARGS__ )
-#define enLog_Fatal(...) _enLog_( 1, __LINE__, __VA_ARGS__ )
-#define enLog_Error(...) _enLog_( 2, __LINE__, __VA_ARGS__ )
-#define enLog_Warn(...) _enLog_( 3, __LINE__, __VA_ARGS__ )
-#define enLog_Info(...) _enLog_( 4, __LINE__, __VA_ARGS__ )
-#define enLog_Debug(...) _enLog_( 5, __LINE__, __VA_ARGS__ )
-#define enLog_Trace(...) _enLog_( 6, __LINE__, __VA_ARGS__ )
+#define enLog_Print(...) enLog_( 0, __LINE__, __VA_ARGS__ )
+#define enLog_Fatal(...) enLog_( 1, __LINE__, __VA_ARGS__ )
+#define enLog_Error(...) enLog_( 2, __LINE__, __VA_ARGS__ )
+#define enLog_Warn(...) enLog_( 3, __LINE__, __VA_ARGS__ )
+#define enLog_Info(...) enLog_( 4, __LINE__, __VA_ARGS__ )
+#define enLog_Debug(...) enLog_( 5, __LINE__, __VA_ARGS__ )
+#define enLog_Trace(...) enLog_( 6, __LINE__, __VA_ARGS__ )

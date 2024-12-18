@@ -108,10 +108,10 @@ integer enObject_ClosestLink(string name)
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
         if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i + 1); // return cached linknum
     #endif
-    return _enObject_FindLink(name);
+    return enObject_FindLink(name);
 }
 
-integer _enObject_FindLink(string name)
+integer enObject_FindLink(string name)
 {
     integer i;
     integer cl_i;
@@ -140,17 +140,17 @@ enObject_CacheClosestLink(
         enLog_Error("enObject_CacheClosestLink called but ENOBJECT_ENABLE_LINK_CACHE not defined.");
     #else
         if (llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
-        _ENOBJECT_LINK_CACHE += [name, _enObject_FindLink(name)];
+        _ENOBJECT_LINK_CACHE += [name, enObject_FindLink(name)];
     #endif
 }
 
-_enObject_LinkCacheUpdate()
+enObject_LinkCacheUpdate()
 {
     integer i;
     integer l = llGetListLength(_ENOBJECT_LINK_CACHE);
     for (i = 0; i < l; i+=2)
     {
-        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [_enObject_FindLink(llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [enObject_FindLink(llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
     }
 }
 
@@ -199,11 +199,11 @@ enObject_Text(
     }
                                                                                            // this is a nbsp
     llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
-    if (flags & ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "_enObject_TextTemp");
-    else enTimer_Cancel(enTimer_Find("_enObject_TextTemp"));
+    if (flags & ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextTemp");
+    else enTimer_Cancel(enTimer_Find("enObject_TextTemp"));
 }
 
-_enObject_TextTemp()
+enObject_TextTemp()
 {
     llSetText("", BLACK, 0.0);
 }
@@ -286,10 +286,10 @@ integer enObject_Profile( // returns various bitwise flags for the state of an o
     return f;
 }
 
-_enObject_UpdateUUIDs()
+enObject_UpdateUUIDs()
 {
     #ifdef ENOBJECT_TRACE
-        enLog_TraceParams("_enObject_UpdateUUIDs", [], []);
+        enLog_TraceParams("enObject_UpdateUUIDs", [], []);
     #endif
 	if (ENOBJECT_LIMIT_SELF)
 	{ // check own UUID

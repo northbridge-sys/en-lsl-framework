@@ -48,7 +48,7 @@
 
         // forward timers directly to enTimer if enabled
         #ifdef ENTIMER_ENABLE
-            _enTimer_Check();
+            enTimer_Check();
         #endif
 
         // pass to user-defined function if requested

@@ -78,11 +78,11 @@ key enHTTP_Request( // sends an HTTP request to a URL
         llDumpList2String(http_params, "\n"),
         body
         ];
-    if (!_ENHTTP_PAUSE) _enHTTP_NextRequest(); // not being throttled, so request now
+    if (!_ENHTTP_PAUSE) enHTTP_NextRequest(); // not being throttled, so request now
     return en_id;
 }
 
-_enHTTP_ProcessResponse( // processes http_response
+enHTTP_ProcessResponse( // processes http_response
     string req_id,
     integer status,
     list metadata,
@@ -90,7 +90,7 @@ _enHTTP_ProcessResponse( // processes http_response
     )
 {
     #ifdef ENHTTP_TRACE
-        enLog_TraceParams("_enHTTP_ProcessResponse", ["req_id", "status", "metadata", "body"], [
+        enLog_TraceParams("enHTTP_ProcessResponse", ["req_id", "status", "metadata", "body"], [
             enString_Elem(req_id),
             status,
             enList_Elem(metadata),
@@ -98,7 +98,7 @@ _enHTTP_ProcessResponse( // processes http_response
             ]);
     #endif
     #ifndef ENHTTP_ENABLE_REQUESTS
-        enLog_Debug("_enHTTP_ProcessResponse failed due to ENHTTP_ENABLE_REQUESTS not being defined.");
+        enLog_Debug("enHTTP_ProcessResponse failed due to ENHTTP_ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [req_id]);
@@ -117,10 +117,10 @@ _enHTTP_ProcessResponse( // processes http_response
     _ENHTTP_REQUESTS = llDeleteSubList(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE, (req_ind + 1) * _ENHTTP_REQUESTS_STRIDE - 1);
 }
 
-_enHTTP_Timer() // request queue timer
+enHTTP_Timer() // request queue timer
 {
     #ifdef ENHTTP_TRACE
-        enLog_TraceParams("_enHTTP_Timer", [], []);
+        enLog_TraceParams("enHTTP_Timer", [], []);
     #endif
     #ifdef ENHTTP_ENABLE_REQUESTS
         // TODO: allow using either SIT or MIT instead of directly calling llSetTimerEvent
@@ -132,7 +132,7 @@ _enHTTP_Timer() // request queue timer
         }
         // keep firing off queued requests
         integer resp;
-        do resp = _enHTTP_NextRequest();
+        do resp = enHTTP_NextRequest();
         while (resp == 1);
         // can't fire off any more queued requests
         if (resp == -1)
@@ -147,10 +147,10 @@ _enHTTP_Timer() // request queue timer
     #endif
 }
 
-integer _enHTTP_NextRequest() // fire off next request in queue (used internally by _enHTTP_Timer)
+integer enHTTP_NextRequest() // fire off next request in queue (used internally by enHTTP_Timer)
 {
     #ifdef ENHTTP_TRACE
-        enLog_TraceParams("_enHTTP_NextRequest", [], []);
+        enLog_TraceParams("enHTTP_NextRequest", [], []);
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [NULL_KEY]);
     if (req_ind == -1) return 0; // no more requests to make

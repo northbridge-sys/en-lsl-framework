@@ -58,10 +58,10 @@
                     enLSD_CheckUUID();
                 #endif
                 #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
-                    _enObject_UpdateUUIDs();
+                    enObject_UpdateUUIDs();
                 #endif
                 #ifdef ENOBJECT_ENABLE_LINK_CACHE
-                    _enObject_LinkCacheUpdate();
+                    enObject_LinkCacheUpdate();
                 #endif
 
         #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE

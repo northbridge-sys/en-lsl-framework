@@ -48,7 +48,7 @@
 
         // check if any En libraries want to intercept this event
         #ifdef ENINVENTORY_ENABLE_NC
-            if (_enInventory_NCParse(query, data)) return;
+            if (enInventory_NCParse(query, data)) return;
         #endif
 
         // pass to user-defined function if requested

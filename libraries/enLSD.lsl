@@ -41,7 +41,7 @@
 // ==
 
 #define enLSD_Head() \
-    _enLSD_BuildHead(llGetScriptName(), llGetKey())
+    enLSD_BuildHead(llGetScriptName(), llGetKey())
 
 // ==
 // == functions

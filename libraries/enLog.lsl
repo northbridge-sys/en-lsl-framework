@@ -47,7 +47,7 @@ enLog_( // custom logging function
         if ( enKey_IsPrimInRegion( prim ) )
         { // log via enCLEP to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP_RegionSayTo( prim, enCLEP_Channel( domain ), enList_ToString([ "enCLEP", enCLEP_GetService(), prim, domain, "_enLog", enList_ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
+            enCLEP_RegionSayTo( prim, enCLEP_Channel( domain ), enList_ToString([ "enCLEP", enCLEP_GetService(), prim, domain, "enLog", enList_ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
         }
     #endif
 }
