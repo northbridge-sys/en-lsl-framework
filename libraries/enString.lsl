@@ -36,12 +36,12 @@
 // == functions
 // ==
 
-string enString$Elem(string var)
+string enString_Elem(string var)
 {
     return "\"" + var + "\"";
 }
 
-string enString$Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
+string enString_Plural( // returns pluralization ("s"/"es"/etc.) for specified integer
     integer x,
     string s
     )
@@ -51,7 +51,7 @@ string enString$Plural( // returns pluralization ("s"/"es"/etc.) for specified i
     return s;
 }
 
-string enString$If( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
+string enString_If( // returns specified string if x is 1; can be used for text like "IS" or "IS NOT" enabled
     integer x,
     string s
     )
@@ -60,7 +60,7 @@ string enString$If( // returns specified string if x is 1; can be used for text 
     return "";
 }
 
-string enString$Pad( // pads a string to length l_target
+string enString_Pad( // pads a string to length l_target
 	string src,
 	string pad,
 	integer l_target,
@@ -98,18 +98,18 @@ string enString$Pad( // pads a string to length l_target
         { // trim the pad back down to diff
             pad = llDeleteSubString(pad, -l_pad + l_diff, -1);
         }
-        if (align == ENSTRING$PAD_ALIGN_CENTER)
+        if (align == ENSTRING_PAD_ALIGN_CENTER)
         { // center align
             if (l_diff == 1) src += llGetSubString(pad, 0, 0);
             else src = llGetSubString(pad, 0, (l_diff / 2) - 1) + src + llGetSubString(pad, 0, (l_diff - (l_diff / 2)) - 1);
         }
-        else if (align == ENSTRING$PAD_ALIGN_RIGHT) src = pad + src; // right align
+        else if (align == ENSTRING_PAD_ALIGN_RIGHT) src = pad + src; // right align
         else src += pad; // left align
     }
     return src; // return src as-modified
 }
 
-string enString$MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
+string enString_MultiByteUnit( // appends the SI prefix to a specified number of bytes, rounding to the largest possible prefix
 	integer bytes
 	)
 {
@@ -122,24 +122,24 @@ string enString$MultiByteUnit( // appends the SI prefix to a specified number of
     return (string)bytes + llList2String(["", "K", "M", "G"], mult);
 }
 
-string enString$Escape(
+string enString_Escape(
     integer f, // filter string flag
     string x
     )
 {
     list y;
     string e;
-    if (f & ENSTRING$ESCAPE_FILTER_REGEX)
+    if (f & ENSTRING_ESCAPE_FILTER_REGEX)
     {
         y = ["^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]", "\\"]; // note that \\ must be the last entry, otherwise previously escaped characters will be double-escaped
         e = "\\"; // regex escaped with single backwards slash
     }
-    if (f & ENSTRING$ESCAPE_FILTER_JSON)
+    if (f & ENSTRING_ESCAPE_FILTER_JSON)
     {
         y = ["\""];
         e = "\\"; // json escaped with single backwards slash
     }
-    if (f & ENSTRING$ESCAPE_REVERSE)
+    if (f & ENSTRING_ESCAPE_REVERSE)
     {
         // TODO: unescape
     }
@@ -152,7 +152,7 @@ string enString$Escape(
     return x;
 }
 
-list enString$ParseCfgLine( // parses a notecard line using a basic configuration markup format
+list enString_ParseCfgLine( // parses a notecard line using a basic configuration markup format
     string s
     )
 {
@@ -167,7 +167,7 @@ list enString$ParseCfgLine( // parses a notecard line using a basic configuratio
     return [n, v];
 }
 
-integer enString$FindChars( // finds the first instance of any of the specified characters, used for user input validation
+integer enString_FindChars( // finds the first instance of any of the specified characters, used for user input validation
     string in,
     string chars
     )
@@ -183,7 +183,7 @@ integer enString$FindChars( // finds the first instance of any of the specified 
     return -1;
 }
 
-string enString$JsonAttempt( // attempts to get a value from a json string, and if fails, returns preset value instead of JSON_INVALID
+string enString_JsonAttempt( // attempts to get a value from a json string, and if fails, returns preset value instead of JSON_INVALID
     string json,
     list specifiers,
     string val
@@ -194,7 +194,7 @@ string enString$JsonAttempt( // attempts to get a value from a json string, and 
     return val;
 }
 
-list enString$ParseVersion( // version number parser
+list enString_ParseVersion( // version number parser
     string s
 )
 {

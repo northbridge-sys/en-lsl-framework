@@ -36,8 +36,8 @@
 // == functions
 // ==
 
-integer enDate$MS( // gets an integer that represents the current millisecond of a month
-    string timestamp // llGetTimestamp string (use enDate$MSNow() for the current value)
+integer enDate_MS( // gets an integer that represents the current millisecond of a month
+    string timestamp // llGetTimestamp string (use enDate_MSNow() for the current value)
     )
 {
     return 0x80000000 + // start at -2147483648
@@ -48,13 +48,13 @@ integer enDate$MS( // gets an integer that represents the current millisecond of
     // total range is 2764800000 ms, or ms in 31 days
 }
 
-integer enDate$MSNow() // gets the value of enDate$MS( ... ) for the current datetime
+integer enDate_MSNow() // gets the value of enDate_MS( ... ) for the current datetime
 {
-    return enDate$MS( llGetTimestamp() );
+    return enDate_MS( llGetTimestamp() );
 }
 
-integer enDate$MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
-    integer ms, // enDate$MS result
+integer enDate_MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
+    integer ms, // enDate_MS result
     integer add // milliseconds to add - note this is limited to 
 )
 {

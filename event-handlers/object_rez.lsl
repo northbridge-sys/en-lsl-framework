@@ -29,22 +29,22 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$OBJECT_REZ
-		en$object_rez( key id )
+		#define EN_OBJECT_REZ
+		en_object_rez( key id )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$OBJECT_REZ
+#ifdef EN_OBJECT_REZ
 	object_rez( key id )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "object_rez", [ "id" ], [
-            enObject$Elem( id ),
+        enLog_TraceParams( "object_rez", [ "id" ], [
+            enObject_Elem( id ),
         ] );
 
         // event unused, so pass to user-defined function only
-        en$object_rez( id );
+        en_object_rez( id );
 	}
 #endif

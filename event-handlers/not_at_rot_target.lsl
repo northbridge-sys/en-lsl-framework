@@ -29,20 +29,20 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$NOT_AT_ROT_TARGET
-		en$not_at_rot_target()
+		#define EN_NOT_AT_ROT_TARGET
+		en_not_at_rot_target()
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$NOT_AT_ROT_TARGET
+#ifdef EN_NOT_AT_ROT_TARGET
 	not_at_rot_target()
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "not_at_rot_target", [], [] );
+        enLog_TraceParams( "not_at_rot_target", [], [] );
 
         // event unused, so pass to user-defined function only
-        en$not_at_rot_target();
+        en_not_at_rot_target();
 	}
 #endif

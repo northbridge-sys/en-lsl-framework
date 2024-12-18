@@ -29,23 +29,23 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$PATH_UPDATE
-		en$path_update( integer type, list reserved )
+		#define EN_PATH_UPDATE
+		en_path_update( integer type, list reserved )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$PATH_UPDATE
+#ifdef EN_PATH_UPDATE
 	path_update( integer type, list reserved )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "path_update", [ "type", "reserved" ], [
+        enLog_TraceParams( "path_update", [ "type", "reserved" ], [
             type,
-            enList$Elem( reserved )
+            enList_Elem( reserved )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$path_update( type, reserved );
+        en_path_update( type, reserved );
 	}
 #endif

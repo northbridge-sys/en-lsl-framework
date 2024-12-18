@@ -36,7 +36,7 @@
 // == functions
 // ==
 
-list enTest$Assert( // unit test
+list enTest_Assert( // unit test
     integer l, // loglevel (FATAL stops script, all others get logged, 0 to not log)
     integer n, // line
     integer at, // value A type
@@ -46,13 +46,13 @@ list enTest$Assert( // unit test
     string bv // value B value
     )
 {
-    #ifndef ENTEST$ENABLE
+    #ifndef ENTEST_ENABLE
         return []; // enTest not enabled
     #else
-        list r = _enTest$Check( at, av, m, bt, bv );
+        list r = _enTest_Check( at, av, m, bt, bv );
         if ( r == [] ) return []; // tested ok
         string e = llList2String( r, -1 ); // error type
-        string f = "enTest$Assert( " + enLog$Level( l ) + ", " + (string)n + ", " + _enTest$Type( at ) + ", \"" + av + "\", ENTEST$" + _enTest$Method( m ) + ", " + _enTest$Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
+        string f = "enTest_Assert( " + enLog_Level( l ) + ", " + (string)n + ", " + _enTest_Type( at ) + ", \"" + av + "\", ENTEST_" + _enTest_Method( m ) + ", " + _enTest_Type( bt ) + ", \"" + bv + "\" ) failed"; // failure reason
         // generate extended failure reason if error type is not "!"
         if ( e == "!Match") f = " due to input parameter type mismatch";
         else if ( e == "!Type" ) f = " due to incompatible input types for this method";
@@ -61,12 +61,12 @@ list enTest$Assert( // unit test
         // terminate failure reason
         f += " at line " + (string)n + ".";
         // log error
-        if ( l == FATAL ) enLog$Fatal( f );
-        else enLog$( l, __LINE__, f );
+        if ( l == FATAL ) enLog_Fatal( f );
+        else enLog_( l, __LINE__, f );
     #endif
 }
 
-string enTest$Type( // converts integer type number into string representation
+string enTest_Type( // converts integer type number into string representation
     integer t
     )
 {
@@ -82,7 +82,7 @@ string enTest$Type( // converts integer type number into string representation
         ], t);
 }
 
-string enTest$Method( // converts integer method number into string representation
+string enTest_Method( // converts integer method number into string representation
     integer m
     )
 {
@@ -95,7 +95,7 @@ string enTest$Method( // converts integer method number into string representati
         ], m);
 }
 
-list _enTest$Check( // internal function called for each test
+list _enTest_Check( // internal function called for each test
     integer at, // value A type
     string av, // value A value
     integer m, // method
@@ -124,15 +124,15 @@ list _enTest$Check( // internal function called for each test
     }
     if ( at == KEY )
     { // validate key
-        if ( !enKey$Is( av ) ) f = "!KeyA"; // av is not a valid key or NULL_KEY
-        if ( !enKey$Is( bv ) ) f = "!KeyB"; // bv is not a valid key or NULL_KEY
+        if ( !enKey_Is( av ) ) f = "!KeyA"; // av is not a valid key or NULL_KEY
+        if ( !enKey_Is( bv ) ) f = "!KeyB"; // bv is not a valid key or NULL_KEY
     }
     if ( at == LIST )
     { // validate lists
         // TODO
     }
     if ( f != "" ) return [ at, av, m, bt, bv, f ]; // not ok
-    if ( m == ENTEST$EQUAL || m == ENTEST$NOT_EQUAL )
+    if ( m == ENTEST_EQUAL || m == ENTEST_NOT_EQUAL )
     {
         if ( at == INTEGER )
         {
@@ -140,23 +140,23 @@ list _enTest$Check( // internal function called for each test
         }
         if ( at == FLOAT )
         {
-            if ( llFabs( (float)av - (float)bv ) <= ENTEST$PRECISION_FLOAT ) f = "!";
+            if ( llFabs( (float)av - (float)bv ) <= ENTEST_PRECISION_FLOAT ) f = "!";
         }
         if ( at == VECTOR )
         {
-            if ( llVecDist( (vector)av, (vector)bv ) <= ENTEST$PRECISION_VECTOR ) f = "!";
+            if ( llVecDist( (vector)av, (vector)bv ) <= ENTEST_PRECISION_VECTOR ) f = "!";
         }
         if ( at == ROTATION )
         {
-            if ( llVecDist( llRot2Euler( (rotation)av ), llRot2Euler( (rotation)bv ) ) <= ENTEST$PRECISION_ROTATION ) f = "!";
+            if ( llVecDist( llRot2Euler( (rotation)av ), llRot2Euler( (rotation)bv ) ) <= ENTEST_PRECISION_ROTATION ) f = "!";
         }
         if ( at == STRING || at == KEY || at == LIST )
         {
             if ( av != bv ) f = "!";
         }
-        if ( m == ENTEST$NOT_EQUAL ) f = enString$If( (f == ""), "!" ); // invert result
+        if ( m == ENTEST_NOT_EQUAL ) f = enString_If( (f == ""), "!" ); // invert result
     }
-    else if ( m == ENTEST$GREATER )
+    else if ( m == ENTEST_GREATER )
     {
         if ( at == INTEGER )
         {
@@ -164,19 +164,19 @@ list _enTest$Check( // internal function called for each test
         }
         if ( at == FLOAT )
         {
-            if ( (float)av + ENTEST$PRECISION_FLOAT <= (float)bv ) f = "!";
+            if ( (float)av + ENTEST_PRECISION_FLOAT <= (float)bv ) f = "!";
         }
         if ( at == VECTOR )
         {
-            if ( llVecMag( (vector)av ) + ENTEST$PRECISION_VECTOR <= llVecMag( (vector)bv ) ) f = "!";
+            if ( llVecMag( (vector)av ) + ENTEST_PRECISION_VECTOR <= llVecMag( (vector)bv ) ) f = "!";
         }
         if ( at == ROTATION )
         {
-            if ( llVecMag( llRot2Euler( (rotation)av ) ) + ENTEST$PRECISION_ROTATION <= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
+            if ( llVecMag( llRot2Euler( (rotation)av ) ) + ENTEST_PRECISION_ROTATION <= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
         }
         if ( at == STRING || at == KEY || at == LIST ) f = "!Type";
     }
-    else if ( m == ENTEST$LESS )
+    else if ( m == ENTEST_LESS )
     {
         if ( at == INTEGER )
         {
@@ -184,15 +184,15 @@ list _enTest$Check( // internal function called for each test
         }
         if ( at == FLOAT )
         {
-            if ( (float)av + ENTEST$PRECISION_FLOAT >= (float)bv ) f = "!";
+            if ( (float)av + ENTEST_PRECISION_FLOAT >= (float)bv ) f = "!";
         }
         if ( at == VECTOR )
         {
-            if ( llVecMag( (vector)av ) - ENTEST$PRECISION_VECTOR >= llVecMag( (vector)bv ) ) f = "!";
+            if ( llVecMag( (vector)av ) - ENTEST_PRECISION_VECTOR >= llVecMag( (vector)bv ) ) f = "!";
         }
         if ( at == ROTATION )
         {
-            if ( llVecMag( llRot2Euler( (rotation)av ) ) - ENTEST$PRECISION_ROTATION >= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
+            if ( llVecMag( llRot2Euler( (rotation)av ) ) - ENTEST_PRECISION_ROTATION >= llVecMag( llRot2Euler( (rotation)bv ) ) ) f = "!";
         }
         if ( at == STRING || at == KEY || at == LIST ) f = "!Type";
     }
@@ -201,11 +201,11 @@ list _enTest$Check( // internal function called for each test
     return []; // ok
 }
 
-enTest$StopOnFail(
-    list a // results of enTest$Assert
+enTest_StopOnFail(
+    list a // results of enTest_Assert
     )
 {
     if ( a = [] ) return; // no need to crash
-    enLog$TraceParams( "enTest$Crash", [ "enTest$Assert(...)" ], [ enList$Elem( a ) ] ); // log crash
+    enLog_TraceParams( "enTest_Crash", [ "enTest_Assert(...)" ], [ enList_Elem( a ) ] ); // log crash
     llSetScriptState( llGetScriptName(), FALSE ); // stop script
 }

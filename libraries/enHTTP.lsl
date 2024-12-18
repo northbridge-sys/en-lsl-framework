@@ -43,7 +43,7 @@ list _ENHTTP_REQUESTS; // enhttp_id, req_id, url, http_params, body
 // == functions
 // ==
 
-key enHTTP$Request( // sends an HTTP request to a URL
+key enHTTP_Request( // sends an HTTP request to a URL
     string url,         // url to pass to llHTTPRequest
     list http_params,   // parameters to pass to llHTTPRequest
                         //  do not specify the following parameters:
@@ -52,21 +52,21 @@ key enHTTP$Request( // sends an HTTP request to a URL
     string body         // body to pass to llHTTPRequest
     )
 {
-    #ifdef ENHTTP$TRACE
-        enLog$TraceParams("enHTTP$Request", ["url", "http_params", "body"], [
-            enString$Elem(url),
-            enList$Elem(http_params),
-            enString$Elem(body)
+    #ifdef ENHTTP_TRACE
+        enLog_TraceParams("enHTTP_Request", ["url", "http_params", "body"], [
+            enString_Elem(url),
+            enList_Elem(http_params),
+            enString_Elem(body)
             ]);
     #endif
-    #ifndef ENHTTP$ENABLE_REQUESTS
-        enLog$Debug("enHTTP$Request failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
+    #ifndef ENHTTP_ENABLE_REQUESTS
+        enLog_Debug("enHTTP_Request failed due to ENHTTP_ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer len = llStringLength(url) + llStringLength(body);
     if (len * 4 + 2048 > llGetFreeMemory())
     { // refuse request due to low memory
-        enLog$Debug("enHTTP$Request failed due to low memory.");
+        enLog_Debug("enHTTP_Request failed due to low memory.");
         return NULL_KEY;
     }
     // populate pending requests stack
@@ -78,33 +78,33 @@ key enHTTP$Request( // sends an HTTP request to a URL
         llDumpList2String(http_params, "\n"),
         body
         ];
-    if (!_ENHTTP_PAUSE) _enHTTP$NextRequest(); // not being throttled, so request now
+    if (!_ENHTTP_PAUSE) _enHTTP_NextRequest(); // not being throttled, so request now
     return en_id;
 }
 
-_enHTTP$ProcessResponse( // processes http_response
+_enHTTP_ProcessResponse( // processes http_response
     string req_id,
     integer status,
     list metadata,
     string body
     )
 {
-    #ifdef ENHTTP$TRACE
-        enLog$TraceParams("_enHTTP$ProcessResponse", ["req_id", "status", "metadata", "body"], [
-            enString$Elem(req_id),
+    #ifdef ENHTTP_TRACE
+        enLog_TraceParams("_enHTTP_ProcessResponse", ["req_id", "status", "metadata", "body"], [
+            enString_Elem(req_id),
             status,
-            enList$Elem(metadata),
-            enString$Elem(body)
+            enList_Elem(metadata),
+            enString_Elem(body)
             ]);
     #endif
-    #ifndef ENHTTP$ENABLE_REQUESTS
-        enLog$Debug("_enHTTP$ProcessResponse failed due to ENHTTP$ENABLE_REQUESTS not being defined.");
+    #ifndef ENHTTP_ENABLE_REQUESTS
+        enLog_Debug("_enHTTP_ProcessResponse failed due to ENHTTP_ENABLE_REQUESTS not being defined.");
         return;
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [req_id]);
     if (req_ind == -1) return; // not a response to a known request
-    #ifdef ENHTTP$ENABLE
-        en$http_response(
+    #ifdef ENHTTP_ENABLE
+        en_http_response(
             orig_id,
             llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE + 2), // url
             llParseStringKeepNulls(llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE + 3), ["\n"], []), // http_params
@@ -117,12 +117,12 @@ _enHTTP$ProcessResponse( // processes http_response
     _ENHTTP_REQUESTS = llDeleteSubList(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE, (req_ind + 1) * _ENHTTP_REQUESTS_STRIDE - 1);
 }
 
-_enHTTP$Timer() // request queue timer
+_enHTTP_Timer() // request queue timer
 {
-    #ifdef ENHTTP$TRACE
-        enLog$TraceParams("_enHTTP$Timer", [], []);
+    #ifdef ENHTTP_TRACE
+        enLog_TraceParams("_enHTTP_Timer", [], []);
     #endif
-    #ifdef ENHTTP$ENABLE_REQUESTS
+    #ifdef ENHTTP_ENABLE_REQUESTS
         // TODO: allow using either SIT or MIT instead of directly calling llSetTimerEvent
         llSetTimerEvent(0.0);
         if (_ENHTTP_REQUESTS == [])
@@ -132,13 +132,13 @@ _enHTTP$Timer() // request queue timer
         }
         // keep firing off queued requests
         integer resp;
-        do resp = _enHTTP$NextRequest();
+        do resp = _enHTTP_NextRequest();
         while (resp == 1);
         // can't fire off any more queued requests
         if (resp == -1)
         { // throttled while processing queue
             _ENHTTP_PAUSE *= 2; // double _ENHTTP_PAUSE
-            enLog$Debug("enHTTP$Request retry throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
+            enLog_Debug("enHTTP_Request retry throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
             llSetTimerEvent(_ENHTTP_PAUSE);
             return;
         }
@@ -147,10 +147,10 @@ _enHTTP$Timer() // request queue timer
     #endif
 }
 
-integer _enHTTP$NextRequest() // fire off next request in queue (used internally by _enHTTP$Timer)
+integer _enHTTP_NextRequest() // fire off next request in queue (used internally by _enHTTP_Timer)
 {
-    #ifdef ENHTTP$TRACE
-        enLog$TraceParams("_enHTTP$NextRequest", [], []);
+    #ifdef ENHTTP_TRACE
+        enLog_TraceParams("_enHTTP_NextRequest", [], []);
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [NULL_KEY]);
     if (req_ind == -1) return 0; // no more requests to make
@@ -165,7 +165,7 @@ integer _enHTTP$NextRequest() // fire off next request in queue (used internally
         {
             _ENHTTP_PAUSE = 40;
             llSetTimerEvent(_ENHTTP_PAUSE);
-            enLog$Debug("enHTTP$Request throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
+            enLog_Debug("enHTTP_Request throttled, pausing " + (string)_ENHTTP_PAUSE + " seconds.");
         }
         return -1; // throttled
     }

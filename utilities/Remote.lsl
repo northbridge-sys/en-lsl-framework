@@ -30,7 +30,7 @@
     used to load one or more scripts dynamically into the newly rezzed object.
 */
 
-#define EN$ALL_TRACE
+#define EN_ALL_TRACE
 
 #include "en-lsl-framework/main.lsl"
 
@@ -39,38 +39,38 @@ default
     // we don't need full En support in this script, so the state_entry and on_rez event handlers are defined manually
     state_entry()
     {
-        enLog$TraceParams( "state_entry", [], [] );
+        enLog_TraceParams( "state_entry", [], [] );
 
         // force temp off
         llSetLinkPrimitiveParamsFast( LINK_SET, [ PRIM_TEMP_ON_REZ, FALSE ] );
-        enLog$Warn("Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
+        enLog_Warn("Disabled temp-on-rez because script was reset. Make sure you re-enable it before packaging." );
     }
 
     on_rez( integer param )
     {
-        // calling enInventory$RezRemote in the parent causes the loglevel to be sent as the start parameter,
+        // calling enInventory_RezRemote in the parent causes the loglevel to be sent as the start parameter,
         // so immediately write loglevel based on llRez* start parameter
         llLinksetDataWrite( "loglevel", (string)param );
 
         // trace event params after setting loglevel
-        enLog$TraceParams( "on_rez", [ "param" ], [ param ] );
+        enLog_TraceParams( "on_rez", [ "param" ], [ param ] );
 
-        enObject$StopIfOwnerRezzed(); // if owner rezzed us from inventory, stop script for inspection
+        enObject_StopIfOwnerRezzed(); // if owner rezzed us from inventory, stop script for inspection
 
         // check that object is temp-on-rez and, if not, warn the owner that it was packaged improperly
-        if ( !(integer)llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_TEMP_ON_REZ ] ), 0 ) ) enLog$Fatal( "Object is not temp-on-rez; set temp-on-rez and repackage." );
+        if ( !(integer)llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_TEMP_ON_REZ ] ), 0 ) ) enLog_Fatal( "Object is not temp-on-rez; set temp-on-rez and repackage." );
 
         // generate and llRemoteLoadScriptPin pin
-        integer pin = enInteger$Rand();
+        integer pin = enInteger_Rand();
         if ( !pin ) pin++; // need a nonzero pin
         llSetRemoteScriptAccessPin( pin );
 
         // notify parent that we are rezzed and ready to receive script(s)
-        enCLEP$SetService( "enInventory$RezRemote" );
-        enCLEP$Send( // send via enCLEP
-            enObject$Parent(), // prim
-            enObject$Parent(), // domain
-            "enInventory$RezRemote", // type
+        enCLEP_SetService( "enInventory_RezRemote" );
+        enCLEP_Send( // send via enCLEP
+            enObject_Parent(), // prim
+            enObject_Parent(), // domain
+            "enInventory_RezRemote", // type
             (string)pin // message
             );
 

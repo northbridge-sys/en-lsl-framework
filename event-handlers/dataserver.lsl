@@ -29,33 +29,33 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$DATASERVER
-		en$dataserver( key query, string data )
+		#define EN_DATASERVER
+		en_dataserver( key query, string data )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$DATASERVER_TRACE || defined EN$DATASERVER || defined ENINVENTORY$ENABLE_NC
+#if defined EN_DATASERVER_TRACE || defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC
 	dataserver( key query, string data )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$DATASERVER_TRACE
-            enLog$TraceParams( "dataserver", [ "query", "data" ], [ enString$Elem( query ), enString$Elem( data ) ] );
+        #ifdef EN_DATASERVER_TRACE
+            enLog_TraceParams( "dataserver", [ "query", "data" ], [ enString_Elem( query ), enString_Elem( data ) ] );
         #endif
 
         // check if any En libraries want to intercept this event
-        #ifdef ENINVENTORY$ENABLE_NC
-            if (_enInventory$NCParse(query, data)) return;
+        #ifdef ENINVENTORY_ENABLE_NC
+            if (_enInventory_NCParse(query, data)) return;
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$DATASERVER
-			en$dataserver( query, data );
+		#ifdef EN_DATASERVER
+			en_dataserver( query, data );
 		#endif
 
-#if defined EN$DATASERVER_TRACE || defined EN$DATASERVER || defined ENINVENTORY$ENABLE_NC
+#if defined EN_DATASERVER_TRACE || defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC
 	}
 #endif

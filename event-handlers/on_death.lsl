@@ -29,20 +29,20 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$ON_DEATH
-		en$on_death()
+		#define EN_ON_DEATH
+		en_on_death()
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$ON_DEATH
+#ifdef EN_ON_DEATH
 	on_death()
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "on_death", [], [] );
+        enLog_TraceParams( "on_death", [], [] );
 
         // event unused, so pass to user-defined function only
-        en$on_death();
+        en_on_death();
 	}
 #endif

@@ -29,43 +29,43 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$ON_REZ
-		en$on_rez( integer param )
+		#define EN_ON_REZ
+		en_on_rez( integer param )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN_ON_REZ_TRACE || defined EN_ON_REZ || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
 	on_rez( integer param )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$ON_REZ_TRACE
-            enLog$TraceParams( "on_rez", [], [ param ] );
+        #ifdef EN_ON_REZ_TRACE
+            enLog_TraceParams( "on_rez", [], [ param ] );
         #endif
 
         // update enCLEP channels if any are just the UUID
-        #ifdef ENCLEP$ENABLE
-            enCLEP$RefreshLinkset();
+        #ifdef ENCLEP_ENABLE
+            enCLEP_RefreshLinkset();
         #endif
 
         // update enLSD names if any use the UUID header
-        #ifdef ENLSD$ENABLE_UUID_HEADER
-            enLSD$CheckUUID();
+        #ifdef ENLSD_ENABLE_UUID_HEADER
+            enLSD_CheckUUID();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$ON_REZ
-			en$on_rez(param);
+		#ifdef EN_ON_REZ
+			en_on_rez(param);
 		#endif
 
 		// update _ENOBJECT_UUIDS_SELF
-        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
-            _enObject$UpdateUUIDs();
+        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+            _enObject_UpdateUUIDs();
         #endif
 
-#if defined EN$ON_REZ_TRACE || defined EN$ON_REZ || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN_ON_REZ_TRACE || defined EN_ON_REZ || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
 	}
 #endif

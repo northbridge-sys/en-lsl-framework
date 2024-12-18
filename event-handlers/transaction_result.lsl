@@ -29,24 +29,24 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$TRANSACTION_RESULT
-		en$transaction_result( key id, integer success, string data )
+		#define EN_TRANSACTION_RESULT
+		en_transaction_result( key id, integer success, string data )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$TRANSACTION_RESULT
+#ifdef EN_TRANSACTION_RESULT
 	transaction_result( key transaction, integer success, string data )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "transaction_result", [ "transaction", "success", "data" ], [
-            enString$Elem( transaction ),
+        enLog_TraceParams( "transaction_result", [ "transaction", "success", "data" ], [
+            enString_Elem( transaction ),
             success,
-            enString$Elem( data )
+            enString_Elem( data )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$transaction_result( transaction, success, data );
+        en_transaction_result( transaction, success, data );
 	}
 #endif

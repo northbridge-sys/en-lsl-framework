@@ -29,33 +29,33 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$HTTP_RESPONSE
-		en$http_response( key request, integer status, list metadata, string body )
+		#define EN_HTTP_RESPONSE
+		en_http_response( key request, integer status, list metadata, string body )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$HTTP_RESPONSE_TRACE || defined EN$HTTP_RESPONSE
+#if defined EN_HTTP_RESPONSE_TRACE || defined EN_HTTP_RESPONSE
 	http_response( key request, integer status, list metadata, string body )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$HTTP_RESPONSE_TRACE
-            enLog$TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
-                enString$Elem( request ),
+        #ifdef EN_HTTP_RESPONSE_TRACE
+            enLog_TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
+                enString_Elem( request ),
                 status,
-                enList$Elem( metadata ),
-                enString$Elem( body )
+                enList_Elem( metadata ),
+                enString_Elem( body )
             ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$HTTP_RESPONSE
-            en$http_response( request, status, metadata, body );
+		#ifdef EN_HTTP_RESPONSE
+            en_http_response( request, status, metadata, body );
 		#endif
 
-#if defined EN$HTTP_RESPONSE_TRACE || defined EN$HTTP_RESPONSE
+#if defined EN_HTTP_RESPONSE_TRACE || defined EN_HTTP_RESPONSE
 	}
 #endif

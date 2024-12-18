@@ -30,22 +30,22 @@
     user-defined function to handle event calls that are not intercepted by En
     libraries:
 
-		#define EN$LAND_COLLISION
-		en$land_collision( vector pos )
+		#define EN_LAND_COLLISION
+		en_land_collision( vector pos )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$LAND_COLLISION
+#ifdef EN_LAND_COLLISION
 	land_collision( vector pos )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "land_collision", [ "pos" ], [
+        enLog_TraceParams( "land_collision", [ "pos" ], [
             pos
         ] );
 
         // event unused, so pass to user-defined function only
-        en$land_collision( pos );
+        en_land_collision( pos );
 	}
 #endif

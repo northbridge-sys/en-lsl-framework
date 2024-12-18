@@ -40,7 +40,7 @@
 */
 
 // each major revision of En increments this value
-#define EN$EVENT_HANDLERS_LOADED 1
+#define EN_EVENT_HANDLERS_LOADED 1
 
 // include event handlers that En actually uses
 #include "en-lsl-framework/event-handlers/at_rot_target.lsl"

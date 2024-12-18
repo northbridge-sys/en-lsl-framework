@@ -36,7 +36,7 @@
 */
 
 // each major revision of En increments this value
-#define EN$LIBRARIES_LOADED 1
+#define EN_LIBRARIES_LOADED 1
 
 // definition files, since we are at the top of the script
 #include "en-lsl-framework/event-handlers/_definitions.lsl"

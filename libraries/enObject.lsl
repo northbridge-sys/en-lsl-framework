@@ -25,7 +25,7 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This script exposes the enObject$* functions and ENOBJECT$* globals, which allows code
+    This script exposes the enObject_* functions and ENOBJECT_* globals, which allows code
     to monitor metadata about the prim and linkset that the script is in, and get
     information about other prims.
 */
@@ -36,7 +36,7 @@
 
 list _ENOBJECT_UUIDS_SELF;
 
-#ifdef ENOBJECT$ENABLE_LINK_CACHE
+#ifdef ENOBJECT_ENABLE_LINK_CACHE
     list _ENOBJECT_LINK_CACHE; // prim name, current linknum
     #define _ENOBJECT_LINK_CACHE_STRIDE 2
 #endif
@@ -45,37 +45,37 @@ list _ENOBJECT_UUIDS_SELF;
 // == functions
 // ==
 
-string enObject$Elem( string id )
+string enObject_Elem( string id )
 {
     list details = llGetObjectDetails( id, [ OBJECT_NAME, OBJECT_POS ] );
     if ( details == [] ) return "\"" + id + "\" (not in region)";
-    return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + enVector$ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
+    return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + enVector_ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
 }
 
-string enObject$Self( // returns either own object's current UUID or one of its previous UUIDs
+string enObject_Self( // returns either own object's current UUID or one of its previous UUIDs
     integer last
     )
 {
     return llList2String( _ENOBJECT_UUIDS_SELF, last );
 }
 
-string enObject$Parent() // gets UUID of entity that rezzed the object
+string enObject_Parent() // gets UUID of entity that rezzed the object
 {
     return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
 }
 
-enObject$StopIfOwnerRezzed()
+enObject_StopIfOwnerRezzed()
 { // TODO: move this to a definition macro that runs automatically on_rez
-    if ( enObject$Parent() == (string)llGetKey() ) enLog$Fatal( "enObject$StopIfOwnerRezzed()" );
+    if ( enObject_Parent() == (string)llGetKey() ) enLog_Fatal( "enObject_StopIfOwnerRezzed()" );
 }
 
-integer enObject$ClosestLinkDesc(
+integer enObject_ClosestLinkDesc(
     string desc
 )
 {
-    #ifdef ENOBJECT$TRACE
-        enLog$TraceParams("enObject$ClosestLinkDesc", ["desc"], [
-            enString$Elem(desc)
+    #ifdef ENOBJECT_TRACE
+        enLog_TraceParams("enObject_ClosestLinkDesc", ["desc"], [
+            enString_Elem(desc)
             ]);
     #endif
     integer i;
@@ -97,21 +97,21 @@ integer enObject$ClosestLinkDesc(
     return 0; // no match
 }
 
-integer enObject$ClosestLink(string name)
+integer enObject_ClosestLink(string name)
 { // finds the linknum of the closest prim in the linkset with the specified name
-    #ifdef ENOBJECT$TRACE
-        enLog$TraceParams("enObject$ClosestLink", ["name"], [
-            enString$Elem(name)
+    #ifdef ENOBJECT_TRACE
+        enLog_TraceParams("enObject_ClosestLink", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
-    #ifdef ENOBJECT$ENABLE_LINK_CACHE
+    #ifdef ENOBJECT_ENABLE_LINK_CACHE
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
         if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i + 1); // return cached linknum
     #endif
-    return _enObject$FindLink(name);
+    return _enObject_FindLink(name);
 }
 
-integer _enObject$FindLink(string name)
+integer _enObject_FindLink(string name)
 {
     integer i;
     integer cl_i;
@@ -132,52 +132,52 @@ integer _enObject$FindLink(string name)
     return 0; // no match
 }
 
-enObject$CacheClosestLink(
+enObject_CacheClosestLink(
     string name
 )
 {
-    #ifndef ENOBJECT$ENABLE_LINK_CACHE
-        enLog$Error("enObject$CacheClosestLink called but ENOBJECT$ENABLE_LINK_CACHE not defined.");
+    #ifndef ENOBJECT_ENABLE_LINK_CACHE
+        enLog_Error("enObject_CacheClosestLink called but ENOBJECT_ENABLE_LINK_CACHE not defined.");
     #else
         if (llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
-        _ENOBJECT_LINK_CACHE += [name, _enObject$FindLink(name)];
+        _ENOBJECT_LINK_CACHE += [name, _enObject_FindLink(name)];
     #endif
 }
 
-_enObject$LinkCacheUpdate()
+_enObject_LinkCacheUpdate()
 {
     integer i;
     integer l = llGetListLength(_ENOBJECT_LINK_CACHE);
     for (i = 0; i < l; i+=2)
     {
-        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [_enObject$FindLink(llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [_enObject_FindLink(llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
     }
 }
 
-enObject$Text(
+enObject_Text(
     integer flags,
     list lines
 )
 {
     vector color = WHITE;
     string icon = "";
-    if (flags & ENOBJECT$TEXT_PROMPT)
+    if (flags & ENOBJECT_TEXT_PROMPT)
     {
         color = YELLOW;
         icon = "🚩";
     }
-    else if (flags & ENOBJECT$TEXT_ERROR)
+    else if (flags & ENOBJECT_TEXT_ERROR)
     {
         color = RED;
         icon = "❌";
     }
-    else if (flags & ENOBJECT$TEXT_BUSY)
+    else if (flags & ENOBJECT_TEXT_BUSY)
     {
         color = BLUE;
-        integer ind = (enDate$MSNow() / 83) % 12; // approenmately +1 ind every 1/12th of a second
+        integer ind = (enDate_MSNow() / 83) % 12; // approenmately +1 ind every 1/12th of a second
         icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
-    else if (flags & ENOBJECT$TEXT_SUCCESS)
+    else if (flags & ENOBJECT_TEXT_SUCCESS)
     {
         color = GREEN;
         icon = "✅";
@@ -187,28 +187,28 @@ enObject$Text(
         icon = llList2String(["", "🛑", "❌", "🚩", "💬", "🪲", "🚦"], flags & 0x7);
     }
     string progress = "▼";
-    if (flags & ENOBJECT$TEXT_PROGRESS_NC)
+    if (flags & ENOBJECT_TEXT_PROGRESS_NC)
     {
         integer ind = llRound(((float)_ENINVENTORY_NC_L / _ENINVENTORY_NC_T) * 16);
         if (_ENINVENTORY_NC_T > 0) progress = llGetSubString("████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁", 16 - ind, 31 - ind); // such a lazy hack!! who cares
     }
-    if (flags & ENOBJECT$TEXT_PROGRESS_THROB)
+    if (flags & ENOBJECT_TEXT_PROGRESS_THROB)
     {
-        integer ind = (enDate$MSNow() / 62) % 16; // approenmately +1 ind every 1/16th of a second
+        integer ind = (enDate_MSNow() / 62) % 16; // approenmately +1 ind every 1/16th of a second
         progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
     }
                                                                                            // this is a nbsp
-    llSetText(llDumpList2String([icon] + enList$Reverse(enList$ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
-    if (flags & ENOBJECT$TEXT_TEMP) enTimer$Start(2.0, 0, "_enObject$TextTemp");
-    else enTimer$Cancel(enTimer$Find("_enObject$TextTemp"));
+    llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
+    if (flags & ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "_enObject_TextTemp");
+    else enTimer_Cancel(enTimer_Find("_enObject_TextTemp"));
 }
 
-_enObject$TextTemp()
+_enObject_TextTemp()
 {
     llSetText("", BLACK, 0.0);
 }
 
-string enObject$GetAttachedString(
+string enObject_GetAttachedString(
     integer i
     )
 {
@@ -272,30 +272,30 @@ string enObject$GetAttachedString(
         ], i);
 }
 
-integer enObject$Profile( // returns various bitwise flags for the state of an object
+integer enObject_Profile( // returns various bitwise flags for the state of an object
     string k
     )
 {
     list l = llGetObjectDetails(k, [OBJECT_PHYSICS, OBJECT_PHANTOM, OBJECT_TEMP_ON_REZ, OBJECT_TEMP_ATTACHED]);
     if (l == []) return 0;
-    integer f = ENOBJECT$PROFILE_EENSTS;
-    if ((integer)llList2String(l, 0)) f += ENOBJECT$PROFILE_PHYSICS;
-    if ((integer)llList2String(l, 1)) f += ENOBJECT$PROFILE_PHANTOM;
-    if ((integer)llList2String(l, 2)) f += ENOBJECT$PROFILE_TEMP_ON_REZ;
-    if ((integer)llList2String(l, 3)) f += ENOBJECT$PROFILE_TEMP_ATTACHED;
+    integer f = ENOBJECT_PROFILE_EXISTS;
+    if ((integer)llList2String(l, 0)) f += ENOBJECT_PROFILE_PHYSICS;
+    if ((integer)llList2String(l, 1)) f += ENOBJECT_PROFILE_PHANTOM;
+    if ((integer)llList2String(l, 2)) f += ENOBJECT_PROFILE_TEMP_ON_REZ;
+    if ((integer)llList2String(l, 3)) f += ENOBJECT_PROFILE_TEMP_ATTACHED;
     return f;
 }
 
-_enObject$UpdateUUIDs()
+_enObject_UpdateUUIDs()
 {
-    #ifdef ENOBJECT$TRACE
-        enLog$TraceParams("_enObject$UpdateUUIDs", [], []);
+    #ifdef ENOBJECT_TRACE
+        enLog_TraceParams("_enObject_UpdateUUIDs", [], []);
     #endif
-	if (ENOBJECT$LIMIT_SELF)
+	if (ENOBJECT_LIMIT_SELF)
 	{ // check own UUID
 		if ((string)llGetKey() != llList2String(_ENOBJECT_UUIDS_SELF, 0))
 		{ // key change
-			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, ENOBJECT$LIMIT_SELF - 1);
+			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, ENOBJECT_LIMIT_SELF - 1);
 		}
 	}
 }

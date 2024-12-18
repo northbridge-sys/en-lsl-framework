@@ -36,12 +36,12 @@
 // == functions
 // ==
 
-string enAvatar$Elem( string id )
+string enAvatar_Elem( string id )
 {
     return "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)";
 }
 
-string enAvatar$GetGroup(
+string enAvatar_GetGroup(
     string id
 )
 {

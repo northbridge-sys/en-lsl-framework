@@ -29,22 +29,22 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$FINAL_DAMAGE
-		en$final_damage( integer num )
+		#define EN_FINAL_DAMAGE
+		en_final_damage( integer num )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$FINAL_DAMAGE
+#ifdef EN_FINAL_DAMAGE
 	final_damage( integer num )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "final_damage", [ "num" ], [
+        enLog_TraceParams( "final_damage", [ "num" ], [
             num
         ] );
 
         // event unused, so pass to user-defined function only
-        en$final_damage( num );
+        en_final_damage( num );
 	}
 #endif

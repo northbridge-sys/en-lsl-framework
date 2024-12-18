@@ -32,7 +32,7 @@
 // == globals
 // ==
 
-#ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+#ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
     string _ENLSD_SCRIPT_NAME;
 #endif
 
@@ -40,17 +40,17 @@
 // == macros
 // ==
 
-#define enLSD$Head() \
+#define enLSD_Head() \
     _enLSD_BuildHead(llGetScriptName(), llGetKey())
 
 // ==
 // == functions
 // ==
 
-enLSD$Reset() // safely resets linkset data
+enLSD_Reset() // safely resets linkset data
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams( "enLSD$Reset", [], [] );
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams( "enLSD_Reset", [], [] );
     #endif
     list protected = [
         "loglevel",
@@ -63,132 +63,132 @@ enLSD$Reset() // safely resets linkset data
     { // store values temporarily
         values += [ llLinksetDataRead( llList2String( protected, i ) ) ];
     }
-    llLinksetDataDeleteFound("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, enLSD$Head()) + ".*$", "");
+    llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + ".*$", "");
     for ( i = 0; i < l; i++ )
     { // write protected values back to datastore
         llLinksetDataWrite( llList2String( protected, i ), llList2String( values, i ) );
     }
 }
 
-integer enLSD$Write(string name, string data)
+integer enLSD_Write(string name, string data)
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Write", ["name", "data"], [
-            enString$Elem(name),
-            enString$Elem(data)
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Write", ["name", "data"], [
+            enString_Elem(name),
+            enString_Elem(data)
             ]);
     #endif
-	return llLinksetDataWrite(enLSD$Head() + name, data);
+	return llLinksetDataWrite(enLSD_Head() + name, data);
 }
 
-string enLSD$Read(string name)
+string enLSD_Read(string name)
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Read", ["name"], [
-            enString$Elem(name)
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Read", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
-	return llLinksetDataRead(enLSD$Head() + name);
+	return llLinksetDataRead(enLSD_Head() + name);
 }
 
-list enLSD$Delete(string name)
+list enLSD_Delete(string name)
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Delete", ["name"], [
-            enString$Elem(name)
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Delete", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
-	return llLinksetDataDeleteFound("^" + enLSD$Head() + name + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + name) + "$", "");
 }
 
-integer enLSD$Exists(string name)
+integer enLSD_Exists(string name)
 {
-    return (enLSD$Find(name, 0, 1) != []);
+    return (enLSD_Find(name, 0, 1) != []);
 }
 
-list enLSD$Find(string name, integer start, integer count)
+list enLSD_Find(string name, integer start, integer count)
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Find", ["name", "start", "count"], [
-            enString$Elem(name),
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Find", ["name", "start", "count"], [
+            enString_Elem(name),
             start,
             count
             ]);
     #endif
-	return llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, enLSD$Head() + name) + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + name) + "$", start, count);
 }
 
-string enLSD$BuildHead(
+string enLSD_BuildHead(
     string script_name,
     string uuid
 )
 {
-    string h = ENLSD$HEADER + "\n";
+    string h = ENLSD_HEADER + "\n";
     integer count = 1;
-    #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+    #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
         h = llGetSubString(llSHA256String(script_name), 0, 7) + "\n" + h; // prepend first 8 chars of SHA256 hashed script name
         count++;
     #endif
-    #ifdef ENLSD$ENABLE_UUID_HEADER
+    #ifdef ENLSD_ENABLE_UUID_HEADER
         h = llGetSubString(uuid, 0, 7) + "\n" + h; // prepend first 8 chars of llGetKey to start of string to avoid linkset conflicts
         count++;
     #endif
     return (string)count + "\n" + h;
 }
 
-enLSD$Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
+enLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
     string prim,
     string domain,
     integer use_header,
     string name
     )
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Pull", ["prim", "domain", "use_header", "name"], [
-            enObject$Elem(prim),
-            enString$Elem(domain),
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Pull", ["prim", "domain", "use_header", "name"], [
+            enObject_Elem(prim),
+            enString_Elem(domain),
             use_header,
-            enString$Elem(name)
+            enString_Elem(name)
             ]);
     #endif
-    enCLEP$Send(prim, domain, "enLSD$PullLSD", enList$ToString([use_header, name]));
+    enCLEP_Send(prim, domain, "enLSD_PullLSD", enList_ToString([use_header, name]));
 }
 
-enLSD$Push( // writes a linkset data name-value pair TO another script, optionally using the active enLSD header
+enLSD_Push( // writes a linkset data name-value pair TO another script, optionally using the active enLSD header
     string prim,
     string domain,
     integer use_header,
     string name
     )
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Push", ["prim", "domain", "use_header", "name"], [
-            enObject$Elem(prim),
-            enString$Elem(domain),
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Push", ["prim", "domain", "use_header", "name"], [
+            enObject_Elem(prim),
+            enString_Elem(domain),
             use_header,
-            enString$Elem(name)
+            enString_Elem(name)
             ]);
     #endif
     string v;
-    if (use_header) v = enLSD$Read(name);
+    if (use_header) v = enLSD_Read(name);
     else v = llLinksetDataRead(name);
     integer u;
-    #ifdef ENLSD$ENABLE_UUID_HEADER
-        u = 1; // if ENLSD$ENABLE_UUID_HEADER defined, note in response
+    #ifdef ENLSD_ENABLE_UUID_HEADER
+        u = 1; // if ENLSD_ENABLE_UUID_HEADER defined, note in response
     #endif
-    enCLEP$Send(prim, domain, "enLSD$Push", enList$ToString([u, use_header, ENLSD$HEADER, name, v]));
+    enCLEP_Send(prim, domain, "enLSD_Push", enList_ToString([u, use_header, ENLSD_HEADER, name, v]));
 }
 
-list enLSD$GetPairHead( // returns the header from a specified LSD pair name
+list enLSD_GetPairHead( // returns the header from a specified LSD pair name
     string pair
 )
 {
     list parts = llParseStringKeepNulls(pair, ["\n"], []);
-    if ((integer)llList2String(parts, 0) < 2) return []; // number of elements must be at least 2 (number of elements, ENLSD$HEADER)
+    if ((integer)llList2String(parts, 0) < 2) return []; // number of elements must be at least 2 (number of elements, ENLSD_HEADER)
     return llList2List(parts, 1, (integer)llList2String(parts, 0) - 1);
 }
 
-enLSD$Process( // writes a linkset data name-value pair FROM another script
+enLSD_Process( // writes a linkset data name-value pair FROM another script
     string prim,
     integer use_uuid,
     integer use_header,
@@ -198,40 +198,40 @@ enLSD$Process( // writes a linkset data name-value pair FROM another script
     string value
     )
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
-            enObject$Elem(prim),
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
+            enObject_Elem(prim),
             use_uuid,
             use_header,
-            enString$Elem(uuid),
-            enString$Elem(header),
-            enString$Elem(name),
-            enString$Elem(value)
+            enString_Elem(uuid),
+            enString_Elem(header),
+            enString_Elem(name),
+            enString_Elem(value)
             ]);
     #endif
-    #ifndef ENLSD$PUSHED_ALLOW_BROADCAST
-        if (prim != (string)llGetKey()) return; // do not allow enLSD$Push calls sent to NULL_KEY
+    #ifndef ENLSD_PUSHED_ALLOW_BROADCAST
+        if (prim != (string)llGetKey()) return; // do not allow enLSD_Push calls sent to NULL_KEY
     #endif
-    #ifdef ENLSD$PUSHED_ADD_HEADER
+    #ifdef ENLSD_PUSHED_ADD_HEADER
         use_header = 1; // always use header when writing
     #endif
-    #ifdef ENLSD$PUSHED_UPDATE_HEADER
-        if (use_header) header = ENLSD$HEADER; // update header to local header
+    #ifdef ENLSD_PUSHED_UPDATE_HEADER
+        if (use_header) header = ENLSD_HEADER; // update header to local header
     #endif
-    #ifdef ENLSD$PUSHED_ADD_UUID
-        use_uuid = 1; // always use uuid when writing (also define ENLSD$PUSHED_ADD_HEADER)
+    #ifdef ENLSD_PUSHED_ADD_UUID
+        use_uuid = 1; // always use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
     #endif
-    #ifdef ENLSD$PUSHED_REMOVE_UUID
-        use_uuid = 0; // never use uuid when writing (also define ENLSD$PUSHED_ADD_HEADER)
+    #ifdef ENLSD_PUSHED_REMOVE_UUID
+        use_uuid = 0; // never use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
     #endif
-    #ifdef ENLSD$PUSHED_UPDATE_UUID
+    #ifdef ENLSD_PUSHED_UPDATE_UUID
         // change header key if used
         if (use_uuid) header = llGetKey() + header;
     #else
         if (use_uuid) header = uuid + header;
     #endif
-    #ifdef ENLSD$PUSHED_EVENT
-        en$pushed_lsd(
+    #ifdef ENLSD_PUSHED_EVENT
+        en_pushed_lsd(
             prim,
             use_uuid,
             use_header,
@@ -241,56 +241,56 @@ enLSD$Process( // writes a linkset data name-value pair FROM another script
             value
             );
     #endif
-    #ifdef ENLSD$PUSHED_WRITE
+    #ifdef ENLSD_PUSHED_WRITE
         if (!use_header) header = "";
         llLinksetDataWrite(header + name, value);
     #endif
 }
 
-enLSD$MoveAllPairs( // utility function for enLSD$Check*
+enLSD_MoveAllPairs( // utility function for enLSD_Check*
     string k
 )
 {
     list l;
-    string old_head = enLSD$BuildHead(_ENLSD_SCRIPT_NAME, k);
+    string old_head = enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
     do
     {
-        l = llLinksetDataFindKeys("^" + enString$Escape(ENSTRING$ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
+        l = llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
         if (l != [])
         {
             string old_pair = llList2String(l, 0);
             string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
-            enLog$Trace("LSD pair \"" + pair_name + "\" moved");
-            llLinksetDataWrite(enLSD$Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
+            enLog_Trace("LSD pair \"" + pair_name + "\" moved");
+            llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
             llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
         }
     } while (l != []); // repeat until we didn't find any keys left with old header
 }
 
-enLSD$CheckUUID() // updates LSD entries that use old UUID
+enLSD_CheckUUID() // updates LSD entries that use old UUID
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$CheckUUID", [], []);
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif
-    #ifdef ENLSD$ENABLE_UUID_HEADER
-        string k = enObject$Self( 0 ); // get last key
+    #ifdef ENLSD_ENABLE_UUID_HEADER
+        string k = enObject_Self( 0 ); // get last key
         if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
-        enLog$Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
-        enLSD$MoveAllPairs(k);
+        enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
+        enLSD_MoveAllPairs(k);
     #endif
 }
 
-enLSD$CheckScriptName() // updates LSD entries that use old script name
+enLSD_CheckScriptName() // updates LSD entries that use old script name
 {
-    #ifdef ENLSD$TRACE
-        enLog$TraceParams("enLSD$CheckScriptName", [], []);
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_CheckScriptName", [], []);
     #endif
-    #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+    #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
         if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
         if (_ENLSD_SCRIPT_NAME != "")
         {
-            enLog$Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
-            enLSD$MoveAllPairs(llGetKey());
+            enLog_Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
+            enLSD_MoveAllPairs(llGetKey());
         }
         _ENLSD_SCRIPT_NAME = llGetScriptName();
     #endif

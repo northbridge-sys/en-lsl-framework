@@ -27,11 +27,11 @@
 
     This is a full script that reports all LEP messages sent via link message in the
     prim. These will be reported via "imp_message" event reports through
-    enLog$TraceParams.
+    enLog_TraceParams.
 
     Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
     can either set the loglevel to 6 as follows to permanently enable output:
-        #define ENLOG$DEFAULT_LOGLEVEL 6
+        #define ENLOG_DEFAULT_LOGLEVEL 6
     or you can set the "loglevel" linkset data pair to the desired loglevel as
     needed, so that inbound messages will only be reported when TRACE logging is
     enabled.  The utils/Loglevel.lsl script allows you to change the loglevel by
@@ -39,17 +39,17 @@
     can be set by any script.
 */
 
-#define ENLEP$ALLOWED_INBOUND_TARGETS_ALL
+#define ENLEP_ALLOWED_INBOUND_TARGETS_ALL
 
 #include "en-lsl-framework/main.lsl"
 
-en$imp_message(
+en_imp_message(
     string prim,        // the SOURCE prim UUID
     string target,      // one of the following:
                             //  - (the target script name): this script name
                             //  - "": all scripts in the prim
                             //  - (any other value): scripts with this value
-                            //      set in ENLEP$ALLOWED_TARGETS list
+                            //      set in ENLEP_ALLOWED_TARGETS list
     string status,      // one of the following:
                             // - ":": broadcast (no response requested)
                             // - "": request
@@ -65,18 +65,18 @@ en$imp_message(
                         //      (-1 if received via enCLEP)
     string source       // the source script name
                         //      (can be pre-filtered by defining
-                        //      ENLEP$ALLOWED_SOURCES list)
+                        //      ENLEP_ALLOWED_SOURCES list)
     )
 {
-    enLog$TraceParams("en$imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
-        enObject$Elem(prim),
-        enString$Elem(target),
-        enString$Elem(status),
+    enLog_TraceParams("en_imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
+        enObject_Elem(prim),
+        enString_Elem(target),
+        enString_Elem(status),
         ident,
-        enList$Elem(params),
-        enString$Elem(data),
+        enList_Elem(params),
+        enString_Elem(data),
         linknum,
-        enString$Elem(source)
+        enString_Elem(source)
         ]);
 }
 

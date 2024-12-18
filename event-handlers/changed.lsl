@@ -29,57 +29,57 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$CHANGED
-		en$changed( integer change )
+		#define EN_CHANGED
+		en_changed( integer change )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+#if defined EN_CHANGED_TRACE || defined EN_CHANGED || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE
 	changed( integer change )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$CHANGED_TRACE
-            enLog$TraceParams( "changed", [ "change" ], [ enInteger$ElemBitfield( change ) ] );
+        #ifdef EN_CHANGED_TRACE
+            enLog_TraceParams( "changed", [ "change" ], [ enInteger_ElemBitfield( change ) ] );
         #endif
 
-        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE
             if ( change & CHANGED_LINK )
             {
         #endif
         
-                #ifdef ENCLEP$ENABLE
-                    enCLEP$RefreshLinkset();
+                #ifdef ENCLEP_ENABLE
+                    enCLEP_RefreshLinkset();
                 #endif
-                #ifdef ENLSD$ENABLE_UUID_HEADER
-                    enLSD$CheckUUID();
+                #ifdef ENLSD_ENABLE_UUID_HEADER
+                    enLSD_CheckUUID();
                 #endif
-                #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
-                    _enObject$UpdateUUIDs();
+                #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+                    _enObject_UpdateUUIDs();
                 #endif
-                #ifdef ENOBJECT$ENABLE$LINK_CACHE
-                    _enObject$LinkCacheUpdate();
+                #ifdef ENOBJECT_ENABLE_LINK_CACHE
+                    _enObject_LinkCacheUpdate();
                 #endif
 
-        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE
             }
         #endif
 
-        #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
+        #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
             if ( change & CHANGED_INVENTORY )
             {
-                enLSD$CheckScriptName();
+                enLSD_CheckScriptName();
             }
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$ATTACH
-			en$changed( change );
+		#ifdef EN_ATTACH
+			en_changed( change );
 		#endif
 
-#if defined EN$CHANGED_TRACE || defined EN$CHANGED || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF || defined ENOBJECT$ENABLE_LINK_CACHE
+#if defined EN_CHANGED_TRACE || defined EN_CHANGED || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE
 	}
 #endif

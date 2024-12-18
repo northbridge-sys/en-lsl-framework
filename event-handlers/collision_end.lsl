@@ -29,22 +29,22 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$COLLISION_END
-		en$collision_end( integer count )
+		#define EN_COLLISION_END
+		en_collision_end( integer count )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$COLLISION_END
+#ifdef EN_COLLISION_END
 	collision_end( integer count )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "collision_end", [ "count" ], [
+        enLog_TraceParams( "collision_end", [ "count" ], [
             count
         ] );
 
         // event unused, so pass to user-defined function only
-        en$collision_end( integer count );
+        en_collision_end( integer count );
 	}
 #endif

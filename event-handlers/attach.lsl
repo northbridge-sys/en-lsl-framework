@@ -29,37 +29,37 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$ATTACH
-		en$attach( key id )
+		#define EN_ATTACH
+		en_attach( key id )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$ATTACH_TRACE || defined EN$ATTACH || defined EN$ATTACH_BLOCK
+#if defined EN_ATTACH_TRACE || defined EN_ATTACH || defined EN_ATTACH_BLOCK
 	attach( key id )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$ATTACH_TRACE
-            enLog$TraceParams( "attach", [ "id" ], [ enString$Elem( id ) ]);
+        #ifdef EN_ATTACH_TRACE
+            enLog_TraceParams( "attach", [ "id" ], [ enString_Elem( id ) ]);
         #endif
 
         // if attaches are blocked, perform auto-detach procedure
-        #ifdef EN$ATTACH_BLOCK
+        #ifdef EN_ATTACH_BLOCK
             if ((string)id != NULL_KEY && llGetAttached()) // check both to be safe, never know
             {
-                enLog$FatalDie("This object cannot be used as an attachment.");
+                enLog_FatalDie("This object cannot be used as an attachment.");
                 return;
             }
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$ATTACH
-			en$attach( id );
+		#ifdef EN_ATTACH
+			en_attach( id );
 		#endif
 
-#if defined EN$ATTACH_TRACE || defined EN$ATTACH || defined EN$ATTACH_BLOCK
+#if defined EN_ATTACH_TRACE || defined EN_ATTACH || defined EN_ATTACH_BLOCK
 	}
 #endif

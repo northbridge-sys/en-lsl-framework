@@ -36,7 +36,7 @@
 // == functions
 // ==
 
-integer enKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
+integer enKey_Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
     string k
     )
 {
@@ -44,7 +44,7 @@ integer enKey$Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the
     return k == NULL_KEY;
 }
 
-integer enKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
+integer enKey_IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     string k
     )
 {
@@ -52,29 +52,29 @@ integer enKey$IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     return 0;
 }
 
-integer enKey$IsNull( // returns 1 if is NULL_KEY
+integer enKey_IsNull( // returns 1 if is NULL_KEY
     string k
     )
 {
     return k == NULL_KEY;
 }
 
-integer enKey$IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
+integer enKey_IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
     string k
     )
 {
-    if ( enKey$IsAvatarInRegion( k ) ) return 1;
-    return enKey$IsPrimInRegion( k );
+    if ( enKey_IsAvatarInRegion( k ) ) return 1;
+    return enKey_IsPrimInRegion( k );
 }
 
-integer enKey$IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
+integer enKey_IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
     string k
 )
 {
     return llGetAgentSize() != ZERO_VECTOR;
 }
 
-integer enKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
+integer enKey_IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     string k
     )
 {
@@ -84,15 +84,15 @@ integer enKey$IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     return 1; // must be a prim
 }
 
-string enKey$Strip( // strips dashes out of a key
+string enKey_Strip( // strips dashes out of a key
     string k
     )
 {
-    if ( !enKey$Is( k ) ) return k; // not a valid key
+    if ( !enKey_Is( k ) ) return k; // not a valid key
     return llReplaceSubString( k, "-", "", 0 ); // valid key, so strip dashes
 }
 
-string enKey$Unstrip( // adds dashes into a 32-character hex string to turn it into a key
+string enKey_Unstrip( // adds dashes into a 32-character hex string to turn it into a key
     string k
     )
 {
@@ -106,29 +106,29 @@ string enKey$Unstrip( // adds dashes into a 32-character hex string to turn it i
         llGetSubString(k, 20, 31);
 }
 
-string enKey$Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
+string enKey_Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
     string k
     )
 {
-    if ( !enKey$Is( k ) ) return k; // not a valid key
-    k = enKey$Strip( k );
+    if ( !enKey_Is( k ) ) return k; // not a valid key
+    k = enKey_Strip( k );
     return llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 0, 7))), 0, 5) // concatenate the first 6 characters of Base64 encoding of each 8 nybbles (the remaining is always padding)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 8, 15))), 0, 5)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 16, 23))), 0, 5)
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 24, 31))), 0, 5);
 }
 
-string enKey$Decompress( // adds dashes back into a key that was sent through enKey$Compress(...)
+string enKey_Decompress( // adds dashes back into a key that was sent through enKey_Compress(...)
     string k
     )
 {
     if (llStringLength(k) != 24) return k; // not a compressed key
     // presumptively valid key at this point (no point k checking any further)
     // convert from Base64 to a 32-nybble hex string
-    k = enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)), 8)
-        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)), 8)
-        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)), 8)
-        + enInteger$ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)), 8);
+    k = enInteger_ToHex(llBase64ToInteger(llGetSubString(k, 0, 5)), 8)
+        + enInteger_ToHex(llBase64ToInteger(llGetSubString(k, 6, 11)), 8)
+        + enInteger_ToHex(llBase64ToInteger(llGetSubString(k, 12, 17)), 8)
+        + enInteger_ToHex(llBase64ToInteger(llGetSubString(k, 18, 23)), 8);
     // inject dashes and return
-    return enKey$Unstrip( k );
+    return enKey_Unstrip( k );
 }

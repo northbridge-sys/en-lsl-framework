@@ -33,28 +33,28 @@ if (status == "" && llList2String(params, 0) == "kvp")
 	string kvp_check_op = llList2String(params, 1);
 	if (kvp_check_op == "list")
 	{ // return list of KVP pairs
-		enLEP$Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVP_NAMES, "\n"));
+		enLEP_Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVP_NAMES, "\n"));
 	}
 	if (kvp_check_op == "set" || kvp_check_op == "get")
 	{ // check name for set or get operation first
-		if (!enKVP$Eensts(llList2String(params, 1)))
+		if (!enKVP_Exists(llList2String(params, 1)))
 		{ // invalid name
-			enLEP$Send("", source, 0, "err:undefined", ident, params, data);
+			enLEP_Send("", source, 0, "err:undefined", ident, params, data);
 			return;
 		}
 	}
 	if (kvp_check_op == "set")
 	{ // setting an enKVP pair
-		if (!enKVP$Set(llList2String(params, 1), data))
+		if (!enKVP_Set(llList2String(params, 1), data))
 		{ // write failed due to protect
-			enLEP$Send("", source, 0, "err:readonly", ident, params, data);
+			enLEP_Send("", source, 0, "err:readonly", ident, params, data);
 			return;
 		}
-		enLEP$Send("", source, 0, "ok", ident, params, data);
+		enLEP_Send("", source, 0, "ok", ident, params, data);
 		return;
 	}
 	if (kvp_check_op == "get")
 	{ // getting an enKVP pair
-		enLEP$Send("", source, 0, "ok", ident, params, enKVP$Get(llList2String(params, 1)));
+		enLEP_Send("", source, 0, "ok", ident, params, enKVP_Get(llList2String(params, 1)));
 	}
 }

@@ -29,33 +29,33 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$TIMER
-		en$timer(  )
+		#define EN_TIMER
+		en_timer(  )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$TIMER_TRACE || defined EN$TIMER || defined ENTIMER$ENABLE
+#if defined EN_TIMER_TRACE || defined EN_TIMER || defined ENTIMER_ENABLE
 	timer()
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$TIMER_TRACE
-            enLog$TraceParams( "timer", [], [] );
+        #ifdef EN_TIMER_TRACE
+            enLog_TraceParams( "timer", [], [] );
         #endif
 
         // forward timers directly to enTimer if enabled
-        #ifdef ENTIMER$ENABLE
-            _enTimer$Check();
+        #ifdef ENTIMER_ENABLE
+            _enTimer_Check();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$TIMER
-			en$timer();
+		#ifdef EN_TIMER
+			en_timer();
 		#endif
 
-#if defined EN$TIMER_TRACE || defined EN$TIMER || defined ENTIMER$ENABLE
+#if defined EN_TIMER_TRACE || defined EN_TIMER || defined ENTIMER_ENABLE
 	}
 #endif

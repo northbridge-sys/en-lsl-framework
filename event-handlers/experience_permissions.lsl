@@ -30,22 +30,22 @@
     optionally executes a user-defined function to handle event calls that are not
     intercepted by En libraries:
 
-		#define EN$EXPERIENCE_PERMISSIONS
-		en$experience_permissions( key id )
+		#define EN_EXPERIENCE_PERMISSIONS
+		en_experience_permissions( key id )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$EXPERIENCE_PERMISSIONS
+#ifdef EN_EXPERIENCE_PERMISSIONS
 	experience_permissions( key id )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "experience_permissions", [ "id" ], [
-            enAvatar$Elem( id )
+        enLog_TraceParams( "experience_permissions", [ "id" ], [
+            enAvatar_Elem( id )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$experience_permissions( id );
+        en_experience_permissions( id );
 	}
 #endif

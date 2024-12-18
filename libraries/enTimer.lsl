@@ -32,7 +32,7 @@
 // == globals
 // ==
 
-#ifdef ENTIMER$DISABLE_MULTIPLE
+#ifdef ENTIMER_DISABLE_MULTIPLE
     list _ENTIMER_QUEUE; // id, callback, length
     #define _ENTIMER_QUEUE_STRIDE 3
 #else
@@ -44,25 +44,25 @@
 // == functions
 // ==
 
-string enTimer$Start( // adds a timer
+string enTimer_Start( // adds a timer
     float interval,
     integer periodic,
     string callback
     )
 {
-    #ifdef ENTIMER$TRACE
-        enLog$TraceParams("enTimer$Start", [ "interval", "periodic", "callback" ], [
+    #ifdef ENTIMER_TRACE
+        enLog_TraceParams("enTimer_Start", [ "interval", "periodic", "callback" ], [
             interval,
             periodic,
-            enString$Elem( callback )
+            enString_Elem( callback )
             ]);
     #endif
 
     // check inputs
     if ( interval < 0.01 ) return NULL_KEY; // invalid interval
-    if ( interval < ENTIMER$MINIMUM_INTERVAL ) interval = ENTIMER$MINIMUM_INTERVAL; // clamp to minimum interval
+    if ( interval < ENTIMER_MINIMUM_INTERVAL ) interval = ENTIMER_MINIMUM_INTERVAL; // clamp to minimum interval
     string id = llGenerateKey();
-    #ifdef ENTIMER$DISABLE_MULTIPLE
+    #ifdef ENTIMER_DISABLE_MULTIPLE
         _ENTIMER_QUEUE = [ // multiple timers not enabled, so set queue
             id,
             callback,
@@ -74,23 +74,23 @@ string enTimer$Start( // adds a timer
             id,
             callback,
             (integer)( interval * 1000 ) * !!periodic,
-            enDate$MSAdd( enDate$MSNow(), (integer)( interval * 1000 ) ) // convert to ms
+            enDate_MSAdd( enDate_MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
-        _enTimer$Check(); // then reprocess queue
+        _enTimer_Check(); // then reprocess queue
     #endif
     return id;
 }
 
-integer enTimer$Cancel( // removes a timer
-    string id // required unless ENTIMER$DISABLE_MULTIPLE is set
+integer enTimer_Cancel( // removes a timer
+    string id // required unless ENTIMER_DISABLE_MULTIPLE is set
     )
 {
-    #ifdef ENTIMER$TRACE
-        enLog$TraceParams("enTimer$Cancel", [ "id" ], [
-            enString$Elem( id )
+    #ifdef ENTIMER_TRACE
+        enLog_TraceParams("enTimer_Cancel", [ "id" ], [
+            enString_Elem( id )
             ]);
     #endif
-    #ifdef ENTIMER$DISABLE_MULTIPLE
+    #ifdef ENTIMER_DISABLE_MULTIPLE
         _ENTIMER_QUEUE = []; // we only have one timer, so cancel it
         llSetTimerEvent( 0.0 );
     #else
@@ -99,18 +99,18 @@ integer enTimer$Cancel( // removes a timer
         if ( i == -1 ) return 0; // not found
         // found, delete it
         _ENTIMER_QUEUE = llDeleteSubList( _ENTIMER_QUEUE, i, i + _ENTIMER_QUEUE_STRIDE - 1 );
-        _enTimer$Check(); // then reprocess queue
+        _enTimer_Check(); // then reprocess queue
     #endif
     return 1;
 }
 
-string enTimer$Find( // finds a timer by callback
+string enTimer_Find( // finds a timer by callback
     string callback
     )
 {
-    #ifdef ENTIMER$TRACE
-        enLog$TraceParams("enTimer$Find", [ "callback" ], [
-            enString$Elem( callback )
+    #ifdef ENTIMER_TRACE
+        enLog_TraceParams("enTimer_Find", [ "callback" ], [
+            enString_Elem( callback )
             ]);
     #endif
     integer i = llListFindList( llList2ListSlice( _ENTIMER_QUEUE, 0, -1, _ENTIMER_QUEUE_STRIDE, 1 ), [ callback ] );
@@ -118,22 +118,22 @@ string enTimer$Find( // finds a timer by callback
     return llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE );
 }
 
-integer _enTimer$InternalLoopback(
+integer _enTimer_InternalLoopback(
     string callback
 )
 {
-    if (callback == "_enObject$TextTemp")
+    if (callback == "_enObject_TextTemp")
     {
-        _enObject$TextTemp();
+        _enObject_TextTemp();
         return 1;
     }
     return 0;
 }
 
-_enTimer$Check() // checks the MIT timers to see if any are triggered
+_enTimer_Check() // checks the MIT timers to see if any are triggered
 {
-    #ifdef ENTIMER$TRACE
-        enLog$TraceParams("_enTimer$Check", [], []);
+    #ifdef ENTIMER_TRACE
+        enLog_TraceParams("_enTimer_Check", [], []);
     #endif
     llSetTimerEvent(0.0);
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
@@ -145,7 +145,7 @@ _enTimer$Check() // checks the MIT timers to see if any are triggered
         if ( (integer)llList2String( _ENTIMER_QUEUE, 3 ) ) llSetTimerEvent( (integer)llList2String( _ENTIMER_QUEUE, 3 ) * 0.001 ); // periodic
         else _ENTIMER_QUEUE = []; // one-shot
     #else
-        integer now = enDate$MSNow();
+        integer now = enDate_MSNow();
         integer i;
         integer l = llGetListLength( _ENTIMER_QUEUE ) / _ENTIMER_QUEUE_STRIDE;
         integer lowest = 0x7FFFFFFF;
@@ -155,8 +155,8 @@ _enTimer$Check() // checks the MIT timers to see if any are triggered
             string t_callback = llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE + 1 );
             integer t_length = (integer)llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE + 2 );
             integer t_trigger = (integer)llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE + 3 );
-            integer remain = enDate$MSAdd( t_trigger, -now );
-            if ( remain * 0.001 < ENTIMER$MINIMUM_INTERVAL )
+            integer remain = enDate_MSAdd( t_trigger, -now );
+            if ( remain * 0.001 < ENTIMER_MINIMUM_INTERVAL )
             { // timer triggered
                 if ( !t_length )
                 { // one-shot, so drop it from the queue
@@ -164,11 +164,11 @@ _enTimer$Check() // checks the MIT timers to see if any are triggered
                     i--; l--; // shift for loop to account for lost queue stride
                 }
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
-                if (!_enTimer$InternalLoopback(t_callback))
+                if (!_enTimer_InternalLoopback(t_callback))
                 {
-                    #ifdef ENTIMER$ENABLE
-                        enLog$Trace("enTimer " + t_id + " triggered: " + t_callback);
-                        en$entimer( // fire function
+                    #ifdef ENTIMER_ENABLE
+                        enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);
+                        en_entimer( // fire function
                             t_id,
                             t_callback
                             );
@@ -180,7 +180,7 @@ _enTimer$Check() // checks the MIT timers to see if any are triggered
         if ( lowest != 0x7FFFFFFF )
         { // a timer is still in the queue
             llSetTimerEvent( lowest * 0.001 );
-            enLog$Trace("enTimer set llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
+            enLog_Trace("enTimer set llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
         }
     #endif
 }

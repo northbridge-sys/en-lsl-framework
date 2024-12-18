@@ -30,7 +30,7 @@
 
 if (status == "" && llList2String(params, 0) == "script")
 { // return script info
-    enLEP$Send( // sends an LEP message
+    enLEP_Send( // sends an LEP message
         "",
         source,
         0, // signed

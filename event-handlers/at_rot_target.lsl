@@ -29,32 +29,32 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$AT_ROT_TARGET
-		en$at_rot_target( integer handle, rotation target, rotation current )
+		#define EN_AT_ROT_TARGET
+		en_at_rot_target( integer handle, rotation target, rotation current )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$AT_ROT_TARGET_TRACE || defined EN$AT_ROT_TARGET
+#if defined EN_AT_ROT_TARGET_TRACE || defined EN_AT_ROT_TARGET
 	at_rot_target( integer handle, rotation target, rotation current )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$AT_ROT_TARGET_TRACE
-            enLog$TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
+        #ifdef EN_AT_ROT_TARGET_TRACE
+            enLog_TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
                 handle,
-                enRotation$Elem( target ),
-                enRotation$Elem( current )
+                enRotation_Elem( target ),
+                enRotation_Elem( current )
             ] );
         #endif
 
         // event unused, so pass to user-defined function only
-        #ifdef EN$AT_ROT_TARGET
-            en$at_rot_target( handle, target, current );
+        #ifdef EN_AT_ROT_TARGET
+            en_at_rot_target( handle, target, current );
         #endif
 
-#if defined EN$AT_ROT_TARGET_TRACE || defined EN$AT_ROT_TARGET
+#if defined EN_AT_ROT_TARGET_TRACE || defined EN_AT_ROT_TARGET
 	}
 #endif

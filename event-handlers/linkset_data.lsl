@@ -30,28 +30,28 @@
     user-defined function to handle event calls that are not intercepted by En
     libraries:
 
-		#define EN$LINKSET_DATA
-		en$linkset_data( integer action, string name, string value )
+		#define EN_LINKSET_DATA
+		en_linkset_data( integer action, string name, string value )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$LINKSET_DATA_TRACE || defined EN$LINKSET_DATA
+#if defined EN_LINKSET_DATA_TRACE || defined EN_LINKSET_DATA
     linkset_data( integer action, string name, string value )
     {
 #endif
 
         // log event if requested
-        #ifdef EN$LINKSET_DATA_TRACE
-            enLog$TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, enString$Elem(name), enString$Elem(value) ] );
+        #ifdef EN_LINKSET_DATA_TRACE
+            enLog_TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, enString_Elem(name), enString_Elem(value) ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$LINKSET_DATA
-			en$linkset_data(action, name, value);
+		#ifdef EN_LINKSET_DATA
+			en_linkset_data(action, name, value);
 		#endif
 
-#if defined EN$LINKSET_DATA_TRACE || defined EN$LINKSET_DATA
+#if defined EN_LINKSET_DATA_TRACE || defined EN_LINKSET_DATA
 	}
 #endif

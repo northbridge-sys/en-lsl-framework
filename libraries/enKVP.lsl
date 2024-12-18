@@ -42,36 +42,36 @@ list _ENKVP_DATA;
 // == functions
 // ==
 
-integer enKVP$Exists(string name)
+integer enKVP_Exists(string name)
 { // checks if a KVP pair exists by name
-    #ifdef ENKVP$TRACE
-        enLog$TraceParams("enKVP$Exists", ["name"], [
-            enString$Elem(name)
+    #ifdef ENKVP_TRACE
+        enLog_TraceParams("enKVP_Exists", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
 	return llListFindList(_ENKVP_NAMES, [name]) != -1;
 }
 
-integer enKVP$Write(string name, string data)
+integer enKVP_Write(string name, string data)
 { // writes a KVP pair value
-    #ifdef ENKVP$TRACE
-        enLog$TraceParams("enKVP$Write", ["name", "data"], [
-            enString$Elem(name),
-            enString$Elem(data)
+    #ifdef ENKVP_TRACE
+        enLog_TraceParams("enKVP_Write", ["name", "data"], [
+            enString_Elem(name),
+            enString_Elem(data)
             ]);
     #endif
 	integer i = llListFindList(_ENKVP_NAMES, [name]);
-	if (i != -1) enKVP$Delete(name); // delete value, then reappend
+	if (i != -1) enKVP_Delete(name); // delete value, then reappend
 	_ENKVP_NAMES += [name];
 	_ENKVP_DATA += [data];
 	return 1;
 }
 
-string enKVP$Read(string name)
+string enKVP_Read(string name)
 { // reads a KVP pair value
-    #ifdef ENKVP$TRACE
-        enLog$TraceParams("enKVP$Read", ["name"], [
-            enString$Elem(name)
+    #ifdef ENKVP_TRACE
+        enLog_TraceParams("enKVP_Read", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
 	integer i = llListFindList(_ENKVP_NAMES, [name]);
@@ -79,11 +79,11 @@ string enKVP$Read(string name)
 	return llList2String(_ENKVP_DATA, i);
 }
 
-enKVP$Delete(string name)
+enKVP_Delete(string name)
 { // deletes a KVP pair
-    #ifdef ENKVP$TRACE
-        enLog$TraceParams("enKVP$Delete", ["name"], [
-            enString$Elem(name)
+    #ifdef ENKVP_TRACE
+        enLog_TraceParams("enKVP_Delete", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
 	integer i = llListFindList(_ENKVP_NAMES, [name]);
@@ -92,10 +92,10 @@ enKVP$Delete(string name)
 	_ENKVP_DATA = llDeleteSubList(_ENKVP_DATA, i, i);
 }
 
-enKVP$Reset()
+enKVP_Reset()
 {
-    #ifdef ENKVP$TRACE
-        enLog$TraceParams("enKVP$Reset", [], []);
+    #ifdef ENKVP_TRACE
+        enLog_TraceParams("enKVP_Reset", [], []);
     #endif
     _ENKVP_NAMES = [];
     _ENKVP_DATA = [];

@@ -36,7 +36,7 @@
 // == functions
 // ==
 
-string enFloat$ToString( // rounds a float to a specified number of digits after the decimal
+string enFloat_ToString( // rounds a float to a specified number of digits after the decimal
     float f,
     integer digits
     )
@@ -48,7 +48,7 @@ string enFloat$ToString( // rounds a float to a specified number of digits after
     return llGetSubString(s, 0, i + digits); // return string-cast float, but only up to the number of digits requested
 }
 
-string enFloat$Compress( // converts a float to a non-equivalent string, can be converted back with enFloat$Decompress
+string enFloat_Compress( // converts a float to a non-equivalent string, can be converted back with enFloat_Decompress
     float f
 )
 {
@@ -67,7 +67,7 @@ string enFloat$Compress( // converts a float to a non-equivalent string, can be 
     return llGetSubString(llIntegerToBase64(i), 0, 5);
 }
 
-float enFloat$Decompress( // converts the integer result from enFloat$Compress back to a float
+float enFloat_Decompress( // converts the integer result from enFloat_Compress back to a float
     string s
 )
 {
@@ -77,7 +77,7 @@ float enFloat$Decompress( // converts the integer result from enFloat$Compress b
     return (!(i & 0x7FFFFF)) * (float)"inf" * ((i >> 31) | 1);
 }
 
-float enFloat$Clamp(
+float enFloat_Clamp(
     float i,
     float m,
     float x
@@ -88,7 +88,7 @@ float enFloat$Clamp(
     return i;
 }
 
-integer enFloat$FlipCoin(
+integer enFloat_FlipCoin(
     float chance // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
     )
 {
@@ -98,7 +98,7 @@ integer enFloat$FlipCoin(
     return 1;
 }
 
-float enFloat$RandRange(
+float enFloat_RandRange(
     float min,
     float max
     )

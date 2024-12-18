@@ -64,19 +64,19 @@ default
 To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
 
 ```
-#define EN$STATE_ENTRY
-#define EN$ON_REZ
+#define EN_STATE_ENTRY
+#define EN_ON_REZ
 
 #include "en-lsl-framework/libraries.lsl"
 
-en$state_entry()
+en_state_entry()
 {
-    // runs on state_entry if EN$STATE_ENTRY has been defined
+    // runs on state_entry if EN_STATE_ENTRY has been defined
 }
 
-en$on_rez( integer param )
+en_on_rez( integer param )
 {
-    // runs on on_rez if EN$ON_REZ has been defined
+    // runs on on_rez if EN_ON_REZ has been defined
 }
 
 // ...
@@ -84,18 +84,18 @@ en$on_rez( integer param )
 
 En also injects its own trace logging if the following macros are defined:
 
-- `EN$TRACE_LIBRARIES` enables all *library* logging
-- `EN*$TRACE` enables logging for a *specific* library (such as `ENCLEP$TRACE`)
-- `EN$TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
-- `EN$*_TRACE` enables logging for a *specific* event (such as `EN$LINK_MESSAGE_TRACE`)
+- `EN_TRACE_LIBRARIES` enables all *library* logging
+- `EN*_TRACE` enables logging for a *specific* library (such as `ENCLEP_TRACE`)
+- `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
+- `EN_*_TRACE` enables logging for a *specific* event (such as `EN_LINK_MESSAGE_TRACE`)
 
 If you need to define any preprocessor values, make sure you do so *above* `#include "en-lsl-framework/libraries.lsl"`.
 
 Here's an example of a script that does nothing but log En function calls and events used by En:
 
 ```
-#define EN$TRACE_LIBRARIES
-#define EN$TRACE_EVENT_HANDLERS
+#define EN_TRACE_LIBRARIES
+#define EN_TRACE_EVENT_HANDLERS
 
 #include "en-lsl-framework/libraries.lsl"
 
@@ -124,12 +124,12 @@ For example, enLog enables in-the-field debugging out-of-the-box. With En, just 
 ```
 someFunction( integer x, integer y )
 {
-    enLog$TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
-    enLog$Debug( "This will only appear if loglevel is DEBUG or above." );
-    enLog$Info( "Function called with parameters " + (string)x + " and " + (string)y + "." );
-    if ( x ) enLog$Warn( "Non-zero values of x are discouraged." );
-    if ( y ) enLog$Error( "Non-zero values of y are prohibited (normally you would return at this point)." );
-    if ( x && y ) enLog$FatalStop( "Everything is terrible." ); // script will stop when enLog$FatalStop is called
+    enLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
+    enLog_Debug( "This will only appear if loglevel is DEBUG or above." );
+    enLog_Info( "Function called with parameters " + (string)x + " and " + (string)y + "." );
+    if ( x ) enLog_Warn( "Non-zero values of x are discouraged." );
+    if ( y ) enLog_Error( "Non-zero values of y are prohibited (normally you would return at this point)." );
+    if ( x && y ) enLog_FatalStop( "Everything is terrible." ); // script will stop when enLog_FatalStop is called
 }
 ```
 
@@ -142,7 +142,7 @@ and when you call `someFunction( 1, 2 );`, you'll see:
 🛑 FATAL ERROR: Everything is terrible. Script stopped.
 ```
 
-or, if you change the runtime loglevel to TRACE (such as with `enLog$SetLoglevel( TRACE );`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
+or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel( TRACE );`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
 
 ```
 🔽 [12:11:24.81] (16% 13a1 @25) New Script
@@ -166,10 +166,10 @@ You can also send a copy of all logs as they are written to a separate object by
 
 En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
 
-**TODO: fix this, enLEP$Send format changed**
+**TODO: fix this, enLEP_Send format changed**
 
 ```
-enLEP$Send(
+enLEP_Send(
     "", // sends via link_message, but can also be sent to a specific link number, specific prim via chat, or all scripts listening to a specified channel
     "Target Script Name",
     "", // signals a request, as opposed to a broadcast or response
@@ -179,16 +179,16 @@ enLEP$Send(
     );
 ```
 
-and the other script - if compiled with En - will call the `en$lep_message` function defined by the script:
+and the other script - if compiled with En - will call the `en_lep_message` function defined by the script:
 
 ```
-#define ENLEP$ENABLE
+#define ENLEP_ENABLE
 
 #include "en-lsl-framework/libraries.lsl"
 
 **TODO: fix this, lep_message format changed**
 
-en$lep_message(
+en_lep_message(
     string prim, // source prim
     string target, // target script
     string status, // status string
@@ -201,7 +201,7 @@ en$lep_message(
 {
     if ( status != "" ) return; // only respond to requests
     if ( llList2String( params, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
-    enLEP$Send( // respond via LEP
+    enLEP_Send( // respond via LEP
         prim,
         source,
         "ok",

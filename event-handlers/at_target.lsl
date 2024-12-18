@@ -29,21 +29,21 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$AT_TARGET
-		en$at_target( integer handle, vector target, vector current )
+		#define EN_AT_TARGET
+		en_at_target( integer handle, vector target, vector current )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$AT_TARGET_TRACE || defined EN$AT_TARGET
+#if defined EN_AT_TARGET_TRACE || defined EN_AT_TARGET
 	at_target( integer handle, vector target, vector current )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$AT_TARGET_TRACE
-            enLog$TraceParams( "at_target", [ "handle", "target", "current" ], [
+        #ifdef EN_AT_TARGET_TRACE
+            enLog_TraceParams( "at_target", [ "handle", "target", "current" ], [
                 handle,
                 target
                 current
@@ -51,10 +51,10 @@
         #endif
 
         // event unused, so pass to user-defined function only
-        #ifdef EN$AT_TARGET
-            en$at_target( handle, target, current );
+        #ifdef EN_AT_TARGET
+            en_at_target( handle, target, current );
         #endif
 
-#if defined EN$AT_TARGET_TRACE || defined EN$AT_TARGET
+#if defined EN_AT_TARGET_TRACE || defined EN_AT_TARGET
 	}
 #endif

@@ -29,8 +29,8 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$LINK_MESSAGE
-		en$link_message( integer link, integer i, string s, string k )
+		#define EN_LINK_MESSAGE
+		en_link_message( integer link, integer i, string s, string k )
 		{ // NOTE: the key k is passed as a string, or can be passed as a key
             // code to run when event occurs that is not intercepted by En
 		}
@@ -51,7 +51,7 @@
                     - "" (empty string): broadcast targeted at all scripts
                     - (script name): message targeted at a specific script
                     - (any other value): message targeted at any script with this
-                                         value in its EN$LEP_WHITELIST list
+                                         value in its EN_LEP_WHITELIST list
                 - source: script name of source script
                 - status: one of the following:
                     - "" (empty string): the script requests a response
@@ -70,14 +70,14 @@
             any response data as a new line (or new lines) at the end of the data
             value that was received in the request.
 
-    Valid messages will call the user-defined en$imp_message function:
-		en$imp_message(
+    Valid messages will call the user-defined en_imp_message function:
+		en_imp_message(
             string prim,        // the SOURCE prim UUID
             string target,  	// one of the following:
                                     //  - (the target script name): this script name
                                     //  - "": all scripts in the prim
                                     //  - (any other value): scripts with this value
-                                    //      set in ENLEP$ALLOWED_TARGETS list
+                                    //      set in ENLEP_ALLOWED_TARGETS list
 			string status,      // one of the following:
                                     // - ":": broadcast (no response requested)
                                     // - "": request
@@ -93,30 +93,30 @@
                                 //      (-1 if received via enCLEP)
             string source       // the source script name
                                 //      (can be pre-filtered by defining
-                                //      ENLEP$ALLOWED_SOURCES list)
+                                //      ENLEP_ALLOWED_SOURCES list)
 			)
     Define this function directly in the script to process LEP messages.
 */
 
-#if defined EN$LINK_MESSAGE_TRACE || defined EN$LINK_MESSAGE || defined EN$LEP_MESSAGE
+#if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined EN_LEP_MESSAGE
     link_message( integer link, integer i, string s, key k )
     {
 #endif
 
         // log event if requested
-        #ifdef EN$LINK_MESSAGE_TRACE
-            enLog$TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, enString$Elem( s ), enString$Elem( k ) ] );
+        #ifdef EN_LINK_MESSAGE_TRACE
+            enLog_TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, enString_Elem( s ), enString_Elem( k ) ] );
         #endif
 
-        #ifdef EN$LEP_MESSAGE
-            if ( enLEP$Process(link, i, s, k)) return; // valid LEP message
+        #ifdef EN_LEP_MESSAGE
+            if ( enLEP_Process(link, i, s, k)) return; // valid LEP message
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$LINK_MESSAGE
-			en$link_message( link, i, s, k );
+		#ifdef EN_LINK_MESSAGE
+			en_link_message( link, i, s, k );
 		#endif
 
-#if defined EN$LINK_MESSAGE_TRACE || defined EN$LINK_MESSAGE || defined EN$LEP_MESSAGE
+#if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined EN_LEP_MESSAGE
 	}
 #endif

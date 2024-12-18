@@ -29,8 +29,8 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$REMOTE_DATA
-		en$remote_data( integer type, key channel, key message_id, string sender,
+		#define EN_REMOTE_DATA
+		en_remote_data( integer type, key channel, key message_id, string sender,
             integer i, string s )
 		{
             // code to run when event occurs that is not intercepted by En
@@ -40,20 +40,20 @@
     fire; it is only included here for completeness and should not be enabled.
 */
 
-#ifdef EN$REMOTE_DATA
+#ifdef EN_REMOTE_DATA
 	remote_data( integer type, key channel, key message_id, string sender, integer i, string s )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "remote_data", [ "type", "channel", "message_id", "sender", "i", "s" ], [
+        enLog_TraceParams( "remote_data", [ "type", "channel", "message_id", "sender", "i", "s" ], [
             type,
-            enString$Elem( channel ),
-            enString$Elem( message_id ),
-            enString$Elem( sender ),
+            enString_Elem( channel ),
+            enString_Elem( message_id ),
+            enString_Elem( sender ),
             i,
-            enString$Elem( s )
+            enString_Elem( s )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$remote_data( type, channel, message_id, sender, i, s );
+        en_remote_data( type, channel, message_id, sender, i, s );
 	}
 #endif

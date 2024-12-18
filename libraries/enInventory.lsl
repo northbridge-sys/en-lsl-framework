@@ -46,7 +46,7 @@ list _ENINVENTORY_REMOTE; // start_param, script_name, running
 // == functions
 // ==
 
-list enInventory$List(
+list enInventory_List(
     integer t
     )
 {
@@ -60,7 +60,7 @@ list enInventory$List(
     return x;
 }
 
-integer enInventory$Copy( // copies an inventory item to another object
+integer enInventory_Copy( // copies an inventory item to another object
     string prim,
     string name,
     integer type,
@@ -69,10 +69,10 @@ integer enInventory$Copy( // copies an inventory item to another object
     integer param
     )
 {
-    #ifdef ENINVENTORY$TRACE
-        enLog$TraceParams("enInventory$Copy", ["prim", "name", "type", "pin", "run", "param"], [
-            enObject$Elem(prim),
-            enString$Elem(name),
+    #ifdef ENINVENTORY_TRACE
+        enLog_TraceParams("enInventory_Copy", ["prim", "name", "type", "pin", "run", "param"], [
+            enObject_Elem(prim),
+            enString_Elem(name),
             type,
             pin,
             run,
@@ -89,14 +89,14 @@ integer enInventory$Copy( // copies an inventory item to another object
     return 1;
 }
 
-integer enInventory$OwnedByCreator(
+integer enInventory_OwnedByCreator(
     string name
 )
 {
     return llGetInventoryCreator( name ) == llGetOwner();
 }
 
-integer enInventory$RezRemote( // rezzes a remote object with Remote.lsl
+integer enInventory_RezRemote( // rezzes a remote object with Remote.lsl
     string name,
     vector pos,
     vector vel,
@@ -106,45 +106,45 @@ integer enInventory$RezRemote( // rezzes a remote object with Remote.lsl
     list runs
     )
 {
-    #ifdef ENINVENTORY$TRACE
-        enLog$TraceParams( "enInventory$RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
-            enString$Elem( name ),
+    #ifdef ENINVENTORY_TRACE
+        enLog_TraceParams( "enInventory_RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
+            enString_Elem( name ),
             (string)pos,
             (string)vel,
             (string)rot,
             (string)param,
-            enList$Elem( scripts ),
-            enList$Elem( runs )
+            enList_Elem( scripts ),
+            enList_Elem( runs )
             ] );
     #endif
-    enLog$Debug("Rezzing remote object with loglevel " + enLog$LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
+    enLog_Debug("Rezzing remote object with loglevel " + enLog_LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
     llRezAtRoot( name, pos, vel, rot, (integer)llLinksetDataRead( "loglevel" ) );
-    _ENINVENTORY_REMOTE += [ param, enList$ToString( scripts ), enList$ToString( runs ) ];
+    _ENINVENTORY_REMOTE += [ param, enList_ToString( scripts ), enList_ToString( runs ) ];
     // TODO: somehow timeout _ENINVENTORY_REMOTE
     return 1;
 }
 
-integer enInventory$NCOpenByPartialName( // opens a notecard for enInventory$NC* operations using a partial name
+integer enInventory_NCOpenByPartialName( // opens a notecard for enInventory_NC* operations using a partial name
     string name
 )
 {
-    list ncs = enInventory$List(INVENTORY_NOTECARD);
-    integer nc = enList$FindPartial(ncs, name);
+    list ncs = enInventory_List(INVENTORY_NOTECARD);
+    integer nc = enList_FindPartial(ncs, name);
     if (nc == -1) return 0;
-    else return enInventory$NCOpen(llList2String(ncs, nc));
+    else return enInventory_NCOpen(llList2String(ncs, nc));
 }
 
-integer enInventory$NCOpen( // opens a notecard for enInventory$NC* operations
+integer enInventory_NCOpen( // opens a notecard for enInventory_NC* operations
     string name
     )
 {
-    #ifdef ENINVENTORY$TRACE
-        enLog$TraceParams("enInventory$NCOpen", ["name"], [
-            enString$Elem(name)
+    #ifdef ENINVENTORY_TRACE
+        enLog_TraceParams("enInventory_NCOpen", ["name"], [
+            enString_Elem(name)
             ]);
     #endif
-    #ifndef ENINVENTORY$ENABLE_NC
-        enLog$Debug("ENINVENTORY$ENABLE_NC not defined.");
+    #ifndef ENINVENTORY_ENABLE_NC
+        enLog_Debug("ENINVENTORY_ENABLE_NC not defined.");
         return;
     #endif
     _ENINVENTORY_NC_N = name;
@@ -158,35 +158,35 @@ integer enInventory$NCOpen( // opens a notecard for enInventory$NC* operations
     return 0x3; // notecard opened, changes since last opened
 }
 
-enInventory$NCRead( // reads a line from the open notecard
+enInventory_NCRead( // reads a line from the open notecard
     integer i // line number, starting from 0
     )
 {
-    #ifdef ENINVENTORY$TRACE
-        enLog$TraceParams("enInventory$NCRead", ["i"], [
+    #ifdef ENINVENTORY_TRACE
+        enLog_TraceParams("enInventory_NCRead", ["i"], [
             i
             ]);
     #endif
-    #ifndef ENINVENTORY$ENABLE_NC
-        enLog$Debug("ENINVENTORY$ENABLE_NC not defined.");
+    #ifndef ENINVENTORY_ENABLE_NC
+        enLog_Debug("ENINVENTORY_ENABLE_NC not defined.");
         return;
     #else
         _ENINVENTORY_NC_L = i;
         string s = NAK;
         if (llGetFreeMemory() > 4096 && _ENINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_ENINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
         if (s == NAK) _ENINVENTORY_NC_H = llGetNotecardLine(_ENINVENTORY_NC_N, i); // sync read failed, do dataserver read
-        else en$nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, s);
+        else en_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, s);
     #endif
 }
 
-integer _enInventory$NCParse(
+integer _enInventory_NCParse(
     string query,
     string data
     )
 {
     if (query == _ENINVENTORY_NC_H)
     {
-        en$nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, data);
+        en_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, data);
         return 1;
     }
     if (query == _ENINVENTORY_NC_G)
@@ -197,7 +197,7 @@ integer _enInventory$NCParse(
     return 0;
 }
 
-string enInventory$TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(enInventory$TypeToString(...)) to get actual flag name)
+string enInventory_TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(enInventory_TypeToString(...)) to get actual flag name)
     integer f // INVENTORY_* flag
     )
 {
@@ -233,7 +233,7 @@ string enInventory$TypeToString( // converts an INVENTORY_* flag into a string (
         ], i);
 }
 
-enInventory$Push( // pushes an inventory item via enCLEP
+enInventory_Push( // pushes an inventory item via enCLEP
     string prim,
     string domain,
     string name,
@@ -243,11 +243,11 @@ enInventory$Push( // pushes an inventory item via enCLEP
     integer param
     )
 {
-    #ifdef ENINVENTORY$TRACE
-        enLog$TraceParams("enInventory$Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
-            enObject$Elem(prim),
-            enString$Elem(domain),
-            enString$Elem(name),
+    #ifdef ENINVENTORY_TRACE
+        enLog_TraceParams("enInventory_Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
+            enObject_Elem(prim),
+            enString_Elem(domain),
+            enString_Elem(name),
             type,
             pin,
             run,
@@ -257,7 +257,7 @@ enInventory$Push( // pushes an inventory item via enCLEP
     // TODO
 }
 
-enInventory$Pull( // pulls an inventory item via enCLEP
+enInventory_Pull( // pulls an inventory item via enCLEP
     string prim,
     string domain,
     string name,
@@ -267,11 +267,11 @@ enInventory$Pull( // pulls an inventory item via enCLEP
     integer param
     )
 {
-    #ifdef ENINVENTORY$TRACE
-        enLog$TraceParams("enInventory$Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
-            enObject$Elem(prim),
-            enString$Elem(domain),
-            enString$Elem(name),
+    #ifdef ENINVENTORY_TRACE
+        enLog_TraceParams("enInventory_Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
+            enObject_Elem(prim),
+            enString_Elem(domain),
+            enString_Elem(name),
             type,
             pin,
             run,

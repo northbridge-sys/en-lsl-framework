@@ -36,24 +36,24 @@
 // == functions
 // ==
 
-string enInteger$ElemBitfield(integer var)
+string enInteger_ElemBitfield(integer var)
 {
     integer test = 1;
     list flags;
     while (test <= var)
     {
-        if (test & var) flags += ["0x" + enInteger$ToHex(test, 1) + " (" + (string)test + ")"];
+        if (test & var) flags += ["0x" + enInteger_ToHex(test, 1) + " (" + (string)test + ")"];
         test *= 2;
     }
     return "{" + llList2CSV(flags) + "}";
 }
 
-integer enInteger$Rand() // random integer
+integer enInteger_Rand() // random integer
 {
     return (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ));
 }
 
-string enInteger$ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
+string enInteger_ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
     integer i, // integer
     integer digits // number of hex digits
     )
@@ -63,7 +63,7 @@ string enInteger$ToHex( // converts a 32-bit signed integer in its entirety to h
     string hex;
     do
     {
-        hex = llGetSubString( ENINTEGER$CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
+        hex = llGetSubString( ENINTEGER_CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
         digits--;
     }
     while ( i = ( 0xFFFFFFF & ( i >> 4 ) ) );
@@ -74,7 +74,7 @@ string enInteger$ToHex( // converts a 32-bit signed integer in its entirety to h
     return hex;
 }
 
-integer enInteger$ToNybbles( // grabs the specified nybbles out of an integer
+integer enInteger_ToNybbles( // grabs the specified nybbles out of an integer
     integer i, // integer
     integer start_index, // start index
     integer digits // number of nybbles to return
@@ -89,7 +89,7 @@ integer enInteger$ToNybbles( // grabs the specified nybbles out of an integer
     return nybbles;
 }
 
-string enInteger$ToString64( // converts int to string of length using 64-character charset, ENTYPE_CHARSET_64
+string enInteger_ToString64( // converts int to string of length using 64-character charset, ENTYPE_CHARSET_64
     integer int,
     integer length
     )
@@ -110,7 +110,7 @@ string enInteger$ToString64( // converts int to string of length using 64-charac
     return o;
 }
 
-integer enInteger$FromStr64( // inverse of enInteger$ToString64
+integer enInteger_FromStr64( // inverse of enInteger_ToString64
     string str
     )
 {
@@ -120,7 +120,7 @@ integer enInteger$FromStr64( // inverse of enInteger$ToString64
     return x;
 }
 
-integer enInteger$Clamp(
+integer enInteger_Clamp(
     integer i,
     integer m,
     integer x
@@ -131,7 +131,7 @@ integer enInteger$Clamp(
     return i;
 }
 
-integer enInteger$Reset(
+integer enInteger_Reset(
     integer i,
     integer m,
     integer x,

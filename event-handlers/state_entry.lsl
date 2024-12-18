@@ -29,42 +29,42 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$STATE_ENTRY
-		en$state_entry()
+		#define EN_STATE_ENTRY
+		en_state_entry()
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN_STATE_ENTRY_TRACE || defined EN_STATE_ENTRY || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT_ENABLE_SELF
 	state_entry()
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$STATE_ENTRY_TRACE
-            enLog$TraceParams( "state_entry", [], [] );
+        #ifdef EN_STATE_ENTRY_TRACE
+            enLog_TraceParams( "state_entry", [], [] );
         #endif
 
         // check if any En libraries want to intercept this event
-        #ifdef ENLSD$ENABLE_UUID_HEADER
-            enLSD$CheckUUID();
+        #ifdef ENLSD_ENABLE_UUID_HEADER
+            enLSD_CheckUUID();
         #endif
 
-        #ifdef ENLSD$ENABLE_SCRIPT_NAME_HEADER
-            enLSD$CheckScriptName();
+        #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
+            enLSD_CheckScriptName();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$STATE_ENTRY
-			en$state_entry();
+		#ifdef EN_STATE_ENTRY
+			en_state_entry();
 		#endif
 
 		// update _ENOBJECT_UUIDS_SELF if needed
-        #if defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENOBJECT$ENABLE_SELF
-            _enObject$UpdateUUIDs();
+        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+            _enObject_UpdateUUIDs();
         #endif
 
-#if defined EN$STATE_ENTRY_TRACE || defined EN$STATE_ENTRY || defined ENCLEP$ENABLE || defined ENLSD$ENABLE_UUID_HEADER || defined ENLSD$ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT$ENABLE_SELF
+#if defined EN_STATE_ENTRY_TRACE || defined EN_STATE_ENTRY || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT_ENABLE_SELF
 	}
 #endif

@@ -29,27 +29,27 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$EMAIL
-		en$email( string time, string address, string subject, string message,
+		#define EN_EMAIL
+		en_email( string time, string address, string subject, string message,
             integer remaining )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$EMAIL
+#ifdef EN_EMAIL
 	email( string time, string address, string subject, string message, integer remaining )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
-            enString$Elem( time ),
-            enString$Elem( address ),
-            enString$Elem( subject ),
-            enString$Elem( message ),
+        enLog_TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
+            enString_Elem( time ),
+            enString_Elem( address ),
+            enString_Elem( subject ),
+            enString_Elem( message ),
             remaining
         ] );
 
         // event unused, so pass to user-defined function only
-        en$email( time, address, subject, message, remaining );
+        en_email( time, address, subject, message, remaining );
 	}
 #endif

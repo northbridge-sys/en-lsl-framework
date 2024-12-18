@@ -30,23 +30,23 @@
     optionally executes a user-defined function to handle event calls that are not
     intercepted by En libraries:
 
-		#define EN$EXPERIENCE_PERMISSIONS_DENIED
-		en$experience_permissions_denied( key id, integer reason )
+		#define EN_EXPERIENCE_PERMISSIONS_DENIED
+		en_experience_permissions_denied( key id, integer reason )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$EXPERIENCE_PERMISSIONS_DENIED
+#ifdef EN_EXPERIENCE_PERMISSIONS_DENIED
 	experience_permissions_denied( key id, integer reason )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "experience_permissions_denied", [ "id", "reason" ], [
-            enAvatar$Elem( id ),
+        enLog_TraceParams( "experience_permissions_denied", [ "id", "reason" ], [
+            enAvatar_Elem( id ),
             reason
         ] );
 
         // event unused, so pass to user-defined function only
-        en$experience_permissions_denied( id, reason );
+        en_experience_permissions_denied( id, reason );
 	}
 #endif

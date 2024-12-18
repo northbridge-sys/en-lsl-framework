@@ -36,12 +36,12 @@
 // == functions
 // ==
 
-string enRotation$Elem( rotation r )
+string enRotation_Elem( rotation r )
 {
     return (string)r + " (" + (string)llRot2Euler( r ) + " -> " + (string)(llRot2Euler( r ) * RAD_TO_DEG) + ")";
 }
 
-rotation enRotation$Normalize(
+rotation enRotation_Normalize(
     rotation r
     )
 {
@@ -49,7 +49,7 @@ rotation enRotation$Normalize(
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
 }
 
-rotation enRotation$Slerp(
+rotation enRotation_Slerp(
     rotation a,
     rotation b,
     float t
@@ -58,7 +58,7 @@ rotation enRotation$Slerp(
     return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
-rotation enRotation$Nlerp(
+rotation enRotation_Nlerp(
     rotation a,
     rotation b,
     float t
@@ -66,24 +66,24 @@ rotation enRotation$Nlerp(
 {
     float ti = 1 - t;
     rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
-    return enRotation$Normalize( r );
+    return enRotation_Normalize( r );
 }
 
-string enRotation$Compress( // converts a rotation to a Base64 string, can be converted back with enRotation$Decompress
+string enRotation_Compress( // converts a rotation to a Base64 string, can be converted back with enRotation_Decompress
     rotation r
 )
 {
-    return enFloat$Compress(r.x) + enFloat$Compress(r.y) + enFloat$Compress(r.z) + enFloat$Compress(r.s);
+    return enFloat_Compress(r.x) + enFloat_Compress(r.y) + enFloat_Compress(r.z) + enFloat_Compress(r.s);
 }
 
-rotation enRotation$Decompress( // converts the string result from enRotation$Compress back to a rotation
+rotation enRotation_Decompress( // converts the string result from enRotation_Compress back to a rotation
     string s
 )
 {
-    return <enFloat$Decompress(llGetSubString(s, 0, 5)), enFloat$Decompress(llGetSubString(s, 6, 11)), enFloat$Decompress(llGetSubString(s, 12, 17)), enFloat$Decompress(llGetSubString(s, 18, 23))>;
+    return <enFloat_Decompress(llGetSubString(s, 0, 5)), enFloat_Decompress(llGetSubString(s, 6, 11)), enFloat_Decompress(llGetSubString(s, 12, 17)), enFloat_Decompress(llGetSubString(s, 18, 23))>;
 }
 
-vector enRotation$FromString( // converts a string to a rotation while being a little loose with what counts as a rotation (all spaces removed, brackets optional, automatic translation from vector)
+vector enRotation_FromString( // converts a string to a rotation while being a little loose with what counts as a rotation (all spaces removed, brackets optional, automatic translation from vector)
     string s,
     integer use_degrees // set TRUE if you want llEuler2Rot translation to presume a vector in degrees instead of radians
 )

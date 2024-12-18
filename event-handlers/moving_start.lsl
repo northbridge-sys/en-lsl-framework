@@ -29,20 +29,20 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$MOVING_START
-		en$moving_start( key id, integer level, integer edge )
+		#define EN_MOVING_START
+		en_moving_start( key id, integer level, integer edge )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$MOVING_START
+#ifdef EN_MOVING_START
 	moving_start()
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "moving_start", [], [] );
+        enLog_TraceParams( "moving_start", [], [] );
 
         // event unused, so pass to user-defined function only
-        en$moving_start();
+        en_moving_start();
 	}
 #endif

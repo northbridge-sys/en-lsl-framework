@@ -29,32 +29,32 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$HTTP_REQUEST
-		en$http_request( key request, string method, string body )
+		#define EN_HTTP_REQUEST
+		en_http_request( key request, string method, string body )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#if defined EN$HTTP_REQUEST_TRACE || defined EN$HTTP_REQUEST
+#if defined EN_HTTP_REQUEST_TRACE || defined EN_HTTP_REQUEST
 	http_request( key request, string method, string body )
 	{
 #endif
 
         // log event if requested
-        #ifdef EN$HTTP_REQUEST_TRACE
-            enLog$TraceParams( "http_request", [ "request", "method", "body" ], [
-                enString$Elem( request ),
-                enString$Elem( method ),
-                enString$Elem( body )
+        #ifdef EN_HTTP_REQUEST_TRACE
+            enLog_TraceParams( "http_request", [ "request", "method", "body" ], [
+                enString_Elem( request ),
+                enString_Elem( method ),
+                enString_Elem( body )
             ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN$HTTP_REQUEST
-            en$http_request( request, method, body );
+		#ifdef EN_HTTP_REQUEST
+            en_http_request( request, method, body );
 		#endif
 
-#if defined EN$HTTP_REQUEST_TRACE || defined EN$HTTP_REQUEST
+#if defined EN_HTTP_REQUEST_TRACE || defined EN_HTTP_REQUEST
 	}
 #endif

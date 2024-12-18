@@ -29,24 +29,24 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$GAME_CONTROL
-		en$game_control( key id, integer held, list axes )
+		#define EN_GAME_CONTROL
+		en_game_control( key id, integer held, list axes )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$GAME_CONTROL
+#ifdef EN_GAME_CONTROL
 	game_control( key id, integer held, list axes )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "game_control", [ "id", "held", "axes" ], [
-            enAvatar$Elem( id ),
+        enLog_TraceParams( "game_control", [ "id", "held", "axes" ], [
+            enAvatar_Elem( id ),
             held,
-            enList$Elem( axes )
+            enList_Elem( axes )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$game_control( id, held, axes );
+        en_game_control( id, held, axes );
 	}
 #endif

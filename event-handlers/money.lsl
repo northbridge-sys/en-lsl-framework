@@ -29,23 +29,23 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$MONEY
-		en$money( key id, integer amount )
+		#define EN_MONEY
+		en_money( key id, integer amount )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$MONEY
+#ifdef EN_MONEY
 	money( key id, integer amount )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "money", [ "id", "amount" ], [
-            enAvatar$Elem( id ),
+        enLog_TraceParams( "money", [ "id", "amount" ], [
+            enAvatar_Elem( id ),
             amount
         ] );
 
         // event unused, so pass to user-defined function only
-        en$money( id, amount );
+        en_money( id, amount );
 	}
 #endif

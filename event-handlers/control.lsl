@@ -29,24 +29,24 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$CONTROL
-		en$control( key id, integer level, integer edge )
+		#define EN_CONTROL
+		en_control( key id, integer level, integer edge )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$CONTROL
+#ifdef EN_CONTROL
 	control( key id, integer level, integer edge )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "control", [ "id", "level", "edge" ], [
-            enAvatar$Elem( id ),
-            enInteger$ElemBitfield( level ),
-            enInteger$ElemBitfield( edge )
+        enLog_TraceParams( "control", [ "id", "level", "edge" ], [
+            enAvatar_Elem( id ),
+            enInteger_ElemBitfield( level ),
+            enInteger_ElemBitfield( edge )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$control( id, level, edge );
+        en_control( id, level, edge );
 	}
 #endif

@@ -41,7 +41,7 @@
 
 setLoglevel()
 {
-    integer loglevel = enLog$StringToLevel(
+    integer loglevel = enLog_StringToLevel(
         llList2String(
             llParseStringKeepNulls(
                 llStringTrim(
@@ -56,14 +56,14 @@ setLoglevel()
         );
     if ( !loglevel )
     {
-        enLog$Error("Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
+        enLog_Error("Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
         return;
     }
     string lsd = llLinksetDataRead( "loglevel" );
     llLinksetDataWrite( "loglevel", (string)loglevel );
-    if ( lsd != "0" && !(integer)lsd ) enLog$( 0, 0, "Set loglevel to " + enLog$LevelToString( loglevel ) + "." );
-    else if ( lsd != (string)loglevel ) enLog$( 0, 0, "Changed loglevel from " + enLog$LevelToString( (integer)lsd ) + " to " + enLog$LevelToString( loglevel ) + "." );
-    else enLog$( 0, 0, "Loglevel remains set at " + enLog$LevelToString( loglevel ) + "." );
+    if ( lsd != "0" && !(integer)lsd ) enLog_( 0, 0, "Set loglevel to " + enLog_LevelToString( loglevel ) + "." );
+    else if ( lsd != (string)loglevel ) enLog_( 0, 0, "Changed loglevel from " + enLog_LevelToString( (integer)lsd ) + " to " + enLog_LevelToString( loglevel ) + "." );
+    else enLog_( 0, 0, "Loglevel remains set at " + enLog_LevelToString( loglevel ) + "." );
 }
 
 default

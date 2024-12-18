@@ -29,20 +29,20 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$NO_SENSOR
-		en$no_sensor( key id, integer level, integer edge )
+		#define EN_NO_SENSOR
+		en_no_sensor( key id, integer level, integer edge )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$NO_SENSOR
+#ifdef EN_NO_SENSOR
 	no_sensor()
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "no_sensor", [], [] );
+        enLog_TraceParams( "no_sensor", [], [] );
 
         // event unused, so pass to user-defined function only
-        en$no_sensor();
+        en_no_sensor();
 	}
 #endif

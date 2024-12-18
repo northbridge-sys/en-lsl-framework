@@ -29,22 +29,22 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$TOUCH_END
-		en$touch_end( integer num )
+		#define EN_TOUCH_END
+		en_touch_end( integer num )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$TOUCH_END
+#ifdef EN_TOUCH_END
 	touch_end( integer num )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "touch_end", [ "num" ], [
+        enLog_TraceParams( "touch_end", [ "num" ], [
             num
         ] );
 
         // event unused, so pass to user-defined function only
-        en$touch_end( num );
+        en_touch_end( num );
 	}
 #endif

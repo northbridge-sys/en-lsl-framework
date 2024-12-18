@@ -34,25 +34,25 @@
 // == functions
 // ==
 
-enLog$( // custom logging function
+enLog_( // custom logging function
     integer level,
     integer line,
     string message
     )
 {
-    enLog$To("", level, line, message);
-    #ifndef ENLOG$DISABLE_LOGTARGET
-        string t = enLog$GetLogtarget();
+    enLog_To("", level, line, message);
+    #ifndef ENLOG_DISABLE_LOGTARGET
+        string t = enLog_GetLogtarget();
         string prim = llGetSubString( t, 0, 35 );
-        if ( enKey$IsPrimInRegion( prim ) )
+        if ( enKey_IsPrimInRegion( prim ) )
         { // log via enCLEP to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP$RegionSayTo( prim, enCLEP$Channel( domain ), enList$ToString([ "enCLEP", enCLEP$GetService(), prim, domain, "$enLog", enList$ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
+            enCLEP_RegionSayTo( prim, enCLEP_Channel( domain ), enList_ToString([ "enCLEP", enCLEP_GetService(), prim, domain, "_enLog", enList_ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
         }
     #endif
 }
 
-enLog$To(
+enLog_To(
     string target,
     integer level,
     integer line,
@@ -60,7 +60,7 @@ enLog$To(
     )
 {
     // can use level 0 to always send, or a level constant for loglevel support
-    integer lsd_level = enLog$GetLoglevel();
+    integer lsd_level = enLog_GetLoglevel();
     string debug_header;
     if (lsd_level >= 5)
     { // use debug header
@@ -91,35 +91,35 @@ enLog$To(
     }
 }
 
-enLog$FatalStop( // logs a fatal error and stops the script
+enLog_FatalStop( // logs a fatal error and stops the script
     string m // message
     )
 {
     if ( m != "" ) m += " ";
-    enLog$Fatal(m + "Script stopped." );
+    enLog_Fatal(m + "Script stopped." );
     llSetScriptState( llGetScriptName(), FALSE );
     llSleep( 1.0 ); // give the simulator time to stop the script to be safe
 }
 
-enLog$FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+enLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
     string m // message
 )
 {
     if ( m != "" ) m += " ";
-    enLog$Fatal(m + "Script deleted." );
-    enLog$Delete();
+    enLog_Fatal(m + "Script deleted." );
+    enLog_Delete();
 }
 
-enLog$Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+enLog_Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
 {
-    // remove inventory if ENLOG$ENABLE_DELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
-    #ifndef ENLOG$ENABLE_DELETE_OWNEDBYCREATOR
-        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Script deletion failed because ENLOG$ENABLE_DELETE_OWNEDBYCREATOR is not defined.");
+    // remove inventory if ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef ENLOG_ENABLE_DELETE_OWNEDBYCREATOR
+        if ( enInventory_OwnedByCreator( llGetScriptName() ) ) enLog_Error("Script deletion failed because ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is not defined.");
         else
     #endif
-    // only remove inventory if ENLOG$DISABLE_DELETE is NOT defined
-    #ifdef ENLOG$DISABLE_DELETE
-        enLog$Error("Script deletion failed because ENLOG$DISABLE_DELETE is defined.");
+    // only remove inventory if ENLOG_DISABLE_DELETE is NOT defined
+    #ifdef ENLOG_DISABLE_DELETE
+        enLog_Error("Script deletion failed because ENLOG_DISABLE_DELETE is defined.");
     #else
         llRemoveInventory( llGetScriptName() );
     #endif
@@ -127,25 +127,25 @@ enLog$Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
     llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
 }
 
-enLog$FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+enLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
     string m // message
 )
 {
     if ( m != "" ) m += " ";
-    enLog$Fatal( m + "Object " + llList2String(["deleted", "detached from " + enObject$GetAttachedString(llGetAttached())], !!llGetAttached()) + "." );
-    enLog$Die();
+    enLog_Fatal( m + "Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + "." );
+    enLog_Die();
 }
 
-enLog$Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+enLog_Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
 {
-    // delete object if ENLOG$ENABLE_DIE_OWNEDBYCREATOR is defined, OR script is not owned by creator
-    #ifndef ENLOG$ENABLE_DIE_OWNEDBYCREATOR
-        if ( enInventory$OwnedByCreator( llGetScriptName() ) ) enLog$Error("Object delete/detach failed because ENLOG$ENABLE_DIE_OWNEDBYCREATOR is not defined.");
+    // delete object if ENLOG_ENABLE_DIE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef ENLOG_ENABLE_DIE_OWNEDBYCREATOR
+        if ( enInventory_OwnedByCreator( llGetScriptName() ) ) enLog_Error("Object delete/detach failed because ENLOG_ENABLE_DIE_OWNEDBYCREATOR is not defined.");
         else
     #endif
-    // only delete object if ENLOG$DISABLE_DIE is NOT defined
-    #ifdef ENLOG$DISABLE_DIE
-        enLog$Error("Object delete/detach failed because ENLOG$DISABLE_DIE is defined.");
+    // only delete object if ENLOG_DISABLE_DIE is NOT defined
+    #ifdef ENLOG_DISABLE_DIE
+        enLog_Error("Object delete/detach failed because ENLOG_DISABLE_DIE is defined.");
     #else
         {
             if (llGetAttached()) llDetachFromAvatar();
@@ -156,7 +156,7 @@ enLog$Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING:
     llSleep( 1.0 ); // give the simulator time to remove the object to be safe
 }
 
-string enLog$LevelToString( // converts integer level number into string representation
+string enLog_LevelToString( // converts integer level number into string representation
     integer l
     )
 {
@@ -172,7 +172,7 @@ string enLog$LevelToString( // converts integer level number into string represe
         ], l );
 }
 
-integer enLog$StringToLevel( // converts integer level number into string representation
+integer enLog_StringToLevel( // converts integer level number into string representation
     string s
     )
 {
@@ -186,26 +186,26 @@ integer enLog$StringToLevel( // converts integer level number into string repres
         ], [ llToUpper( llStringTrim( s, STRING_TRIM ) ) ] ) + 1;
 }
 
-enLog$TraceParams( string function_name, list param_names, list param_values )
+enLog_TraceParams( string function_name, list param_names, list param_values )
 {
     string params;
-    if ( param_values != [] ) params = "\n        " + llDumpList2String( enList$Concatenate( "", param_names, " = ", param_values, "" ), ",\n        " ) + "\n    ";
-    enLog$Trace( function_name + "(" + params + ")" );
+    if ( param_values != [] ) params = "\n        " + llDumpList2String( enList_Concatenate( "", param_names, " = ", param_values, "" ), ",\n        " ) + "\n    ";
+    enLog_Trace( function_name + "(" + params + ")" );
 }
 
-enLog$TraceVars( list var_names, list var_values )
+enLog_TraceVars( list var_names, list var_values )
 {
-    enLog$TraceParams( "enLog$TraceVars", var_names, var_values );
+    enLog_TraceParams( "enLog_TraceVars", var_names, var_values );
 }
 
-integer enLog$GetLoglevel()
+integer enLog_GetLoglevel()
 {
     string lsd = llLinksetDataRead( "loglevel" ); // any valid log level number, 0 (uses default), or negative (suppresses all output)
     if ( (integer)lsd ) return (integer)lsd;
-    else return ENLOG$DEFAULT_LOGLEVEL;
+    else return ENLOG_DEFAULT_LOGLEVEL;
 }
 
-enLog$SetLoglevel(
+enLog_SetLoglevel(
     integer level
 )
 {
@@ -213,13 +213,13 @@ enLog$SetLoglevel(
     llLinksetDataWrite( "loglevel", (string)level );
 }
 
-string enLog$GetLogtarget(
+string enLog_GetLogtarget(
 )
 {
     return llLinksetDataRead("logtarget");
 }
 
-enLog$SetLogtarget(
+enLog_SetLogtarget(
     string target
 )
 {

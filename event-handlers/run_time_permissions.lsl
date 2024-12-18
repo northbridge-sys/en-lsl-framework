@@ -29,22 +29,22 @@
     maintenance functions required by En libraries, then optionally executes a user-
     defined function to handle event calls that are not intercepted by En libraries:
 
-		#define EN$RUN_TIME_PERMISSIONS
-		en$run_time_permissions( integer perm )
+		#define EN_RUN_TIME_PERMISSIONS
+		en_run_time_permissions( integer perm )
 		{
             // code to run when event occurs that is not intercepted by En
 		}
 */
 
-#ifdef EN$RUN_TIME_PERMISSIONS
+#ifdef EN_RUN_TIME_PERMISSIONS
 	run_time_permissions( integer perm )
 	{
         // event unused, so the only reason to define it is to log it
-        enLog$TraceParams( "run_time_permissions", [ "perm" ], [
-            enInteger$ElemBitfield( perm )
+        enLog_TraceParams( "run_time_permissions", [ "perm" ], [
+            enInteger_ElemBitfield( perm )
         ] );
 
         // event unused, so pass to user-defined function only
-        en$run_time_permissions( perm );
+        en_run_time_permissions( perm );
 	}
 #endif
