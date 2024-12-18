@@ -160,13 +160,9 @@ integer enLEP$Process(
         // filter out messages that don't match the allowed source script list
         if (llListFindList(ENLEP$ALLOWED_SOURCE_SCRIPTS, [llList2String(parameters, 0)]) == -1) return 1; // discard message, not sent from an allowed source script
     #endif
-    #ifdef ENLEP$ALLOWED_TARGET_SCRIPTS
-        // filter out messages that don't match the allowed target script list
-        if (llListFindList(["", llGetScriptName()] + ENLEP$ALLOWED_TARGET_SCRIPTS, [llList2String(parameters, 1)]) == -1) return 1; // discard message, not sent to an allowed target script
-    #endif
     list allowed_targets = ["", llGetScriptName()]; // allow messages targeted to "" (all) and this script only
     #ifdef ENLEP$ALLOWED_TARGET_SCRIPTS
-        allowed_targets += ENLEP$ALLOWED_TARGET_SCRIPTS;
+        allowed_targets += ENLEP$ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro ENLEP$ALLOWED_TARGET_SCRIPTS
     #endif
     #ifndef ENLEP$ALLOW_ALL_TARGET_SCRIPTS
         if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1) return 0; // discard message, not targeted to us
