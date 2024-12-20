@@ -88,6 +88,31 @@ float enFloat_Clamp(
     return i;
 }
 
+float enFloat_ResetTarget(
+    float i,
+    float m,
+    float x,
+    float t
+    )
+{
+    if (i < m || i > x) return t; // return target if outside min/max
+    return i;
+}
+
+float enFloat_ResetChunk(
+    float i,
+    float m,
+    float x,
+    float c
+)
+{
+    if (c < 0) c = -c; // make c positive
+    // this is not as efficient as enInteger's version but whatever
+    while (i < m) i += c; // add c until over min
+    while (i > x) i -= c; // subtract c until under max
+    return i;
+}
+
 integer enFloat_FlipCoin(
     float chance // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
     )
