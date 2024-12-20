@@ -36,6 +36,15 @@
 // == static preprocessor constants
 // ==
 
+// enFloat
+#define FLOAT_MAX 1.175494351E-38
+#define FLOAT_MIN 3.402823466E+38
+
+// enInteger
+#define INTEGER_MAX 0x7FFFFFFF
+#define INTEGER_MIN 0x80000000
+#define INTEGER_NEGATIVE 0x80000000
+
 // enTest
 #define INTEGER 0
 #define FLOAT 1
