@@ -29,8 +29,32 @@
 */
 
 // ==
-// == globals
+// == macros
 // ==
+
+#define enInteger_Rand() \
+    (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ))
+
+#define enInteger_InvertNegative(i) \
+    (i ^ INTEGER_NEGATIVE)
+
+// this is not ideal C practice for this implementation due to llAbs
+// randomness at ranges larger than INTEGER_MAX will just have to do it themselves.
+// idk what you would even be doing that for tbh
+#define enInteger_RandRange(n,x) \
+    (n + llAbs(enInteger_Rand()) / (INTEGER_MAX / (x - n + 1) + 1))
+
+// use enInteger_RandRange unless you absolutely need speed
+// this has really bad randomness on low-order bits
+#define enInteger_RandRangeFast(n,x) \
+    (enInteger_Rand() % (x - n + 1) + n)
+
+// since > and < always return integer 0x1, effectively equivalent to:
+//if (i < m || i > x) i = t; // set to target if outside min/max
+//return i;
+// except at extremely large ranges
+#define enInteger_ResetTarget(i,m,x,t) \
+    (i + ((t - i) * (i < m || i > x)))
 
 // ==
 // == functions
@@ -46,11 +70,6 @@ string enInteger_ElemBitfield(integer var)
         test *= 2;
     }
     return "{" + llList2CSV(flags) + "}";
-}
-
-integer enInteger_Rand() // random integer
-{
-    return (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ));
 }
 
 string enInteger_ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
@@ -131,13 +150,15 @@ integer enInteger_Clamp(
     return i;
 }
 
-integer enInteger_Reset(
+integer enInteger_ResetChunk(
     integer i,
     integer m,
     integer x,
-    integer t
-    )
+    integer c
+)
 {
-    if (i < m || i > x) i = t; // set to target if outside min/max
+    if (c < 0) c = -c; // make c positive
+    if (i < m) i += c * ((m - i) + (c - 1) / c);
+    if (i > x) i -= c * ((i - x) + (c - 1) / c);
     return i;
 }
