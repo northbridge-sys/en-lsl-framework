@@ -42,6 +42,13 @@ list _ENOBJECT_UUIDS_SELF;
 #endif
 
 // ==
+// == macros
+// ==
+
+#define enObject_GetLinkColor(link,face) \
+    (vector)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 0)
+
+// ==
 // == functions
 // ==
 
@@ -132,15 +139,18 @@ integer enObject_FindLink(string name)
     return 0; // no match
 }
 
-enObject_CacheClosestLink(
+integer enObject_CacheClosestLink(
     string name
 )
 {
     #ifndef ENOBJECT_ENABLE_LINK_CACHE
         enLog_Error("enObject_CacheClosestLink called but ENOBJECT_ENABLE_LINK_CACHE not defined.");
+        return 0;
     #else
-        if (llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]) != -1) return; // already caching
+        integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
+        if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1); // already caching
         _ENOBJECT_LINK_CACHE += [name, enObject_FindLink(name)];
+        return (integer)llList2String(_ENOBJECT_LINK_CACHE, -1); // return last element, since it is always ours
     #endif
 }
 
