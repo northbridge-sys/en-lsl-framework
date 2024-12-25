@@ -127,11 +127,17 @@ string enLSD_BuildHead(
     #ifdef ENLSD_HEADER
         h = ENLSD_HEADER + "\n" + h;
     #endif
-    #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        h = llGetSubString(llSHA256String(script_name), 0, 7) + "\n" + h; // prepend first 8 chars of SHA256 hashed script name
+    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER && !defined ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH
+        h = script_name + "\n" + h; // prepend full script name
     #endif
-    #ifdef ENLSD_ENABLE_UUID_HEADER
-        h = llGetSubString(uuid, 0, 7) + "\n" + h; // prepend first 8 chars of llGetKey to start of string to avoid linkset conflicts
+    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER && defined ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH
+        h = llGetSubString(llSHA256String(script_name), 0, ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH - 1) + "\n" + h; // prepend first chars of SHA256 hashed script name
+    #endif
+    #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH
+        h = uuid + "\n" + h; // prepend llGetKey to start of string to avoid linkset conflicts
+    #endif
+    #if defined ENLSD_ENABLE_UUID_HEADER && defined ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH
+        h = llGetSubString(uuid, 0, ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH - 1) + "\n" + h; // prepend first chars of llGetKey to start of string to avoid linkset conflicts
     #endif
     return h;
 }
