@@ -170,8 +170,8 @@ integer enLEP_Process(
     #ifdef EN_LEP_MESSAGE
         en_lep_message(
             source_link,
-            source_script,
-            target_script,
+            llList2String(parameters, 0),
+            llList2String(parameters, 1),
             flags,
             llDeleteSubList(parameters, 0, 1),
             (string)k
