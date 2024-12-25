@@ -123,17 +123,17 @@ string enLSD_BuildHead(
     string uuid
 )
 {
-    string h = ENLSD_HEADER + "\n";
-    integer count = 1;
+    string h;
+    #ifdef ENLSD_HEADER
+        h = ENLSD_HEADER + "\n" + h;
+    #endif
     #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
         h = llGetSubString(llSHA256String(script_name), 0, 7) + "\n" + h; // prepend first 8 chars of SHA256 hashed script name
-        count++;
     #endif
     #ifdef ENLSD_ENABLE_UUID_HEADER
         h = llGetSubString(uuid, 0, 7) + "\n" + h; // prepend first 8 chars of llGetKey to start of string to avoid linkset conflicts
-        count++;
     #endif
-    return (string)count + "\n" + h;
+    return h;
 }
 
 enLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
