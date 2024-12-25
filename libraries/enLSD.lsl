@@ -70,43 +70,43 @@ enLSD_Reset() // safely resets linkset data
     }
 }
 
-integer enLSD_Write(string name, string data)
+integer enLSD_Write(list name, string data)
 {
     #ifdef ENLSD_TRACE
         enLog_TraceParams("enLSD_Write", ["name", "data"], [
-            enString_Elem(name),
+            enList_Elem(name),
             enString_Elem(data)
             ]);
     #endif
-	return llLinksetDataWrite(enLSD_Head() + name, data);
+	return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
 }
 
-string enLSD_Read(string name)
+string enLSD_Read(list name)
 {
     #ifdef ENLSD_TRACE
         enLog_TraceParams("enLSD_Read", ["name"], [
-            enString_Elem(name)
+            enList_Elem(name)
             ]);
     #endif
-	return llLinksetDataRead(enLSD_Head() + name);
+	return llLinksetDataRead(enLSD_Head() + llDumpList2String(name, "\n"));
 }
 
-list enLSD_Delete(string name)
+list enLSD_Delete(list name)
 {
     #ifdef ENLSD_TRACE
         enLog_TraceParams("enLSD_Delete", ["name"], [
-            enString_Elem(name)
+            enList_Elem(name)
             ]);
     #endif
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + name) + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", "");
 }
 
-integer enLSD_Exists(string name)
+integer enLSD_Exists(list name)
 {
     return (enLSD_Find(name, 0, 1) != []);
 }
 
-list enLSD_Find(string name, integer start, integer count)
+list enLSD_Find(list name, integer start, integer count)
 {
     #ifdef ENLSD_TRACE
         enLog_TraceParams("enLSD_Find", ["name", "start", "count"], [
@@ -115,7 +115,7 @@ list enLSD_Find(string name, integer start, integer count)
             count
             ]);
     #endif
-	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + name) + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
 string enLSD_BuildHead(
