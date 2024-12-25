@@ -30,7 +30,7 @@
     defined function to handle event calls that are not intercepted by En libraries:
 
 		#define EN_LINK_MESSAGE
-		en_link_message( integer link, integer i, string s, string k )
+		en_link_message( integer l, integer i, string s, string k )
 		{ // NOTE: the key k is passed as a string, or can be passed as a key
             // code to run when event occurs that is not intercepted by En
 		}
@@ -99,22 +99,22 @@
 */
 
 #if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined EN_LEP_MESSAGE
-    link_message( integer link, integer i, string s, key k )
+    link_message( integer l, integer i, string s, key k )
     {
 #endif
 
         // log event if requested
         #ifdef EN_LINK_MESSAGE_TRACE
-            enLog_TraceParams( "link_message", [ "link", "i", "s", "k" ], [ link, i, enString_Elem( s ), enString_Elem( k ) ] );
+            enLog_TraceParams( "link_message", [ "l", "i", "s", "k" ], [ l, i, enString_Elem( s ), enString_Elem( k ) ] );
         #endif
 
         #ifdef EN_LEP_MESSAGE
-            if ( enLEP_Process(link, i, s, k)) return; // valid LEP message
+            if ( enLEP_Process(l, i, s, k)) return; // valid LEP message
         #endif
 
         // pass to user-defined function if requested
 		#ifdef EN_LINK_MESSAGE
-			en_link_message( link, i, s, k );
+			en_link_message( l, i, s, k );
 		#endif
 
 #if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined EN_LEP_MESSAGE
