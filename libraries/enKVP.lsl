@@ -42,17 +42,17 @@ list _ENKVP_DATA;
 // == functions
 // ==
 
-integer enKVP_Exists(string name)
+integer enKVP_Exists(list name)
 { // checks if a KVP pair exists by name
     #ifdef ENKVP_TRACE
         enLog_TraceParams("enKVP_Exists", ["name"], [
             enString_Elem(name)
             ]);
     #endif
-	return llListFindList(_ENKVP_NAMES, [name]) != -1;
+	return llListFindList(_ENKVP_NAMES, [llDumpList2String(name, "\n")]) != -1;
 }
 
-integer enKVP_Write(string name, string data)
+integer enKVP_Write(list name, string data)
 { // writes a KVP pair value
     #ifdef ENKVP_TRACE
         enLog_TraceParams("enKVP_Write", ["name", "data"], [
@@ -60,33 +60,33 @@ integer enKVP_Write(string name, string data)
             enString_Elem(data)
             ]);
     #endif
-	integer i = llListFindList(_ENKVP_NAMES, [name]);
+	integer i = llListFindList(_ENKVP_NAMES, [llDumpList2String(name, "\n")]);
 	if (i != -1) enKVP_Delete(name); // delete value, then reappend
-	_ENKVP_NAMES += [name];
+	_ENKVP_NAMES += [llDumpList2String(name, "\n")];
 	_ENKVP_DATA += [data];
 	return 1;
 }
 
-string enKVP_Read(string name)
+string enKVP_Read(list name)
 { // reads a KVP pair value
     #ifdef ENKVP_TRACE
         enLog_TraceParams("enKVP_Read", ["name"], [
             enString_Elem(name)
             ]);
     #endif
-	integer i = llListFindList(_ENKVP_NAMES, [name]);
+	integer i = llListFindList(_ENKVP_NAMES, [llDumpList2String(name, "\n")]);
 	if (i == -1) return ""; // doesn't exist
 	return llList2String(_ENKVP_DATA, i);
 }
 
-enKVP_Delete(string name)
+enKVP_Delete(list name)
 { // deletes a KVP pair
     #ifdef ENKVP_TRACE
         enLog_TraceParams("enKVP_Delete", ["name"], [
             enString_Elem(name)
             ]);
     #endif
-	integer i = llListFindList(_ENKVP_NAMES, [name]);
+	integer i = llListFindList(_ENKVP_NAMES, [llDumpList2String(name, "\n")]);
 	if (i == -1) return; // doesn't exist
 	_ENKVP_NAMES = llDeleteSubList(_ENKVP_NAMES, i, i);
 	_ENKVP_DATA = llDeleteSubList(_ENKVP_DATA, i, i);
