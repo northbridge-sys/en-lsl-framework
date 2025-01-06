@@ -29,8 +29,20 @@
 */
 
 // ==
-// == globals
+// == macros
 // ==
+
+// converts a world pos to a region POSITION, as in a position within a region
+#define enVector_WorldToRegion(world_position) \
+    (world - enVector_WorldToCorner(world_position))
+
+// converts the current region position to world position
+#define enVector_RegionToWorld(region_position) \
+    enVector_RegionCornerToWorld(region_position, llGetRegionCorner())
+
+// converts a region CORNER and POSITION to a world pos
+#define enVector_RegionCornerToWorld(region_position, region_corner) \
+    (region_position + region_corner)
 
 // ==
 // == functions
@@ -80,28 +92,6 @@ vector enVector_WorldToCorner( // converts a world pos to a region CORNER
     )
 {
     return <(integer)(world.x / 256.0) * 256, (integer)(world.y / 256.0) * 256, 0.0>;
-}
-
-vector enVector_WorldToRegion( // converts a world pos to a region POSITION, as in a position within a region
-    vector world
-    )
-{
-    return world - enVector_WorldToCorner(world);
-}
-
-vector enVector_RegionToWorld( // converts the current region position to world position
-    vector region
-    )
-{
-    return enVector_RegionCornerToWorld(region, llGetRegionCorner());
-}
-
-vector enVector_RegionCornerToWorld( // converts a region CORNER and POSITION to a world pos
-    vector region,
-    vector corner
-    )
-{
-    return region + corner;
 }
 
 // TODO: local pos conversion stuff, pos from root with rot, all sorts of stuff
