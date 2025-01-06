@@ -86,6 +86,10 @@ list _ENCLEP_DOMAINS; // domain, flags, channel, handle
     #define ENCLEP_PTP_STRIDE 4
 #endif
 
+#ifdef ENCLEP_ENABLE_LEP
+    string ENCLEP_LEP_SOURCE_PRIM = NULL_KEY;
+#endif
+
 // ==
 // == functions
 // ==
@@ -117,14 +121,18 @@ integer enCLEP_Channel( // converts a string into an integer, hashed with _ENCLE
     return chan;
 }
 
-enCLEP_RegionSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of silently failing
+enCLEP_MultiSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of silently failing
     string prim,
     integer channel,
     string message
     )
 {
-    if (prim == NULL_KEY) llRegionSay(channel, message);
-    else llRegionSayTo(prim, channel, message);
+    if (prim == "") prim = NULL_KEY;
+    if (prim == NULL_KEY) llRegionSay(channel, message); // RS if prim is not specified
+    else if (llGetObjectDetails(prim, [OBJECT_PHANTOM]) != []) llRegionSayTo(prim, channel, message); // RST if prim is in region
+#ifdef ENCLEP_ENABLE_SHOUT
+    else llShout(channel, message); // shout if prim is not in region and ENCLEP_ENABLE_SHOUT is defined
+#endif
 }
 
 enCLEP_SendLEP( // send LEP via enCLEP
@@ -162,7 +170,7 @@ enCLEP_Send( // send via enCLEP
             enString_Elem(_ENCLEP_SERVICE)
             ]);
     #endif
-    enCLEP_RegionSayTo(prim, enCLEP_Channel(domain), enList_ToString(["CLEP", _ENCLEP_SERVICE, prim, domain, type, message]));
+    enCLEP_MultiSayTo(prim, enCLEP_Channel(domain), enList_ToString(["CLEP", _ENCLEP_SERVICE, prim, domain, type, message]));
 }
 
 enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
@@ -189,7 +197,7 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
         max = ENCLEP_PTP_SIZE - (51 + llStringLength((string)llStringLength(ENCLEP_PTP_SIZE))); // get maximum length of packet after enCLEP_PTP header via enList_ToString
         string k = llGenerateKey(); // transfer key for identifying a specific message in transit
         string c = enCLEP_Channel(domain);
-        enCLEP_RegionSayTo(prim, c, enList_ToString(["CLEP_PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
+        enCLEP_MultiSayTo(prim, c, enList_ToString(["CLEP_PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
         if (llStringLength(message) > max) ENCLEP_PTP += [k, prim, "", llDeleteSubString(message, 0, max - 2)]; // we don't need to save domain here
         // TODO: some cleanup function that clears stalled transfers (in and out) from ENCLEP_PTP_QUEUE
     #endif
@@ -273,7 +281,7 @@ integer enCLEP_Process(
             // TODO: PTP buffers must be requested with the total length of the message
             // TODO: if total length of message would exceed script memory, reject message
             else ENCLEP_PTP = llListReplaceList(ENCLEP_PTP, [llList2String(ENCLEP_PTP, i * ENCLEP_PTP_STRIDE + 3) + m], i * ENCLEP_PTP_STRIDE + 3, i * ENCLEP_PTP_STRIDE + 3); // append to existing buffer
-            enCLEP_RegionSayTo(id, enCLEP_Channel(d), enList_ToString(["CLEP_PTP_More", d, k])); // request next message fragment
+            enCLEP_MultiSayTo(id, enCLEP_Channel(d), enList_ToString(["CLEP_PTP_More", d, k])); // request next message fragment
             return 1;
         }
         if (llList2String(data, 0) == "CLEP_PTP_More")
@@ -283,11 +291,11 @@ integer enCLEP_Process(
             integer i = llListFindList(llList2ListSlice(ENCLEP_PTP, 0, -1, ENCLEP_PTP_STRIDE, 0), [k]);
             if (i == -1)
             { // we have nothing to send, because this transfer_key does not exist in the queue
-                enCLEP_RegionSayTo(id, c, enList_ToString(["CLEP_PTP", d, k, ""])); // send empty packet to signal end of transfer
+                enCLEP_MultiSayTo(id, c, enList_ToString(["CLEP_PTP", d, k, ""])); // send empty packet to signal end of transfer
                 return 1;
             }
             string m = llList2String(ENCLEP_PTP, i * ENCLEP_PTP_STRIDE + 3);
-            enCLEP_RegionSayTo(id, c, enList_ToString(["CLEP_PTP", d, k, llGetSubString(m, 0, max - 2)])); // send next packet
+            enCLEP_MultiSayTo(id, c, enList_ToString(["CLEP_PTP", d, k, llGetSubString(m, 0, max - 2)])); // send next packet
             if (llStringLength(m) > max)
             { // trim from buffer
                 ENCLEP_PTP = llListReplaceList(ENCLEP_PTP, [llDeleteSubString(llList2String(ENCLEP_PTP, i * ENCLEP_PTP_STRIDE + 3), 0, max - 1)], i * ENCLEP_PTP_STRIDE + 3, i * ENCLEP_PTP_STRIDE + 3);
@@ -312,14 +320,19 @@ integer enCLEP_Process(
     #ifdef EN_LEP_MESSAGE
         if (llList2String(data, 4) == "LEP")
         { // LEP message
+    #endif
+    #if defined EN_LEP_MESSAGE && defined ENCLEP_ENABLE_LEP
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 3) return 1; // error in LEP unserialize operation
+            ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
             enLEP_Process(
                 -1,
                 (integer)llList2String(data, 0),
                 llList2String(data, 1),
                 llList2String(data, 2)
                 );
+    #endif
+    #ifdef EN_LEP_MESSAGE
             return 1;
         }
     #endif
