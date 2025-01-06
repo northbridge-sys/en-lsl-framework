@@ -33,7 +33,7 @@
 // ==
 
 #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
-    string _ENLSD_SCRIPT_NAME;
+    string ENLSD_SCRIPT_NAME;
 #endif
 
 // ==
@@ -258,7 +258,11 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
 )
 {
     list l;
-    string old_head = enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
+    string n;
+    #ifdef ENLSD_USE_SCRIPT_NAME_HEADER
+        n = ENLSD_SCRIPT_NAME;
+    #endif
+    string old_head = enLSD_BuildHead(n, k);
     do
     {
         l = llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
@@ -292,12 +296,12 @@ enLSD_CheckScriptName() // updates LSD entries that use old script name
         enLog_TraceParams("enLSD_CheckScriptName", [], []);
     #endif
     #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
-        if (_ENLSD_SCRIPT_NAME != "")
+        if (llGetScriptName() == ENLSD_SCRIPT_NAME) return; // no script name change
+        if (ENLSD_SCRIPT_NAME != "")
         {
-            enLog_Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
+            enLog_Debug("Moving LSD due to script name change from \"" + ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
             enLSD_MoveAllPairs(llGetKey());
         }
-        _ENLSD_SCRIPT_NAME = llGetScriptName();
+        ENLSD_SCRIPT_NAME = llGetScriptName();
     #endif
 }
