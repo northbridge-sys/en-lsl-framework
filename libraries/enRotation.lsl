@@ -29,8 +29,11 @@
 */
 
 // ==
-// == globals
+// == macros
 // ==
+
+#define enRotation_Slerp(a, b, t) \
+    (llAxisAngle2Rot(llRot2Axis(b /= a), t * llRot2Angle(b)) * a)
 
 // ==
 // == functions
@@ -47,15 +50,6 @@ rotation enRotation_Normalize(
 {
     float m = 1 / llSqrt( r.x * r.x + r.y * r.y + r.z * r.z + r.s * r.s ); // normalize
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
-}
-
-rotation enRotation_Slerp(
-    rotation a,
-    rotation b,
-    float t
-    )
-{
-    return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
 rotation enRotation_Nlerp(
