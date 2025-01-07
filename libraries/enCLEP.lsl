@@ -173,13 +173,13 @@ enCLEP_Send( // send via enCLEP
     )
 {
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_Send", ["prim", "domain", "type", "message", "(service)" ], [
+        /*enLog_TraceParams("enCLEP_Send", ["prim", "domain", "type", "message", "(service)" ], [
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(type),
             enString_Elem(message),
             enString_Elem(_ENCLEP_SERVICE)
-            ]);
+            ]);*/
     #endif
     enCLEP_MultiSayTo(prim, enCLEP_Channel(domain), enList_ToString(["CLEP", _ENCLEP_SERVICE, prim, domain, type, message]));
 }
