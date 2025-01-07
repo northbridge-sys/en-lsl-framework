@@ -145,7 +145,18 @@ enCLEP_SendLEP( // send LEP via enCLEP
     string data
     )
 {
-    if (!enKey_Is(prim)) return;
+    #ifdef ENCLEP_TRACE
+        enLog_TraceParams("enCLEP_SendLEP", ["prim", "domain", "target_link", "target_script", "flags", "parameters", "data", "(service)" ], [
+            enObject_Elem(prim),
+            enString_Elem(domain),
+            target_link,
+            enString_Elem(target_script),
+            enInteger_ElemBitfield(flags),
+            enList_Elem(parameters),
+            enString_Elem(data),
+            enString_Elem(_ENCLEP_SERVICE)
+            ]);
+    #endif
     enCLEP_Send(
         prim,
         domain,
