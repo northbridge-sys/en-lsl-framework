@@ -142,7 +142,7 @@ integer enLEP_Process(
     integer source_link,
     integer flags,
     string s,
-    key k
+    string k
 )
 {
     #ifdef ENLEP_TRACE
@@ -167,6 +167,16 @@ integer enLEP_Process(
     #ifndef ENLEP_ALLOW_ALL_TARGET_SCRIPTS
         if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1) return 0; // discard message, not targeted to us
     #endif
+    #if defined EN_LEP_MESSAGE && defined EN_LEP_MESSAGE_TRACE
+        enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
+            source_link,
+            enString_Elem(llList2String(parameters, 0)),
+            enString_Elem(llList2String(parameters, 1)),
+            enInteger_ElemBitfield(flags),
+            enList_Elem(llDeleteSubList(parameters, 0, 1)),
+            enString_Elem(k)
+        ]);
+    #endif
     #ifdef EN_LEP_MESSAGE
         en_lep_message(
             source_link,
@@ -174,7 +184,7 @@ integer enLEP_Process(
             llList2String(parameters, 1),
             flags,
             llDeleteSubList(parameters, 0, 1),
-            (string)k
+            k
             );
     #endif
     return 1;
