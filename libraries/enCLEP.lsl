@@ -253,21 +253,17 @@ integer enCLEP_Listen(  // initializes or updates a dynamically managed llListen
 integer enCLEP_Process(
     integer channel,
     string name,
-    key id,
+    string id,
     string message
     )
 {
-    #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_Process", ["channel", "name", "id", "message"], [
+    list data = enList_FromString(message);
+    #if defined ENCLEP_TRACE || defined ENCLEP_PROCESS_TRACE
+        enLog_TraceParams("enCLEP_Process", ["channel", "name", "id", "message", "data"], [
             channel,
             enString_Elem(name),
             enString_Elem(id),
-            enString_Elem(message)
-            ]);
-    #endif
-    list data = enList_FromString(message);
-    #ifdef ENCLEP_TRACE
-        enLog_TraceVars(["data"], [
+            enString_Elem(message),
             enList_Elem(data)
             ]);
     #endif
@@ -435,7 +431,7 @@ integer enCLEP_Process(
     #endif
     // generic message
     #ifndef EN_CLEP_MESSAGE
-        enLog_Debug("Raw CLEP message received from " + enObject_Elem( id ) + " on domain \"" + llList2String( data, 2 ) + "\", but EN_CLEP_MESSAGE not defined: " + llList2String( data, 4 ) );
+        enLog_Debug("Raw CLEP message received from " + id + " on domain \"" + llList2String( data, 2 ) + "\", but EN_CLEP_MESSAGE not defined: " + llList2String( data, 4 ) );
     #else
         en_clep_message(
             id, // source id
