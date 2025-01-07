@@ -33,7 +33,7 @@
 // ==
 
 #define enRotation_Slerp(a, b, t) \
-    (llAxisAngle2Rot(llRot2Axis(b /= a), t * llRot2Angle(b)) * a)
+    (llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a)
 
 // ==
 // == functions
