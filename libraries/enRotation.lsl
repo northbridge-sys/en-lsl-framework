@@ -29,13 +29,6 @@
 */
 
 // ==
-// == macros
-// ==
-
-#define enRotation_Slerp(a, b, t) \
-    (llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a)
-
-// ==
 // == functions
 // ==
 
@@ -61,6 +54,15 @@ rotation enRotation_Nlerp(
     float ti = 1 - t;
     rotation r = < a.x * ti, a.y * ti, a.z * ti, a.s * ti > + < b.x * t, b.y * t, b.z * t, b.s * t >;
     return enRotation_Normalize( r );
+}
+
+rotation enRotation_Slerp(
+    rotation a,
+    rotation b,
+    float t
+)
+{
+    return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
 string enRotation_Compress( // converts a rotation to a Base64 string, can be converted back with enRotation_Decompress
