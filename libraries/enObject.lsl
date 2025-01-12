@@ -35,10 +35,10 @@
 // ==
 
 #define enObject_StopIfOwnerRezzed() \
-    if (enObject_Parent() == (string)llGetKey()) enLog_(FATAL, "enObject_StopIfOwnerRezzed()")
+    if (enObject_Parent() == (string)llGetKey()) enLog_(FATAL, __LINE__, "enObject_StopIfOwnerRezzed()")
 
 #define enObject_StopIfFlagged() \
-    if ((integer)llLinksetDataRead("stop")) enLog_(FATAL, "enObject_StopIfFlagged()")
+    if ((integer)llLinksetDataRead("stop")) enLog_(FATAL, __LINE__, "enObject_StopIfFlagged()")
 
 // ==
 // == globals
