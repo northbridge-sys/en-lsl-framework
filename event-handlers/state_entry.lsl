@@ -46,6 +46,14 @@
             enLog_TraceParams( "state_entry", [], [] );
         #endif
 
+        // stop immediately if the "stop" LSD pair is set (used for updaters)
+        enObject_StopIfFlagged();
+
+        // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
+        #ifdef ENOBJECT_STOPIFOWNERREZZED
+            enObject_StopIfOwnerRezzed();
+        #endif
+
         // check if any En libraries want to intercept this event
         #ifdef ENLSD_ENABLE_UUID_HEADER
             enLSD_CheckUUID();
