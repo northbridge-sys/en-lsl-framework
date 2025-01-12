@@ -118,6 +118,18 @@ list enLSD_Find(list name, integer start, integer count)
 	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
+list enLSD_FindRegex(string regex, integer start, integer count)
+{ // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
+    #ifdef ENLSD_TRACE
+        enLog_TraceParams("enLSD_FindRegex", ["regex", "start", "count"], [
+            enString_Elem(regex),
+            start,
+            count
+            ]);
+    #endif
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + regex + "$", start, count);
+}
+
 string enLSD_BuildHead(
     string script_name,
     string uuid
