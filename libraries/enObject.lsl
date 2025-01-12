@@ -31,6 +31,16 @@
 */
 
 // ==
+// == macros
+// ==
+
+#define enObject_StopIfOwnerRezzed() \
+    if (enObject_Parent() == (string)llGetKey()) enLog_(FATAL, "enObject_StopIfOwnerRezzed()")
+
+#define enObject_StopIfFlagged() \
+    if ((integer)llLinksetDataRead("stop")) enLog_(FATAL, "enObject_StopIfFlagged()")
+
+// ==
 // == globals
 // ==
 
@@ -69,11 +79,6 @@ string enObject_Self( // returns either own object's current UUID or one of its 
 string enObject_Parent() // gets UUID of entity that rezzed the object
 {
     return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
-}
-
-enObject_StopIfOwnerRezzed()
-{ // TODO: move this to a definition macro that runs automatically on_rez
-    if ( enObject_Parent() == (string)llGetKey() ) enLog_Fatal( "enObject_StopIfOwnerRezzed()" );
 }
 
 integer enObject_ClosestLinkDesc(

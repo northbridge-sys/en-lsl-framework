@@ -46,6 +46,14 @@
             enLog_TraceParams( "on_rez", [], [ param ] );
         #endif
 
+        // stop immediately if the "stop" LSD pair is set (used for updaters)
+        enObject_StopIfFlagged();
+
+        // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
+        #ifdef ENOBJECT_STOPIFOWNERREZZED
+            enObject_StopIfOwnerRezzed();
+        #endif
+
         // update enCLEP channels if any are just the UUID
         #ifdef ENCLEP_ENABLE
             enCLEP_RefreshLinkset();
