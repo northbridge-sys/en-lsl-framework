@@ -36,11 +36,8 @@
 		}
 */
 
-#if defined EN_ON_REZ_TRACE || defined EN_ON_REZ || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
 	on_rez( integer param )
 	{
-#endif
-
         // log event if requested
         #ifdef EN_ON_REZ_TRACE
             enLog_TraceParams( "on_rez", [], [ param ] );
@@ -73,7 +70,4 @@
         #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
             enObject_UpdateUUIDs();
         #endif
-
-#if defined EN_ON_REZ_TRACE || defined EN_ON_REZ || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
 	}
-#endif
