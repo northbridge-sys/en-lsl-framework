@@ -36,11 +36,8 @@
 		}
 */
 
-#if defined EN_STATE_ENTRY_TRACE || defined EN_STATE_ENTRY || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT_ENABLE_SELF
 	state_entry()
 	{
-#endif
-
         // log event if requested
         #ifdef EN_STATE_ENTRY_TRACE
             enLog_TraceParams( "state_entry", [], [] );
@@ -72,7 +69,4 @@
         #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
             enObject_UpdateUUIDs();
         #endif
-
-#if defined EN_STATE_ENTRY_TRACE || defined EN_STATE_ENTRY || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENOBJECT_ENABLE_SELF
 	}
-#endif
