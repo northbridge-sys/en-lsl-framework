@@ -36,6 +36,41 @@
 // == functions
 // ==
 
+list enDate_DayPartToHMS(
+    float day_part
+)
+{
+    integer seconds = (integer)(86400 * day_part); // get total number of seconds in a day represented by this day_part
+    integer hours = seconds / 3600;
+    integer minutes = (seconds / 60) % 60;
+    return [
+        hours,
+        minutes,
+        (86400 * day_part) - hours * 3600 - minutes * 60 // remaining seconds
+    ];
+}
+
+list enDate_EnvironmentTimeHere()
+{ // note: this shouldn't be used in attachments maybe because of llGetPos?
+    list e = llGetEnvironment(llGetPos(), [ENVIRONMENT_DAYINFO]);
+    return enDate_DayPartToHMS((float)llList2String(e, 2) / (float)llList2String(e, 0));
+}
+
+string enDate_PrettyHMS(
+    list hms,
+    integer flags
+)
+{
+    if (flags & ENDATE_12_HOUR) 1; // TODO
+    if (flags & ENDATE_PAD_ZEROES)
+    {
+        while (llStringLength(llList2String(hms, 0)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 0)], 0, 0);
+        while (llStringLength(llList2String(hms, 1)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 1)], 1, 1);
+        while (llStringLength(llList2String(hms, 2)) < 2 || (llSubStringIndex(llList2String(hms, 2), ".") < 2 && llSubStringIndex(llList2String(hms, 2), ".") > -1)) hms = llListReplaceList(hms, ["0" + llList2String(hms, 2)], 2, 2); // TODO: MAKE LESS BAD
+    }
+    return llList2String(hms, 0) + ":" + llList2String(hms, 1) + ":" + llList2String(hms, 2);
+}
+
 integer enDate_MS( // gets an integer that represents the current millisecond of a month
     string timestamp // llGetTimestamp string (use enDate_MSNow() for the current value)
     )
