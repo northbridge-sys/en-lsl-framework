@@ -35,6 +35,10 @@
 #define enInteger_Rand() \
     (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ))
 
+// WARNING: THIS IS LAZY AND BAD, DON'T USE
+#define enInteger_GetSign(i) \
+    (!!(i & INTEGER_NEGATIVE) * 2 - 1)
+
 #define enInteger_InvertNegative(i) \
     (i ^ INTEGER_NEGATIVE)
 
