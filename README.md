@@ -17,10 +17,10 @@ LSL is the native scripting language used to control Second Life objects. Certai
 Some of the useful features En provides:
 
 - enLog - a standardized logging interface that encourages better scripting
-- enCLEP - `llListen`/`llRegionSayTo` with hash channels, packetization, and LSD/KVP/inventory transfers
+- enCLEP - `llListen`/`llRegionSayTo` with hash channels, packetization, and LSD/KVS/inventory transfers
 - enLEP - `llMessageLinked` (or enCLEP) with lists, script filtering, and a request-response protocol
 - enLSD - functions to safely write, read, and manipulate key-value pairs in the `llLinksetData*` store
-- enKVP - simple in-memory key-value pair database, particularly useful for backing up critical linkset data
+- enKVS - simple in-memory key-value pair database, particularly useful for backing up critical linkset data
 - enTimer - `llSetTimerEvent` with string callbacks, multiple concurrent timers, and one-shot timers
 - enTest - unit testing utilities
 - Helper libraries for integers (including hex & bitwise), floats, vectors, rotations, strings, lists, and keys

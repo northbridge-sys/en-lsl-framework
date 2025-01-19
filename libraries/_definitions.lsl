@@ -180,7 +180,7 @@
     #define ENINTEGER_TRACE
     #define ENINVENTORY_TRACE
     #define ENKEY_TRACE
-    #define ENKVP_TRACE
+    #define ENKVS_TRACE
     #define ENLIST_TRACE
     #define ENLOG_TRACE
     #define ENLSD_TRACE

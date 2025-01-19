@@ -88,6 +88,7 @@ list _ENCLEP_DOMAINS; // domain, flags, channel, handle
 
 #ifdef ENCLEP_ENABLE_LEP
     string ENCLEP_LEP_SOURCE_PRIM = NULL_KEY;
+    string ENCLEP_LEP_DOMAIN;
 #endif
 
 // ==
@@ -332,12 +333,15 @@ integer enCLEP_Process(
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 3) return 1; // error in LEP unserialize operation
             ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
+            ENCLEP_LEP_DOMAIN = llList2String(data, 3); // same with domain
             enLEP_Process(
                 -1,
                 (integer)llList2String(data, 0),
                 llList2String(data, 1),
                 llList2String(data, 2)
                 );
+            ENCLEP_LEP_SOURCE_PRIM = NULL_KEY; // reset values to be safe
+            ENCLEP_LEP_DOMAIN = "";
     #endif
     #ifdef EN_LEP_MESSAGE
             return 1;

@@ -32,20 +32,20 @@ if (status == "" && llList2String(params, 0) == "kvp")
 {
 	string kvp_check_op = llList2String(params, 1);
 	if (kvp_check_op == "list")
-	{ // return list of KVP pairs
-		enLEP_Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVP_NAMES, "\n"));
+	{ // return list of KVS pairs
+		enLEP_Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVS_NAMES, "\n"));
 	}
 	if (kvp_check_op == "set" || kvp_check_op == "get")
 	{ // check name for set or get operation first
-		if (!enKVP_Exists(llList2String(params, 1)))
+		if (!enKVS_Exists(llList2String(params, 1)))
 		{ // invalid name
 			enLEP_Send("", source, 0, "err:undefined", ident, params, data);
 			return;
 		}
 	}
 	if (kvp_check_op == "set")
-	{ // setting an enKVP pair
-		if (!enKVP_Set(llList2String(params, 1), data))
+	{ // setting an enKVS pair
+		if (!enKVS_Set(llList2String(params, 1), data))
 		{ // write failed due to protect
 			enLEP_Send("", source, 0, "err:readonly", ident, params, data);
 			return;
@@ -54,7 +54,7 @@ if (status == "" && llList2String(params, 0) == "kvp")
 		return;
 	}
 	if (kvp_check_op == "get")
-	{ // getting an enKVP pair
-		enLEP_Send("", source, 0, "ok", ident, params, enKVP_Get(llList2String(params, 1)));
+	{ // getting an enKVS pair
+		enLEP_Send("", source, 0, "ok", ident, params, enKVS_Get(llList2String(params, 1)));
 	}
 }
