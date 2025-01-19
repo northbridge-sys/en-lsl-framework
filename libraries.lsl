@@ -51,7 +51,7 @@
 #include "en-lsl-framework/libraries/enInteger.lsl"
 #include "en-lsl-framework/libraries/enInventory.lsl"
 #include "en-lsl-framework/libraries/enKey.lsl"
-#include "en-lsl-framework/libraries/enKVP.lsl"
+#include "en-lsl-framework/libraries/enKVS.lsl"
 #include "en-lsl-framework/libraries/enList.lsl"
 #include "en-lsl-framework/libraries/enLog.lsl"
 #include "en-lsl-framework/libraries/enLSD.lsl"
