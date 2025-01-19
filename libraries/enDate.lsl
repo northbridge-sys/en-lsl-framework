@@ -43,10 +43,11 @@ list enDate_DayPartToHMS(
     integer seconds = (integer)(86400 * day_part); // get total number of seconds in a day represented by this day_part
     integer hours = seconds / 3600;
     integer minutes = (seconds / 60) % 60;
+    seconds -= (hours * 3600) + (minutes * 60);
     return [
         hours,
         minutes,
-        (86400 * day_part) - hours * 3600 - minutes * 60 // remaining seconds
+        seconds
     ];
 }
 
