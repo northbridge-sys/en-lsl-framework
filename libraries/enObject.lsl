@@ -47,8 +47,8 @@
 list _ENOBJECT_UUIDS_SELF;
 
 #ifdef ENOBJECT_ENABLE_LINK_CACHE
-    list _ENOBJECT_LINK_CACHE; // prim name, current linknum
-    #define _ENOBJECT_LINK_CACHE_STRIDE 2
+    list _ENOBJECT_LINK_CACHE; // prim name, current linknum, max distance
+    #define _ENOBJECT_LINK_CACHE_STRIDE 3
 #endif
 
 // ==
@@ -133,7 +133,7 @@ integer enObject_FindLink(float max_dist, string name)
         if (llGetLinkName(i) == name)
         { // name match
 			float dist = llVecDist(llGetPos(), llList2Vector(llGetLinkPrimitiveParams(i, [PRIM_POSITION]), 0));
-			if ((cl_dist < 0.0 || dist < cl_dist) && (max_dist > 0.0 && dist <= max_dist))
+			if ((cl_dist < 0.0 || dist < cl_dist) && (max_dist <= 0.0 || dist <= max_dist))
 			{ // closet so far, and within max distance
 				cl_i = i;
 				cl_dist = dist;
@@ -145,6 +145,7 @@ integer enObject_FindLink(float max_dist, string name)
 }
 
 integer enObject_CacheClosestLink(
+    float max_dist,
     string name
 )
 {
@@ -154,8 +155,8 @@ integer enObject_CacheClosestLink(
     #else
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
         if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1); // already caching
-        _ENOBJECT_LINK_CACHE += [name, enObject_FindLink(name)];
-        return (integer)llList2String(_ENOBJECT_LINK_CACHE, -1); // return last element, since it is always ours
+        _ENOBJECT_LINK_CACHE += [name, enObject_FindLink(max_dist, name), max_dist];
+        return (integer)llList2String(_ENOBJECT_LINK_CACHE, -2); // return last element, since it is always ours
     #endif
 }
 
@@ -163,9 +164,9 @@ enObject_LinkCacheUpdate()
 {
     integer i;
     integer l = llGetListLength(_ENOBJECT_LINK_CACHE);
-    for (i = 0; i < l; i+=2)
+    for (i = 0; i < l; i += _ENOBJECT_LINK_CACHE_STRIDE)
     {
-        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [enObject_FindLink(llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [enObject_FindLink((float)llList2String(_ENOBJECT_LINK_CACHE, i + 2), llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
     }
 }
 
