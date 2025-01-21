@@ -62,19 +62,7 @@ enLog_To(
     // can use level 0 to always send, or a level constant for loglevel support
     integer lsd_level = enLog_GetLoglevel();
     string debug_header;
-    if (lsd_level >= 5)
-    { // use debug header
-        list script_name = llParseStringKeepNulls(llGetScriptName(), [" "], []);
-        while (llListFindList(["(", "["], [llGetSubString(llList2String(script_name, 0), 0, 0)]) != -1)
-        { // remove any elements at start of script_name that start with "(" or "[" (such as "[Northbridge Business Systems]")
-            script_name = llDeleteSubList(script_name, 0, 0);
-        }
-        while (llListFindList(["r", "v"], [llGetSubString(llList2String(script_name, -1), 0, 0)]) != -1)
-        { // remove any elements at end of script_name that start with "r" or "v" (hides revision/version number)
-            script_name = llDeleteSubList(script_name, -1, -1);
-        }
-        debug_header = "🔽 [" + llGetSubString(llGetTimestamp(), 11, 21) + "] (" + (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())) + "% " + llGetSubString(llGetKey(), 0, 3) + " @" + (string)line + ") " + llDumpList2String(script_name, " ") + "\n";
-    }
+    if (lsd_level >= 5) debug_header = "🔽 [" + llGetSubString(llGetTimestamp(), 11, 21) + "] (" + (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())) + "% " + llGetSubString(llGetKey(), 0, 3) + " @" + (string)line + ") " + llDumpList2String(llGetScriptName(), " ") + "\n";
     if ( lsd_level >= level )
     {
         message = debug_header + llList2String([ // loglevel header, usually an icon but can be anything
