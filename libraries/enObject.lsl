@@ -123,7 +123,7 @@ integer enObject_ClosestLink(string name)
     return enObject_FindLink(name);
 }
 
-integer enObject_FindLink(string name)
+integer enObject_FindLink(float max_dist, string name)
 {
     integer i;
     integer cl_i;
@@ -133,8 +133,8 @@ integer enObject_FindLink(string name)
         if (llGetLinkName(i) == name)
         { // name match
 			float dist = llVecDist(llGetPos(), llList2Vector(llGetLinkPrimitiveParams(i, [PRIM_POSITION]), 0));
-			if (cl_dist < 0.0 || dist < cl_dist)
-			{ // closet so far
+			if ((cl_dist < 0.0 || dist < cl_dist) && (max_dist > 0.0 && dist <= max_dist))
+			{ // closet so far, and within max distance
 				cl_i = i;
 				cl_dist = dist;
 			}
