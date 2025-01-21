@@ -62,7 +62,7 @@ enLog_To(
     // can use level 0 to always send, or a level constant for loglevel support
     integer lsd_level = enLog_GetLoglevel();
     string debug_header;
-    if (lsd_level >= 5) debug_header = "🔽 [" + llGetSubString(llGetTimestamp(), 11, 21) + "] (" + (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())) + "% " + llGetSubString(llGetKey(), 0, 3) + " @" + (string)line + ") " + llDumpList2String(llGetScriptName(), " ") + "\n";
+    if (lsd_level >= 5) debug_header = "🔽 [" + llGetSubString(llGetTimestamp(), 11, 21) + "] (" + (string)((integer)((100.0 * llGetUsedMemory()) / llGetMemoryLimit())) + "% " + llGetSubString(llGetKey(), 0, 3) + " @" + (string)line + ") " + llGetScriptName() + "\n";
     if ( lsd_level >= level )
     {
         message = debug_header + llList2String([ // loglevel header, usually an icon but can be anything
