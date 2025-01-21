@@ -1,5 +1,6 @@
 /*
-    libraries.lsl
+    enEnvironment.lsl
+    Library
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
     https://docs.northbridgesys.com/en-lsl-framework
@@ -24,41 +25,33 @@
     │ INSTRUCTIONS                                                                 │
     └──────────────────────────────────────────────────────────────────────────────┘
 
-    This file #includes all existing En library scripts. Type the following:
-		#include "en-lsl-framework/libraries.lsl"
-    into the top of an LSL script with the LSL preprocessor enabled to be able to
-    call En library functions.
-
-    Make sure to #define any desired preprocessor flags BEFORE #include-ing this
-    script, or the libraries may be loaded incorrectly.
-
-    Make sure the "Script optimizer" setting is enabled in your preprocessor!
+	TBD
 */
 
-// each major revision of En increments this value
-#define EN_LIBRARIES_LOADED 1
+// ==
+// == macros
+// ==
 
-// required macro definitions
-#include "en-lsl-framework/libraries/_definitions.lsl"
+// AmbientLight returns float 0.0 to 1.0 (llVecMag directly returns up to √3)
+// by default, AmbientLight > ~0.85 means sun is up
+#define enEnvironment_AmbientLight(p) \
+    (llVecMag((vector)llList2String(llGetEnvironment(p, [SKY_LIGHT]), 2)) * 0.577334)
 
-// libraries
-#include "en-lsl-framework/libraries/enAvatar.lsl"
-#include "en-lsl-framework/libraries/enLEP.lsl" // must be defined before enCLEP
-#include "en-lsl-framework/libraries/enCLEP.lsl"
-#include "en-lsl-framework/libraries/enDate.lsl"
-#include "en-lsl-framework/libraries/enEnvironment.lsl"
-#include "en-lsl-framework/libraries/enFloat.lsl"
-#include "en-lsl-framework/libraries/enHTTP.lsl"
-#include "en-lsl-framework/libraries/enInteger.lsl"
-#include "en-lsl-framework/libraries/enInventory.lsl"
-#include "en-lsl-framework/libraries/enKey.lsl"
-#include "en-lsl-framework/libraries/enKVS.lsl"
-#include "en-lsl-framework/libraries/enList.lsl"
-#include "en-lsl-framework/libraries/enLog.lsl"
-#include "en-lsl-framework/libraries/enLSD.lsl"
-#include "en-lsl-framework/libraries/enObject.lsl"
-#include "en-lsl-framework/libraries/enRotation.lsl"
-#include "en-lsl-framework/libraries/enString.lsl"
-#include "en-lsl-framework/libraries/enTimer.lsl"
-#include "en-lsl-framework/libraries/enTest.lsl"
-#include "en-lsl-framework/libraries/enVector.lsl"
+// note: this shouldn't be used in attachments maybe because of llGetPos?
+#define enEnvironment_AmbientLightHere() \
+    (llVecMag((vector)llList2String(llGetEnvironment(llGetPos(), [SKY_LIGHT]), 2)) * 0.577334)
+
+// SunHeight returns float -1.0 to 1.0
+// by default, SunHeight > 0.0 means sun is up
+#define enEnvironment_SunHeightHere() \
+    enEnvironment_SunHeight(llGetPos())
+
+// ==
+// == functions
+// ==
+
+float enEnvironment_SunHeight(vector p)
+{
+    p = (vector)llList2String(llGetEnvironment(p, [SKY_SUN]), 4);
+    return p.z; // this might not be working?
+}
