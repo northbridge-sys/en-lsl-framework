@@ -79,23 +79,60 @@ enLog_To(
     }
 }
 
+enLog_SuccessStop( // logs a success and stops the script
+    string m // message
+)
+{
+    if (m != "") m = " " + m;
+    enLog_(0, __LINE__, "✅ SUCCESS: Script stopped:" + m);
+    llSetScriptState(llGetScriptName(), FALSE);
+    llSleep(1.0); // give the simulator time to stop the script to be safe
+}
+
+enLog_SuccessDelete( // logs a success and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+    string m // message
+)
+{
+    if (m != "") m = " " + m;
+    enLog_(0, __LINE__, "✅ SUCCESS: Script deleted:" + m);
+    enLog_Delete();
+}
+
+enLog_SuccessDie( // logs a success and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+    string m // message
+)
+{
+    if (m != "") m = " " + m;
+    enLog_(0, __LINE__, "✅ SUCCESS: Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ":" + m);
+    enLog_Die();
+}
+
 enLog_FatalStop( // logs a fatal error and stops the script
     string m // message
     )
 {
-    if ( m != "" ) m += " ";
-    enLog_Fatal(m + "Script stopped." );
-    llSetScriptState( llGetScriptName(), FALSE );
-    llSleep( 1.0 ); // give the simulator time to stop the script to be safe
+    if (m != "") m = " " + m;
+    enLog_Fatal("Script stopped:" + m);
+    llSetScriptState(llGetScriptName(), FALSE);
+    llSleep(1.0); // give the simulator time to stop the script to be safe
 }
 
 enLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
     string m // message
 )
 {
-    if ( m != "" ) m += " ";
-    enLog_Fatal(m + "Script deleted." );
+    if (m != "") m = " " + m;
+    enLog_Fatal("Script deleted:" + m);
     enLog_Delete();
+}
+
+enLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+    string m // message
+)
+{
+    if (m != "") m = " " + m;
+    enLog_Fatal("Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ":" + m);
+    enLog_Die();
 }
 
 enLog_Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
@@ -109,19 +146,10 @@ enLog_Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
     #ifdef ENLOG_DISABLE_DELETE
         enLog_Error("Script deletion failed because ENLOG_DISABLE_DELETE is defined.");
     #else
-        llRemoveInventory( llGetScriptName() );
+        llRemoveInventory(llGetScriptName());
     #endif
-    llSetScriptState( llGetScriptName(), FALSE );
-    llSleep( 1.0 ); // give the simulator time to stop and delete the script to be safe
-}
-
-enLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
-    string m // message
-)
-{
-    if ( m != "" ) m += " ";
-    enLog_Fatal( m + "Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + "." );
-    enLog_Die();
+    llSetScriptState(llGetScriptName(), FALSE);
+    llSleep(1.0); // give the simulator time to stop and delete the script to be safe
 }
 
 enLog_Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
