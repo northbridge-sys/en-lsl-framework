@@ -29,15 +29,13 @@
 */
 
 // ==
-// == macros
-// ==
-
-#define enAvatar_Elem(string id) \
-    "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)"
-
-// ==
 // == functions
 // ==
+
+string enAvatar_Elem( string id )
+{
+    return "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)";
+}
 
 string enAvatar_GetGroup(
     string id
