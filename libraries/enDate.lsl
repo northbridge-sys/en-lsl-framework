@@ -29,8 +29,10 @@
 */
 
 // ==
-// == globals
+// == macros
 // ==
+
+#define enDate_MSNow() enDate_MS(llGetTimestamp())
 
 // ==
 // == functions
@@ -82,11 +84,6 @@ integer enDate_MS( // gets an integer that represents the current millisecond of
         (integer)llGetSubString( timestamp, 14, 15 ) * 60000 + // minutes * ms_per_minute (613716352 + (59 * 60000) = 617256352)
         (integer)( (float)llGetSubString( timestamp, 17, -2 ) * 1000.0 ); // seconds.ms * ms_per_second (617256352 + 60000 = 617316352)
     // total range is 2764800000 ms, or ms in 31 days
-}
-
-integer enDate_MSNow() // gets the value of enDate_MS( ... ) for the current datetime
-{
-    return enDate_MS( llGetTimestamp() );
 }
 
 integer enDate_MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
