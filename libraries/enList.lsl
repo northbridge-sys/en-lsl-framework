@@ -133,6 +133,11 @@ Ended with 15540 bytes used
  
 [22:52] Object: Testing enList_FromString
 Started with 16760 bytes used
+Ended with 17000 bytes used
+ Time Running Per Cycle: 0.004608 seconds
+ 
+[22:55] Object: Testing enList_FromString llListReplaceList
+Started with 16760 bytes used
 Ended with 17116 bytes used
  Time Running Per Cycle: 0.005356 seconds
 */
