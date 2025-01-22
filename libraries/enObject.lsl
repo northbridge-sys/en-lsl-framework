@@ -34,6 +34,9 @@
 // == macros
 // ==
 
+#define enObject_Root() \
+    llList2String([llGetKey(), llGetLinkKey(1)], !(llGetNumberOfPrims() - 1))
+
 #define enObject_StopIfOwnerRezzed() \
     if (enObject_Parent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered.")
 
