@@ -165,7 +165,10 @@ integer enLEP_Process(
         allowed_targets += ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro ENLEP_ALLOWED_TARGET_SCRIPTS
     #endif
     #ifndef ENLEP_ALLOW_ALL_TARGET_SCRIPTS
-        if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1) return 0; // discard message, not targeted to us
+        if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1)
+        {
+            if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard message, not targeted to us
+        }
     #endif
     #if defined EN_LEP_MESSAGE && defined EN_LEP_MESSAGE_TRACE
         enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
