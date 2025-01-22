@@ -92,14 +92,15 @@ list _ENCLEP_DOMAINS; // domain, flags, channel, handle
 #endif
 
 // ==
-// == functions
+// == macros
 // ==
 
-string enCLEP_GetService()
-{
-    // cannot log this function because it is used by enLog
-    return _ENCLEP_SERVICE;
-}
+// cannot log this function because it is used by enLog
+#define enCLEP_GetService() _ENCLEP_SERVICE
+
+// ==
+// == functions
+// ==
 
 enCLEP_SetService(
     string service
