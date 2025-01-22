@@ -260,7 +260,7 @@ integer enCLEP_Process(
 {
     list data = enList_FromString(message);
     #if defined ENCLEP_TRACE || defined ENCLEP_PROCESS_TRACE
-        enLog_TraceParams("enCLEP_Process", ["channel", "name", "id", "message", "data"], [
+        enLog_TraceParams("enCLEP_Process", ["channel", "name", "id", "message", "(data)"], [
             channel,
             enString_Elem(name),
             enString_Elem(id),
