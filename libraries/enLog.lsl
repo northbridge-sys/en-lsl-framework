@@ -74,8 +74,13 @@ enLog_To(
             "🪲 ", // DEBUG
             "🚦 " // TRACE
             ], level) + message;
-        if (target == "") llOwnerSay(message);
-        else llRegionSayTo(target, 0, message);
+        if (target == "")
+        {
+            if ((integer)llLinksetDataRead("logsay")) llSay((integer)llLinksetDataRead("logchannel"), message);
+            else llOwnerSay(message);
+        }
+        else if (target == NULL_KEY) 
+        else llRegionSayTo(target, (integer)llLinksetDataRead("logchannel"), message);
     }
 }
 
