@@ -67,7 +67,7 @@ default
 
         // notify parent that we are rezzed and ready to receive script(s)
         enCLEP_SetService( "enInventory_RezRemote" );
-        enCLEP_Send( // send via enCLEP
+        enCLEP_SendRaw( // send via enCLEP
             enObject_Parent(), // prim
             enObject_Parent(), // domain
             "enInventory_RezRemote", // type
