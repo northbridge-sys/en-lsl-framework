@@ -290,7 +290,7 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
 }
 
 enLSD_CheckUUID() // updates LSD entries that use old UUID
-{
+{ // note: if ENLSD_SKIP_CHECK_UUID is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
     #ifdef ENLSD_TRACE
         enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif
