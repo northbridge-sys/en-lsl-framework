@@ -62,7 +62,7 @@ list enTest_Assert( // unit test
         f += " at line " + (string)n + ".";
         // log error
         if ( l == FATAL ) enLog_Fatal( f );
-        else enLog_( l, __LINE__, f );
+        else enLog_To( l, __LINE__, "", f );
     #endif
 }
 

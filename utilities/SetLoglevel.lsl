@@ -61,9 +61,9 @@ setLoglevel()
     }
     string lsd = llLinksetDataRead( "loglevel" );
     llLinksetDataWrite( "loglevel", (string)loglevel );
-    if ( lsd != "0" && !(integer)lsd ) enLog_( 0, 0, "Set loglevel to " + enLog_LevelToString( loglevel ) + "." );
-    else if ( lsd != (string)loglevel ) enLog_( 0, 0, "Changed loglevel from " + enLog_LevelToString( (integer)lsd ) + " to " + enLog_LevelToString( loglevel ) + "." );
-    else enLog_( 0, 0, "Loglevel remains set at " + enLog_LevelToString( loglevel ) + "." );
+    if ( lsd != "0" && !(integer)lsd ) enLog_Print( "Set loglevel to " + enLog_LevelToString( loglevel ) + "." );
+    else if ( lsd != (string)loglevel ) enLog_Print( "Changed loglevel from " + enLog_LevelToString( (integer)lsd ) + " to " + enLog_LevelToString( loglevel ) + "." );
+    else enLog_Print( "Loglevel remains set at " + enLog_LevelToString( loglevel ) + "." );
 }
 
 default
