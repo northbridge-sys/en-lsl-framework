@@ -31,31 +31,26 @@
 */
 
 // ==
+// == macros
+// ==
+
+#define enLog_TraceVars(var_names, var_values) \
+    enLog_TraceParams("enLog_TraceVars", var_names, var_values)
+
+#define enLog_GetLogtarget() \
+    llLinksetDataRead("logtarget")
+
+#define enLog_SetLogtarget(target) \
+    llLinksetDataWrite("logtarget", target)
+
+// ==
 // == functions
 // ==
 
-enLog_( // custom logging function
-    integer level,
-    integer line,
-    string message
-    )
-{
-    enLog_To("", level, line, message);
-    #ifndef ENLOG_DISABLE_LOGTARGET
-        string t = enLog_GetLogtarget();
-        string prim = llGetSubString( t, 0, 35 );
-        if ( enKey_IsPrimInRegion( prim ) )
-        { // log via enCLEP to logtarget
-            string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP_MultiSayTo( prim, enCLEP_Channel( domain ), enList_ToString([ "enCLEP", enCLEP_GetService(), prim, domain, "enLog", enList_ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
-        }
-    #endif
-}
-
 enLog_To(
-    string target,
     integer level,
     integer line,
+    string target, // note - this is NOT related to the "logtarget" check
     string message
     )
 {
@@ -74,14 +69,19 @@ enLog_To(
             "🪲 ", // DEBUG
             "🚦 " // TRACE
             ], level) + message;
-        if (target == "")
-        {
-            if ((integer)llLinksetDataRead("logsay")) llSay((integer)llLinksetDataRead("logchannel"), message);
-            else llOwnerSay(message);
-        }
-        else if (target == NULL_KEY) 
-        else llRegionSayTo(target, (integer)llLinksetDataRead("logchannel"), message);
+        if ((integer)llLinksetDataRead("logsay")) llSay((integer)llLinksetDataRead("logchannel"), message); // always check logsay for last-resort llSay logging
+        if (target == "") llOwnerSay(message); // target to owner
+        else llRegionSayTo(target, 0, message); // log to specific user
     }
+    #ifndef ENLOG_DISABLE_LOGTARGET
+        string t = enLog_GetLogtarget();
+        string prim = llGetSubString( t, 0, 35 );
+        if ( enKey_IsPrimInRegion( prim ) )
+        { // log via enCLEP to logtarget
+            string domain = llDeleteSubString( t, 0, 35 );
+            enCLEP_MultiSayTo( prim, enCLEP_Channel( domain ), enList_ToString([ "enCLEP", enCLEP_GetService(), prim, domain, "enLog", enList_ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
+        }
+    #endif
 }
 
 enLog_SuccessStop( // logs a success and stops the script
@@ -89,7 +89,7 @@ enLog_SuccessStop( // logs a success and stops the script
 )
 {
     if (m != "") m = " " + m;
-    enLog_(0, __LINE__, "✅ SUCCESS: Script stopped:" + m);
+    enLog_Print("✅ SUCCESS: Script stopped:" + m);
     llSetScriptState(llGetScriptName(), FALSE);
     llSleep(1.0); // give the simulator time to stop the script to be safe
 }
@@ -99,7 +99,7 @@ enLog_SuccessDelete( // logs a success and deletes the script (WARNING: SCRIPT I
 )
 {
     if (m != "") m = " " + m;
-    enLog_(0, __LINE__, "✅ SUCCESS: Script deleted:" + m);
+    enLog_Print("✅ SUCCESS: Script deleted:" + m);
     enLog_Delete();
 }
 
@@ -108,7 +108,7 @@ enLog_SuccessDie( // logs a success and deletes the OBJECT (WARNING: OBJECT IS I
 )
 {
     if (m != "") m = " " + m;
-    enLog_(0, __LINE__, "✅ SUCCESS: Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ":" + m);
+    enLog_Print("✅ SUCCESS: Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ":" + m);
     enLog_Die();
 }
 
@@ -214,11 +214,6 @@ enLog_TraceParams( string function_name, list param_names, list param_values )
     enLog_Trace( function_name + "(" + params + ")" );
 }
 
-enLog_TraceVars( list var_names, list var_values )
-{
-    enLog_TraceParams( "enLog_TraceVars", var_names, var_values );
-}
-
 integer enLog_GetLoglevel()
 {
     string lsd = llLinksetDataRead( "loglevel" ); // any valid log level number, 0 (uses default), or negative (suppresses all output)
@@ -232,17 +227,4 @@ enLog_SetLoglevel(
 {
     if ( level < FATAL || level > TRACE ) return;
     llLinksetDataWrite( "loglevel", (string)level );
-}
-
-string enLog_GetLogtarget(
-)
-{
-    return llLinksetDataRead("logtarget");
-}
-
-enLog_SetLogtarget(
-    string target
-)
-{
-    llLinksetDataWrite( "logtarget", target );
 }

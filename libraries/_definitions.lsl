@@ -238,13 +238,21 @@
 #endif
 
 // ==
-// == macros
+// == macros required by all libraries
 // ==
 
-#define enLog_Print(...) enLog_( 0, __LINE__, __VA_ARGS__ )
-#define enLog_Fatal(...) enLog_( 1, __LINE__, __VA_ARGS__ )
-#define enLog_Error(...) enLog_( 2, __LINE__, __VA_ARGS__ )
-#define enLog_Warn(...) enLog_( 3, __LINE__, __VA_ARGS__ )
-#define enLog_Info(...) enLog_( 4, __LINE__, __VA_ARGS__ )
-#define enLog_Debug(...) enLog_( 5, __LINE__, __VA_ARGS__ )
-#define enLog_Trace(...) enLog_( 6, __LINE__, __VA_ARGS__ )
+#define enLog_Print(...) enLog_To( 0, __LINE__, "", __VA_ARGS__ )
+#define enLog_Fatal(...) enLog_To( 1, __LINE__, "", __VA_ARGS__ )
+#define enLog_Error(...) enLog_To( 2, __LINE__, "", __VA_ARGS__ )
+#define enLog_Warn(...) enLog_To( 3, __LINE__, "", __VA_ARGS__ )
+#define enLog_Info(...) enLog_To( 4, __LINE__, "", __VA_ARGS__ )
+#define enLog_Debug(...) enLog_To( 5, __LINE__, "", __VA_ARGS__ )
+#define enLog_Trace(...) enLog_To( 6, __LINE__, "", __VA_ARGS__ )
+
+#define enLog_PrintTo(...) enLog_To( 0, __LINE__, __VA_ARGS__ )
+#define enLog_FatalTo(...) enLog_To( 1, __LINE__, __VA_ARGS__ )
+#define enLog_ErrorTo(...) enLog_To( 2, __LINE__, __VA_ARGS__ )
+#define enLog_WarnTo(...) enLog_To( 3, __LINE__, __VA_ARGS__ )
+#define enLog_InfoTo(...) enLog_To( 4, __LINE__, __VA_ARGS__ )
+#define enLog_DebugTo(...) enLog_To( 5, __LINE__, __VA_ARGS__ )
+#define enLog_TraceTo(...) enLog_To( 6, __LINE__, __VA_ARGS__ )
