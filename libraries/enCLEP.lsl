@@ -107,9 +107,9 @@ enCLEP_SetService(
     )
 {
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams( "enCLEP_SetService", [ "service" ], [
-            enString_Elem( service )
-            ] );
+        enLog_TraceParams("enCLEP_SetService", ["service"], [
+            enString_Elem(service)
+            ]);
     #endif
     _ENCLEP_SERVICE = service;
 }
@@ -147,7 +147,7 @@ enCLEP_Send( // send LEP via enCLEP
     )
 {
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_Send", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)" ], [
+        enLog_TraceParams("enCLEP_Send", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)"], [
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(target_script),
@@ -166,6 +166,7 @@ enCLEP_Send( // send LEP via enCLEP
 }
 
 enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on whether prim is part of linkset
+    integer target_link,
     string prim,
     string domain,
     string target_script,
@@ -174,17 +175,16 @@ enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on whether prim is 
     string data
     )
 {
-    integer target_link = enObject_RelativeLinknum(prim);
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendHybrid", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)", "(target_link)" ], [
+        enLog_TraceParams("enCLEP_SendHybrid", ["target_link", "prim", "domain", "target_script", "flags", "parameters", "data", "(service)"], [
+            target_link,
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
             enString_Elem(data),
-            enString_Elem(_ENCLEP_SERVICE),
-            target_link
+            enString_Elem(_ENCLEP_SERVICE)
             ]);
     #endif
     if (target_link < 0)
@@ -216,7 +216,7 @@ enCLEP_SendRaw( // send via enCLEP
     )
 {
     #ifdef ENCLEP_TRACE
-        /*enLog_TraceParams("enCLEP_SendRaw", ["prim", "domain", "type", "message", "(service)" ], [
+        /*enLog_TraceParams("enCLEP_SendRaw", ["prim", "domain", "type", "message", "(service)"], [
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(type),
@@ -235,7 +235,7 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
     )
 {
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendPTP", ["prim", "domain", "type", "message", "(service)" ], [
+        enLog_TraceParams("enCLEP_SendPTP", ["prim", "domain", "type", "message", "(service)"], [
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(type),
