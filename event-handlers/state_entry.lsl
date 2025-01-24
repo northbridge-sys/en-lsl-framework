@@ -52,7 +52,7 @@
         #endif
 
         // check if any En libraries want to intercept this event
-        #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_SKIP_CHECK_UUID
+        #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
             enLSD_CheckUUID();
         #endif
 
