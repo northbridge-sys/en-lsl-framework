@@ -165,8 +165,7 @@ enCLEP_Send( // send LEP via enCLEP
     );
 }
 
-enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on parameters passed in
-    integer target_link, // note: this is the target_link for LEP - if <0, sends via CLEP, which always effectively only uses LINK_THIS
+enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on whether prim is part of linkset
     string prim,
     string domain,
     string target_script,
@@ -175,20 +174,21 @@ enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on parameters passe
     string data
     )
 {
+    integer target_link = enObject_RelativeLinknum(prim);
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendHybrid", ["target_link", "prim", "domain", "target_script", "flags", "parameters", "data", "(service)" ], [
-            target_link,
+        enLog_TraceParams("enCLEP_SendHybrid", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)", "(target_link)" ], [
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
             enString_Elem(data),
-            enString_Elem(_ENCLEP_SERVICE)
+            enString_Elem(_ENCLEP_SERVICE),
+            target_link
             ]);
     #endif
     if (target_link < 0)
-    { // send via enCLEP
+    { // prim not part of same linkset, send via enCLEP
         enCLEP_SendRaw(
             prim,
             domain,
@@ -197,7 +197,7 @@ enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on parameters passe
         );
     }
     else
-    { // send via enLEP
+    { // prim part of same linkset, send via enLEP
         enLEP_Send( // sends a LEP message
             target_link,
             target_script,
