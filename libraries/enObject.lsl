@@ -84,6 +84,16 @@ string enObject_Parent() // gets UUID of entity that rezzed the object
     return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
 }
 
+string enObject_RelativeLinknum( // returns the linknum of a specified UUID if it is part of the same linkset, or -1 if it is not
+    string prim
+)
+{
+    list l = llGetObjectDetails(prim, [OBJECT_LINK_NUMBER]); // first, attempt to get the linknum of the prim within its linkset
+    if (l == []) return -1; // prim doesn't exist
+    if (llGetLinkKey((integer)llList2String(l, 0)) == prim) return (integer)llList2String(l, 0); // if the UUID of the linknum within our OWN linkset matches the one passed in, it is part of our linkset
+    return -1; // otherwise, it is not part of our linkset
+}
+
 integer enObject_ClosestLinkDesc(
     string desc
 )
