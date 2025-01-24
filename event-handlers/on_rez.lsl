@@ -57,7 +57,7 @@
         #endif
 
         // update enLSD names if any use the UUID header
-        #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_SKIP_CHECK_UUID
+        #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
             enLSD_CheckUUID();
         #endif
 

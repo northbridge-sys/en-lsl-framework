@@ -54,7 +54,7 @@
                 #ifdef ENCLEP_ENABLE
                     enCLEP_RefreshLinkset();
                 #endif
-                #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_SKIP_CHECK_UUID
+                #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
                     enLSD_CheckUUID();
                 #endif
                 #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
