@@ -169,7 +169,7 @@ enLSD_Pull( // reads a linkset data name-value pair FROM another script, optiona
             enString_Elem(name)
             ]);
     #endif
-    enCLEP_Send(prim, domain, "enLSD_PullLSD", enList_ToString([use_header, name]));
+    enCLEP_SendRaw(prim, domain, "enLSD_PullLSD", enList_ToString([use_header, name]));
 }
 
 enLSD_Push( // writes a linkset data name-value pair TO another script, optionally using the active enLSD header
@@ -194,7 +194,7 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     #ifdef ENLSD_ENABLE_UUID_HEADER
         u = 1; // if ENLSD_ENABLE_UUID_HEADER defined, note in response
     #endif
-    enCLEP_Send(prim, domain, "enLSD_Push", enList_ToString([u, use_header, ENLSD_HEADER, name, v]));
+    enCLEP_SendRaw(prim, domain, "enLSD_Push", enList_ToString([u, use_header, ENLSD_HEADER, name, v]));
 }
 
 list enLSD_GetPairHead( // returns the header from a specified LSD pair name

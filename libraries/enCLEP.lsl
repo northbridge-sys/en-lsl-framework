@@ -137,10 +137,9 @@ enCLEP_MultiSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of sil
 #endif
 }
 
-enCLEP_SendLEP( // send LEP via enCLEP
+enCLEP_Send( // send LEP via enCLEP
     string prim,
     string domain,
-    integer target_link,
     string target_script,
     integer flags,
     list parameters,
@@ -148,10 +147,9 @@ enCLEP_SendLEP( // send LEP via enCLEP
     )
 {
     #ifdef ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendLEP", ["prim", "domain", "target_link", "target_script", "flags", "parameters", "data", "(service)" ], [
+        enLog_TraceParams("enCLEP_Send", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)" ], [
             enObject_Elem(prim),
             enString_Elem(domain),
-            target_link,
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
@@ -159,7 +157,7 @@ enCLEP_SendLEP( // send LEP via enCLEP
             enString_Elem(_ENCLEP_SERVICE)
             ]);
     #endif
-    enCLEP_Send(
+    enCLEP_SendRaw(
         prim,
         domain,
         "LEP",
@@ -167,7 +165,50 @@ enCLEP_SendLEP( // send LEP via enCLEP
     );
 }
 
-enCLEP_Send( // send via enCLEP
+enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on parameters passed in
+    integer target_link, // note: this is the target_link for LEP - if <0, sends via CLEP, which always effectively only uses LINK_THIS
+    string prim,
+    string domain,
+    string target_script,
+    integer flags,
+    list parameters,
+    string data
+    )
+{
+    #ifdef ENCLEP_TRACE
+        enLog_TraceParams("enCLEP_SendHybrid", ["target_link", "prim", "domain", "target_script", "flags", "parameters", "data", "(service)" ], [
+            target_link,
+            enObject_Elem(prim),
+            enString_Elem(domain),
+            enString_Elem(target_script),
+            enInteger_ElemBitfield(flags),
+            enList_Elem(parameters),
+            enString_Elem(data),
+            enString_Elem(_ENCLEP_SERVICE)
+            ]);
+    #endif
+    if (target_link < 0)
+    { // send via enCLEP
+        enCLEP_SendRaw(
+            prim,
+            domain,
+            "LEP",
+            enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
+        );
+    }
+    else
+    { // send via enLEP
+        enLEP_Send( // sends a LEP message
+            target_link,
+            target_script,
+            flags,
+            parameters,
+            data
+        );
+    }
+}
+
+enCLEP_SendRaw( // send via enCLEP
     string prim,
     string domain,
     string type,
@@ -175,7 +216,7 @@ enCLEP_Send( // send via enCLEP
     )
 {
     #ifdef ENCLEP_TRACE
-        /*enLog_TraceParams("enCLEP_Send", ["prim", "domain", "type", "message", "(service)" ], [
+        /*enLog_TraceParams("enCLEP_SendRaw", ["prim", "domain", "type", "message", "(service)" ], [
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(type),
