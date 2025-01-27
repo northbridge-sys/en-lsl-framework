@@ -76,7 +76,7 @@
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_ATTACH
+		#ifdef EN_CHANGED
 			en_changed( change );
 		#endif
 
