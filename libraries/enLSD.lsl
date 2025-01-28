@@ -206,15 +206,6 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     enCLEP_SendRaw(prim, domain, "enLSD_Push", enList_ToString([u, use_header, ENLSD_HEADER, name, v]));
 }
 
-list enLSD_GetPairHead( // returns the header from a specified LSD pair name
-    string pair
-)
-{
-    list parts = llParseStringKeepNulls(pair, ["\n"], []);
-    if ((integer)llList2String(parts, 0) < 2) return []; // number of elements must be at least 2 (number of elements, ENLSD_HEADER)
-    return llList2List(parts, 1, (integer)llList2String(parts, 0) - 1);
-}
-
 enLSD_Process( // writes a linkset data name-value pair FROM another script
     string prim,
     integer use_uuid,
