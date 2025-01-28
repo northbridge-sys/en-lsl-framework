@@ -43,6 +43,12 @@
 #define enLSD_Head() \
     enLSD_BuildHead(llGetScriptName(), llGetKey())
 
+#define enLSD_WriteRaw(name, data) \
+    llLinksetDataWrite(enLSD_Head() + name, data)
+
+#define enLSD_ReadRaw(name, data) \
+    llLinksetDataRead(enLSD_Head() + name)
+
 // ==
 // == functions
 // ==
