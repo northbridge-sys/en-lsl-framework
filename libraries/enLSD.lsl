@@ -43,6 +43,9 @@
 #define enLSD_Head() \
     enLSD_BuildHead(llGetScriptName(), llGetKey())
 
+#define enLSD_GetHeadCount() \
+    (llGetListLength(llParseStringKeepNulls(enLSD_Head(), ["\n"], [])) - 1)
+
 #define enLSD_WriteRaw(name, data) \
     llLinksetDataWrite(enLSD_Head() + name, data)
 
