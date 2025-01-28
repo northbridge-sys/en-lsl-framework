@@ -163,6 +163,17 @@ string enLSD_BuildHead(
     return h;
 }
 
+list enLSD_PairToName( // converts a raw LSD pair name to an enLSD name list
+    string pair
+)
+{
+    if (pair == "") return [];
+    list elems = llParseStringKeepNulls(pair, ["\n"], []);
+    integer head = enLSD_GetHeadCount();
+    if (head) elems = llDeleteSubList(elems, 0, head - 1);
+    return elems;
+}
+
 enLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
     string prim,
     string domain,
