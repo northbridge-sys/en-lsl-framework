@@ -71,8 +71,8 @@
                 ]);
         #endif
         _ENTIMER_PREEMPT = !!i;
-        if (!_ENTIMER_PREEMPT) enTimer_Check(); // no longer preempting, check immediately
-        else llSetTimerEvent(0.0); // now preempting, so stop timer immediately
+        enTimer_Check(); // check immediately in case no longer preempting - cheaper memory-wise to call and let it return early
+        if (_ENTIMER_PREEMPT) llSetTimerEvent(0.0); // now preempting, so stop timer immediately
     }
 #endif
 
@@ -164,6 +164,7 @@ integer enTimer_InternalLoopback(
 
 enTimer_Check() // checks the MIT timers to see if any are triggered
 {
+    if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
     #ifdef ENTIMER_TRACE
         enLog_TraceParams("enTimer_Check", [], []);
     #endif
