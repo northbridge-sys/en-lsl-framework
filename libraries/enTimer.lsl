@@ -40,9 +40,41 @@
     #define _ENTIMER_QUEUE_STRIDE 4
 #endif
 
+/*  ENTIMER_ENABLE_PREEMPTION is required to enable "preemption" mode, which exposes
+    the enTimer_SetPreempt accessor function. If enTimer_SetPreempt(1) is called,
+    all future timer events will skip the slow enTimer_Check call and, in
+    combination with EN_TIMER, pass the timer event directly to en_timer.
+
+    This is useful for scripts that need to temporarily process high-frequency timer
+    events and can tolerate delaying enTimer triggers until enTimer_SetPreempt(0) is
+    called.
+*/
+#ifdef ENTIMER_ENABLE_PREEMPTION
+    integer _ENTIMER_PREEMPT;
+#endif
+
 // ==
 // == functions
 // ==
+
+#ifdef ENTIMER_ENABLE_PREEMPTION
+/*  Note that this needs to be set BEFORE setting the timer with llSetTimerEvent,
+    since the timer will be reset when calling enTimer_SetPreempt(1)
+*/
+    enTimer_SetPreempt(
+        integer i
+    )
+    {
+        #ifdef ENTIMER_TRACE
+            enLog_TraceParams("enTimer_SetPreempt", [ "i" ], [
+                i
+                ]);
+        #endif
+        _ENTIMER_PREEMPT = !!i;
+        if (!_ENTIMER_PREEMPT) enTimer_Check(); // no longer preempting, check immediately
+        else llSetTimerEvent(0.0); // now preempting, so stop timer immediately
+    }
+#endif
 
 string enTimer_Start( // adds a timer
     float interval,

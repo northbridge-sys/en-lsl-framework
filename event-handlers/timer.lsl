@@ -47,6 +47,9 @@
         #endif
 
         // forward timers directly to enTimer if enabled
+        #if defined ENTIMER_ENABLE && defined ENTIMER_ENABLE_PREEMPTION
+            if (!_ENTIMER_PREEMPT)
+        #endif
         #ifdef ENTIMER_ENABLE
             enTimer_Check();
         #endif
