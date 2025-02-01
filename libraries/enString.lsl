@@ -131,7 +131,7 @@ string enString_Escape(
     string e;
     if (f & ENSTRING_ESCAPE_FILTER_REGEX)
     {
-        y = ["^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]", "\\"]; // note that \\ must be the last entry, otherwise previously escaped characters will be double-escaped
+        y = ["\\", "^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]"]; // note that \\ must be the first entry, otherwise previously escaped characters will be double-escaped
         e = "\\"; // regex escaped with single backwards slash
     }
     if (f & ENSTRING_ESCAPE_FILTER_JSON)
