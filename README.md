@@ -159,7 +159,7 @@ or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel
 🔽 [12:11:24.98] (16% 13a1 @29) New Script
 ❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
 🔽 [12:11:25.05] (16% 13a1 @30) New Script
-🛑 FATAL ERROR: Everything is terrible. Script stopped.
+🛑 FATAL ERROR: Script stopped: Everything is terrible.
 ```
 
 You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` value.
