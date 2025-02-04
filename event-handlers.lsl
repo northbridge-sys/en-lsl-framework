@@ -31,7 +31,7 @@
 
     default
     {
-		    #include "en-lsl-framework/event-handlers.lsl"
+		#include "en-lsl-framework/event-handlers.lsl"
     }
 
     to allow the En framework to handle events.
@@ -42,7 +42,7 @@
 // each major revision of En increments this value
 #define EN_EVENT_HANDLERS_LOADED 1
 
-// include event handlers that En actually uses
+// all known events as of latest revision
 #include "en-lsl-framework/event-handlers/at_rot_target.lsl"
 #include "en-lsl-framework/event-handlers/at_target.lsl"
 #include "en-lsl-framework/event-handlers/attach.lsl"
