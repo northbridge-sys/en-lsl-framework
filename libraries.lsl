@@ -41,9 +41,11 @@
 // required macro definitions
 #include "en-lsl-framework/libraries/_definitions.lsl"
 
-// libraries
-#include "en-lsl-framework/libraries/enAvatar.lsl"
+// required cross-referenced libraries
 #include "en-lsl-framework/libraries/enLEP.lsl" // must be defined before enCLEP
+
+// other libraries
+#include "en-lsl-framework/libraries/enAvatar.lsl"
 #include "en-lsl-framework/libraries/enCLEP.lsl"
 #include "en-lsl-framework/libraries/enDate.lsl"
 #include "en-lsl-framework/libraries/enEnvironment.lsl"
