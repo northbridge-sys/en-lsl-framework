@@ -26,7 +26,7 @@
     └──────────────────────────────────────────────────────────────────────────────┘
 
     This is a full script that reports all LEP messages sent via link message in the
-    prim. These will be reported via "imp_message" event reports through
+    prim. These will be reported via "en_lep_message" event reports through
     enLog_TraceParams.
 
     Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
@@ -34,53 +34,36 @@
         #define ENLOG_DEFAULT_LOGLEVEL 6
     or you can set the "loglevel" linkset data pair to the desired loglevel as
     needed, so that inbound messages will only be reported when TRACE logging is
-    enabled.  The utils/Loglevel.lsl script allows you to change the loglevel by
-    renaming the script itself, which is useful for fast debugging, but the value
-    can be set by any script.
+    enabled.
 */
 
-#define ENLEP_ALLOWED_INBOUND_TARGETS_ALL
+#define ENLEP_ENABLE
+#define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
-#include "en-lsl-framework/main.lsl"
+#include "en-lsl-framework/libraries.lsl"
 
-en_imp_message(
-    string prim,        // the SOURCE prim UUID
-    string target,      // one of the following:
-                            //  - (the target script name): this script name
-                            //  - "": all scripts in the prim
-                            //  - (any other value): scripts with this value
-                            //      set in ENLEP_ALLOWED_TARGETS list
-    string status,      // one of the following:
-                            // - ":": broadcast (no response requested)
-                            // - "": request
-                            // - "ok": generic success response
-                            // - "err:_": error response
-                            //      _ is defined as any string describing
-                            //      the nature of the error (no newlines!)
-                            // - (any other value): specific success response
-    integer ident,      // LEP message ident (link_message integer)
-    list params,        // list of parameter strings
-    string data,        // LEP data (link_message key)
-    integer linknum,    // linknum of prim that sent enLEP(...)
-                        //      (-1 if received via enCLEP)
-    string source       // the source script name
-                        //      (can be pre-filtered by defining
-                        //      ENLEP_ALLOWED_SOURCES list)
-    )
+en_lep_message(
+    integer source_link,
+    string source_script,
+    string target_script,
+    integer flags,
+    list parameters,
+    string data
+)
 {
-    enLog_TraceParams("en_imp_message", ["prim", "target", "status", "ident", "params", "data", "linknum", "source"], [
-        enObject_Elem(prim),
-        enString_Elem(target),
-        enString_Elem(status),
-        ident,
-        enList_Elem(params),
+    enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data", "ENCLEP_LEP_SOURCE_PRIM", "ENCLEP_LEP_SOURCE_DOMAIN"], [
+        source_link + " (" + enString_Elem(llGetLinkName(source_link)) + ")",
+        enString_Elem(source_script),
+        enString_Elem(target_script),
+        enInteger_ElemBitwise(flags),
+        enList_Elem(parameters),
         enString_Elem(data),
-        linknum,
-        enString_Elem(source)
-        ]);
+        enObject_Elem(ENCLEP_LEP_SOURCE_PRIM),
+        enObject_Elem(ENCLEP_LEP_SOURCE_DOMAIN)
+    ]);
 }
 
 default
 {
-    #include "en-LSL-Framework/Event-Handlers/link_message.lsl"
+    #include "en-lsl-framework/event-handlers.lsl"
 }
