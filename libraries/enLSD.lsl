@@ -52,6 +52,12 @@
 #define enLSD_ReadRaw(name, data) \
     llLinksetDataRead(enLSD_Head() + name)
 
+#define enLSD_WriteProtectedRaw(name, data, pass) \
+    llLinksetDataWriteProtected(enLSD_Head() + name, data, pass)
+
+#define enLSD_ReadProtectedRaw(name, pass) \
+    llLinksetDataReadProtected(enLSD_Head() + name, pass)
+
 // ==
 // == functions
 // ==
@@ -61,21 +67,24 @@ enLSD_Reset() // safely resets linkset data
     #ifdef ENLSD_TRACE
         enLog_TraceParams( "enLSD_Reset", [], [] );
     #endif
-    list protected = [
+    // note: retained pairs MUST be unprotected
+    list retain = [
         "loglevel",
-        "logtarget"
+        "logtarget",
+        "logsay",
+        "logchannel"
         ];
     list values;
     integer i;
-    integer l = llGetListLength( protected );
+    integer l = llGetListLength( retain );
     for ( i = 0; i < l; i++ )
     { // store values temporarily
-        values += [ llLinksetDataRead( llList2String( protected, i ) ) ];
+        values += [ llLinksetDataRead( llList2String( retain, i ) ) ];
     }
-    llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + ".*$", "");
+    llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + ".*$", ENLSD_PASS);
     for ( i = 0; i < l; i++ )
-    { // write protected values back to datastore
-        llLinksetDataWrite( llList2String( protected, i ), llList2String( values, i ) );
+    { // write retained values back to datastore
+        llLinksetDataWrite( llList2String( retain, i ), llList2String( values, i ) );
     }
 }
 
@@ -87,7 +96,8 @@ integer enLSD_Write(list name, string data)
             enString_Elem(data)
             ]);
     #endif
-	return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
+	if (ENLSD_PASS == "") return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
+    return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(name, "\n"), data, ENLSD_PASS);
 }
 
 string enLSD_Read(list name)
@@ -97,7 +107,8 @@ string enLSD_Read(list name)
             enList_Elem(name)
             ]);
     #endif
-	return llLinksetDataRead(enLSD_Head() + llDumpList2String(name, "\n"));
+	if (ENLSD_PASS == "") return llLinksetDataRead(enLSD_Head() + llDumpList2String(name, "\n"));
+    return llLinksetDataReadProtected(enLSD_Head() + llDumpList2String(name, "\n"), ENLSD_PASS);
 }
 
 list enLSD_Delete(list name)
@@ -107,7 +118,7 @@ list enLSD_Delete(list name)
             enList_Elem(name)
             ]);
     #endif
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", ENLSD_PASS);
 }
 
 integer enLSD_Exists(list name)
@@ -294,8 +305,16 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
             string old_pair = llList2String(l, 0);
             string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
             enLog_Trace("LSD pair \"" + pair_name + "\" moved");
-            llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
-            llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
+            if (ENLSD_PASS == "") // unfortunately the preprocessor can't do string comparison so, we'll do it live
+            {
+                llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
+                llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
+            }
+            else
+            {
+                llLinksetDataWriteProtected(enLSD_Head() + pair_name, llLinksetDataReadProtected(old_pair, ENLSD_PASS), ENLSD_PASS); // write with updated header
+                llLinksetDataDeleteProtected(old_pair, ENLSD_PASS); // immediately delete old pair to save memory
+            }
         }
     } while (l != []); // repeat until we didn't find any keys left with old header
 }
