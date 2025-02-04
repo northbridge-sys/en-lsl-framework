@@ -1,5 +1,5 @@
 /*
-    script.lsl
+    ping.lsl
     LEP Processor Snippet
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
@@ -28,15 +28,13 @@
     TBD
 */
 
-if (status == "" && llList2String(params, 0) == "script")
+if (llList2String(params, 0) == "ping" && status & ENLEP_TYPE_REQUEST)
 { // return script info
-    enLEP_Send( // sends an LEP message
-        "",
-        source,
-        0, // signed
-        "ok",
-        ident,
+    enLEP_Send(
+        source_link,
+        source_script,
+        ENLEP_TYPE_RESPONSE,
         params,
         "lsl\n" + (string)llGetMemoryLimit() + "\n" + (string)llGetUsedMemory()
-        );
+    );
 }
