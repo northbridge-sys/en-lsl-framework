@@ -128,6 +128,10 @@
     #define ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
+#ifndef ENLSD_PASS
+    #define ENLSD_PASS ""
+#endif
+
 #ifndef ENINTEGER_CHARSET_16
     #define ENINTEGER_CHARSET_16 "0123456789abcdef"
 #endif
