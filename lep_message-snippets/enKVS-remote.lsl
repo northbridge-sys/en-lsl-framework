@@ -1,5 +1,5 @@
 /*
-    kvp.lsl
+    enKVS-remote.lsl
     LEP Processor Snippet
     En LSL Framework
     Copyright (C) 2024  Northbridge Business Systems
@@ -28,33 +28,55 @@
     TBD
 */
 
-if (status == "" && llList2String(params, 0) == "kvp")
+if (llList2String(params, 0) == "enKVS-remote" && status & ENLEP_TYPE_REQUEST)
 {
-	string kvp_check_op = llList2String(params, 1);
-	if (kvp_check_op == "list")
-	{ // return list of KVS pairs
-		enLEP_Send("", source, 0, "ok", ident, params, llDumpList2String(ENKVS_NAMES, "\n"));
-	}
-	if (kvp_check_op == "set" || kvp_check_op == "get")
-	{ // check name for set or get operation first
+	string kvs_check_op = llList2String(params, 1);
+	if (kvs_check_op == "write" || kvs_check_op == "read")
+	{ // check name for write or read operation first
 		if (!enKVS_Exists(llList2String(params, 1)))
 		{ // invalid name
-			enLEP_Send("", source, 0, "err:undefined", ident, params, data);
+			enLEP_Send(
+				source_link,
+				source_script,
+				ENLEP_TYPE_RESPONSE | ENLEP_STATUS_ERROR,
+				params + ["undefined"],
+				data
+			);
 			return;
 		}
 	}
-	if (kvp_check_op == "set")
-	{ // setting an enKVS pair
-		if (!enKVS_Set(llList2String(params, 1), data))
-		{ // write failed due to protect
-			enLEP_Send("", source, 0, "err:readonly", ident, params, data);
-			return;
-		}
-		enLEP_Send("", source, 0, "ok", ident, params, data);
+	if (kvs_check_op == "write")
+	{ // writing an enKVS pair
+		enKVS_Write(llList2String(params, 1), data); // this should never fail
+		enLEP_Send(
+			source_link,
+			source_script,
+			ENLEP_TYPE_RESPONSE,
+			params,
+			data
+		);
 		return;
 	}
-	if (kvp_check_op == "get")
-	{ // getting an enKVS pair
-		enLEP_Send("", source, 0, "ok", ident, params, enKVS_Get(llList2String(params, 1)));
+	if (kvs_check_op == "read")
+	{ // reading an enKVS pair
+		enLEP_Send(
+			source_link,
+			source_script,
+			ENLEP_TYPE_RESPONSE,
+			params,
+			enKVS_Read(llList2String(params, 1))
+		);
+		return;
 	}
+	if (kvs_check_op == "list")
+	{ // return list of KVS pairs
+		enLEP_Send(
+			source_link,
+			source_script,
+			ENLEP_TYPE_RESPONSE,
+			params,
+			llDumpList2String(ENKVS_NAMES, "\n")
+		);
+	}
+	return;
 }
