@@ -86,7 +86,7 @@ En also injects its own trace logging if the following macros are defined:
 
 - `EN_TRACE_LIBRARIES` enables all *library* logging
 - `EN*_TRACE` enables logging for a *specific* library (such as `ENCLEP_TRACE`)
-- `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script and probably break it!**)
+- `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
 - `EN_*_TRACE` enables logging for a *specific* event (such as `EN_LINK_MESSAGE_TRACE`)
 
 If you need to define any preprocessor values, make sure you do so *above* `#include "en-lsl-framework/libraries.lsl"`.
