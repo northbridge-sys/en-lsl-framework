@@ -131,7 +131,7 @@ integer enObject_ClosestLink(string name)
     #endif
     #ifdef ENOBJECT_ENABLE_LINK_CACHE
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-        if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1); // return cached linknum
+        if (~i) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1);  // != -1; return cached linknum
     #endif
     return enObject_FindLink(name);
 }
@@ -167,7 +167,7 @@ integer enObject_CacheClosestLink(
         return 0;
     #else
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-        if (i != -1) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1); // already caching
+        if (~i) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1);  // != -1; already caching
         _ENOBJECT_LINK_CACHE += [name, enObject_FindLink(max_dist, name), max_dist];
         return (integer)llList2String(_ENOBJECT_LINK_CACHE, -2); // return last element, since it is always ours
     #endif

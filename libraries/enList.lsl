@@ -243,7 +243,7 @@ integer enList_FindPartial( // llListFindList but needle can be only part of the
     integer l = llGetListLength(x);
     for (i = 0; i < l; i++)
     {
-        if (llSubStringIndex(llList2String(x, i), s) != -1) return i;
+        if (~llSubStringIndex(llList2String(x, i), s)) return i; // != -1
     }
     return -1;
 }
@@ -256,7 +256,7 @@ list enList_DeleteStrideByMatch(
     )
 {
     integer i = llListFindList(llList2ListSlice(haystack, 0, -1, stride, index), needle);
-    if (i != -1) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1); // delete existing stride because we'll be re-adding it
+    if (~i) return llDeleteSubList(haystack, i * stride, (i + 1) * stride - 1);  // != -1; delete existing stride because we'll be re-adding it
     return haystack;
 }
 
@@ -271,8 +271,8 @@ list enList_ReplaceExact(
     do
     {
         ind = llListFindList(haystack, needle);
-        if (ind != -1) haystack = llListReplaceList(haystack, new, ind, ind + l - 1);
+        if (~ind) haystack = llListReplaceList(haystack, new, ind, ind + l - 1); // != -1
     }
-    while (ind != -1);
+    while (~ind); // != -1
     return haystack;
 }

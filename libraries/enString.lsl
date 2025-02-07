@@ -178,7 +178,7 @@ integer enString_FindChars( // finds the first instance of any of the specified 
     for (i = 0; i < l; i++)
     {
         x = llSubStringIndex(in, llGetSubString(chars, i, i));
-        if (x != -1) return x;
+        if (~x) return x; // != -1
     }
     return -1;
 }
