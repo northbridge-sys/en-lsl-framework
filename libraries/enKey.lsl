@@ -29,8 +29,12 @@
 */
 
 // ==
-// == globals
+// == macros
 // ==
+
+// returns 1 if is NULL_KEY
+#define enKey_IsNull(k) \
+    (k == NULL_KEY)
 
 // ==
 // == functions
@@ -50,13 +54,6 @@ integer enKey_IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
 {
     if ( (key)k ) return 1;
     return 0;
-}
-
-integer enKey_IsNull( // returns 1 if is NULL_KEY
-    string k
-    )
-{
-    return k == NULL_KEY;
 }
 
 integer enKey_IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
