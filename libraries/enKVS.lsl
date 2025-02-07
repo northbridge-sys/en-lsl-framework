@@ -49,7 +49,7 @@ integer enKVS_Exists(list name)
             enList_Elem(name)
             ]);
     #endif
-	return llListFindList(_ENKVS_NAMES, [llDumpList2String(name, "\n")]) != -1;
+	return ~llListFindList(_ENKVS_NAMES, [llDumpList2String(name, "\n")]); // != -1
 }
 
 integer enKVS_Write(list name, string data)
@@ -61,7 +61,7 @@ integer enKVS_Write(list name, string data)
             ]);
     #endif
 	integer i = llListFindList(_ENKVS_NAMES, [llDumpList2String(name, "\n")]);
-	if (i != -1) enKVS_Delete(name); // delete value, then reappend
+	if (~i) enKVS_Delete(name);  // != -1; delete value, then reappend
 	_ENKVS_NAMES += [llDumpList2String(name, "\n")];
 	_ENKVS_DATA += [data];
 	return 1;

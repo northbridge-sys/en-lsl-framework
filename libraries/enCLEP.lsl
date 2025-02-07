@@ -276,7 +276,7 @@ integer enCLEP_Listen(  // initializes or updates a dynamically managed llListen
         enCLEP_ListenDomains();
         return 0;
     }
-    if (index != -1)
+    if (~index) // != -1
     { // delete existing domain enCLEP, so it can be cleanly appended to the end
         _ENCLEP_DOMAINS = llDeleteSubList(_ENCLEP_DOMAINS, index * _ENCLEP_DOMAINS_STRIDE, (index + 1) * _ENCLEP_DOMAINS_STRIDE - 1);
     }
