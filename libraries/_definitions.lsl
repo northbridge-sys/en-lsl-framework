@@ -110,7 +110,8 @@
 #define ENTEST_GREATER 2
 #define ENTEST_LESS 3
 
-#define ENTEST_VM_LSO 0
+// 0xFFFFFFFF is 1 byte and 1 operation more efficient than -1
+#define ENTEST_VM_LSO 0xFFFFFFFF
 #define ENTEST_VM_MONO 1
 
 // ==

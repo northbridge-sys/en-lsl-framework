@@ -32,9 +32,11 @@
 // == macros
 // ==
 
-// returns TRUE for Mono (ENTEST_VM_MONO), FALSE for LSO (ENTEST_VM_LSO)
+// returns 1 for Mono (ENTEST_VM_MONO), -1 for LSO (ENTEST_VM_LSO)
+// relies on LSO returning strcmp instead of a boolean result
+// written before Luau was available to test; if you're here to rewrite this under Luau, good job living that long
 #define enTest_GetVM() \
-    (llToLower( "Ü" ) != "Ü")
+    ("" != "x")
 
 // ==
 // == functions
