@@ -29,8 +29,12 @@
 */
 
 // ==
-// == globals
+// == macros
 // ==
+
+// returns TRUE for Mono (ENTEST_VM_MONO), FALSE for LSO (ENTEST_VM_LSO)
+#define enTest_GetVM() \
+    (llToLower( "Ü" ) != "Ü")
 
 // ==
 // == functions

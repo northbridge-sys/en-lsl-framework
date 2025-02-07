@@ -110,6 +110,9 @@
 #define ENTEST_GREATER 2
 #define ENTEST_LESS 3
 
+#define ENTEST_VM_LSO 0
+#define ENTEST_VM_MONO 1
+
 // ==
 // == configurable preprocessor constants
 // ==
