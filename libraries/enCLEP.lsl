@@ -367,11 +367,11 @@ integer enCLEP_Process(
     { // owner only flag enabled for this listener
         if (llGetOwnerKey(id) != llGetOwner()) return 1; // not sent by same-owner object/agent
     }
-    #ifdef EN_LEP_MESSAGE
+    #ifdef ENLEP_MESSAGE
         if (llList2String(data, 4) == "LEP")
         { // LEP message
     #endif
-    #if defined EN_LEP_MESSAGE && defined ENCLEP_ENABLE_LEP
+    #if defined ENLEP_MESSAGE && defined ENCLEP_ENABLE_LEP
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 3) return 1; // error in LEP unserialize operation
             ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
@@ -385,7 +385,7 @@ integer enCLEP_Process(
             ENCLEP_LEP_SOURCE_PRIM = NULL_KEY; // reset values to be safe
             ENCLEP_LEP_SOURCE_DOMAIN = "";
     #endif
-    #ifdef EN_LEP_MESSAGE
+    #ifdef ENLEP_MESSAGE
             return 1;
         }
     #endif

@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN_TIMER_TRACE || defined EN_TIMER || defined ENTIMER_ENABLE
+#if defined EN_TIMER_TRACE || defined EN_TIMER || defined ENTIMER_TIMER
 	timer()
 	{
 #endif
@@ -47,7 +47,7 @@
         #endif
 
         // forward timers directly to enTimer if enabled
-        #ifdef ENTIMER_ENABLE
+        #ifdef ENTIMER_TIMER
             enTimer_Check();
         #endif
 
@@ -56,6 +56,6 @@
 			en_timer();
 		#endif
 
-#if defined EN_TIMER_TRACE || defined EN_TIMER || defined ENTIMER_ENABLE
+#if defined EN_TIMER_TRACE || defined EN_TIMER || defined ENTIMER_TIMER
 	}
 #endif

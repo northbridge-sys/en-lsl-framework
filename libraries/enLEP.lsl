@@ -115,7 +115,7 @@ integer enLEP_Process(
             if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard message, not targeted to us
         }
     #endif
-    #if defined EN_LEP_MESSAGE && defined EN_LEP_MESSAGE_TRACE
+    #if defined ENLEP_MESSAGE && defined ENLEP_MESSAGE_TRACE
         enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
             source_link,
             enString_Elem(llList2String(parameters, 0)),
@@ -125,7 +125,7 @@ integer enLEP_Process(
             enString_Elem(k)
         ]);
     #endif
-    #ifdef EN_LEP_MESSAGE
+    #ifdef ENLEP_MESSAGE
         enLEP_message(
             source_link,
             llList2String(parameters, 0),

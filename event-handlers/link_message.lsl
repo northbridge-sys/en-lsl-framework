@@ -98,7 +98,7 @@
     Define this function directly in the script to process LEP messages.
 */
 
-#if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined EN_LEP_MESSAGE
+#if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined ENLEP_MESSAGE
     link_message( integer l, integer i, string s, key k )
     {
 #endif
@@ -108,7 +108,7 @@
             enLog_TraceParams( "link_message", [ "l", "i", "s", "k" ], [ l, i, enString_Elem( s ), enString_Elem( k ) ] );
         #endif
 
-        #ifdef EN_LEP_MESSAGE
+        #ifdef ENLEP_MESSAGE
             if ( enLEP_Process(l, i, s, k)) return; // valid LEP message
         #endif
 
@@ -117,6 +117,6 @@
 			en_link_message( l, i, s, k );
 		#endif
 
-#if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined EN_LEP_MESSAGE
+#if defined EN_LINK_MESSAGE_TRACE || defined EN_LINK_MESSAGE || defined ENLEP_MESSAGE
 	}
 #endif
