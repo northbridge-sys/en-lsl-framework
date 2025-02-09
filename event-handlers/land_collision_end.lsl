@@ -37,14 +37,19 @@
 		}
 */
 
-#ifdef EN_LAND_COLLISION_END
+#if defined EN_LAND_COLLISION_END
 	land_collision_end( vector pos )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "land_collision_end", [ "pos" ], [
-            pos
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_LAND_COLLISION_END && defined EN_LAND_COLLISION_END_TRACE
+            enLog_TraceParams( "land_collision_end", [ "pos" ], [
+                pos
+            ] );
+        #endif
+
+#if defined EN_LAND_COLLISION_END
         // event unused, so pass to user-defined function only
         en_land_collision_end( pos );
 	}

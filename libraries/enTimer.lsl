@@ -32,7 +32,7 @@
 // == globals
 // ==
 
-#ifdef ENTIMER_DISABLE_MULTIPLE
+#if defined ENTIMER_DISABLE_MULTIPLE
     list _ENTIMER_QUEUE; // id, callback, length
     #define _ENTIMER_QUEUE_STRIDE 3
 #else
@@ -49,7 +49,7 @@
     events and can tolerate delaying enTimer triggers until enTimer_SetPreempt(0) is
     called.
 */
-#ifdef ENTIMER_TIMER_PREEMPTION
+#if defined ENTIMER_TIMER_PREEMPTION
     integer _ENTIMER_PREEMPT;
 #endif
 
@@ -57,7 +57,7 @@
 // == functions
 // ==
 
-#ifdef ENTIMER_TIMER_PREEMPTION
+#if defined ENTIMER_TIMER_PREEMPTION
 /*  Note that this needs to be set BEFORE setting the timer with llSetTimerEvent,
     since the timer will be reset when calling enTimer_SetPreempt(1)
 */
@@ -65,7 +65,7 @@
         integer i
     )
     {
-        #ifdef ENTIMER_TRACE
+        #if defined ENTIMER_TRACE
             enLog_TraceParams("enTimer_SetPreempt", [ "i" ], [
                 i
                 ]);
@@ -82,7 +82,7 @@ string enTimer_Start( // adds a timer
     string callback
     )
 {
-    #ifdef ENTIMER_TRACE
+    #if defined ENTIMER_TRACE
         enLog_TraceParams("enTimer_Start", [ "interval", "periodic", "callback" ], [
             interval,
             periodic,
@@ -94,7 +94,7 @@ string enTimer_Start( // adds a timer
     if ( interval < 0.01 ) return NULL_KEY; // invalid interval
     if ( interval < ENTIMER_MINIMUM_INTERVAL ) interval = ENTIMER_MINIMUM_INTERVAL; // clamp to minimum interval
     string id = llGenerateKey();
-    #ifdef ENTIMER_DISABLE_MULTIPLE
+    #if defined ENTIMER_DISABLE_MULTIPLE
         _ENTIMER_QUEUE = [ // multiple timers not enabled, so set queue
             id,
             callback,
@@ -117,12 +117,12 @@ integer enTimer_Cancel( // removes a timer
     string id // required unless ENTIMER_DISABLE_MULTIPLE is set
     )
 {
-    #ifdef ENTIMER_TRACE
+    #if defined ENTIMER_TRACE
         enLog_TraceParams("enTimer_Cancel", [ "id" ], [
             enString_Elem( id )
             ]);
     #endif
-    #ifdef ENTIMER_DISABLE_MULTIPLE
+    #if defined ENTIMER_DISABLE_MULTIPLE
         _ENTIMER_QUEUE = []; // we only have one timer, so cancel it
         llSetTimerEvent( 0.0 );
     #else
@@ -140,7 +140,7 @@ string enTimer_Find( // finds a timer by callback
     string callback
     )
 {
-    #ifdef ENTIMER_TRACE
+    #if defined ENTIMER_TRACE
         enLog_TraceParams("enTimer_Find", [ "callback" ], [
             enString_Elem( callback )
             ]);
@@ -165,12 +165,12 @@ integer enTimer_InternalLoopback(
 enTimer_Check() // checks the MIT timers to see if any are triggered
 {
     if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
-    #ifdef ENTIMER_TRACE
+    #if defined ENTIMER_TRACE
         enLog_TraceParams("enTimer_Check", [], []);
     #endif
     llSetTimerEvent(0.0);
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
-    #ifdef ENMIT_DISABLE_MULTIPLE
+    #if defined ENMIT_DISABLE_MULTIPLE
         enTimer_timer(
             llList2String( _ENTIMER_QUEUE, 0 ),
             llList2String( _ENTIMER_QUEUE, 1 )
@@ -199,7 +199,7 @@ enTimer_Check() // checks the MIT timers to see if any are triggered
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
                 if (!enTimer_InternalLoopback(t_callback))
                 {
-                    #ifdef ENTIMER_TIMER
+                    #if defined ENTIMER_TIMER
                         enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);
                         enTimer_timer( // fire function
                             t_id,

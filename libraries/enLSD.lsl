@@ -35,7 +35,7 @@
 string _ENLSD_HEADER;
 string _ENLSD_PASS;
 
-#ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
+#if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
     string _ENLSD_SCRIPT_NAME;
 #endif
 
@@ -73,7 +73,7 @@ string _ENLSD_PASS;
 
 enLSD_Reset() // safely resets linkset data
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams( "enLSD_Reset", [], [] );
     #endif
     // note: retained pairs MUST be unprotected
@@ -99,7 +99,7 @@ enLSD_Reset() // safely resets linkset data
 
 integer enLSD_Write(list name, string data)
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Write", ["name", "data"], [
             enList_Elem(name),
             enString_Elem(data)
@@ -111,7 +111,7 @@ integer enLSD_Write(list name, string data)
 
 string enLSD_Read(list name)
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Read", ["name"], [
             enList_Elem(name)
             ]);
@@ -122,7 +122,7 @@ string enLSD_Read(list name)
 
 list enLSD_Delete(list name)
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Delete", ["name"], [
             enList_Elem(name)
             ]);
@@ -137,7 +137,7 @@ integer enLSD_Exists(list name)
 
 list enLSD_Find(list name, integer start, integer count)
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Find", ["name", "start", "count"], [
             enString_Elem(name),
             start,
@@ -149,7 +149,7 @@ list enLSD_Find(list name, integer start, integer count)
 
 list enLSD_FindRegex(string regex, integer start, integer count)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_FindRegex", ["regex", "start", "count"], [
             enString_Elem(regex),
             start,
@@ -198,7 +198,7 @@ enLSD_Pull( // reads a linkset data name-value pair FROM another script, optiona
     string name
     )
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Pull", ["prim", "domain", "use_header", "name"], [
             enObject_Elem(prim),
             enString_Elem(domain),
@@ -216,7 +216,7 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     string name
     )
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Push", ["prim", "domain", "use_header", "name"], [
             enObject_Elem(prim),
             enString_Elem(domain),
@@ -228,7 +228,7 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     if (use_header) v = enLSD_Read(name);
     else v = llLinksetDataRead(name);
     integer u;
-    #ifdef ENLSD_ENABLE_UUID_HEADER
+    #if defined ENLSD_ENABLE_UUID_HEADER
         u = 1; // if ENLSD_ENABLE_UUID_HEADER defined, note in response
     #endif
     enCLEP_SendRaw(prim, domain, "enLSD_Push", enList_ToString([u, use_header, _ENLSD_HEADER, name, v]));
@@ -244,7 +244,7 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
     string value
     )
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
             enObject_Elem(prim),
             use_uuid,
@@ -258,25 +258,25 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
     #ifndef ENLSD_PUSHED_ALLOW_BROADCAST
         if (prim != (string)llGetKey()) return; // do not allow enLSD_Push calls sent to NULL_KEY
     #endif
-    #ifdef ENLSD_PUSHED_ADD_HEADER
+    #if defined ENLSD_PUSHED_ADD_HEADER
         use_header = 1; // always use header when writing
     #endif
-    #ifdef ENLSD_PUSHED_UPDATE_HEADER
+    #if defined ENLSD_PUSHED_UPDATE_HEADER
         if (use_header) header = _ENLSD_HEADER; // update header to local header
     #endif
-    #ifdef ENLSD_PUSHED_ADD_UUID
+    #if defined ENLSD_PUSHED_ADD_UUID
         use_uuid = 1; // always use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
     #endif
-    #ifdef ENLSD_PUSHED_REMOVE_UUID
+    #if defined ENLSD_PUSHED_REMOVE_UUID
         use_uuid = 0; // never use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
     #endif
-    #ifdef ENLSD_PUSHED_UPDATE_UUID
+    #if defined ENLSD_PUSHED_UPDATE_UUID
         // change header key if used
         if (use_uuid) header = llGetKey() + header;
     #else
         if (use_uuid) header = uuid + header;
     #endif
-    #ifdef ENLSD_PUSHED_EVENT
+    #if defined ENLSD_PUSHED_EVENT
         en_pushed_lsd(
             prim,
             use_uuid,
@@ -287,7 +287,7 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
             value
             );
     #endif
-    #ifdef ENLSD_PUSHED_WRITE
+    #if defined ENLSD_PUSHED_WRITE
         if (!use_header) header = "";
         llLinksetDataWrite(header + name, value);
     #endif
@@ -299,7 +299,7 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
 {
     list l;
     string n;
-    #ifdef ENLSD_USE_SCRIPT_NAME_HEADER
+    #if defined ENLSD_USE_SCRIPT_NAME_HEADER
         n = _ENLSD_SCRIPT_NAME;
     #endif
     string old_head = enLSD_BuildHead(n, k);
@@ -327,10 +327,10 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
 
 enLSD_CheckUUID() // updates LSD entries that use old UUID
 { // note: if ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif
-    #ifdef ENLSD_ENABLE_UUID_HEADER
+    #if defined ENLSD_ENABLE_UUID_HEADER
         string k = enObject_Self( 1 ); // get last key
         if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
         enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
@@ -340,10 +340,10 @@ enLSD_CheckUUID() // updates LSD entries that use old UUID
 
 enLSD_CheckScriptName() // updates LSD entries that use old script name
 {
-    #ifdef ENLSD_TRACE
+    #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_CheckScriptName", [], []);
     #endif
-    #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
+    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
         if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
         if (_ENLSD_SCRIPT_NAME != "")
         {

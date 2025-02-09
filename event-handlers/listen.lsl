@@ -42,16 +42,16 @@
 #endif
 
         // log event if requested
-        #ifdef EN_LISTEN_TRACE
+        #if defined EN_LISTEN_TRACE
             enLog_TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, enString_Elem( name ), enObject_Elem( id ), enString_Elem( message ) ] );
         #endif
 
-        #ifdef ENCLEP_ENABLE
+        #if defined ENCLEP_ENABLE
 		    if ( enCLEP_Process( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
         // pass to user-defined function if requested
-		#ifdef EN_LISTEN
+		#if defined EN_LISTEN
 			en_listen( channel, name, id, message );
 		#endif
 

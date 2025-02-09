@@ -36,14 +36,19 @@
 		}
 */
 
-#ifdef EN_TOUCH_START
+#if defined EN_TOUCH_START
 	touch_start( integer num )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "touch_start", [ "num" ], [
-            num
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_TOUCH_START && defined EN_TOUCH_START_TRACE
+            enLog_TraceParams( "touch_start", [ "num" ], [
+                num
+            ] );
+        #endif
+
+#if defined EN_TOUCH_START
         // event unused, so pass to user-defined function only
         en_touch_start( num );
 	}

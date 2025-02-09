@@ -81,12 +81,12 @@ string _ENCLEP_SERVICE;
 list _ENCLEP_DOMAINS; // domain, flags, channel, handle
 #define _ENCLEP_DOMAINS_STRIDE 4
 
-#ifdef ENCLEP_ENABLE_PTP
+#if defined ENCLEP_ENABLE_PTP
     list ENCLEP_PTP; // transfer_key, prim ("" for inbound), domain, message_buffer
     #define ENCLEP_PTP_STRIDE 4
 #endif
 
-#ifdef ENCLEP_ENABLE_LEP
+#if defined ENCLEP_ENABLE_LEP
     string ENCLEP_LEP_SOURCE_PRIM = NULL_KEY;
     string ENCLEP_LEP_SOURCE_DOMAIN;
 #endif
@@ -106,7 +106,7 @@ enCLEP_SetService(
     string service
     )
 {
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_SetService", ["service"], [
             enString_Elem(service)
             ]);
@@ -132,7 +132,7 @@ enCLEP_MultiSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of sil
     if (prim == "") prim = NULL_KEY;
     if (prim == NULL_KEY) llRegionSay(channel, message); // RS if prim is not specified
     else if (llGetObjectDetails(prim, [OBJECT_PHANTOM]) != []) llRegionSayTo(prim, channel, message); // RST if prim is in region
-#ifdef ENCLEP_ENABLE_SHOUT
+#if defined ENCLEP_ENABLE_SHOUT
     else llShout(channel, message); // shout if prim is not in region and ENCLEP_ENABLE_SHOUT is defined
 #endif
 }
@@ -146,7 +146,7 @@ enCLEP_Send( // send LEP via enCLEP
     string data
     )
 {
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_Send", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)"], [
             enObject_Elem(prim),
             enString_Elem(domain),
@@ -175,7 +175,7 @@ enCLEP_SendHybrid( // send LEP via enLEP or enCLEP depending on whether prim is 
     string data
     )
 {
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_SendHybrid", ["target_link", "prim", "domain", "target_script", "flags", "parameters", "data", "(service)"], [
             target_link,
             enObject_Elem(prim),
@@ -215,7 +215,7 @@ enCLEP_SendRaw( // send via enCLEP
     string message
     )
 {
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         /*enLog_TraceParams("enCLEP_SendRaw", ["prim", "domain", "type", "message", "(service)"], [
             enObject_Elem(prim),
             enString_Elem(domain),
@@ -234,7 +234,7 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
     string message
     )
 {
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_SendPTP", ["prim", "domain", "type", "message", "(service)"], [
             enObject_Elem(prim),
             enString_Elem(domain),
@@ -262,7 +262,7 @@ integer enCLEP_Listen(  // initializes or updates a dynamically managed llListen
     integer flags   // ENCLEP_LISTEN_* flags
     )
 {
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_Listen", ["domain", "flags", "(service)"], [
             enString_Elem(domain),
             enInteger_ElemBitfield(flags),
@@ -311,7 +311,7 @@ integer enCLEP_Process(
             ]);
     #endif
     if (llGetListLength(data) != 6) return 0; // error in enCLEP unserialize operation
-    #ifdef ENCLEP_ENABLE_PTP
+    #if defined ENCLEP_ENABLE_PTP
         if (llList2String(data, 0) == "CLEP_PTP")
         { // we have a PTP packet
             string d = llList2String(data, 1); // domain
@@ -367,7 +367,7 @@ integer enCLEP_Process(
     { // owner only flag enabled for this listener
         if (llGetOwnerKey(id) != llGetOwner()) return 1; // not sent by same-owner object/agent
     }
-    #ifdef ENLEP_MESSAGE
+    #if defined ENLEP_MESSAGE
         if (llList2String(data, 4) == "LEP")
         { // LEP message
     #endif
@@ -385,11 +385,11 @@ integer enCLEP_Process(
             ENCLEP_LEP_SOURCE_PRIM = NULL_KEY; // reset values to be safe
             ENCLEP_LEP_SOURCE_DOMAIN = "";
     #endif
-    #ifdef ENLEP_MESSAGE
+    #if defined ENLEP_MESSAGE
             return 1;
         }
     #endif
-    #ifdef ENCLEP_ENABLE_ENLSD
+    #if defined ENCLEP_ENABLE_ENLSD
         string domain = llList2String(data, 3);
         if (llList2String(data, 4) == "LSD_Pull")
         { // send LSD pair
@@ -420,7 +420,7 @@ integer enCLEP_Process(
             return 1;
         }
     #endif
-    #ifdef ENCLEP_ENABLE_ENINVENTORY
+    #if defined ENCLEP_ENABLE_ENINVENTORY
         string domain = llList2String(data, 3);
         if (llList2String(data, 4) == "Inventory_Push")
         { // send inventory
@@ -453,7 +453,7 @@ integer enCLEP_Process(
             return 1;
         }
     #endif
-    #ifdef ENCLEP_ENABLE_ENINVENTORY_REZREMOTE
+    #if defined ENCLEP_ENABLE_ENINVENTORY_REZREMOTE
         if (llList2String( data, 4 ) == "Inventory_RezRemote")
         { // we have rezzed an object with Remote.lsl
             integer param = (integer)llList2String( ENINVENTORY_REMOTE, 0 );
@@ -476,10 +476,10 @@ integer enCLEP_Process(
         }
     #endif
     // generic message
-    #ifndef EN_CLEP_MESSAGE
-        enLog_Debug("Raw CLEP message received from " + id + " on domain \"" + llList2String( data, 2 ) + "\", but EN_CLEP_MESSAGE not defined: " + llList2String( data, 4 ) );
+    #ifndef ENCLEP_MESSAGE
+        enLog_Debug("Raw CLEP message received from " + id + " on domain \"" + llList2String( data, 2 ) + "\", but ENCLEP_MESSAGE not defined: " + llList2String( data, 4 ) );
     #else
-        en_clep_message(
+        enclep_message(
             id, // source id
             llList2String(data, 2), // domain
             llList2String(data, 4) // message
@@ -490,7 +490,7 @@ integer enCLEP_Process(
 
 enCLEP_UnListenDomains()
 { // internal function that runs llListenRemove on everything in _ENCLEP_DOMAINS
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_UnListenDomains", [], []);
     #endif
     integer i;
@@ -503,7 +503,7 @@ enCLEP_UnListenDomains()
 
 enCLEP_ListenDomains()
 { // internal function that runs llListen on everything in _ENCLEP_DOMAINS - DON'T run this without running enCLEP_UnListenDomains() first!
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_ListenDomains", [], []);
     #endif
     integer i;
@@ -517,7 +517,7 @@ enCLEP_ListenDomains()
 
 enCLEP_RefreshLinkset()
 { // internal function that runs after key change to reset any listens based on previous UUID
-    #ifdef ENCLEP_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_RefreshLinkset", [], []);
     #endif
     enCLEP_UnListenDomains();

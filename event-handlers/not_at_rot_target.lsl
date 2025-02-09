@@ -36,12 +36,17 @@
 		}
 */
 
-#ifdef EN_NOT_AT_ROT_TARGET
+#if defined EN_NOT_AT_ROT_TARGET
 	not_at_rot_target()
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "not_at_rot_target", [], [] );
+#endif
 
+        // log event if requested
+        #if defined EN_NOT_AT_ROT_TARGET && defined EN_NOT_AT_ROT_TARGET_TRACE
+            enLog_TraceParams( "not_at_rot_target", [], [] );
+        #endif
+
+#if defined EN_NOT_AT_ROT_TARGET
         // event unused, so pass to user-defined function only
         en_not_at_rot_target();
 	}

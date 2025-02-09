@@ -36,14 +36,19 @@
 		}
 */
 
-#ifdef EN_FINAL_DAMAGE
+#if defined EN_FINAL_DAMAGE
 	final_damage( integer num )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "final_damage", [ "num" ], [
-            num
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_FINAL_DAMAGE && defined EN_FINAL_DAMAGE_TRACE
+            enLog_TraceParams( "final_damage", [ "num" ], [
+                num
+            ] );
+        #endif
+
+#if defined EN_FINAL_DAMAGE
         // event unused, so pass to user-defined function only
         en_final_damage( num );
 	}

@@ -42,17 +42,17 @@
 #endif
 
         // log event if requested
-        #ifdef EN_TIMER_TRACE
+        #if defined EN_TIMER_TRACE
             enLog_TraceParams( "timer", [], [] );
         #endif
 
         // forward timers directly to enTimer if enabled
-        #ifdef ENTIMER_TIMER
+        #if defined ENTIMER_TIMER
             enTimer_Check();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_TIMER
+		#if defined EN_TIMER
 			en_timer();
 		#endif
 

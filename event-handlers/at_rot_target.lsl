@@ -42,7 +42,7 @@
 #endif
 
         // log event if requested
-        #ifdef EN_AT_ROT_TARGET_TRACE
+        #if defined EN_AT_ROT_TARGET_TRACE
             enLog_TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
                 handle,
                 enRotation_Elem( target ),
@@ -51,7 +51,7 @@
         #endif
 
         // event unused, so pass to user-defined function only
-        #ifdef EN_AT_ROT_TARGET
+        #if defined EN_AT_ROT_TARGET
             en_at_rot_target( handle, target, current );
         #endif
 

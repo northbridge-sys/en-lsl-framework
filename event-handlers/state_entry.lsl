@@ -39,7 +39,7 @@
 	state_entry()
 	{
         // log event if requested
-        #ifdef EN_STATE_ENTRY_TRACE
+        #if defined EN_STATE_ENTRY_TRACE
             enLog_TraceParams( "state_entry", [], [] );
         #endif
 
@@ -47,7 +47,7 @@
         enObject_StopIfFlagged();
 
         // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
-        #ifdef ENOBJECT_STOPIFOWNERREZZED
+        #if defined ENOBJECT_STOPIFOWNERREZZED
             enObject_StopIfOwnerRezzed();
         #endif
 
@@ -61,12 +61,12 @@
             enLSD_CheckUUID();
         #endif
 
-        #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
+        #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
             enLSD_CheckScriptName();
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_STATE_ENTRY
+		#if defined EN_STATE_ENTRY
 			en_state_entry();
 		#endif
 	}

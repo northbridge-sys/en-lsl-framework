@@ -36,16 +36,21 @@
 		}
 */
 
-#ifdef EN_TRANSACTION_RESULT
+#if defined EN_TRANSACTION_RESULT
 	transaction_result( key transaction, integer success, string data )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "transaction_result", [ "transaction", "success", "data" ], [
-            enString_Elem( transaction ),
-            success,
-            enString_Elem( data )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_TRANSACTION_RESULT && defined EN_TRANSACTION_RESULT_TRACE
+            enLog_TraceParams( "transaction_result", [ "transaction", "success", "data" ], [
+                enString_Elem( transaction ),
+                success,
+                enString_Elem( data )
+            ] );
+        #endif
+
+#if defined EN_TRANSACTION_RESULT
         // event unused, so pass to user-defined function only
         en_transaction_result( transaction, success, data );
 	}

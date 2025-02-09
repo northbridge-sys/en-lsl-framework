@@ -37,15 +37,20 @@
 		}
 */
 
-#ifdef EN_EXPERIENCE_PERMISSIONS_DENIED
+#if defined EN_EXPERIENCE_PERMISSIONS_DENIED
 	experience_permissions_denied( key id, integer reason )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "experience_permissions_denied", [ "id", "reason" ], [
-            enAvatar_Elem( id ),
-            reason
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_EXPERIENCE_PERMISSIONS_DENIED && defined EN_EXPERIENCE_PERMISSIONS_DENIED_TRACE
+            enLog_TraceParams( "experience_permissions_denied", [ "id", "reason" ], [
+                enAvatar_Elem( id ),
+                reason
+            ] );
+        #endif
+
+#if defined EN_EXPERIENCE_PERMISSIONS_DENIED
         // event unused, so pass to user-defined function only
         en_experience_permissions_denied( id, reason );
 	}

@@ -37,14 +37,19 @@
 		}
 */
 
-#ifdef EN_EXPERIENCE_PERMISSIONS
+#if defined EN_EXPERIENCE_PERMISSIONS
 	experience_permissions( key id )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "experience_permissions", [ "id" ], [
-            enAvatar_Elem( id )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_EXPERIENCE_PERMISSIONS && defined EN_EXPERIENCE_PERMISSIONS_TRACE
+            enLog_TraceParams( "experience_permissions", [ "id" ], [
+                enAvatar_Elem( id )
+            ] );
+        #endif
+
+#if defined EN_EXPERIENCE_PERMISSIONS
         // event unused, so pass to user-defined function only
         en_experience_permissions( id );
 	}

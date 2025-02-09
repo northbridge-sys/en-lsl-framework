@@ -36,14 +36,19 @@
 		}
 */
 
-#ifdef EN_COLLISION_START
+#if defined EN_COLLISION_START
 	collision_start( integer count )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "collision_start", [ "count" ], [
-            count
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_COLLISION_START && defined EN_COLLISION_START_TRACE
+            enLog_TraceParams( "collision_start", [ "count" ], [
+                count
+            ] );
+        #endif
+
+#if defined EN_COLLISION_START
         // event unused, so pass to user-defined function only
         en_collision_start( integer count );
 	}

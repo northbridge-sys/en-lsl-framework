@@ -36,15 +36,20 @@
 		}
 */
 
-#ifdef EN_MONEY
+#if defined EN_MONEY
 	money( key id, integer amount )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "money", [ "id", "amount" ], [
-            enAvatar_Elem( id ),
-            amount
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_MONEY && defined EN_MONEY_TRACE
+            enLog_TraceParams( "money", [ "id", "amount" ], [
+                enAvatar_Elem( id ),
+                amount
+            ] );
+        #endif
+
+#if defined EN_MONEY
         // event unused, so pass to user-defined function only
         en_money( id, amount );
 	}

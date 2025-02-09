@@ -36,14 +36,19 @@
 		}
 */
 
-#ifdef EN_OBJECT_REZ
+#if defined EN_OBJECT_REZ
 	object_rez( key id )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "object_rez", [ "id" ], [
-            enObject_Elem( id ),
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_OBJECT_REZ && defined EN_OBJECT_REZ_TRACE
+            enLog_TraceParams( "object_rez", [ "id" ], [
+                enObject_Elem( id ),
+            ] );
+        #endif
+
+#if defined EN_OBJECT_REZ
         // event unused, so pass to user-defined function only
         en_object_rez( id );
 	}

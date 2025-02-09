@@ -76,7 +76,7 @@ integer enInventory_Copy( // copies an inventory item to another object
     integer param
     )
 {
-    #ifdef ENINVENTORY_TRACE
+    #if defined ENINVENTORY_TRACE
         enLog_TraceParams("enInventory_Copy", ["prim", "name", "type", "pin", "run", "param"], [
             enObject_Elem(prim),
             enString_Elem(name),
@@ -113,7 +113,7 @@ integer enInventory_RezRemote( // rezzes a remote object with Remote.lsl
     list runs
     )
 {
-    #ifdef ENINVENTORY_TRACE
+    #if defined ENINVENTORY_TRACE
         enLog_TraceParams( "enInventory_RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
             enString_Elem( name ),
             (string)pos,
@@ -145,7 +145,7 @@ integer enInventory_NCOpen( // opens a notecard for enInventory_NC* operations
     string name
     )
 {
-    #ifdef ENINVENTORY_TRACE
+    #if defined ENINVENTORY_TRACE
         enLog_TraceParams("enInventory_NCOpen", ["name"], [
             enString_Elem(name)
             ]);
@@ -169,7 +169,7 @@ enInventory_NCRead( // reads a line from the open notecard
     integer i // line number, starting from 0
     )
 {
-    #ifdef ENINVENTORY_TRACE
+    #if defined ENINVENTORY_TRACE
         enLog_TraceParams("enInventory_NCRead", ["i"], [
             i
             ]);
@@ -250,7 +250,7 @@ enInventory_Push( // pushes an inventory item via enCLEP
     integer param
     )
 {
-    #ifdef ENINVENTORY_TRACE
+    #if defined ENINVENTORY_TRACE
         enLog_TraceParams("enInventory_Push", ["prim", "domain", "name", "type", "pin", "run", "param"], [
             enObject_Elem(prim),
             enString_Elem(domain),
@@ -274,7 +274,7 @@ enInventory_Pull( // pulls an inventory item via enCLEP
     integer param
     )
 {
-    #ifdef ENINVENTORY_TRACE
+    #if defined ENINVENTORY_TRACE
         enLog_TraceParams("enInventory_Pull", ["prim", "domain", "name", "type", "pin", "run", "param"], [
             enObject_Elem(prim),
             enString_Elem(domain),

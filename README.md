@@ -183,7 +183,7 @@ and the other script - if compiled with En - will call the `en_lep_message` func
 
 #include "en-lsl-framework/libraries.lsl"
 
-enLEP_message(
+enlep_message(
     integer source_link,
     string source_script,
     string target_script,

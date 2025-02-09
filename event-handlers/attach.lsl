@@ -42,12 +42,12 @@
 #endif
 
         // log event if requested
-        #ifdef EN_ATTACH_TRACE
+        #if defined EN_ATTACH_TRACE
             enLog_TraceParams( "attach", [ "id" ], [ enString_Elem( id ) ]);
         #endif
 
         // if attaches are blocked, perform auto-detach procedure
-        #ifdef EN_ATTACH_BLOCK
+        #if defined EN_ATTACH_BLOCK
             if ((string)id != NULL_KEY && llGetAttached()) // check both to be safe, never know
             {
                 enLog_FatalDie("This object cannot be used as an attachment.");
@@ -56,7 +56,7 @@
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_ATTACH
+		#if defined EN_ATTACH
 			en_attach( id );
 		#endif
 

@@ -49,7 +49,7 @@
 
 list _ENOBJECT_UUIDS_SELF;
 
-#ifdef ENOBJECT_ENABLE_LINK_CACHE
+#if defined ENOBJECT_ENABLE_LINK_CACHE
     list _ENOBJECT_LINK_CACHE; // prim name, current linknum, max distance
     #define _ENOBJECT_LINK_CACHE_STRIDE 3
 #endif
@@ -98,7 +98,7 @@ integer enObject_ClosestLinkDesc(
     string desc
 )
 {
-    #ifdef ENOBJECT_TRACE
+    #if defined ENOBJECT_TRACE
         enLog_TraceParams("enObject_ClosestLinkDesc", ["desc"], [
             enString_Elem(desc)
             ]);
@@ -124,12 +124,12 @@ integer enObject_ClosestLinkDesc(
 
 integer enObject_ClosestLink(string name)
 { // finds the linknum of the closest prim in the linkset with the specified name
-    #ifdef ENOBJECT_TRACE
+    #if defined ENOBJECT_TRACE
         enLog_TraceParams("enObject_ClosestLink", ["name"], [
             enString_Elem(name)
             ]);
     #endif
-    #ifdef ENOBJECT_ENABLE_LINK_CACHE
+    #if defined ENOBJECT_ENABLE_LINK_CACHE
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
         if (~i) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1);  // != -1; return cached linknum
     #endif
@@ -228,7 +228,7 @@ enObject_Text(
     }
                                                                                            // this is a nbsp
     llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
-    #ifdef ENTIMER_TIMER
+    #if defined ENTIMER_TIMER
         if (flags & ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextTemp");
         else enTimer_Cancel(enTimer_Find("enObject_TextTemp"));
     #endif
@@ -319,7 +319,7 @@ integer enObject_Profile( // returns various bitwise flags for the state of an o
 
 enObject_UpdateUUIDs()
 {
-    #ifdef ENOBJECT_TRACE
+    #if defined ENOBJECT_TRACE
         enLog_TraceParams("enObject_UpdateUUIDs", [], []);
     #endif
 	if (ENOBJECT_LIMIT_SELF)

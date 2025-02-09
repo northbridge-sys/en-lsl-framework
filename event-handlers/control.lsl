@@ -36,16 +36,21 @@
 		}
 */
 
-#ifdef EN_CONTROL
+#if defined EN_CONTROL
 	control( key id, integer level, integer edge )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "control", [ "id", "level", "edge" ], [
-            enAvatar_Elem( id ),
-            enInteger_ElemBitfield( level ),
-            enInteger_ElemBitfield( edge )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_CONTROL && defined EN_CONTROL_TRACE
+            enLog_TraceParams( "control", [ "id", "level", "edge" ], [
+                enAvatar_Elem( id ),
+                enInteger_ElemBitfield( level ),
+                enInteger_ElemBitfield( edge )
+            ] );
+        #endif
+
+#if defined EN_CONTROL
         // event unused, so pass to user-defined function only
         en_control( id, level, edge );
 	}

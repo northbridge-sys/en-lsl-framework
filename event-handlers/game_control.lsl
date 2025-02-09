@@ -36,16 +36,21 @@
 		}
 */
 
-#ifdef EN_GAME_CONTROL
+#if defined EN_GAME_CONTROL
 	game_control( key id, integer held, list axes )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "game_control", [ "id", "held", "axes" ], [
-            enAvatar_Elem( id ),
-            held,
-            enList_Elem( axes )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_GAME_CONTROL && defined EN_GAME_CONTROL_TRACE
+            enLog_TraceParams( "game_control", [ "id", "held", "axes" ], [
+                enAvatar_Elem( id ),
+                held,
+                enList_Elem( axes )
+            ] );
+        #endif
+
+#if defined EN_GAME_CONTROL
         // event unused, so pass to user-defined function only
         en_game_control( id, held, axes );
 	}

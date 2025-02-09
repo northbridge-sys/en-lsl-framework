@@ -40,19 +40,24 @@
     fire; it is only included here for completeness and should not be enabled.
 */
 
-#ifdef EN_REMOTE_DATA
+#if defined EN_REMOTE_DATA
 	remote_data( integer type, key channel, key message_id, string sender, integer i, string s )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "remote_data", [ "type", "channel", "message_id", "sender", "i", "s" ], [
-            type,
-            enString_Elem( channel ),
-            enString_Elem( message_id ),
-            enString_Elem( sender ),
-            i,
-            enString_Elem( s )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_REMOTE_DATA && defined EN_REMOTE_DATA_TRACE
+            enLog_TraceParams( "remote_data", [ "type", "channel", "message_id", "sender", "i", "s" ], [
+                type,
+                enString_Elem( channel ),
+                enString_Elem( message_id ),
+                enString_Elem( sender ),
+                i,
+                enString_Elem( s )
+            ] );
+        #endif
+
+#if defined EN_REMOTE_DATA
         // event unused, so pass to user-defined function only
         en_remote_data( type, channel, message_id, sender, i, s );
 	}

@@ -36,12 +36,17 @@
 		}
 */
 
-#ifdef EN_STATE_EXIT
+#if defined EN_STATE_EXIT
 	state_exit()
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "state_exit", [], [] );
+#endif
 
+        // log event if requested
+        #if defined EN_STATE_EXIT && defined EN_STATE_EXIT_TRACE
+            enLog_TraceParams( "state_exit", [], [] );
+        #endif
+
+#if defined EN_STATE_EXIT
         // event unused, so pass to user-defined function only
         en_state_exit();
 	}

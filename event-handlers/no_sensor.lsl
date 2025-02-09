@@ -36,12 +36,17 @@
 		}
 */
 
-#ifdef EN_NO_SENSOR
+#if defined EN_NO_SENSOR
 	no_sensor()
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "no_sensor", [], [] );
+#endif
 
+        // log event if requested
+        #if defined EN_NO_SENSOR && defined EN_NO_SENSOR_TRACE
+            enLog_TraceParams( "no_sensor", [], [] );
+        #endif
+
+#if defined EN_NO_SENSOR
         // event unused, so pass to user-defined function only
         en_no_sensor();
 	}
