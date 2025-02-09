@@ -126,7 +126,7 @@ integer enLEP_Process(
         ]);
     #endif
     #ifdef EN_LEP_MESSAGE
-        en_lep_message(
+        enLEP_message(
             source_link,
             llList2String(parameters, 0),
             llList2String(parameters, 1),

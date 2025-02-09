@@ -171,7 +171,7 @@ enTimer_Check() // checks the MIT timers to see if any are triggered
     llSetTimerEvent(0.0);
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
     #ifdef ENMIT_DISABLE_MULTIPLE
-        en_entimer(
+        enTimer_timer(
             llList2String( _ENTIMER_QUEUE, 0 ),
             llList2String( _ENTIMER_QUEUE, 1 )
         );

@@ -42,7 +42,7 @@
 
 #include "en-lsl-framework/libraries.lsl"
 
-en_lep_message(
+enLEP_message(
     integer source_link,
     string source_script,
     string target_script,
