@@ -143,7 +143,7 @@
 #endif
 
 #ifndef ENLOG_DEFAULT_LOGLEVEL
-    #define ENLOG_DEFAULT_LOGLEVEL 4
+    #define ENLOG_DEFAULT_LOGLEVEL INFO
 #endif
 
 #ifndef ENOBJECT_LIMIT_SELF

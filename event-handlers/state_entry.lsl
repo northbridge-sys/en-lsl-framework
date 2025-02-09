@@ -51,6 +51,11 @@
             enObject_StopIfOwnerRezzed();
         #endif
 
+		// update _ENOBJECT_UUIDS_SELF if needed
+        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+            enObject_UpdateUUIDs();
+        #endif
+
         // check if any En libraries want to intercept this event
         #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
             enLSD_CheckUUID();
@@ -64,9 +69,4 @@
 		#ifdef EN_STATE_ENTRY
 			en_state_entry();
 		#endif
-
-		// update _ENOBJECT_UUIDS_SELF if needed
-        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
-            enObject_UpdateUUIDs();
-        #endif
 	}

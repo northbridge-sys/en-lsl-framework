@@ -524,9 +524,9 @@ enCLEP_RefreshLinkset()
     if (ENOBJECT_LIMIT_SELF)
     { // we can check for self prim domains
         string new = (string)llGetKey();
-        if ( enObject_Self( 0 ) != new )
+        if ( enObject_Self( 1 ) != new )
         { // UUID change
-            integer index = llListFindList( llList2ListSlice( _ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [ enObject_Self( 0 ) ] );
+            integer index = llListFindList( llList2ListSlice( _ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [ enObject_Self( 1 ) ] );
             if (index)
             { // we are listening to a self prim domain, so update it
                 _ENCLEP_DOMAINS = llListReplaceList(_ENCLEP_DOMAINS, [

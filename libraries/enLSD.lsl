@@ -331,7 +331,7 @@ enLSD_CheckUUID() // updates LSD entries that use old UUID
         enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif
     #ifdef ENLSD_ENABLE_UUID_HEADER
-        string k = enObject_Self( 0 ); // get last key
+        string k = enObject_Self( 1 ); // get last key
         if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
         enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
         enLSD_MoveAllPairs(k);
