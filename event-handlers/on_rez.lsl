@@ -51,6 +51,11 @@
             enObject_StopIfOwnerRezzed();
         #endif
 
+		// update _ENOBJECT_UUIDS_SELF
+        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+            enObject_UpdateUUIDs();
+        #endif
+
         // update enCLEP channels if any are just the UUID
         #ifdef ENCLEP_ENABLE
             enCLEP_RefreshLinkset();
@@ -65,9 +70,4 @@
 		#ifdef EN_ON_REZ
 			en_on_rez(param);
 		#endif
-
-		// update _ENOBJECT_UUIDS_SELF
-        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
-            enObject_UpdateUUIDs();
-        #endif
 	}
