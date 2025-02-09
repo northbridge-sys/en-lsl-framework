@@ -201,7 +201,7 @@ enTimer_Check() // checks the MIT timers to see if any are triggered
                 {
                     #ifdef ENTIMER_ENABLE
                         enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);
-                        en_entimer( // fire function
+                        enTimer_timer( // fire function
                             t_id,
                             t_callback
                             );
