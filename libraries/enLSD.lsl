@@ -33,6 +33,7 @@
 // ==
 
 string _ENLSD_HEADER;
+string _ENLSD_PASS;
 
 #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
     string _ENLSD_SCRIPT_NAME;
@@ -44,6 +45,9 @@ string _ENLSD_HEADER;
 
 #define enLSD_SetHeader(s) \
     (_ENLSD_HEADER = s)
+
+#define enLSD_SetPass(s) \
+    (_ENLSD_PASS = s)
 
 #define enLSD_Head() \
     enLSD_BuildHead(llGetScriptName(), llGetKey())
@@ -86,7 +90,7 @@ enLSD_Reset() // safely resets linkset data
     { // store values temporarily
         values += [ llLinksetDataRead( llList2String( retain, i ) ) ];
     }
-    llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + ".*$", ENLSD_PASS);
+    llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + ".*$", _ENLSD_PASS);
     for ( i = 0; i < l; i++ )
     { // write retained values back to datastore
         llLinksetDataWrite( llList2String( retain, i ), llList2String( values, i ) );
@@ -101,8 +105,8 @@ integer enLSD_Write(list name, string data)
             enString_Elem(data)
             ]);
     #endif
-	if (ENLSD_PASS == "") return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
-    return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(name, "\n"), data, ENLSD_PASS);
+	if (_ENLSD_PASS == "") return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
+    return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(name, "\n"), data, _ENLSD_PASS);
 }
 
 string enLSD_Read(list name)
@@ -112,8 +116,8 @@ string enLSD_Read(list name)
             enList_Elem(name)
             ]);
     #endif
-	if (ENLSD_PASS == "") return llLinksetDataRead(enLSD_Head() + llDumpList2String(name, "\n"));
-    return llLinksetDataReadProtected(enLSD_Head() + llDumpList2String(name, "\n"), ENLSD_PASS);
+	if (_ENLSD_PASS == "") return llLinksetDataRead(enLSD_Head() + llDumpList2String(name, "\n"));
+    return llLinksetDataReadProtected(enLSD_Head() + llDumpList2String(name, "\n"), _ENLSD_PASS);
 }
 
 list enLSD_Delete(list name)
@@ -123,7 +127,7 @@ list enLSD_Delete(list name)
             enList_Elem(name)
             ]);
     #endif
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", ENLSD_PASS);
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", _ENLSD_PASS);
 }
 
 integer enLSD_Exists(list name)
@@ -307,15 +311,15 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
             string old_pair = llList2String(l, 0);
             string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
             enLog_Trace("LSD pair \"" + pair_name + "\" moved");
-            if (ENLSD_PASS == "") // unfortunately the preprocessor can't do string comparison so, we'll do it live
+            if (_ENLSD_PASS == "")
             {
                 llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
                 llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
             }
             else
             {
-                llLinksetDataWriteProtected(enLSD_Head() + pair_name, llLinksetDataReadProtected(old_pair, ENLSD_PASS), ENLSD_PASS); // write with updated header
-                llLinksetDataDeleteProtected(old_pair, ENLSD_PASS); // immediately delete old pair to save memory
+                llLinksetDataWriteProtected(enLSD_Head() + pair_name, llLinksetDataReadProtected(old_pair, _ENLSD_PASS), _ENLSD_PASS); // write with updated header
+                llLinksetDataDeleteProtected(old_pair, _ENLSD_PASS); // immediately delete old pair to save memory
             }
         }
     } while (l != []); // repeat until we didn't find any keys left with old header
