@@ -32,13 +32,18 @@
 // == globals
 // ==
 
+string _ENLSD_HEADER;
+
 #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
-    string ENLSD_SCRIPT_NAME;
+    string _ENLSD_SCRIPT_NAME;
 #endif
 
 // ==
 // == macros
 // ==
+
+#define enLSD_SetHeader(s) \
+    (_ENLSD_HEADER = s)
 
 #define enLSD_Head() \
     enLSD_BuildHead(llGetScriptName(), llGetKey())
@@ -155,10 +160,7 @@ string enLSD_BuildHead(
     string uuid
 )
 {
-    string h;
-    #ifdef ENLSD_HEADER
-        h = ENLSD_HEADER + "\n" + h;
-    #endif
+    string h = _ENLSD_HEADER + "\n";
     #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER && !defined ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH
         h = script_name + "\n" + h; // prepend full script name
     #endif
@@ -225,7 +227,7 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     #ifdef ENLSD_ENABLE_UUID_HEADER
         u = 1; // if ENLSD_ENABLE_UUID_HEADER defined, note in response
     #endif
-    enCLEP_SendRaw(prim, domain, "enLSD_Push", enList_ToString([u, use_header, ENLSD_HEADER, name, v]));
+    enCLEP_SendRaw(prim, domain, "enLSD_Push", enList_ToString([u, use_header, _ENLSD_HEADER, name, v]));
 }
 
 enLSD_Process( // writes a linkset data name-value pair FROM another script
@@ -256,7 +258,7 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
         use_header = 1; // always use header when writing
     #endif
     #ifdef ENLSD_PUSHED_UPDATE_HEADER
-        if (use_header) header = ENLSD_HEADER; // update header to local header
+        if (use_header) header = _ENLSD_HEADER; // update header to local header
     #endif
     #ifdef ENLSD_PUSHED_ADD_UUID
         use_uuid = 1; // always use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
@@ -294,7 +296,7 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
     list l;
     string n;
     #ifdef ENLSD_USE_SCRIPT_NAME_HEADER
-        n = ENLSD_SCRIPT_NAME;
+        n = _ENLSD_SCRIPT_NAME;
     #endif
     string old_head = enLSD_BuildHead(n, k);
     do
@@ -338,12 +340,12 @@ enLSD_CheckScriptName() // updates LSD entries that use old script name
         enLog_TraceParams("enLSD_CheckScriptName", [], []);
     #endif
     #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        if (llGetScriptName() == ENLSD_SCRIPT_NAME) return; // no script name change
-        if (ENLSD_SCRIPT_NAME != "")
+        if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
+        if (_ENLSD_SCRIPT_NAME != "")
         {
-            enLog_Debug("Moving LSD due to script name change from \"" + ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
+            enLog_Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
             enLSD_MoveAllPairs(llGetKey());
         }
-        ENLSD_SCRIPT_NAME = llGetScriptName();
+        _ENLSD_SCRIPT_NAME = llGetScriptName();
     #endif
 }

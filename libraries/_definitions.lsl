@@ -150,10 +150,6 @@
     #define ENLOG_DEFAULT_LOGLEVEL 4
 #endif
 
-#ifndef ENLSD_HEADER
-    #define ENLSD_HEADER ""
-#endif
-
 #ifndef ENOBJECT_LIMIT_SELF
     // number of own object UUIDs to store, retrievable via enObject_Self
     #define ENOBJECT_LIMIT_SELF 2
