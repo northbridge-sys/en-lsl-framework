@@ -228,7 +228,7 @@ enObject_Text(
     }
                                                                                            // this is a nbsp
     llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
-    #ifdef ENTIMER_ENABLE
+    #ifdef ENTIMER_TIMER
         if (flags & ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextTemp");
         else enTimer_Cancel(enTimer_Find("enObject_TextTemp"));
     #endif
