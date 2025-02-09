@@ -42,7 +42,7 @@
 #endif
 
         // log event if requested
-        #ifdef EN_HTTP_RESPONSE_TRACE
+        #if defined EN_HTTP_RESPONSE_TRACE
             enLog_TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
                 enString_Elem( request ),
                 status,
@@ -52,7 +52,7 @@
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_HTTP_RESPONSE
+		#if defined EN_HTTP_RESPONSE
             en_http_response( request, status, metadata, body );
 		#endif
 

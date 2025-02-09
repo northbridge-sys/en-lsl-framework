@@ -36,12 +36,17 @@
 		}
 */
 
-#ifdef EN_MOVING_END
+#if defined EN_MOVING_END
 	moving_end()
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "moving_end", [], [] );
+#endif
 
+        // log event if requested
+        #if defined EN_MOVING_END && defined EN_MOVING_END_TRACE
+            enLog_TraceParams( "moving_end", [], [] );
+        #endif
+
+#if defined EN_MOVING_END
         // event unused, so pass to user-defined function only
         en_moving_end();
 	}

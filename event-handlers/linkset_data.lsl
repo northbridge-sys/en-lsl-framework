@@ -43,12 +43,12 @@
 #endif
 
         // log event if requested
-        #ifdef EN_LINKSET_DATA_TRACE
+        #if defined EN_LINKSET_DATA_TRACE
             enLog_TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, enString_Elem(name), enString_Elem(value) ] );
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_LINKSET_DATA
+		#if defined EN_LINKSET_DATA
 			en_linkset_data(action, name, value);
 		#endif
 

@@ -36,15 +36,20 @@
 		}
 */
 
-#ifdef EN_PATH_UPDATE
+#if defined EN_PATH_UPDATE
 	path_update( integer type, list reserved )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "path_update", [ "type", "reserved" ], [
-            type,
-            enList_Elem( reserved )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_PATH_UPDATE && defined EN_PATH_UPDATE_TRACE
+            enLog_TraceParams( "path_update", [ "type", "reserved" ], [
+                type,
+                enList_Elem( reserved )
+            ] );
+        #endif
+
+#if defined EN_PATH_UPDATE
         // event unused, so pass to user-defined function only
         en_path_update( type, reserved );
 	}

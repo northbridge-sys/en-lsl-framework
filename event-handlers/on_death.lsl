@@ -36,12 +36,17 @@
 		}
 */
 
-#ifdef EN_ON_DEATH
+#if defined EN_ON_DEATH
 	on_death()
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "on_death", [], [] );
+#endif
 
+        // log event if requested
+        #if defined EN_ON_DEATH && defined EN_ON_DEATH_TRACE
+            enLog_TraceParams( "on_death", [], [] );
+        #endif
+
+#if defined EN_ON_DEATH
         // event unused, so pass to user-defined function only
         en_on_death();
 	}

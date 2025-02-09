@@ -104,16 +104,16 @@
 #endif
 
         // log event if requested
-        #ifdef EN_LINK_MESSAGE_TRACE
+        #if defined EN_LINK_MESSAGE_TRACE
             enLog_TraceParams( "link_message", [ "l", "i", "s", "k" ], [ l, i, enString_Elem( s ), enString_Elem( k ) ] );
         #endif
 
-        #ifdef ENLEP_MESSAGE
+        #if defined ENLEP_MESSAGE
             if ( enLEP_Process(l, i, s, k)) return; // valid LEP message
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_LINK_MESSAGE
+		#if defined EN_LINK_MESSAGE
 			en_link_message( l, i, s, k );
 		#endif
 

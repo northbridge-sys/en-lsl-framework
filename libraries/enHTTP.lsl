@@ -52,7 +52,7 @@ key enHTTP_Request( // sends an HTTP request to a URL
     string body         // body to pass to llHTTPRequest
     )
 {
-    #ifdef ENHTTP_TRACE
+    #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_Request", ["url", "http_params", "body"], [
             enString_Elem(url),
             enList_Elem(http_params),
@@ -89,7 +89,7 @@ enHTTP_ProcessResponse( // processes http_response
     string body
     )
 {
-    #ifdef ENHTTP_TRACE
+    #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_ProcessResponse", ["req_id", "status", "metadata", "body"], [
             enString_Elem(req_id),
             status,
@@ -103,7 +103,7 @@ enHTTP_ProcessResponse( // processes http_response
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [req_id]);
     if (req_ind == -1) return; // not a response to a known request
-    #ifdef ENHTTP_ENABLE
+    #if defined ENHTTP_ENABLE
         en_http_response(
             orig_id,
             llList2String(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE + 2), // url
@@ -119,10 +119,10 @@ enHTTP_ProcessResponse( // processes http_response
 
 enHTTP_Timer() // request queue timer
 {
-    #ifdef ENHTTP_TRACE
+    #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_Timer", [], []);
     #endif
-    #ifdef ENHTTP_ENABLE_REQUESTS
+    #if defined ENHTTP_ENABLE_REQUESTS
         // TODO: allow using either SIT or MIT instead of directly calling llSetTimerEvent
         llSetTimerEvent(0.0);
         if (_ENHTTP_REQUESTS == [])
@@ -149,7 +149,7 @@ enHTTP_Timer() // request queue timer
 
 integer enHTTP_NextRequest() // fire off next request in queue (used internally by enHTTP_Timer)
 {
-    #ifdef ENHTTP_TRACE
+    #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_NextRequest", [], []);
     #endif
     integer req_ind = llListFindList(llList2ListSlice(_ENHTTP_REQUESTS, 0, -1, _ENHTTP_REQUESTS_STRIDE, 1), [NULL_KEY]);

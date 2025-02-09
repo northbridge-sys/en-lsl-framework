@@ -170,7 +170,7 @@
     #define ENTIMER_MINIMUM_INTERVAL 0.1
 #endif
 
-#ifdef EN_TRACE_LIBRARIES
+#if defined EN_TRACE_LIBRARIES
     #define ENAVATAR_TRACE
     #define ENCLEP_TRACE
     #define ENDATE_TRACE
@@ -192,7 +192,7 @@
     #define ENVECTOR_TRACE
 #endif
 
-#ifdef EN_TRACE_EVENT_HANDLERS
+#if defined EN_TRACE_EVENT_HANDLERS
     #define EN_AT_ROT_TARGET_TRACE
     #define EN_AT_TARGET_TRACE
     #define EN_ATTACH_TRACE

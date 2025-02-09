@@ -37,18 +37,23 @@
 		}
 */
 
-#ifdef EN_EMAIL
+#if defined EN_EMAIL
 	email( string time, string address, string subject, string message, integer remaining )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
-            enString_Elem( time ),
-            enString_Elem( address ),
-            enString_Elem( subject ),
-            enString_Elem( message ),
-            remaining
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_EMAIL && defined EN_EMAIL_TRACE
+            enLog_TraceParams( "email", [ "time", "address", "subject", "message", "remaining" ], [
+                  enString_Elem( time ),
+                  enString_Elem( address ),
+                  enString_Elem( subject ),
+                  enString_Elem( message ),
+                  remaining
+            ] );
+        #endif
+
+#if defined EN_EMAIL
         // event unused, so pass to user-defined function only
         en_email( time, address, subject, message, remaining );
 	}

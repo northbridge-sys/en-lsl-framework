@@ -47,7 +47,7 @@ enLEP_Send( // sends a LEP message
     string data
 )
 {
-    #ifdef ENLEP_TRACE
+    #if defined ENLEP_TRACE
         enLog_TraceParams("enLEP_Send", ["target_link", "target_script", "flags", "paramters", "data"], [
             target_link,
             enString_Elem(target_script),
@@ -69,7 +69,7 @@ enLEP_SendAs( // sends a LEP message as a specific source_script name
     string data
 )
 {
-    #ifdef ENLEP_TRACE
+    #if defined ENLEP_TRACE
         enLog_TraceParams("enLEP_SendAs", ["source_script", "target_link", "target_script", "flags", "paramters", "data"], [
             enString_Elem(source_script),
             target_link,
@@ -90,7 +90,7 @@ integer enLEP_Process(
     string k
 )
 {
-    #ifdef ENLEP_TRACE
+    #if defined ENLEP_TRACE
         enLog_TraceParams("enLEP_Process", ["source_link", "flags", "s", "k"], [
             source_link,
             flags,
@@ -101,12 +101,12 @@ integer enLEP_Process(
     list parameters = llParseStringKeepNulls(s, ["\n"], []);
     if (llGetListLength(parameters) < 2) return 0; // not a valid LEP message
     if (source_link == llGetLinkNumber() && llList2String(parameters, 0) == llGetScriptName()) return 1; // discard message loopback even
-    #ifdef ENLEP_ALLOWED_SOURCE_SCRIPTS
+    #if defined ENLEP_ALLOWED_SOURCE_SCRIPTS
         // filter out messages that don't match the allowed source script list
         if (llListFindList(ENLEP_ALLOWED_SOURCE_SCRIPTS, [llList2String(parameters, 0)]) == -1) return 1; // discard message, not sent from an allowed source script
     #endif
     list allowed_targets = ["", llGetScriptName()]; // allow messages targeted to "" (all) and this script only
-    #ifdef ENLEP_ALLOWED_TARGET_SCRIPTS
+    #if defined ENLEP_ALLOWED_TARGET_SCRIPTS
         allowed_targets += ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro ENLEP_ALLOWED_TARGET_SCRIPTS
     #endif
     #ifndef ENLEP_ALLOW_ALL_TARGET_SCRIPTS
@@ -116,7 +116,7 @@ integer enLEP_Process(
         }
     #endif
     #if defined ENLEP_MESSAGE && defined ENLEP_MESSAGE_TRACE
-        enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
+        enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
             source_link,
             enString_Elem(llList2String(parameters, 0)),
             enString_Elem(llList2String(parameters, 1)),
@@ -125,8 +125,8 @@ integer enLEP_Process(
             enString_Elem(k)
         ]);
     #endif
-    #ifdef ENLEP_MESSAGE
-        enLEP_message(
+    #if defined ENLEP_MESSAGE
+        enlep_message(
             source_link,
             llList2String(parameters, 0),
             llList2String(parameters, 1),

@@ -148,7 +148,7 @@ enLog_Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
         else
     #endif
     // only remove inventory if ENLOG_DISABLE_DELETE is NOT defined
-    #ifdef ENLOG_DISABLE_DELETE
+    #if defined ENLOG_DISABLE_DELETE
         enLog_Error("Script deletion failed because ENLOG_DISABLE_DELETE is defined.");
     #else
         llRemoveInventory(llGetScriptName());
@@ -165,7 +165,7 @@ enLog_Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING:
         else
     #endif
     // only delete object if ENLOG_DISABLE_DIE is NOT defined
-    #ifdef ENLOG_DISABLE_DIE
+    #if defined ENLOG_DISABLE_DIE
         enLog_Error("Object delete/detach failed because ENLOG_DISABLE_DIE is defined.");
     #else
         {

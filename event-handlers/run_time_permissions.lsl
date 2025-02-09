@@ -36,14 +36,19 @@
 		}
 */
 
-#ifdef EN_RUN_TIME_PERMISSIONS
+#if defined EN_RUN_TIME_PERMISSIONS
 	run_time_permissions( integer perm )
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "run_time_permissions", [ "perm" ], [
-            enInteger_ElemBitfield( perm )
-        ] );
+#endif
 
+        // log event if requested
+        #if defined EN_RUN_TIME_PERMISSIONS && defined EN_RUN_TIME_PERMISSIONS_TRACE
+            enLog_TraceParams( "run_time_permissions", [ "perm" ], [
+                enInteger_ElemBitfield( perm )
+            ] );
+        #endif
+
+#if defined EN_RUN_TIME_PERMISSIONS
         // event unused, so pass to user-defined function only
         en_run_time_permissions( perm );
 	}

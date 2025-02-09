@@ -42,7 +42,7 @@
 #endif
 
         // log event if requested
-        #ifdef EN_CHANGED_TRACE
+        #if defined EN_CHANGED_TRACE
             enLog_TraceParams( "changed", [ "change" ], [ enInteger_ElemBitfield( change ) ] );
         #endif
 
@@ -51,7 +51,7 @@
             {
         #endif
         
-                #ifdef ENCLEP_ENABLE
+                #if defined ENCLEP_ENABLE
                     enCLEP_RefreshLinkset();
                 #endif
                 #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
@@ -60,7 +60,7 @@
                 #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
                     enObject_UpdateUUIDs();
                 #endif
-                #ifdef ENOBJECT_ENABLE_LINK_CACHE
+                #if defined ENOBJECT_ENABLE_LINK_CACHE
                     enObject_LinkCacheUpdate();
                 #endif
 
@@ -68,7 +68,7 @@
             }
         #endif
 
-        #ifdef ENLSD_ENABLE_SCRIPT_NAME_HEADER
+        #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
             if ( change & CHANGED_INVENTORY )
             {
                 enLSD_CheckScriptName();
@@ -76,7 +76,7 @@
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_CHANGED
+		#if defined EN_CHANGED
 			en_changed( change );
 		#endif
 

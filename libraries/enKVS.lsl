@@ -44,7 +44,7 @@ list _ENKVS_DATA;
 
 integer enKVS_Exists(list name)
 { // checks if a KVS pair exists by name
-    #ifdef ENKVS_TRACE
+    #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Exists", ["name"], [
             enList_Elem(name)
             ]);
@@ -54,7 +54,7 @@ integer enKVS_Exists(list name)
 
 integer enKVS_Write(list name, string data)
 { // writes a KVS pair value
-    #ifdef ENKVS_TRACE
+    #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Write", ["name", "data"], [
             enList_Elem(name),
             enString_Elem(data)
@@ -69,7 +69,7 @@ integer enKVS_Write(list name, string data)
 
 string enKVS_Read(list name)
 { // reads a KVS pair value
-    #ifdef ENKVS_TRACE
+    #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Read", ["name"], [
             enList_Elem(name)
             ]);
@@ -81,7 +81,7 @@ string enKVS_Read(list name)
 
 enKVS_Delete(list name)
 { // deletes a KVS pair
-    #ifdef ENKVS_TRACE
+    #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Delete", ["name"], [
             enList_Elem(name)
             ]);
@@ -94,7 +94,7 @@ enKVS_Delete(list name)
 
 enKVS_Reset()
 {
-    #ifdef ENKVS_TRACE
+    #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Reset", [], []);
     #endif
     _ENKVS_NAMES = [];

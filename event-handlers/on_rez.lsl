@@ -39,7 +39,7 @@
 	on_rez( integer param )
 	{
         // log event if requested
-        #ifdef EN_ON_REZ_TRACE
+        #if defined EN_ON_REZ_TRACE
             enLog_TraceParams( "on_rez", [], [ param ] );
         #endif
 
@@ -47,7 +47,7 @@
         enObject_StopIfFlagged();
 
         // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
-        #ifdef ENOBJECT_STOPIFOWNERREZZED
+        #if defined ENOBJECT_STOPIFOWNERREZZED
             enObject_StopIfOwnerRezzed();
         #endif
 
@@ -57,7 +57,7 @@
         #endif
 
         // update enCLEP channels if any are just the UUID
-        #ifdef ENCLEP_ENABLE
+        #if defined ENCLEP_ENABLE
             enCLEP_RefreshLinkset();
         #endif
 
@@ -67,7 +67,7 @@
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_ON_REZ
+		#if defined EN_ON_REZ
 			en_on_rez(param);
 		#endif
 	}

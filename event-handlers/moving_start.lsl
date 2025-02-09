@@ -36,12 +36,17 @@
 		}
 */
 
-#ifdef EN_MOVING_START
+#if defined EN_MOVING_START
 	moving_start()
 	{
-        // event unused, so the only reason to define it is to log it
-        enLog_TraceParams( "moving_start", [], [] );
+#endif
 
+        // log event if requested
+        #if defined EN_MOVING_START && defined EN_MOVING_START_TRACE
+            enLog_TraceParams( "moving_start", [], [] );
+        #endif
+
+#if defined EN_MOVING_START
         // event unused, so pass to user-defined function only
         en_moving_start();
 	}

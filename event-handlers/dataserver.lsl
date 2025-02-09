@@ -42,17 +42,17 @@
 #endif
 
         // log event if requested
-        #ifdef EN_DATASERVER_TRACE
+        #if defined EN_DATASERVER_TRACE
             enLog_TraceParams( "dataserver", [ "query", "data" ], [ enString_Elem( query ), enString_Elem( data ) ] );
         #endif
 
         // check if any En libraries want to intercept this event
-        #ifdef ENINVENTORY_ENABLE_NC
+        #if defined ENINVENTORY_ENABLE_NC
             if (enInventory_NCParse(query, data)) return;
         #endif
 
         // pass to user-defined function if requested
-		#ifdef EN_DATASERVER
+		#if defined EN_DATASERVER
 			en_dataserver( query, data );
 		#endif
 
