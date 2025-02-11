@@ -293,6 +293,15 @@ integer enCLEP_Listen(  // initializes or updates a dynamically managed llListen
     return 1;
 }
 
+enCLEP_Reset()  // resets and removes all enCLEP listeners, for single-purpose scripts to not have to independently keep track of listen handles
+{
+    #if defined ENCLEP_TRACE || defined ENCLEP_PROCESS_TRACE
+        enLog_TraceParams("enCLEP_Reset", [], []);
+    #endif
+    enCLEP_UnListenDomains();
+    _ENCLEP_DOMAINS = [];
+}
+
 integer enCLEP_Process(
     integer channel,
     string name,
