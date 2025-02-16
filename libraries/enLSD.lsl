@@ -1,31 +1,56 @@
 /*
-    enLSD.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enLSD.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ INSTRUCTIONS                                                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    TBD
+See documentation. enLSD is used to safely store values to the linkset_data
+store. It provides a variety of options and functions that reimplement the LSL
+llLinksetData* functions in a more flexible way.
+
+Note that enLSD does not protect against linkset data loss when being unlinked
+inside a child prim. If this is a concern, consider enKVS.
+
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ PREPROCESSOR OPTIONS                                                         │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+For quick reference only. For information on these options, see documentation.
+
+// feature flags
+#define ENLSD_DISABLE_UUID_CHECK
+#define ENLSD_ENABLE_SCRIPT_NAME_HEADER
+#define ENLSD_ENABLE_UUID_HEADER
+
+// event flags
+
+// callback flags
+
+// overrides
+#define ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH 8
+#define ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH 8
+
 */
 
 // ==
@@ -191,7 +216,66 @@ list enLSD_PairToName( // converts a raw LSD pair name to an enLSD name list
     return elems;
 }
 
-enLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
+enLSD_MoveAllPairs( // utility function for enLSD_Check*
+    string k
+)
+{
+    list l;
+    string old_head = enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
+    do
+    {
+        l = llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
+        if (l != [])
+        {
+            string old_pair = llList2String(l, 0);
+            string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
+            enLog_Trace("LSD pair \"" + pair_name + "\" moved");
+            if (_ENLSD_PASS == "")
+            {
+                llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
+                llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
+            }
+            else
+            {
+                llLinksetDataWriteProtected(enLSD_Head() + pair_name, llLinksetDataReadProtected(old_pair, _ENLSD_PASS), _ENLSD_PASS); // write with updated header
+                llLinksetDataDeleteProtected(old_pair, _ENLSD_PASS); // immediately delete old pair to save memory
+            }
+        }
+    } while (l != []); // repeat until we didn't find any keys left with old header
+}
+
+enLSD_CheckUUID() // updates LSD entries that use old UUID
+{ // note: if ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
+    #if defined ENLSD_TRACE
+        enLog_TraceParams("enLSD_CheckUUID", [], []);
+    #endif
+    #if defined ENLSD_ENABLE_UUID_HEADER
+        string k = enObject_Self(1); // get last key
+        if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
+        enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
+        enLSD_MoveAllPairs(k);
+    #endif
+}
+
+enLSD_CheckScriptName() // updates LSD entries that use old script name
+{
+    #if defined ENLSD_TRACE
+        enLog_TraceParams("enLSD_CheckScriptName", [], []);
+    #endif
+    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
+        if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
+        if (_ENLSD_SCRIPT_NAME != "")
+        {
+            enLog_Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
+            enLSD_MoveAllPairs(llGetKey());
+        }
+        _ENLSD_SCRIPT_NAME = llGetScriptName();
+    #endif
+}
+
+// the below functions were never tested and are no longer "enLSD-compliant" so need to be rewritten at some point
+
+/*enLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
     string prim,
     string domain,
     integer use_header,
@@ -255,7 +339,7 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
             enString_Elem(value)
             ]);
     #endif
-    #ifndef ENLSD_PUSHED_ALLOW_BROADCAST
+    #if !defined ENLSD_PUSHED_ALLOW_BROADCAST
         if (prim != (string)llGetKey()) return; // do not allow enLSD_Push calls sent to NULL_KEY
     #endif
     #if defined ENLSD_PUSHED_ADD_HEADER
@@ -291,65 +375,4 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
         if (!use_header) header = "";
         llLinksetDataWrite(header + name, value);
     #endif
-}
-
-enLSD_MoveAllPairs( // utility function for enLSD_Check*
-    string k
-)
-{
-    list l;
-    string n;
-    #if defined ENLSD_USE_SCRIPT_NAME_HEADER
-        n = _ENLSD_SCRIPT_NAME;
-    #endif
-    string old_head = enLSD_BuildHead(n, k);
-    do
-    {
-        l = llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
-        if (l != [])
-        {
-            string old_pair = llList2String(l, 0);
-            string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
-            enLog_Trace("LSD pair \"" + pair_name + "\" moved");
-            if (_ENLSD_PASS == "")
-            {
-                llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
-                llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
-            }
-            else
-            {
-                llLinksetDataWriteProtected(enLSD_Head() + pair_name, llLinksetDataReadProtected(old_pair, _ENLSD_PASS), _ENLSD_PASS); // write with updated header
-                llLinksetDataDeleteProtected(old_pair, _ENLSD_PASS); // immediately delete old pair to save memory
-            }
-        }
-    } while (l != []); // repeat until we didn't find any keys left with old header
-}
-
-enLSD_CheckUUID() // updates LSD entries that use old UUID
-{ // note: if ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
-    #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_CheckUUID", [], []);
-    #endif
-    #if defined ENLSD_ENABLE_UUID_HEADER
-        string k = enObject_Self( 1 ); // get last key
-        if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
-        enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
-        enLSD_MoveAllPairs(k);
-    #endif
-}
-
-enLSD_CheckScriptName() // updates LSD entries that use old script name
-{
-    #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_CheckScriptName", [], []);
-    #endif
-    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
-        if (_ENLSD_SCRIPT_NAME != "")
-        {
-            enLog_Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
-            enLSD_MoveAllPairs(llGetKey());
-        }
-        _ENLSD_SCRIPT_NAME = llGetScriptName();
-    #endif
-}
+}*/
