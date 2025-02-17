@@ -221,7 +221,11 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
 )
 {
     list l;
-    string old_head = enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
+    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
+        string old_head = enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
+    #else
+        string old_head = enLSD_BuildHead("", k);
+    #endif
     do
     {
         l = llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, old_head) + ".*$", 0, 1);
