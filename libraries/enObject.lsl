@@ -337,7 +337,7 @@ enObject_UpdateUUIDs()
 */
 enObject_AlwaysPhantom()
 {
-    if (llGetLinkNumber() > 2) llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHYSICS_SHAPE_TYPE, PRIM_PHYSICS_SHAPE_NONE]);
+    if (llGetLinkNumber() > 1) llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHYSICS_SHAPE_TYPE, PRIM_PHYSICS_SHAPE_NONE]);
     else if (llGetLinkNumber()) enLog_Debug("ENOBJECT_ALWAYS_PHANTOM cannot be used in root prim of linkset");
     else llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHANTOM, TRUE]);
 }
