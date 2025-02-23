@@ -65,6 +65,10 @@
             enLSD_CheckScriptName();
         #endif
 
+        #if defined ENOBJECT_ALWAYS_PHANTOM
+            enObject_AlwaysPhantom();
+        #endif
+
         // pass to user-defined function if requested
 		#if defined EN_STATE_ENTRY
 			en_state_entry();
