@@ -36,13 +36,13 @@
 		}
 */
 
-#if defined EN_HTTP_RESPONSE_TRACE || defined EN_HTTP_RESPONSE
+#if defined EN_HTTP_RESPONSE
 	http_response( key request, integer status, list metadata, string body )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_HTTP_RESPONSE_TRACE
+        #if defined EN_HTTP_RESPONSE_TRACE && defined EN_HTTP_RESPONSE
             enLog_TraceParams( "http_response", [ "request", "status", "metadata", "body" ], [
                 enString_Elem( request ),
                 status,
@@ -56,6 +56,6 @@
             en_http_response( request, status, metadata, body );
 		#endif
 
-#if defined EN_HTTP_RESPONSE_TRACE || defined EN_HTTP_RESPONSE
+#if defined EN_HTTP_RESPONSE
 	}
 #endif

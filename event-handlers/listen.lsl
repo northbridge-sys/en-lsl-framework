@@ -36,13 +36,13 @@
 		}
 */
 
-#if defined EN_LISTEN_TRACE || defined EN_LISTEN || defined ENCLEP_ENABLE
+#if defined EN_LISTEN || defined ENCLEP_ENABLE
 	listen( integer channel, string name, key id, string message )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_LISTEN_TRACE
+        #if defined EN_LISTEN_TRACE && (defined EN_LISTEN || defined ENCLEP_ENABLE)
             enLog_TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, enString_Elem( name ), enObject_Elem( id ), enString_Elem( message ) ] );
         #endif
 
@@ -55,6 +55,6 @@
 			en_listen( channel, name, id, message );
 		#endif
 
-#if defined EN_LISTEN_TRACE || defined EN_LISTEN || defined ENCLEP_ENABLE
+#if defined EN_LISTEN || defined ENCLEP_ENABLE
 	}
 #endif

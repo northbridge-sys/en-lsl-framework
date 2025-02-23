@@ -36,13 +36,13 @@
 		}
 */
 
-#if defined EN_HTTP_REQUEST_TRACE || defined EN_HTTP_REQUEST
+#if defined EN_HTTP_REQUEST
 	http_request( key request, string method, string body )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_HTTP_REQUEST_TRACE
+        #if defined EN_HTTP_REQUEST_TRACE && defined EN_HTTP_REQUEST
             enLog_TraceParams( "http_request", [ "request", "method", "body" ], [
                 enString_Elem( request ),
                 enString_Elem( method ),
@@ -55,6 +55,6 @@
             en_http_request( request, method, body );
 		#endif
 
-#if defined EN_HTTP_REQUEST_TRACE || defined EN_HTTP_REQUEST
+#if defined EN_HTTP_REQUEST
 	}
 #endif
