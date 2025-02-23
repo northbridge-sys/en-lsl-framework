@@ -36,13 +36,13 @@
 		}
 */
 
-#if defined EN_AT_ROT_TARGET_TRACE || defined EN_AT_ROT_TARGET
+#if defined EN_AT_ROT_TARGET
 	at_rot_target( integer handle, rotation target, rotation current )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_AT_ROT_TARGET_TRACE
+        #if defined EN_AT_ROT_TARGET_TRACE && defined EN_AT_ROT_TARGET
             enLog_TraceParams( "at_rot_target", [ "handle", "target", "current" ], [
                 handle,
                 enRotation_Elem( target ),
@@ -53,8 +53,5 @@
         // event unused, so pass to user-defined function only
         #if defined EN_AT_ROT_TARGET
             en_at_rot_target( handle, target, current );
-        #endif
-
-#if defined EN_AT_ROT_TARGET_TRACE || defined EN_AT_ROT_TARGET
 	}
 #endif

@@ -36,13 +36,13 @@
 		}
 */
 
-#if defined EN_DATASERVER_TRACE || defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC
+#if defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC
 	dataserver( key query, string data )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_DATASERVER_TRACE
+        #if defined EN_DATASERVER_TRACE && (defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC)
             enLog_TraceParams( "dataserver", [ "query", "data" ], [ enString_Elem( query ), enString_Elem( data ) ] );
         #endif
 
@@ -56,6 +56,6 @@
 			en_dataserver( query, data );
 		#endif
 
-#if defined EN_DATASERVER_TRACE || defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC
+#if defined EN_DATASERVER || defined ENINVENTORY_ENABLE_NC
 	}
 #endif

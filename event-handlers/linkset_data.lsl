@@ -37,13 +37,13 @@
 		}
 */
 
-#if defined EN_LINKSET_DATA_TRACE || defined EN_LINKSET_DATA
+#if defined EN_LINKSET_DATA
     linkset_data( integer action, string name, string value )
     {
 #endif
 
         // log event if requested
-        #if defined EN_LINKSET_DATA_TRACE
+        #if defined EN_LINKSET_DATA_TRACE && defined EN_LINKSET_DATA
             enLog_TraceParams( "linkset_data", [ "action", "name", "value" ], [ action, enString_Elem(name), enString_Elem(value) ] );
         #endif
 
@@ -52,6 +52,6 @@
 			en_linkset_data(action, name, value);
 		#endif
 
-#if defined EN_LINKSET_DATA_TRACE || defined EN_LINKSET_DATA
+#if defined EN_LINKSET_DATA
 	}
 #endif

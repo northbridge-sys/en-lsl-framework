@@ -36,13 +36,13 @@
 		}
 */
 
-#if defined EN_ATTACH_TRACE || defined EN_ATTACH || defined EN_ATTACH_BLOCK
+#if defined EN_ATTACH || defined EN_ATTACH_BLOCK
 	attach( key id )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_ATTACH_TRACE
+        #if defined EN_ATTACH_TRACE && (defined EN_ATTACH || defined EN_ATTACH_BLOCK)
             enLog_TraceParams( "attach", [ "id" ], [ enString_Elem( id ) ]);
         #endif
 
@@ -60,6 +60,6 @@
 			en_attach( id );
 		#endif
 
-#if defined EN_ATTACH_TRACE || defined EN_ATTACH || defined EN_ATTACH_BLOCK
+#if defined EN_ATTACH || defined EN_ATTACH_BLOCK
 	}
 #endif
