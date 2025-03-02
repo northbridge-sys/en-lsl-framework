@@ -76,6 +76,12 @@
     }
 #endif
 
+enTimer_Reset()
+{
+    _ENTIMER_QUEUE = [];
+    llSetTimerEvent(0.0);
+}
+
 string enTimer_Start( // adds a timer
     float interval,
     integer periodic,
@@ -164,7 +170,9 @@ integer enTimer_InternalLoopback(
 
 enTimer_Check() // checks the MIT timers to see if any are triggered
 {
-    if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
+    #if defined ENTIMER_TIMER_PREEMPTION
+        if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
+    #endif
     #if defined ENTIMER_TRACE
         enLog_TraceParams("enTimer_Check", [], []);
     #endif
@@ -201,7 +209,7 @@ enTimer_Check() // checks the MIT timers to see if any are triggered
                 {
                     #if defined ENTIMER_TIMER
                         enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);
-                        enTimer_timer( // fire function
+                        entimer_timer( // fire function
                             t_id,
                             t_callback
                             );
