@@ -118,7 +118,7 @@ integer enCLEP_Channel( // converts a string into an integer, hashed with _ENCLE
     string domain  // domain string to use to generate integer channel
     )
 {
-    integer chan = (integer)("0x" + llGetSubString(llSHA256String(domain + enCLEP_GetService()), -8, -1));
+    integer chan = llHash(domain + enCLEP_GetService()); // basic SDBM hashing - converts string into a 32-bit integer (this is NOT secure)
     if (chan == PUBLIC_CHANNEL || chan == DEBUG_CHANNEL) chan++; // filter out channels that can be seen in the viewer by default
     return chan;
 }
