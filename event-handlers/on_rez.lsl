@@ -44,7 +44,9 @@
         #endif
 
         // stop immediately if the "stop" LSD pair is set (used for updaters)
-        enObject_StopIfFlagged();
+        #if !defined ENOBJECT_DISABLE_STOPIFFLAGGED
+            enObject_StopIfFlagged();
+        #endif
 
         // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
         #if defined ENOBJECT_STOPIFOWNERREZZED
