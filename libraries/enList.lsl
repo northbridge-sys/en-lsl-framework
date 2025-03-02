@@ -99,6 +99,22 @@ list enList_Collate(
     return out;
 }
 
+// combines list b into a; each element of b is appended to a if it doesn't already exist in a
+// note that since type matching is enforced, the types must match
+list enList_Combine(
+    list a,
+    list b
+)
+{
+    integer i;
+    integer l = llGetListLength(b);
+    for (i = 0; i < l; i++)
+    {
+        if (llListFindList(a, llList2List(b, i, i)) == -1) a += llList2List(b, i, i);
+    }
+    return a;
+}
+
 list enList_Concatenate(
     string start,
     list a,
