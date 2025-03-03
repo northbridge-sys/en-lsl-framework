@@ -37,7 +37,7 @@
     enabled.
 */
 
-#define ENLEP_ENABLE
+#define ENLEP_MESSAGE
 #define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
 #include "en-lsl-framework/libraries.lsl"
