@@ -66,12 +66,12 @@
 
 string enInteger_ElemBitfield(integer var)
 {
-    integer test = 1;
     list flags;
-    while (test <= var)
+    integer bit;
+    // TODO: support for non-32-bit bitfields?
+    for (bit = 0; bit < 32; bit++)
     {
-        if (test & var) flags += ["0x" + enInteger_ToHex(test, 1) + " (" + (string)test + ")"];
-        test *= 2;
+        if (var & (0x1 << bit)) flags += ["0x" + enInteger_ToHex(var & (0x1 << bit), 1) + " (" + (string)(var & (0x1 << bit)) + ")"];
     }
     return "{" + llList2CSV(flags) + "}";
 }
