@@ -139,7 +139,7 @@ and when you call `someFunction( 1, 2 );`, you'll see:
 💬 Function called with parameters 1 and 2.
 🚩 WARNING: Non-zero values of x are discouraged.
 ❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
-🛑 FATAL ERROR: Everything is terrible. Script stopped.
+🛑 FATAL ERROR: Script stopped: Everything is terrible.
 ```
 
 or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel( TRACE );`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
@@ -176,10 +176,10 @@ enLEP_Send(
 );
 ```
 
-and the other script - if compiled with En - will call the `en_lep_message` function defined by the script:
+and the other script - if compiled with En - will call the `enlep_message` function defined by the script:
 
 ```
-#define ENLEP_ENABLE
+#define ENLEP_MESSAGE
 
 #include "en-lsl-framework/libraries.lsl"
 
