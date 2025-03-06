@@ -113,3 +113,13 @@ vector enVector_ScaleInverse( // scales a vector by dividing by each element of 
 {
     return <a.x / b.x, a.y / b.y, a.z / b.z>;
 }
+
+/*
+    used to normalize offsets used primarily for speculars/normals, which don't gracefully handle negative offsets
+*/
+vector enVector_NormalizeOffset(vector v)
+{
+    while (v.x < 0.0) v.x += 1.0;
+    while (v.y < 0.0) v.y += 1.0;
+    return v;
+}
