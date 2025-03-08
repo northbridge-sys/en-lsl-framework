@@ -31,6 +31,13 @@ enCLEP_MultiSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of sil
     string message
     )
 {
+#if defined ENCLEP_MULTISAYTO_TRACE
+    enLog_TraceParams("enCLEP_MultiSayTo", ["prim", "channel", "message"], [
+        enString_Elem(prim),
+        channel,
+        enString_Elem(message)
+    ]);
+#endif
     if (prim == "") prim = NULL_KEY;
     if (prim == NULL_KEY) llRegionSay(channel, message); // RS if prim is not specified
     else if (llGetObjectDetails(prim, [OBJECT_PHANTOM]) != []) llRegionSayTo(prim, channel, message); // RST if prim is in region
