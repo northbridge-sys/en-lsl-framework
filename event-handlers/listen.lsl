@@ -47,7 +47,7 @@
         #endif
 
         #if defined ENCLEP_ENABLE
-		    if ( enCLEP_Process( channel, name, id, message ) ) return; // valid enCLEP message
+		    if ( !enCLEP_Process( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
         // pass to user-defined function if requested
