@@ -136,17 +136,11 @@ string enLSD_BuildHead(
 )
 {
     string h = _ENLSD_HEADER + "\n";
-    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER && !defined ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH
+    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
         h = script_name + "\n" + h; // prepend full script name
     #endif
-    #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER && defined ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH
-        h = llGetSubString(llSHA256String(script_name), 0, ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH - 1) + "\n" + h; // prepend first chars of SHA256 hashed script name
-    #endif
-    #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH
+    #if defined ENLSD_ENABLE_UUID_HEADER
         h = uuid + "\n" + h; // prepend llGetKey to start of string to avoid linkset conflicts
-    #endif
-    #if defined ENLSD_ENABLE_UUID_HEADER && defined ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH
-        h = llGetSubString(uuid, 0, ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH - 1) + "\n" + h; // prepend first chars of llGetKey to start of string to avoid linkset conflicts
     #endif
     return h;
 }
