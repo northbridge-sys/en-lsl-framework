@@ -135,14 +135,17 @@ string enLSD_BuildHead(
     string uuid
 )
 {
-    string h = _ENLSD_HEADER + "\n";
+    return uuid + "\n"
     #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        h = script_name + "\n" + h; // prepend full script name
+        + script_name
     #endif
-    #if defined ENLSD_ENABLE_UUID_HEADER
-        h = uuid + "\n" + h; // prepend llGetKey to start of string to avoid linkset conflicts
-    #endif
-    return h;
+        + "\n";
+}
+
+//  purges all enLSD pairs assigned to UUIDs that are not part of this linkset
+enLSD_Purge()
+{
+    
 }
 
 // converts a raw LSD pair name to an enLSD name list
