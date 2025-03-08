@@ -310,7 +310,8 @@ integer enCLEP_Process(
     if (llList2String(data, 0) != "CLEP") return __LINE__; // not a valid enCLEP message
     // note: at this point we have a valid enCLEP message, so all returns should be 0 to indicate that the enCLEP message was processed
     if (llList2String(data, 1) != _ENCLEP_SERVICE) return 0; // not for our service
-    integer domain_ind = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [llList2String(data, 3)]);
+    string domain = llList2String(data, 3);
+    integer domain_ind = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [domain]);
     if (domain_ind == -1) return 0; // not listening to this domain
     integer flags = (integer)llList2String(_ENCLEP_DOMAINS, domain_ind * _ENCLEP_DOMAINS_STRIDE + 1);
     if (flags & ENCLEP_LISTEN_OWNERONLY)
@@ -322,10 +323,11 @@ integer enCLEP_Process(
         { // LEP message
     #endif
     #if defined ENLEP_MESSAGE && defined ENCLEP_ENABLE_LEP
+            // enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
             data = enList_FromString(llList2String(data, 5));
-            if (llGetListLength(data) != 3) return 0; // error in LEP unserialize operation
+            if (llGetListLength(data) != 4) return 0; // error in LEP unserialize operation
             ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
-            ENCLEP_LEP_SOURCE_DOMAIN = llList2String(data, 3); // same with domain
+            ENCLEP_LEP_SOURCE_DOMAIN = domain; // same with domain
             enLEP_Process(
                 -1,
                 (integer)llList2String(data, 0),
@@ -340,7 +342,6 @@ integer enCLEP_Process(
         }
     #endif
     #if defined ENCLEP_ENABLE_ENLSD
-        string domain = llList2String(data, 3);
         if (llList2String(data, 4) == "LSD_Pull")
         { // send LSD pair
             data = enList_FromString(llList2String(data, 5));
@@ -371,7 +372,6 @@ integer enCLEP_Process(
         }
     #endif
     #if defined ENCLEP_ENABLE_ENINVENTORY
-        string domain = llList2String(data, 3);
         if (llList2String(data, 4) == "Inventory_Push")
         { // send inventory
             data = enList_FromString(llList2String(data, 5));
