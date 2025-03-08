@@ -49,6 +49,7 @@ list _ENCLEP_DOMAINS; // service, domain, flags, handle
 
 #if defined ENCLEP_ENABLE_LEP
     string ENCLEP_LEP_SOURCE_PRIM = NULL_KEY;
+    string ENCLEP_LEP_SOURCE_SERVICE;
     string ENCLEP_LEP_SOURCE_DOMAIN;
 #endif
 
