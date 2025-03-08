@@ -334,7 +334,7 @@ integer enCLEP_Process(
     integer match_ind = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
     if (match_ind == -1)
     {
-        enLog_Debug(type + " interference on channel " + (string)channel + " from service \"" + service + "\" domain \"" + domain + "\" with type \"" + type + "\": " + message);
+        enLog_Debug(llList2String(data, 4) + " interference on channel " + (string)channel + " from service \"" + service + "\" domain \"" + domain + "\": " + llList2String(data, 5));
         return 0; // not listening to this service + domain (channel interference)
     }
 
@@ -365,7 +365,7 @@ integer enCLEP_Process(
         ENCLEP_LEP_SOURCE_SERVICE = "";
         ENCLEP_LEP_SOURCE_DOMAIN = "";
     #else
-        enLog_Debug(type + " message received on service \"" + service + "\" domain \"" + domain + "\" but ENLEP_MESSAGE is not defined: " + message);
+        enLog_Debug("LEP message received on service \"" + service + "\" domain \"" + domain + "\" but ENLEP_MESSAGE is not defined: " + message);
     #endif
         return 0;
     }
