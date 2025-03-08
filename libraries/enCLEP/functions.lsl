@@ -488,11 +488,17 @@ enCLEP_ListenDomains()
     #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_ListenDomains", [], []);
     #endif
+
     integer i;
     integer l = llGetListLength(_ENCLEP_DOMAINS) / _ENCLEP_DOMAINS_STRIDE;
-
+    list c;
     // for each domain in _ENCLEP_DOMAINS, add listen and update _ENCLEP_DOMAINS with handle
-    for (i = 0; i < l; i++) llListReplaceList(_ENCLEP_DOMAINS, [llListen(enCLEP_Channel(llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE), llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 1)), "", "", "")], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
+    for (i = 0; i < l; i++)
+    {
+        c += [enCLEP_Channel(llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE), llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 1))];
+        llListReplaceList(_ENCLEP_DOMAINS, [llListen(llList2Integer(c, -1), "", "", "")], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
+    }
+    enLog_Debug("enCLEP channels: " + enList_ElemNumbers(c));
 }
 
 //  internal function that runs after key change to reset any listens based on previous UUID
