@@ -1,4 +1,4 @@
- /*
+/*
 enObject.lsl
 Library
 En LSL Framework
@@ -20,32 +20,11 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-╒══════════════════════════════════════════════════════════════════════════════╕
-│ INSTRUCTIONS                                                                 │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-This script exposes the enObject_* functions and ENOBJECT_* globals, which
-allows code to monitor metadata about the prim and linkset that the script is
-in, and get information about other prims.
 */
 
-// ==
-// == macros
-// ==
-
-#define enObject_Root() \
-    llList2String([llGetKey(), llGetLinkKey(1)], !(llGetNumberOfPrims() - 1))
-
-#define enObject_StopIfOwnerRezzed() \
-    if (enObject_Parent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered.")
-
-#define enObject_StopIfFlagged() \
-    if ((integer)llLinksetDataRead("stop")) enLog_FatalStop("enObject_StopIfFlagged() triggered.")
-
-// ==
-// == globals
-// ==
+//  ==
+//  ==  GLOBALS
+//  ==
 
 list _ENOBJECT_UUIDS_SELF;
 
@@ -54,16 +33,33 @@ list _ENOBJECT_UUIDS_SELF;
     #define _ENOBJECT_LINK_CACHE_STRIDE 3
 #endif
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enObject_GetLinkColor(link,face) \
     (vector)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 0)
 
-// ==
-// == functions
-// ==
+//  gets UUID of entity that rezzed the object
+#define enObject_Parent() \
+    llList2String(llGetObjectDetails(llGetKey(), [OBJECT_REZZER_KEY]), 0)
+
+#define enObject_Root() \
+    llList2String([llGetKey(), llGetLinkKey(1)], !(llGetNumberOfPrims() - 1))
+
+//  returns either own object's current UUID or one of its previous UUIDs
+#define enObject_Self(i) \
+    llList2String(_ENOBJECT_UUIDS_SELF, i)
+
+#define enObject_StopIfOwnerRezzed() \
+    if (enObject_Parent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered.")
+
+#define enObject_StopIfFlagged() \
+    if ((integer)llLinksetDataRead("stop")) enLog_FatalStop("enObject_StopIfFlagged() triggered.")
+
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 string enObject_Elem( string id )
 {
@@ -72,19 +68,8 @@ string enObject_Elem( string id )
     return "\"" + id + "\" (\"" + llList2String( details, 0 ) + "\" at " + enVector_ToString( (vector)llList2String( details, 1 ), 3 ) + ")";
 }
 
-string enObject_Self( // returns either own object's current UUID or one of its previous UUIDs
-    integer last
-    )
-{
-    return llList2String( _ENOBJECT_UUIDS_SELF, last );
-}
-
-string enObject_Parent() // gets UUID of entity that rezzed the object
-{
-    return llList2String( llGetObjectDetails( llGetKey(), [ OBJECT_REZZER_KEY ] ), 0);
-}
-
-string enObject_RelativeLinknum( // returns the linknum of a specified UUID if it is part of the same linkset, or -1 if it is not
+//  returns the linknum of a specified UUID if it is part of the same linkset, or -1 if it is not
+string enObject_RelativeLinknum(
     string prim
 )
 {
@@ -122,8 +107,9 @@ integer enObject_ClosestLinkDesc(
     return 0; // no match
 }
 
+//  finds the linknum of the closest prim in the linkset with the specified name
 integer enObject_ClosestLink(string name)
-{ // finds the linknum of the closest prim in the linkset with the specified name
+{
     #if defined ENOBJECT_TRACE
         enLog_TraceParams("enObject_ClosestLink", ["name"], [
             enString_Elem(name)
@@ -303,7 +289,8 @@ string enObject_GetAttachedString(
         ], i);
 }
 
-integer enObject_Profile( // returns various bitwise flags for the state of an object
+// returns various bitwise flags for the state of an object
+integer enObject_Profile(
     string k
     )
 {
@@ -331,7 +318,8 @@ enObject_UpdateUUIDs()
 	}
 }
 
-/*  runs on certain events when ENOBJECT_ALWAYS_PHANTOM is defined
+/*
+    runs on certain events when ENOBJECT_ALWAYS_PHANTOM is defined
     used for building components that should always be phantom
     can also be called independently without ENOBJECT_ALWAYS_PHANTOM if you only want to do this as a runtime option
 */
