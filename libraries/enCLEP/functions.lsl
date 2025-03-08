@@ -333,10 +333,14 @@ integer enCLEP_Process(
     // we do a little trick here - this can technically be hacked if you use integers for your service and domain, so don't do that
     integer match_ind = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
     if (match_ind == -1)
-    {
-        enLog_Debug(llList2String(data, 4) + " interference on channel " + (string)channel + " from service \"" + service + "\" domain \"" + domain + "\": " + llList2String(data, 5));
-        return 0; // not listening to this service + domain (channel interference)
-    }
+    #if defined ENCLEP_REPORT_INTERFERENCE
+        {
+            enLog_Debug(llList2String(data, 4) + " interference on channel " + (string)channel + " from service \"" + service + "\" domain \"" + domain + "\": " + llList2String(data, 5));
+    #endif
+    return 0; // not listening to this service + domain (channel interference)
+    #if defined ENCLEP_REPORT_INTERFERENCE
+        } // memory trick :)
+    #endif
 
     // process flags for the matched listen
     integer flags = (integer)llList2String(_ENCLEP_DOMAINS, match_ind + 2);
@@ -351,7 +355,7 @@ integer enCLEP_Process(
     #if defined ENLEP_MESSAGE
         // enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
         data = enList_FromString(llList2String(data, 5));
-        if (llGetListLength(data) != 4) return 0; // error in LEP unserialize operation
+        if (llGetListLength(data) != 3) return 0; // error in LEP unserialize operation
         ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
         ENCLEP_LEP_SOURCE_SERVICE = service; // same with service
         ENCLEP_LEP_SOURCE_DOMAIN = domain; // same with domain
