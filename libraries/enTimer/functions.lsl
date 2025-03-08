@@ -161,7 +161,7 @@ enTimer_Check()
                 if (!enTimer_InternalLoopback(t_callback))
                 {
                     #if defined ENTIMER_TIMER
-                        enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);
+                        enLog_Trace("enTimer \"" + t_id + "\": " + t_callback);
                         triggers += [t_id, t_callback];
                     #endif
                 }
@@ -171,7 +171,7 @@ enTimer_Check()
         if ( lowest != 0x7FFFFFFF )
         { // a timer is still in the queue
             llSetTimerEvent( lowest * 0.001 );
-            enLog_Trace("enTimer set llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
+            enLog_Trace("enTimer llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
         }
         /*
         entimer_timer calls need to be made AFTER the next timer is scheduled, because otherwise there is an ordering problem
@@ -183,8 +183,8 @@ enTimer_Check()
         for (i = 0; i < l; i++)
         {
             entimer_timer( // fire function
-                llList2String(triggers, 0),
-                llList2String(triggers, 1)
+                llList2String(triggers, i * 2),
+                llList2String(triggers, i * 2 + 1)
                 );
         }
     #endif
