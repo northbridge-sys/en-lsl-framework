@@ -1,38 +1,38 @@
 /*
-    libraries.lsl
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+libraries.lsl
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ INSTRUCTIONS                                                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This file #includes all existing En library scripts. Type the following:
-		#include "en-lsl-framework/libraries.lsl"
-    into the top of an LSL script with the LSL preprocessor enabled to be able to
-    call En library functions.
+This file #includes all existing En library scripts. Type the following:
+#include "en-lsl-framework/libraries.lsl"
+into the top of an LSL script with the LSL preprocessor enabled to be able to
+call En library functions.
 
-    Make sure to #define any desired preprocessor flags BEFORE #include-ing this
-    script, or the libraries may be loaded incorrectly.
+Make sure to #define any desired preprocessor flags BEFORE #include-ing this
+script, or the libraries may be loaded incorrectly.
 
-    Make sure the "Script optimizer" setting is enabled in your preprocessor!
+Make sure the "Script optimizer" setting is enabled in your preprocessor!
 */
 
 // each major revision of En increments this value

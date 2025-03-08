@@ -1,42 +1,33 @@
 /*
-    enFloat.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enFloat.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == globals
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
-// ==
-// == functions
-// ==
-
-string enFloat_ToString( // rounds a float to a specified number of digits after the decimal
+//  rounds a float to a specified number of digits after the decimal
+string enFloat_ToString(
     float f,
     integer digits
     )
@@ -48,7 +39,8 @@ string enFloat_ToString( // rounds a float to a specified number of digits after
     return llGetSubString(s, 0, i + digits); // return string-cast float, but only up to the number of digits requested
 }
 
-string enFloat_Compress( // converts a float to a non-equivalent string, can be converted back with enFloat_Decompress
+//  converts a float to a non-equivalent string, can be converted back with enFloat_Decompress
+string enFloat_Compress(
     float f
 )
 {
@@ -67,7 +59,8 @@ string enFloat_Compress( // converts a float to a non-equivalent string, can be 
     return llGetSubString(llIntegerToBase64(i), 0, 5);
 }
 
-float enFloat_Decompress( // converts the integer result from enFloat_Compress back to a float
+//  converts the integer result from enFloat_Compress back to a float
+float enFloat_Decompress(
     string s
 )
 {

@@ -1,56 +1,54 @@
- /*
-    enHTTP.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+/*
+enHTTP.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TODO
-
-    WARNING: enHTTP uses the llSetTimerEvent() timer. TODO: allow using either SIT
-    or MIT
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == globals
-// ==
+
+//  WARNING: enHTTP uses the llSetTimerEvent() timer. TODO: allow using either SIT
+//  or MIT
+
+//  WARNING: enHTTP was experimental and probably no longer works!! TODO
+
+//  ==
+//  ==  GLOBALS
+//  ==
 
 integer _ENHTTP_PAUSE; // pause for rate limit
 list _ENHTTP_REQUESTS; // enhttp_id, req_id, url, http_params, body
 #define _ENHTTP_REQUESTS_STRIDE 5
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
-key enHTTP_Request( // sends an HTTP request to a URL
+//  sends an HTTP request to a URL
+key enHTTP_Request(
     string url,         // url to pass to llHTTPRequest
     list http_params,   // parameters to pass to llHTTPRequest
                         //  do not specify the following parameters:
                         //  - HTTP_VERBOSE_THROTTLE: automatically set FALSE
                         //  - HTTP_EXTENDED_ERROR: must always be FALSE (default)
     string body         // body to pass to llHTTPRequest
-    )
+)
 {
     #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_Request", ["url", "http_params", "body"], [
@@ -82,7 +80,8 @@ key enHTTP_Request( // sends an HTTP request to a URL
     return en_id;
 }
 
-enHTTP_ProcessResponse( // processes http_response
+//  processes http_response
+enHTTP_ProcessResponse(
     string req_id,
     integer status,
     list metadata,
@@ -117,7 +116,8 @@ enHTTP_ProcessResponse( // processes http_response
     _ENHTTP_REQUESTS = llDeleteSubList(_ENHTTP_REQUESTS, req_ind * _ENHTTP_REQUESTS_STRIDE, (req_ind + 1) * _ENHTTP_REQUESTS_STRIDE - 1);
 }
 
-enHTTP_Timer() // request queue timer
+//  request queue timer
+enHTTP_Timer()
 {
     #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_Timer", [], []);
@@ -147,7 +147,8 @@ enHTTP_Timer() // request queue timer
     #endif
 }
 
-integer enHTTP_NextRequest() // fire off next request in queue (used internally by enHTTP_Timer)
+//  fire off next request in queue (used internally by enHTTP_Timer)
+integer enHTTP_NextRequest()
 {
     #if defined ENHTTP_TRACE
         enLog_TraceParams("enHTTP_NextRequest", [], []);

@@ -1,36 +1,30 @@
 /*
-    enRotation.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enRotation.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 string enRotation_Elem( rotation r )
 {
@@ -65,21 +59,24 @@ rotation enRotation_Slerp(
     return llAxisAngle2Rot( llRot2Axis( b /= a ), t * llRot2Angle( b ) ) * a;
 }
 
-string enRotation_Compress( // converts a rotation to a Base64 string, can be converted back with enRotation_Decompress
+//  converts a rotation to a Base64 string, can be converted back with enRotation_Decompress
+string enRotation_Compress(
     rotation r
 )
 {
     return enFloat_Compress(r.x) + enFloat_Compress(r.y) + enFloat_Compress(r.z) + enFloat_Compress(r.s);
 }
 
-rotation enRotation_Decompress( // converts the string result from enRotation_Compress back to a rotation
+//  converts the string result from enRotation_Compress back to a rotation
+rotation enRotation_Decompress(
     string s
 )
 {
     return <enFloat_Decompress(llGetSubString(s, 0, 5)), enFloat_Decompress(llGetSubString(s, 6, 11)), enFloat_Decompress(llGetSubString(s, 12, 17)), enFloat_Decompress(llGetSubString(s, 18, 23))>;
 }
 
-vector enRotation_FromString( // converts a string to a rotation while being a little loose with what counts as a rotation (all spaces removed, brackets optional, automatic translation from vector)
+//  converts a string to a rotation while being a little loose with what counts as a rotation (all spaces removed, brackets optional, automatic translation from vector)
+vector enRotation_FromString(
     string s,
     integer use_degrees // set TRUE if you want llEuler2Rot translation to presume a vector in degrees instead of radians
 )

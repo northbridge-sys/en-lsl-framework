@@ -1,38 +1,30 @@
 /*
-    enLog.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enLog.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    This is an LSL preprocessor include file that implements a set of fleenble
-    logging functions that can output different loglevels via llOwnerSay and,
-    optionally, via enCLEP to a specified UUID and service.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enLog_TraceVars(var_names, var_values) \
     enLog_TraceParams("enLog_TraceVars", var_names, var_values)
@@ -43,9 +35,9 @@
 #define enLog_SetLogtarget(target) \
     llLinksetDataWrite("logtarget", target)
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 enLog_To(
     integer level,
@@ -84,7 +76,8 @@ enLog_To(
     #endif
 }
 
-enLog_SuccessStop( // logs a success and stops the script
+// logs a success and stops the script
+enLog_SuccessStop(
     string m // message
 )
 {
@@ -94,7 +87,8 @@ enLog_SuccessStop( // logs a success and stops the script
     llSleep(1.0); // give the simulator time to stop the script to be safe
 }
 
-enLog_SuccessDelete( // logs a success and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+// logs a success and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+enLog_SuccessDelete(
     string m // message
 )
 {
@@ -103,7 +97,8 @@ enLog_SuccessDelete( // logs a success and deletes the script (WARNING: SCRIPT I
     enLog_Delete();
 }
 
-enLog_SuccessDie( // logs a success and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+// logs a success and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+enLog_SuccessDie(
     string m // message
 )
 {
@@ -112,7 +107,8 @@ enLog_SuccessDie( // logs a success and deletes the OBJECT (WARNING: OBJECT IS I
     enLog_Die();
 }
 
-enLog_FatalStop( // logs a fatal error and stops the script
+// logs a fatal error and stops the script
+enLog_FatalStop(
     string m // message
     )
 {
@@ -122,7 +118,8 @@ enLog_FatalStop( // logs a fatal error and stops the script
     llSleep(1.0); // give the simulator time to stop the script to be safe
 }
 
-enLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+// logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+enLog_FatalDelete(
     string m // message
 )
 {
@@ -131,7 +128,8 @@ enLog_FatalDelete( // logs a fatal error and deletes the script (WARNING: SCRIPT
     enLog_Delete();
 }
 
-enLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+// logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+enLog_FatalDie(
     string m // message
 )
 {
@@ -140,7 +138,8 @@ enLog_FatalDie( // logs a fatal error and deletes the OBJECT (WARNING: OBJECT IS
     enLog_Die();
 }
 
-enLog_Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+// deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
+enLog_Delete()
 {
     // remove inventory if ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef ENLOG_ENABLE_DELETE_OWNEDBYCREATOR
@@ -157,7 +156,8 @@ enLog_Delete() // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
     llSleep(1.0); // give the simulator time to stop and delete the script to be safe
 }
 
-enLog_Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+// deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
+enLog_Die()
 {
     // delete object if ENLOG_ENABLE_DIE_OWNEDBYCREATOR is defined, OR script is not owned by creator
     #ifndef ENLOG_ENABLE_DIE_OWNEDBYCREATOR
@@ -177,7 +177,8 @@ enLog_Die() // deletes the OBJECT (or, if it is attached, detaches it) (WARNING:
     llSleep( 1.0 ); // give the simulator time to remove the object to be safe
 }
 
-string enLog_LevelToString( // converts integer level number into string representation
+// converts integer level number into string representation
+string enLog_LevelToString(
     integer l
     )
 {
@@ -193,7 +194,8 @@ string enLog_LevelToString( // converts integer level number into string represe
         ], l );
 }
 
-integer enLog_StringToLevel( // converts integer level number into string representation
+// converts integer level number into string representation
+integer enLog_StringToLevel(
     string s
     )
 {

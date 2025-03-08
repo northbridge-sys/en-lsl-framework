@@ -1,42 +1,42 @@
 /*
-    event-handlers.lsl
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+event-handlers.lsl
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ INSTRUCTIONS                                                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This file #includes all possible event handlers. Only event handlers that are
-    necessary for the script to run will be included in the compiled script.
+This file #includes all possible event handlers. Only event handlers that are
+necessary for the script to run will be included in the compiled script.
 
-    At the bottom of the script, add:
+At the bottom of the script, add:
 
-    default
-    {
-		#include "en-lsl-framework/event-handlers.lsl"
-    }
+default
+{
+    #include "en-lsl-framework/event-handlers.lsl"
+}
 
-    to allow the En framework to handle events.
+to allow the En framework to handle events.
 
-    Make sure the "Script optimizer" setting is enabled in your preprocessor!
+Make sure the "Script optimizer" setting is enabled in your preprocessor!
 */
 
 // each major revision of En increments this value

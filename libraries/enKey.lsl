@@ -1,46 +1,41 @@
 /*
-    enKey.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enKey.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 // returns 1 if is NULL_KEY
 #define enKey_IsNull(k) \
     (k == NULL_KEY)
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
-integer enKey_Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
+//  returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
+integer enKey_Is(
     string k
     )
 {
@@ -48,7 +43,8 @@ integer enKey_Is( // returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the
     return k == NULL_KEY;
 }
 
-integer enKey_IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
+//  returns 1 if is a valid key, but NOT NULL_KEY
+integer enKey_IsNotNull(
     string k
     )
 {
@@ -56,7 +52,8 @@ integer enKey_IsNotNull( // returns 1 if is a valid key, but NOT NULL_KEY
     return 0;
 }
 
-integer enKey_IsInRegion( // returns 1 if is a key of something that exists IN THIS REGION
+//  returns 1 if is a key of something that exists IN THIS REGION
+integer enKey_IsInRegion(
     string k
     )
 {
@@ -64,14 +61,16 @@ integer enKey_IsInRegion( // returns 1 if is a key of something that exists IN T
     return enKey_IsPrimInRegion( k );
 }
 
-integer enKey_IsAvatarInRegion( // returns 1 if a valid avatar key IN THIS REGION
+//  returns 1 if a valid avatar key IN THIS REGION
+integer enKey_IsAvatarInRegion(
     string k
 )
 {
     return llGetAgentSize() != ZERO_VECTOR;
 }
 
-integer enKey_IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
+//  returns 1 if a valid prim key IN THIS REGION
+integer enKey_IsPrimInRegion(
     string k
     )
 {
@@ -81,7 +80,8 @@ integer enKey_IsPrimInRegion( // returns 1 if a valid prim key IN THIS REGION
     return 1; // must be a prim
 }
 
-string enKey_Strip( // strips dashes out of a key
+//  strips dashes out of a key
+string enKey_Strip(
     string k
     )
 {
@@ -89,7 +89,8 @@ string enKey_Strip( // strips dashes out of a key
     return llReplaceSubString( k, "-", "", 0 ); // valid key, so strip dashes
 }
 
-string enKey_Unstrip( // adds dashes into a 32-character hex string to turn it into a key
+//  adds dashes into a 32-character hex string to turn it into a key
+string enKey_Unstrip(
     string k
     )
 {
@@ -103,7 +104,8 @@ string enKey_Unstrip( // adds dashes into a 32-character hex string to turn it i
         llGetSubString(k, 20, 31);
 }
 
-string enKey_Compress( // strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
+//  strips dashes out of a key and encodes it in Base64 for memory efficiency (36 characters down to 32 in hex, or 24 in Base64)
+string enKey_Compress(
     string k
     )
 {
@@ -115,7 +117,8 @@ string enKey_Compress( // strips dashes out of a key and encodes it in Base64 fo
         + llGetSubString(llIntegerToBase64((integer)("0x" + llGetSubString(k, 24, 31))), 0, 5);
 }
 
-string enKey_Decompress( // adds dashes back into a key that was sent through enKey_Compress(...)
+//  adds dashes back into a key that was sent through enKey_Compress(...)
+string enKey_Decompress(
     string k
     )
 {
