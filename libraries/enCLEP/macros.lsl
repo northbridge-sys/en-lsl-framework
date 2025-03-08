@@ -47,7 +47,8 @@ list _ENCLEP_DOMAINS; // service, domain, flags, handle
     #define ENCLEP_PTP_STRIDE 4
 #endif
 
-#if defined ENCLEP_ENABLE_LEP
+#if defined ENCLEP_ENABLE && defined ENLEP_MESSAGE
+    // enLEP via enCLEP is enabled automatically
     string ENCLEP_LEP_SOURCE_PRIM = NULL_KEY;
     string ENCLEP_LEP_SOURCE_SERVICE;
     string ENCLEP_LEP_SOURCE_DOMAIN;
