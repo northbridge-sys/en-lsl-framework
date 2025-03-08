@@ -142,6 +142,7 @@ enTimer_Check()
         integer i;
         integer l = llGetListLength( _ENTIMER_QUEUE ) / _ENTIMER_QUEUE_STRIDE;
         integer lowest = 0x7FFFFFFF;
+        list triggers;
         for (i = 0; i < l; i++)
         {
             string t_id = llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE );
@@ -161,10 +162,7 @@ enTimer_Check()
                 {
                     #if defined ENTIMER_TIMER
                         enLog_Trace("enTimer " + t_id + " triggered: " + t_callback);
-                        entimer_timer( // fire function
-                            t_id,
-                            t_callback
-                            );
+                        triggers += [t_id, t_callback];
                     #endif
                 }
             }
@@ -174,6 +172,20 @@ enTimer_Check()
         { // a timer is still in the queue
             llSetTimerEvent( lowest * 0.001 );
             enLog_Trace("enTimer set llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
+        }
+        /*
+        entimer_timer calls need to be made AFTER the next timer is scheduled, because otherwise there is an ordering problem
+        if code that runs in entimer_timer re-calls enTimer_Start, it will modify the enTimer queue and schedule the next timer
+        but if this function then sets the timer to the OLD timer, it causes the old lowest timer to be used instead of the new one
+        moving these triggers out to be enumerated separately solves this problem - calls to enTimer_Start will correctly reschedule the timer
+        */
+        l = llGetListLength(triggers) / 2;
+        for (i = 0; i < l; i++)
+        {
+            entimer_timer( // fire function
+                llList2String(triggers, 0),
+                llList2String(triggers, 1)
+                );
         }
     #endif
 }
