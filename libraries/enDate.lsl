@@ -59,14 +59,26 @@ string enDate_PrettyHMS(
     integer flags
 )
 {
-    if (flags & ENDATE_12_HOUR) 1; // TODO
+    string xm;
+    if (flags & ENDATE_12_HOUR)
+    {
+        xm = "A";
+        integer h = (integer)llList2String(hms, 0);
+        if (h == 0) h = 12;
+        else
+        {
+            if (h >= 12) xm = "P"; // if hour 12-23, P
+            if (h > 12) h -= 12; // if hour 13-23, go back to 1-11
+        }
+        hms = llListReplaceList(hms, [(integer)llList2String(hms, 0) - 12], 0, 0);
+    }
     if (flags & ENDATE_PAD_ZEROES)
     {
         while (llStringLength(llList2String(hms, 0)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 0)], 0, 0);
         while (llStringLength(llList2String(hms, 1)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 1)], 1, 1);
         while (llStringLength(llList2String(hms, 2)) < 2 || (llSubStringIndex(llList2String(hms, 2), ".") < 2 && llSubStringIndex(llList2String(hms, 2), ".") > -1)) hms = llListReplaceList(hms, ["0" + llList2String(hms, 2)], 2, 2); // TODO: MAKE LESS BAD
     }
-    return llList2String(hms, 0) + ":" + llList2String(hms, 1) + ":" + llList2String(hms, 2);
+    return llList2String(hms, 0) + ":" + llList2String(hms, 1) + ":" + llList2String(hms, 2) + xm;
 }
 
 //  gets an integer that represents the current millisecond of a month
