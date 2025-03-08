@@ -263,6 +263,7 @@ If so, check that the message is acceptable (matches a listened-to domain, owner
 If the message is acceptable, route it appropriately (either to enLEP, or whatever other library or protocol) and return 0.
 If not, return 0 to signal a CLEP message even if it wasn't routable.
 */
+
 integer enCLEP_Process(
     integer channel,
     string name,
@@ -331,7 +332,11 @@ integer enCLEP_Process(
     string domain = llList2String(data, 3);
     // we do a little trick here - this can technically be hacked if you use integers for your service and domain, so don't do that
     integer match_ind = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
-    if (match_ind == -1) return 0; // not listening to this service + domain (channel interference)
+    if (match_ind == -1)
+    {
+        enLog_Debug(type + " interference on channel " + (string)channel + " from service \"" + service + "\" domain \"" + domain + "\" with type \"" + type + "\": " + message);
+        return 0; // not listening to this service + domain (channel interference)
+    }
 
     // process flags for the matched listen
     integer flags = (integer)llList2String(_ENCLEP_DOMAINS, match_ind + 2);
