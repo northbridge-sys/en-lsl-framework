@@ -75,7 +75,7 @@ integer enLEP_Process(
     string k
 )
 {
-    #if defined ENLEP_TRACE
+    #if defined ENLEP_TRACE || defined ENLEP_PROCESS_TRACE
         enLog_TraceParams("enLEP_Process", ["source_link", "flags", "s", "k"], [
             source_link,
             flags,
