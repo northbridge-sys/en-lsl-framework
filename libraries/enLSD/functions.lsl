@@ -145,7 +145,19 @@ string enLSD_BuildHead(
 //  purges all enLSD pairs assigned to UUIDs that are not part of this linkset
 enLSD_Purge()
 {
-    
+    string root = enObject_Root();
+    list pair;
+    integer i;
+    do
+    {
+        pair = llLinksetDataFindKeys("^[0-9a-fA-F-]{36}\n.*$", i, 1);
+        if (pair != [])
+        {
+            string owner = llGetSubString(llList2String(pair, 0), 0, 35);
+            if (llList2String(llGetObjectDetails(owner, [OBJECT_ROOT]), 0) != root) llLinksetDataDeleteFound("^" + owner + "\n.*$", ""); // delete all pairs owned by this prim, since it's gone
+        }
+    }
+    while (pair != []);
 }
 
 // converts a raw LSD pair name to an enLSD name list
