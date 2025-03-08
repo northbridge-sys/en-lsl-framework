@@ -1,5 +1,5 @@
 /*
-enAvatar.lsl
+enLog.lsl
 Library
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
@@ -22,22 +22,11 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-//  ==
-//  ==  FUNCTIONS
-//  ==
+#define enLog_TraceVars(var_names, var_values) \
+    enLog_TraceParams("enLog_TraceVars", var_names, var_values)
 
-string enAvatar_Elem( string id )
-{
-    return "\"" + id + "\" (secondlife:///app/agent/" + id + "/username)";
-}
+#define enLog_GetLogtarget() \
+    llLinksetDataRead("logtarget")
 
-string enAvatar_GetGroup(
-    string id
-)
-{
-    list attaches = llGetAttachedList(id);
-    string group = NULL_KEY;
-    string first = llList2String(attaches, 0);
-    if (attaches != [] && first != "NOT ON REGION" && first != "NOT FOUND") group = llList2String(llGetObjectDetails(llList2String(attaches, 0), [OBJECT_GROUP]), 0);
-    return group;
-}
+#define enLog_SetLogtarget(target) \
+    llLinksetDataWrite("logtarget", target)

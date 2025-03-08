@@ -1,6 +1,6 @@
 /*
 enHTTP.lsl
-Library
+Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
@@ -27,18 +27,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 //  or MIT
 
 //  WARNING: enHTTP was experimental and probably no longer works!! TODO
-
-//  ==
-//  ==  GLOBALS
-//  ==
-
-integer _ENHTTP_PAUSE; // pause for rate limit
-list _ENHTTP_REQUESTS; // enhttp_id, req_id, url, http_params, body
-#define _ENHTTP_REQUESTS_STRIDE 5
-
-//  ==
-//  ==  FUNCTIONS
-//  ==
 
 //  sends an HTTP request to a URL
 key enHTTP_Request(

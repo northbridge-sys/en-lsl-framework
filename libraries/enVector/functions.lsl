@@ -1,6 +1,6 @@
 /*
 enVector.lsl
-Library
+Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
@@ -21,26 +21,6 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-//  ==
-//  == MACROS
-//  ==
-
-// converts a world-scope position to a region-scope position, as in a position within a region
-#define enVector_WorldToRegion(world_position) \
-    (world - enVector_WorldToCorner(world_position))
-
-// converts the current region-scope position to world-scope position
-#define enVector_RegionToWorld(region_position) \
-    enVector_RegionCornerToWorld(region_position, llGetRegionCorner())
-
-// converts a region CORNER and POSITION to a world-scope position
-#define enVector_RegionCornerToWorld(region_position, region_corner) \
-    (region_position + region_corner)
-
-//  ==
-//  ==  FUNCTIONS
-//  ==
 
 //  ==  TYPECASTING
 

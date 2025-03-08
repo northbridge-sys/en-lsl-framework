@@ -1,6 +1,6 @@
 /*
 enKey.lsl
-Library
+Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
@@ -21,18 +21,6 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-//  ==
-//  ==  MACROS
-//  ==
-
-// returns 1 if is NULL_KEY
-#define enKey_IsNull(k) \
-    (k == NULL_KEY)
-
-//  ==
-//  ==  FUNCTIONS
-//  ==
 
 //  returns 1 if is a valid key (INCLUDING NULL_KEY, unlike the regular if (key) conditional check)
 integer enKey_Is(

@@ -1,6 +1,6 @@
 /*
 enDate.lsl
-Library
+Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
@@ -21,16 +21,6 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
-
-//  ==
-//  ==  MACROS
-//  ==
-
-#define enDate_MSNow() enDate_MS(llGetTimestamp())
-
-//  ==
-//  ==  FUNCTIONS
-//  ==
 
 list enDate_DayPartToHMS(
     float day_part
