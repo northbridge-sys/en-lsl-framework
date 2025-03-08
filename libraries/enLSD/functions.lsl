@@ -1,6 +1,6 @@
 /*
 enLSD.lsl
-Library
+Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
@@ -39,51 +39,7 @@ For quick reference only. For information on these options, see documentation.
 // overrides
 #define ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH 8
 #define ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH 8
-
 */
-
-//  ==
-//  ==  GLOBALS
-//  ==
-
-string _ENLSD_HEADER;
-string _ENLSD_PASS;
-
-#if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
-    string _ENLSD_SCRIPT_NAME;
-#endif
-
-//  ==
-//  ==  MACROS
-//  ==
-
-#define enLSD_SetHeader(s) \
-    (_ENLSD_HEADER = s)
-
-#define enLSD_SetPass(s) \
-    (_ENLSD_PASS = s)
-
-#define enLSD_Head() \
-    enLSD_BuildHead(llGetScriptName(), llGetKey())
-
-#define enLSD_GetHeadCount() \
-    (llGetListLength(llParseStringKeepNulls(enLSD_Head(), ["\n"], [])) - 1)
-
-#define enLSD_WriteRaw(name, data) \
-    llLinksetDataWrite(enLSD_Head() + name, data)
-
-#define enLSD_ReadRaw(name, data) \
-    llLinksetDataRead(enLSD_Head() + name)
-
-#define enLSD_WriteProtectedRaw(name, data, pass) \
-    llLinksetDataWriteProtected(enLSD_Head() + name, data, pass)
-
-#define enLSD_ReadProtectedRaw(name, pass) \
-    llLinksetDataReadProtected(enLSD_Head() + name, pass)
-
-//  ==
-//  ==  FUNCTIONS
-//  ==
 
 // safely resets linkset data
 enLSD_Reset()
