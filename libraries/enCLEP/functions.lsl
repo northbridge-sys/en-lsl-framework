@@ -22,20 +22,6 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-/*
-enCLEP_Channel is the hashing algorithm that converts DOMAINS and SERVICES together into a channel number.
-This is used to enforce channel separation on different domains. This reduces script execution for llRegionSay calls.
-enCLEP_Channel can also be used directly in llListen for a relatively safe llDialog channel.
-*/
-integer enCLEP_Channel( // converts a string into an integer, hashed with _ENCLEP_SERVICE, can be called externally for dialog listeners
-    string domain  // domain string to use to generate integer channel
-    )
-{
-    integer chan = llHash(domain + enCLEP_GetService()); // basic SDBM hashing - converts string into a 32-bit integer (this is NOT secure)
-    if (chan == PUBLIC_CHANNEL || chan == DEBUG_CHANNEL) chan++; // filter out channels that can be seen in the viewer by default
-    return chan | INTEGER_NEGATIVE; // enCLEP channels are always negative; we can just OR 0x80000000 to always get a negative integer thanks to two's complement
-}
-
 //  Internal function that dynamically selects a chat method to use based on the target prim
 //  NULL_KEY or "" can be passed as a prim to use llRegionSay automatically
 //  If ENCLEP_ENABLE_SHOUT is defined, a llRegionSayTo message will be sent via llShout to attempt to reach a prim across a nearby sim border
