@@ -46,6 +46,7 @@ The recipient script(s) must be listening to the domain and must share the same 
 The target_script, flags, parameters, and data values are the same as used by LEP (see enLEP_Send).
 */
 enCLEP_Send(
+    string service,
     string prim,
     string domain,
     string target_script,
@@ -55,17 +56,18 @@ enCLEP_Send(
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_Send", ["prim", "domain", "target_script", "flags", "parameters", "data", "(service)"], [
+        enLog_TraceParams("enCLEP_Send", ["service", "prim", "domain", "target_script", "flags", "parameters", "data"], [
+            enString_Elem(service),
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
-            enString_Elem(data),
-            enString_Elem(_ENCLEP_SERVICE)
+            enString_Elem(data)
             ]);
     #endif
     enCLEP_SendRaw(
+        service,
         prim,
         domain,
         "LEP",
@@ -81,6 +83,7 @@ TODO: This doesn't work with LINK_* constants
 TODO: Add a macro to automatically search for the link via the enObject link cache, and/or via ClosestLink, since currently that has to be done manually
 */
 enCLEP_SendHybrid(
+    string service,
     integer target_link,
     string prim,
     string domain,
@@ -91,20 +94,21 @@ enCLEP_SendHybrid(
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendHybrid", ["target_link", "prim", "domain", "target_script", "flags", "parameters", "data", "(service)"], [
+        enLog_TraceParams("enCLEP_SendHybrid", ["service", "target_link", "prim", "domain", "target_script", "flags", "parameters", "data"], [
+            enString_Elem(service),
             target_link,
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
-            enString_Elem(data),
-            enString_Elem(_ENCLEP_SERVICE)
+            enString_Elem(data)
             ]);
     #endif
     if (target_link < 0)
     { // prim not part of same linkset, send via enCLEP
         enCLEP_SendRaw(
+            service,
             prim,
             domain,
             "LEP",
@@ -129,6 +133,7 @@ This causes the recipient to call enclep_message, similar to a plain listen even
 Can be useful for situations where you don't need LEP features but still want to only communicate to a specific CLEP domain and service.
 */
 enCLEP_SendRaw( // send via enCLEP
+    string service,
     string prim,
     string domain,
     string type,
@@ -136,15 +141,15 @@ enCLEP_SendRaw( // send via enCLEP
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendRaw", ["prim", "domain", "type", "message", "(service)"], [
+        enLog_TraceParams("enCLEP_SendRaw", ["service", "prim", "domain", "type", "message"], [
+            enString_Elem(service),
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(type),
-            enString_Elem(message),
-            enString_Elem(_ENCLEP_SERVICE)
+            enString_Elem(message)
             ]);
     #endif
-    enCLEP_MultiSayTo(prim, enCLEP_Channel(domain), enList_ToString(["CLEP", _ENCLEP_SERVICE, prim, domain, type, message]));
+    enCLEP_MultiSayTo(prim, enCLEP_Channel(service, domain), enList_ToString(["CLEP", service, prim, domain, type, message]));
 }
 
 /*
@@ -152,6 +157,7 @@ Sends raw data via CLEP encapsulation with PTP packetization.
 WARNING: This function hasn't been tested since major CLEP rework and is probably broken.
 */
 enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
+    string service,
     string prim,
     string domain,
     string type,
@@ -159,23 +165,23 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendPTP", ["prim", "domain", "type", "message", "(service)"], [
+        enLog_TraceParams("enCLEP_SendPTP", ["service", "prim", "domain", "type", "message"], [
+            enString_Elem(service),
             enObject_Elem(prim),
             enString_Elem(domain),
             enString_Elem(type),
-            enString_Elem(message),
-            enString_Elem(_ENCLEP_SERVICE)
+            enString_Elem(message)
             ]);
     #endif
     #ifndef ENCLEP_ENABLE_PTP
         enLog_Warn("enCLEP_SendPTP called but ENCLEP_ENABLE_PTP not defined.");
     #else
         // TODO: message really should be dynamically loaded from linkset data - maybe with some way of loading data of arbitrary length into safe ~1K chunks in linkset data for situations like this?
-        message = enList_ToString(["CLEP", _ENCLEP_SERVICE, prim, domain, type, message]); // add enCLEP_PTP header to message to be sent
+        message = enList_ToString(["CLEP", service, prim, domain, type, message]); // add enCLEP_PTP header to message to be sent
         // 51 + llStringLength(...) is length of "10\nenCLEP_PTP32\n00000000000000000000000000000000" + {packet_size} + "\n"
         max = ENCLEP_PTP_SIZE - (51 + llStringLength((string)llStringLength(ENCLEP_PTP_SIZE))); // get maximum length of packet after enCLEP_PTP header via enList_ToString
         string k = llGenerateKey(); // transfer key for identifying a specific message in transit
-        string c = enCLEP_Channel(domain);
+        string c = enCLEP_Channel(service, domain);
         enCLEP_MultiSayTo(prim, c, enList_ToString(["CLEP_PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
         if (llStringLength(message) > max) ENCLEP_PTP += [k, prim, "", llDeleteSubString(message, 0, max - 2)]; // we don't need to save domain here
         // TODO: some cleanup function that clears stalled transfers (in and out) from ENCLEP_PTP_QUEUE
@@ -203,33 +209,34 @@ dynamically update the domain after a key change. (This is done automatically
 in event-handlers.lsl if you use it.)
 */
 integer enCLEP_Listen(
-    string domain,  // domain to listen to "within" the active enCLEP service
+    string service, // service to listen to
+    string domain,  // domain to listen to "within" the service
     integer flags   // ENCLEP_LISTEN_* flags
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_Listen", ["domain", "flags", "(service)"], [
+        enLog_TraceParams("enCLEP_Listen", ["service", "domain", "flags"], [
+            enString_Elem(service),
             enString_Elem(domain),
-            enInteger_ElemBitfield(flags),
-            enString_Elem(_ENCLEP_SERVICE)
+            enInteger_ElemBitfield(flags)
             ]);
     #endif
     enCLEP_UnListenDomains();
-    integer index = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [domain]);
+    integer index = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
     if (index == -1 && flags & ENCLEP_LISTEN_REMOVE)
     { // nothing to remove, so return error
         enCLEP_ListenDomains();
-        return 0;
+        return __LINE__;
     }
-    if (~index) _ENCLEP_DOMAINS = llDeleteSubList(_ENCLEP_DOMAINS, index * _ENCLEP_DOMAINS_STRIDE, (index + 1) * _ENCLEP_DOMAINS_STRIDE - 1); // index == -1; delete existing domain enCLEP, so it can be cleanly appended to the end
+    if (~index) _ENCLEP_DOMAINS = llDeleteSubList(_ENCLEP_DOMAINS, index, index + _ENCLEP_DOMAINS_STRIDE - 1); // index == -1; delete existing domain enCLEP, so it can be cleanly appended to the end
     if (llGetListLength(_ENCLEP_DOMAINS) / _ENCLEP_DOMAINS_STRIDE + ENCLEP_RESERVE_LISTENS > 63)
     { // too many listens (maximum 65, so if we are currently at 64 or more, fail)
         enCLEP_ListenDomains();
-        return 0;
+        return __LINE__;
     }
-    if (~flags & ENCLEP_LISTEN_REMOVE) _ENCLEP_DOMAINS += [domain, flags, enCLEP_Channel(domain), 0]; // add to _ENCLEP_DOMAINS only if we aren't removing it
+    if (~flags & ENCLEP_LISTEN_REMOVE) _ENCLEP_DOMAINS += [service, domain, flags, 0]; // add to _ENCLEP_DOMAINS only if we aren't removing it
     enCLEP_ListenDomains();
-    return 1;
+    return 0;
 }
 
 //  resets and removes all enCLEP listeners, for single-purpose scripts to not have to independently keep track of listen handles
@@ -287,7 +294,8 @@ integer enCLEP_Process(
             // TODO: PTP buffers must be requested with the total length of the message
             // TODO: if total length of message would exceed script memory, reject message
             else ENCLEP_PTP = llListReplaceList(ENCLEP_PTP, [llList2String(ENCLEP_PTP, i * ENCLEP_PTP_STRIDE + 3) + m], i * ENCLEP_PTP_STRIDE + 3, i * ENCLEP_PTP_STRIDE + 3); // append to existing buffer
-            enCLEP_MultiSayTo(id, enCLEP_Channel(d), enList_ToString(["CLEP_PTP_More", d, k])); // request next message fragment
+            // TODO: SERVICE IS DEFINED AS "" HERE - NEED TO REWORK PTP PROTOCOL TO PASS SERVICE
+            enCLEP_MultiSayTo(id, enCLEP_Channel("", d), enList_ToString(["CLEP_PTP_More", d, k])); // request next message fragment
             return 0;
         }
         if (llList2String(data, 0) == "CLEP_PTP_More")
@@ -309,15 +317,20 @@ integer enCLEP_Process(
     #endif
     if (llList2String(data, 0) != "CLEP") return __LINE__; // not a valid enCLEP message
     // note: at this point we have a valid enCLEP message, so all returns should be 0 to indicate that the enCLEP message was processed
-    if (llList2String(data, 1) != _ENCLEP_SERVICE) return 0; // not for our service
+    string service = llList2String(data, 1);
     string domain = llList2String(data, 3);
-    integer domain_ind = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [domain]);
-    if (domain_ind == -1) return 0; // not listening to this domain
-    integer flags = (integer)llList2String(_ENCLEP_DOMAINS, domain_ind * _ENCLEP_DOMAINS_STRIDE + 1);
+    // we do a little trick here - this can technically be hacked if you use integers for your service and domain, so don't do that
+    integer match_ind = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
+    if (match_ind == -1) return 0; // not listening to this service + domain (channel interference)
+
+    // process flags for the matched listen
+    integer flags = (integer)llList2String(_ENCLEP_DOMAINS, match_ind + 1);
     if (flags & ENCLEP_LISTEN_OWNERONLY)
     { // owner only flag enabled for this listener
         if (llGetOwnerKey(id) != llGetOwner()) return 0; // not sent by same-owner object/agent
     }
+
+    // process as LEP message
     #if defined ENLEP_MESSAGE
         if (llList2String(data, 4) == "LEP")
         { // LEP message
@@ -341,6 +354,8 @@ integer enCLEP_Process(
             return 0;
         }
     #endif
+
+    // process as enLSD operations
     #if defined ENCLEP_ENABLE_ENLSD
         if (llList2String(data, 4) == "LSD_Pull")
         { // send LSD pair
@@ -371,6 +386,8 @@ integer enCLEP_Process(
             return 0;
         }
     #endif
+
+    // process as enInventory operations
     #if defined ENCLEP_ENABLE_ENINVENTORY
         if (llList2String(data, 4) == "Inventory_Push")
         { // send inventory
@@ -425,8 +442,9 @@ integer enCLEP_Process(
             return 0;
         }
     #endif
-    // generic message
-    #ifndef ENCLEP_MESSAGE
+
+    // process as generic message
+    #if !defined ENCLEP_MESSAGE
         enLog_Debug("Raw CLEP message received from " + id + " on domain \"" + llList2String( data, 2 ) + "\", but ENCLEP_MESSAGE not defined: " + llList2String( data, 4 ) );
     #else
         enclep_message(
@@ -457,11 +475,9 @@ enCLEP_ListenDomains()
     #endif
     integer i;
     integer l = llGetListLength(_ENCLEP_DOMAINS) / _ENCLEP_DOMAINS_STRIDE;
-    for (i = 0; i < l; i++)
-    { // for each domain in _ENCLEP_DOMAINS, add listen and update _ENCLEP_DOMAINS with handle
-        enLog_Trace("llListen( " + llList2String( _ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 2 ) + ", \"\", \"\", \"\" ) called for domain \"" + llList2String( _ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE ) + "\" on service \"" + _ENCLEP_SERVICE + "\"" );
-        llListReplaceList(_ENCLEP_DOMAINS, [llListen((integer)llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 2), "", "", "")], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
-    }
+
+    // for each domain in _ENCLEP_DOMAINS, add listen and update _ENCLEP_DOMAINS with handle
+    for (i = 0; i < l; i++) llListReplaceList(_ENCLEP_DOMAINS, [llListen(enCLEP_Channel(llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE), llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 1)), "", "", "")], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
 }
 
 //  internal function that runs after key change to reset any listens based on previous UUID
@@ -474,14 +490,13 @@ enCLEP_RefreshLinkset()
     if (ENOBJECT_LIMIT_SELF)
     { // we can check for self prim domains
         string new = (string)llGetKey();
-        if ( enObject_Self( 1 ) != new )
+        if (enObject_Self(1) != new)
         { // UUID change
-            integer index = llListFindList( llList2ListSlice( _ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [ enObject_Self( 1 ) ] );
-            if (index) _ENCLEP_DOMAINS = llListReplaceList(_ENCLEP_DOMAINS, [
-                new,
-                (integer)llList2String(_ENCLEP_DOMAINS, index * _ENCLEP_DOMAINS_STRIDE + 1),
-                enCLEP_Channel(new)
-                ], index + _ENCLEP_DOMAINS_STRIDE, index + _ENCLEP_DOMAINS_STRIDE + 2); // we are listening to a self prim domain, so update it
+            integer index = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 1), [enObject_Self(1)]);
+            if (index) _ENCLEP_DOMAINS = llListReplaceList(_ENCLEP_DOMAINS,
+                [new],
+                index * _ENCLEP_DOMAINS_STRIDE + 1,
+                index * _ENCLEP_DOMAINS_STRIDE + 1); // we are listening to a self prim domain, so update it
         }
     }
     enCLEP_ListenDomains();

@@ -66,8 +66,8 @@ default
         llSetRemoteScriptAccessPin( pin );
 
         // notify parent that we are rezzed and ready to receive script(s)
-        enCLEP_SetService( "enInventory_RezRemote" );
         enCLEP_SendRaw( // send via enCLEP
+            "enInventory_RezRemote", // service
             enObject_Parent(), // prim
             enObject_Parent(), // domain
             "enInventory_RezRemote", // type

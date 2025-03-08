@@ -54,7 +54,15 @@ enLog_To(
         if ( enKey_IsPrimInRegion( prim ) )
         { // log via enCLEP to logtarget
             string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP_MultiSayTo( prim, enCLEP_Channel( domain ), enList_ToString([ "enCLEP", enCLEP_GetService(), prim, domain, "enLog", enList_ToString([llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName(), level, line, message]) ] ) );
+            enCLEP_Send(
+                "enLog",
+                prim,
+                domain,
+                "",
+                0,
+                [level, line, llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName()],
+                message
+            );
         }
     #endif
 }
