@@ -22,6 +22,22 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define PRINT 0
+#define FATAL 1
+#define ERROR 2
+#define WARN 3
+#define INFO 4
+#define DEBUG 5
+#define TRACE 6
+
+#ifndef ENLOG_DEFAULT_LOGLEVEL
+    #define ENLOG_DEFAULT_LOGLEVEL INFO
+#endif
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENLOG_TRACE
+#endif
+
 #define enLog_Print(...) enLog_To( 0, __LINE__, "", __VA_ARGS__ )
 #define enLog_Fatal(...) enLog_To( 1, __LINE__, "", __VA_ARGS__ )
 #define enLog_Error(...) enLog_To( 2, __LINE__, "", __VA_ARGS__ )

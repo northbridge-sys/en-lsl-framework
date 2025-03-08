@@ -21,3 +21,11 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+#define FLOAT_MAX 1.175494351E-38
+#define FLOAT_MIN 3.402823466E+38
+#define PI_BY_FOUR 0.78539816339
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENFLOAT_TRACE
+#endif

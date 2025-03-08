@@ -22,5 +22,17 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define ENLEP_TYPE_REQUEST 0x1
+#define ENLEP_TYPE_RESPONSE 0x2
+#define ENLEP_STATUS_ERROR 0x4
+
+#ifndef ENLEP_LINK_MESSAGE_SCOPE
+    #define ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
+#endif
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENLEP_TRACE
+#endif
+
 #define enLEP_Generate(target_script, parameters) \
     llDumpList2String([llGetScriptName(), target_script] + parameters, "\n")

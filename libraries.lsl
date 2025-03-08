@@ -38,9 +38,6 @@ Make sure the "Script optimizer" setting is enabled in your preprocessor!
 // each major revision of En increments this value
 #define EN_LIBRARIES_LOADED 1
 
-// required general macro definitions
-#include "en-lsl-framework/libraries/definitions.lsl"
-
 // macros
 #include "en-lsl-framework/libraries/enAvatar/macros.lsl"
 #include "en-lsl-framework/libraries/enCLEP/macros.lsl"

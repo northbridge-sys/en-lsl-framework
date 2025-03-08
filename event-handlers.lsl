@@ -42,6 +42,52 @@ Make sure the "Script optimizer" setting is enabled in your preprocessor!
 // each major revision of En increments this value
 #define EN_EVENT_HANDLERS_LOADED 1
 
+// set global event handler trace
+#if defined EN_TRACE_EVENT_HANDLERS
+    #define EN_AT_ROT_TARGET_TRACE
+    #define EN_AT_TARGET_TRACE
+    #define EN_ATTACH_TRACE
+    #define EN_CHANGED_TRACE
+    #define EN_COLLISION_END_TRACE
+    #define EN_COLLISION_START_TRACE
+    #define EN_COLLISION_TRACE
+    #define EN_CONTROL_TRACE
+    #define EN_DATASERVER_TRACE
+    #define EN_EMAIL_TRACE
+    #define EN_EXPERIENCE_PERMISSIONS_DENIED_TRACE
+    #define EN_EXPERIENCE_PERMISSIONS_TRACE
+    #define EN_FINAL_DAMAGE_TRACE
+    #define EN_GAME_CONTROL_TRACE
+    #define EN_HTTP_REQUEST_TRACE
+    #define EN_HTTP_RESPONSE_TRACE
+    #define EN_LAND_COLLISION_END_TRACE
+    #define EN_LAND_COLLISION_START_TRACE
+    #define EN_LAND_COLLISION_TRACE
+    #define EN_LINK_MESSAGE_TRACE
+    #define EN_LISTEN_TRACE
+    #define EN_MONEY_TRACE
+    #define EN_MOVING_END_TRACE
+    #define EN_MOVING_START_TRACE
+    #define EN_NO_SENSOR_TRACE
+    #define EN_NOT_AT_ROT_TARGET_TRACE
+    #define EN_NOT_AT_TARGET_TRACE
+    #define EN_OBJECT_REZ_TRACE
+    #define EN_ON_DAMAGE_TRACE
+    #define EN_ON_DEATH_TRACE
+    #define EN_ON_REZ_TRACE
+    #define EN_PATH_UPDATE_TRACE
+    #define EN_REMOTE_DATA_TRACE
+    #define EN_RUN_TIME_PERMISSIONS_TRACE
+    #define EN_SENSOR_TRACE
+    #define EN_STATE_ENTRY_TRACE
+    #define EN_STATE_EENT_TRACE
+    #define EN_TIMER_TRACE
+    #define EN_TOUCH_END_TRACE
+    #define EN_TOUCH_START_TRACE
+    #define EN_TOUCH_TRACE
+    #define EN_TRANSACTION_RESULT_TRACE
+#endif
+
 // all known events as of latest revision
 #include "en-lsl-framework/event-handlers/at_rot_target.lsl"
 #include "en-lsl-framework/event-handlers/at_target.lsl"

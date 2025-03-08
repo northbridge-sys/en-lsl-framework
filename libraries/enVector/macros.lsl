@@ -22,6 +22,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#if defined EN_TRACE_LIBRARIES
+    #define ENVECTOR_TRACE
+#endif
+
 // converts a world-scope position to a region-scope position, as in a position within a region
 #define enVector_WorldToRegion(world_position) \
     (world - enVector_WorldToCorner(world_position))

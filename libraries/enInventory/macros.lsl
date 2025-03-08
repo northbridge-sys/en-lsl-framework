@@ -22,6 +22,13 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define ENINVENTORY_NC_OPENED 0x1
+#define ENINVENTORY_NC_MODIFIED 0x2
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENINVENTORY_TRACE
+#endif
+
 string _ENINVENTORY_NC_N; // notecard name
 string _ENINVENTORY_NC_K; // notecard key
 integer _ENINVENTORY_NC_L = -1; // notecard line being read
