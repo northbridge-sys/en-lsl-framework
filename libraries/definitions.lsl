@@ -1,40 +1,40 @@
 /*
-    _definitions.lsl
-    Library Definitions
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+_definitions.lsl
+Library Definitions
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ INSTRUCTIONS                                                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This code provides definitions used when calling En libraries.
+This code provides definitions used when calling En libraries.
 
-    Since libraries within the En framework call functions from other libraries,
-    these definitions need to be loaded into the preprocessor before the libraries
-    themselves, or the compiler will throw errors.
+Since libraries within the En framework call functions from other libraries,
+these definitions need to be loaded into the preprocessor before the libraries
+themselves, or the compiler will throw errors.
 */
 
-// ==
-// == static preprocessor constants
-// ==
+//  ==
+//  ==  CONSTANTS AND FLAGS
+//  ==
 
 // enFloat
 #define FLOAT_MAX 1.175494351E-38
@@ -117,9 +117,9 @@
 #define ENTEST_VM_LSO 0xFFFFFFFF
 #define ENTEST_VM_MONO 1
 
-// ==
-// == configurable preprocessor constants
-// ==
+//  ==
+//  ==  OVERRIDES
+//  ==
 
 #ifndef ENCLEP_RESERVE_LISTENS
     #define ENCLEP_RESERVE_LISTENS 0
@@ -239,23 +239,3 @@
     #define EN_TOUCH_TRACE
     #define EN_TRANSACTION_RESULT_TRACE
 #endif
-
-// ==
-// == macros required by all libraries
-// ==
-
-#define enLog_Print(...) enLog_To( 0, __LINE__, "", __VA_ARGS__ )
-#define enLog_Fatal(...) enLog_To( 1, __LINE__, "", __VA_ARGS__ )
-#define enLog_Error(...) enLog_To( 2, __LINE__, "", __VA_ARGS__ )
-#define enLog_Warn(...) enLog_To( 3, __LINE__, "", __VA_ARGS__ )
-#define enLog_Info(...) enLog_To( 4, __LINE__, "", __VA_ARGS__ )
-#define enLog_Debug(...) enLog_To( 5, __LINE__, "", __VA_ARGS__ )
-#define enLog_Trace(...) enLog_To( 6, __LINE__, "", __VA_ARGS__ )
-
-#define enLog_PrintTo(...) enLog_To( 0, __LINE__, __VA_ARGS__ )
-#define enLog_FatalTo(...) enLog_To( 1, __LINE__, __VA_ARGS__ )
-#define enLog_ErrorTo(...) enLog_To( 2, __LINE__, __VA_ARGS__ )
-#define enLog_WarnTo(...) enLog_To( 3, __LINE__, __VA_ARGS__ )
-#define enLog_InfoTo(...) enLog_To( 4, __LINE__, __VA_ARGS__ )
-#define enLog_DebugTo(...) enLog_To( 5, __LINE__, __VA_ARGS__ )
-#define enLog_TraceTo(...) enLog_To( 6, __LINE__, __VA_ARGS__ )
