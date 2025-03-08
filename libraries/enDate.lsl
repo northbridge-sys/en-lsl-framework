@@ -1,42 +1,36 @@
 /*
-    enDate.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enDate.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-	TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enDate_MSNow() enDate_MS(llGetTimestamp())
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 list enDate_DayPartToHMS(
     float day_part
@@ -59,6 +53,7 @@ list enDate_EnvironmentTimeHere()
     return enDate_DayPartToHMS((float)llList2String(e, 2) / (float)llList2String(e, 0));
 }
 
+//  converts an hour,minutes,seconds list to a prettified string
 string enDate_PrettyHMS(
     list hms,
     integer flags
@@ -74,7 +69,8 @@ string enDate_PrettyHMS(
     return llList2String(hms, 0) + ":" + llList2String(hms, 1) + ":" + llList2String(hms, 2);
 }
 
-integer enDate_MS( // gets an integer that represents the current millisecond of a month
+//  gets an integer that represents the current millisecond of a month
+integer enDate_MS(
     string timestamp // llGetTimestamp string (use enDate_MSNow() for the current value)
     )
 {
@@ -86,9 +82,10 @@ integer enDate_MS( // gets an integer that represents the current millisecond of
     // total range is 2764800000 ms, or ms in 31 days
 }
 
-integer enDate_MSAdd( // since milliseconds can wrap around in a weird way at the start of the month
+//  adds a number of milliseconds to an enDate_MS integer to safely wrap milliseconds at the ends of a month
+integer enDate_MSAdd(
     integer ms, // enDate_MS result
-    integer add // milliseconds to add - note this is limited to 
+    integer add // milliseconds to add - note this is limited to +/- 1530167295, otherwise you will overflow
 )
 {
     // check if adding takes us into the "dead zone" of 617316352 to 2147483647
