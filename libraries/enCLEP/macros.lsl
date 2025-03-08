@@ -22,6 +22,23 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define ENCLEP_LISTEN_OWNERONLY 0x1
+#define ENCLEP_LISTEN_REMOVE 0x80000000
+
+#ifndef ENCLEP_RESERVE_LISTENS
+    #define ENCLEP_RESERVE_LISTENS 0
+#endif
+
+#ifndef ENCLEP_PTP_SIZE
+    // note that this value is set to the maximum number of UTF-8 characters that can be sent via llRegionSayTo
+    // if you are positive you will ALWAYS have ASCII-7 characters, this can be raised to 1024 for better performance and lower memory usage
+    #define ENCLEP_PTP_SIZE 512
+#endif
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENCLEP_TRACE
+#endif
+
 string _ENCLEP_SERVICE;
 
 list _ENCLEP_DOMAINS; // domain, flags, channel, handle

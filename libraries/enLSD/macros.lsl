@@ -22,6 +22,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#if defined EN_TRACE_LIBRARIES
+    #define ENLSD_TRACE
+#endif
+
 string _ENLSD_HEADER;
 string _ENLSD_PASS;
 

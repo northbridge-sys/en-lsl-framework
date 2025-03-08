@@ -22,6 +22,24 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define INTEGER_MAX 0x7FFFFFFF
+#define INTEGER_MIN 0x80000000
+#define INTEGER_NEGATIVE 0x80000000
+
+#ifndef ENINTEGER_CHARSET_16
+    #define ENINTEGER_CHARSET_16 "0123456789abcdef"
+#endif
+#ifndef ENINTEGER_CHARSET_64
+    #define ENINTEGER_CHARSET_64 "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-="
+#endif
+#ifndef ENINTEGER_CHARSET_256
+    #define ENINTEGER_CHARSET_256 ""
+#endif
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENINTEGER_TRACE
+#endif
+
 #define enInteger_Rand() \
     (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ))
 

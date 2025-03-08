@@ -25,3 +25,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 integer _ENHTTP_PAUSE; // pause for rate limit
 list _ENHTTP_REQUESTS; // enhttp_id, req_id, url, http_params, body
 #define _ENHTTP_REQUESTS_STRIDE 5
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENHTTP_TRACE
+#endif

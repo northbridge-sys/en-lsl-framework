@@ -22,6 +22,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#if defined EN_TRACE_LIBRARIES
+    #define ENKVS_TRACE
+#endif
+
 // these are done as separate lists for speed, the memory difference is negligible
 list _ENKVS_NAMES;
 list _ENKVS_DATA;

@@ -21,3 +21,7 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENAVATAR_TRACE
+#endif

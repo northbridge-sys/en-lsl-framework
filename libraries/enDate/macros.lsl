@@ -22,4 +22,11 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define ENDATE_12_HOUR 0x1
+#define ENDATE_PAD_ZEROES 0x2
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENDATE_TRACE
+#endif
+
 #define enDate_MSNow() enDate_MS(llGetTimestamp())

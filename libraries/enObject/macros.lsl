@@ -22,6 +22,38 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define RED <1.0, 0.25, 0.0>
+#define ORANGE <1.0, 0.5, 0.0>
+#define YELLOW <1.0, 0.8, 0.0>
+#define GREEN <0.5, 1.0, 0.0>
+#define BLUE <0.2, 0.8, 1.0>
+#define PURPLE <0.5, 0.0, 1.0>
+#define PINK <1.0, 0.0, 0.5>
+#define WHITE <1.0, 1.0, 1.0>
+#define BLACK <0.0, 0.0, 0.0>
+
+#define ENOBJECT_PROFILE_EXISTS 0x80000000
+#define ENOBJECT_PROFILE_PHYSICS 0x1
+#define ENOBJECT_PROFILE_PHANTOM 0x2
+#define ENOBJECT_PROFILE_TEMP_ON_REZ 0x4
+#define ENOBJECT_PROFILE_TEMP_ATTACHED 0x8
+#define ENOBJECT_TEXT_SUCCESS 0x10
+#define ENOBJECT_TEXT_BUSY 0x20
+#define ENOBJECT_TEXT_PROMPT 0x40
+#define ENOBJECT_TEXT_ERROR 0x80
+#define ENOBJECT_TEXT_TEMP 0x100
+#define ENOBJECT_TEXT_PROGRESS_NC 0x200
+#define ENOBJECT_TEXT_PROGRESS_THROB 0x400
+
+#ifndef ENOBJECT_LIMIT_SELF
+    // number of own object UUIDs to store, retrievable via enObject_Self
+    #define ENOBJECT_LIMIT_SELF 2
+#endif
+
+#if defined EN_TRACE_LIBRARIES
+    #define ENOBJECT_TRACE
+#endif
+
 list _ENOBJECT_UUIDS_SELF;
 
 #if defined ENOBJECT_ENABLE_LINK_CACHE

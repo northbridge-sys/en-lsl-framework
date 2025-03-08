@@ -22,6 +22,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#if defined EN_TRACE_LIBRARIES
+    #define ENENVIRONMENT_TRACE
+#endif
+
 // AmbientLight returns float 0.0 to 1.0 (llVecMag directly returns up to √3)
 // by default, AmbientLight > ~0.85 means sun is up
 #define enEnvironment_AmbientLight(p) \
