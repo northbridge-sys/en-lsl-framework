@@ -26,9 +26,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define ENLSD_TRACE
 #endif
 
-#if defined ENLSD_ENABLE_PASS
-    string _ENLSD_PASS;
-#endif
+string _ENLSD_PASS;
 
 #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
     string _ENLSD_SCRIPT_NAME;
