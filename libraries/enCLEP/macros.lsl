@@ -39,9 +39,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define ENCLEP_TRACE
 #endif
 
-string _ENCLEP_SERVICE;
-
-list _ENCLEP_DOMAINS; // domain, flags, channel, handle
+list _ENCLEP_DOMAINS; // service, domain, flags, handle
 #define _ENCLEP_DOMAINS_STRIDE 4
 
 #if defined ENCLEP_ENABLE_PTP
@@ -61,17 +59,5 @@ enCLEP_Channel can also be used directly in llListen for a relatively safe llDia
 enCLEP channels are always negative, so we just set the 0x80000000 bit to force a negative integer of some kind.
 This also avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL (0x7FFFFFFF -> 0xFFFFFFFF) automatically.
 */
-#define enCLEP_Channel(s) \
-    (llHash(s + enCLEP_GetService()) | INTEGER_NEGATIVE)
-
-// cannot log this function because it is used by enLog
-#define enCLEP_GetService() _ENCLEP_SERVICE
-
-/*
-To define the service string, call enCLEP_SetService( service ). This will be used twice:
-    - Appended to the start of all chat messages in plain text for filtering.
-    - Hashed against the domain to generate the integer channel for llListen.
-*/
-// not going to bother logging this function because service should always be hard-coded, no reason to debug this
-#define enCLEP_SetService(s) \
-    (_ENCLEP_SERVICE = s)
+#define enCLEP_Channel(service, domain) \
+    (llHash(service + domain) | INTEGER_NEGATIVE)
