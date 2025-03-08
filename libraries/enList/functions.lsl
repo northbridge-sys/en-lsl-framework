@@ -28,6 +28,11 @@ string enList_Elem(list var)
     return "[\"" + llDumpList2String(var, "\", \"") + "\"]";
 }
 
+string enList_ElemNumbers(list var)
+{
+    return "[" + llDumpList2String(var, ", ") + "]";
+}
+
 // if a list only has one element that is a blank string, convert it to an empty list
 list enList_Empty(
     list in
