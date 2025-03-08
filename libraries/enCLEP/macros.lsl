@@ -54,6 +54,16 @@ list _ENCLEP_DOMAINS; // domain, flags, channel, handle
     string ENCLEP_LEP_SOURCE_DOMAIN;
 #endif
 
+/*
+enCLEP_Channel is the hashing algorithm that converts DOMAINS and SERVICES together into a channel number.
+This is used to enforce channel separation on different domains. This reduces script execution for llRegionSay calls.
+enCLEP_Channel can also be used directly in llListen for a relatively safe llDialog channel.
+enCLEP channels are always negative, so we just set the 0x80000000 bit to force a negative integer of some kind.
+This also avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL (0x7FFFFFFF -> 0xFFFFFFFF) automatically.
+*/
+#define enCLEP_Channel(s) \
+    (llHash(s + enCLEP_GetService()) | INTEGER_NEGATIVE)
+
 // cannot log this function because it is used by enLog
 #define enCLEP_GetService() _ENCLEP_SERVICE
 
