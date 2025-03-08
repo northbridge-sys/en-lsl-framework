@@ -1,47 +1,37 @@
 /*
-    enList.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enList.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == globals
-// ==
-
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enList_FindStrideByElem( list_haystack, stride_length, index_in_stride, string_needle ) \
     llListFindList( llList2ListSlice( list_haystack, 0, -1, stride_length, index_in_stride ), [ string_needle ] )
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 string enList_Elem(list var)
 {
@@ -49,7 +39,8 @@ string enList_Elem(list var)
     return "[\"" + llDumpList2String(var, "\", \"") + "\"]";
 }
 
-list enList_Empty( // if a list only has one element that is a blank string, convert it to an empty list
+// if a list only has one element that is a blank string, convert it to an empty list
+list enList_Empty(
     list in
     )
 {
@@ -60,7 +51,8 @@ list enList_Empty( // if a list only has one element that is a blank string, con
     return in;
 }
 
-list enList_ToJson( // returns a string with each element converted to an escaped JSON string
+// returns a string with each element converted to an escaped JSON string
+list enList_ToJson(
     list in
 )
 {
@@ -131,7 +123,7 @@ list enList_Concatenate(
     return out;
 }
 
-/* benchmark results:
+/* benchmark results for various ToString implementations:
 [22:50] Object: Testing enList_Legacy_ToString
 Started with 15264 bytes used
 Ended with 15450 bytes used
@@ -158,7 +150,8 @@ Ended with 17116 bytes used
  Time Running Per Cycle: 0.005356 seconds
 */
 
-string enList_ToString( // converts a list into a string without worrying about separators or JSON
+// converts a list into a string without worrying about separators or JSON
+string enList_ToString(
     list in
     )
 {
@@ -173,7 +166,8 @@ string enList_ToString( // converts a list into a string without worrying about 
     return out;
 }
 
-string enList_Legacy_ToString( // converts a list into a string without worrying about separators or JSON
+// converts a list into a string without worrying about separators or JSON
+string enList_Legacy_ToString(
     list in
     )
 {
@@ -189,7 +183,8 @@ string enList_Legacy_ToString( // converts a list into a string without worrying
     return "𒂗L" + (string)l + " " + out + " ";
 }
 
-list enList_FromString( // converts a string generated by enList_ToString(...) back into a list
+// converts a string generated by enList_ToString(...) back into a list
+list enList_FromString(
     string in
     )
 {
@@ -217,7 +212,8 @@ list enList_FromString( // converts a string generated by enList_ToString(...) b
     return unescaped;
 }
 
-list enList_Legacy_FromString( // converts a string generated by enList_ToString(...) back into a list
+// converts a string generated by enList_ToString(...) back into a list
+list enList_Legacy_FromString(
     string in
     )
 {
@@ -250,7 +246,8 @@ list enList_Legacy_FromString( // converts a string generated by enList_ToString
     return out;
 }
 
-integer enList_FindPartial( // llListFindList but needle can be only part of the element instead of the entire element
+// llListFindList but needle can be only part of the element instead of the entire element
+integer enList_FindPartial(
     list x,
     string s
     )

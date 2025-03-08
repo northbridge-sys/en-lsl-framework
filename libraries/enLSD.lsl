@@ -22,17 +22,6 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 
 ╒══════════════════════════════════════════════════════════════════════════════╕
-│ INSTRUCTIONS                                                                 │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-See documentation. enLSD is used to safely store values to the linkset_data
-store. It provides a variety of options and functions that reimplement the LSL
-llLinksetData* functions in a more flexible way.
-
-Note that enLSD does not protect against linkset data loss when being unlinked
-inside a child prim. If this is a concern, consider enKVS.
-
-╒══════════════════════════════════════════════════════════════════════════════╕
 │ PREPROCESSOR OPTIONS                                                         │
 └──────────────────────────────────────────────────────────────────────────────┘
 
@@ -53,9 +42,9 @@ For quick reference only. For information on these options, see documentation.
 
 */
 
-// ==
-// == globals
-// ==
+//  ==
+//  ==  GLOBALS
+//  ==
 
 string _ENLSD_HEADER;
 string _ENLSD_PASS;
@@ -64,9 +53,9 @@ string _ENLSD_PASS;
     string _ENLSD_SCRIPT_NAME;
 #endif
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enLSD_SetHeader(s) \
     (_ENLSD_HEADER = s)
@@ -92,11 +81,12 @@ string _ENLSD_PASS;
 #define enLSD_ReadProtectedRaw(name, pass) \
     llLinksetDataReadProtected(enLSD_Head() + name, pass)
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
-enLSD_Reset() // safely resets linkset data
+// safely resets linkset data
+enLSD_Reset()
 {
     #if defined ENLSD_TRACE
         enLog_TraceParams( "enLSD_Reset", [], [] );
@@ -205,7 +195,8 @@ string enLSD_BuildHead(
     return h;
 }
 
-list enLSD_PairToName( // converts a raw LSD pair name to an enLSD name list
+// converts a raw LSD pair name to an enLSD name list
+list enLSD_PairToName(
     string pair
 )
 {
@@ -216,7 +207,8 @@ list enLSD_PairToName( // converts a raw LSD pair name to an enLSD name list
     return elems;
 }
 
-enLSD_MoveAllPairs( // utility function for enLSD_Check*
+// utility function for enLSD_Check*
+enLSD_MoveAllPairs(
     string k
 )
 {
@@ -248,7 +240,8 @@ enLSD_MoveAllPairs( // utility function for enLSD_Check*
     } while (l != []); // repeat until we didn't find any keys left with old header
 }
 
-enLSD_CheckUUID() // updates LSD entries that use old UUID
+// updates LSD entries that use old UUID
+enLSD_CheckUUID()
 { // note: if ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
     #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_CheckUUID", [], []);
@@ -261,7 +254,8 @@ enLSD_CheckUUID() // updates LSD entries that use old UUID
     #endif
 }
 
-enLSD_CheckScriptName() // updates LSD entries that use old script name
+// updates LSD entries that use old script name
+enLSD_CheckScriptName()
 {
     #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_CheckScriptName", [], []);

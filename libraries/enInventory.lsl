@@ -1,36 +1,30 @@
 /*
-    enInventory.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enInventory.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == globals
-// ==
+//  ==
+//  ==  GLOBALS
+//  ==
 
 string _ENINVENTORY_NC_N; // notecard name
 string _ENINVENTORY_NC_K; // notecard key
@@ -42,16 +36,16 @@ string _ENINVENTORY_NC_G; // llGetNumberOfNotecardLines handle
 list _ENINVENTORY_REMOTE; // start_param, script_name, running
 #define _ENINVENTORY_REMOTE_STRIDE 3
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enInventory_NCOpenedName() _ENINVENTORY_NC_N
 #define enInventory_NCOpenedKey() _ENINVENTORY_NC_K
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 list enInventory_List(
     integer t
@@ -67,7 +61,8 @@ list enInventory_List(
     return x;
 }
 
-integer enInventory_Copy( // copies an inventory item to another object
+//  copies an inventory item to another object
+integer enInventory_Copy(
     string prim,
     string name,
     integer type,
@@ -103,7 +98,8 @@ integer enInventory_OwnedByCreator(
     return llGetInventoryCreator( name ) == llGetOwner();
 }
 
-integer enInventory_RezRemote( // rezzes a remote object with Remote.lsl
+//  rezzes a remote object with Remote.lsl
+integer enInventory_RezRemote(
     string name,
     vector pos,
     vector vel,
@@ -131,7 +127,8 @@ integer enInventory_RezRemote( // rezzes a remote object with Remote.lsl
     return 1;
 }
 
-integer enInventory_NCOpenByPartialName( // opens a notecard for enInventory_NC* operations using a partial name
+//  opens a notecard for enInventory_NC* operations using a partial name
+integer enInventory_NCOpenByPartialName(
     string name
 )
 {
@@ -141,7 +138,8 @@ integer enInventory_NCOpenByPartialName( // opens a notecard for enInventory_NC*
     else return enInventory_NCOpen(llList2String(ncs, nc));
 }
 
-integer enInventory_NCOpen( // opens a notecard for enInventory_NC* operations
+//  opens a notecard for enInventory_NC* operations
+integer enInventory_NCOpen(
     string name
     )
 {
@@ -165,7 +163,8 @@ integer enInventory_NCOpen( // opens a notecard for enInventory_NC* operations
     return 0x3; // notecard opened, changes since last opened
 }
 
-enInventory_NCRead( // reads a line from the open notecard
+//  reads a line from the open notecard
+enInventory_NCRead( 
     integer i // line number, starting from 0
     )
 {
@@ -204,7 +203,8 @@ integer enInventory_NCParse(
     return 0;
 }
 
-string enInventory_TypeToString( // converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(enInventory_TypeToString(...)) to get actual flag name)
+//  converts an INVENTORY_* flag into a string (use "INVENTORY_" + llToUpper(enInventory_TypeToString(...)) to get actual flag name)
+string enInventory_TypeToString(
     integer f // INVENTORY_* flag
     )
 {
@@ -240,7 +240,8 @@ string enInventory_TypeToString( // converts an INVENTORY_* flag into a string (
         ], i);
 }
 
-enInventory_Push( // pushes an inventory item via enCLEP
+//  pushes an inventory item via enCLEP
+enInventory_Push(
     string prim,
     string domain,
     string name,
@@ -264,7 +265,8 @@ enInventory_Push( // pushes an inventory item via enCLEP
     // TODO
 }
 
-enInventory_Pull( // pulls an inventory item via enCLEP
+// pulls an inventory item via enCLEP
+enInventory_Pull(
     string prim,
     string domain,
     string name,

@@ -1,49 +1,42 @@
 /*
-    enKVS.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enKVS.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    These functions allow scripts to access an in-memory key-value pair list.  This
-    is mainly used for dynamic configuration value options in situations where
-    linkset data cannot be used and the values only need to be known at runtime.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == globals
-// ==
+//  ==
+//  ==  GLOBALS
+//  ==
 
 // these are done as separate lists for speed, the memory difference is negligible
 list _ENKVS_NAMES;
 list _ENKVS_DATA;
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
+//  checks if a KVS pair exists by name
 integer enKVS_Exists(list name)
-{ // checks if a KVS pair exists by name
+{
     #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Exists", ["name"], [
             enList_Elem(name)
@@ -52,8 +45,9 @@ integer enKVS_Exists(list name)
 	return ~llListFindList(_ENKVS_NAMES, [llDumpList2String(name, "\n")]); // != -1
 }
 
+//  writes a KVS pair value
 integer enKVS_Write(list name, string data)
-{ // writes a KVS pair value
+{
     #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Write", ["name", "data"], [
             enList_Elem(name),
@@ -67,8 +61,9 @@ integer enKVS_Write(list name, string data)
 	return 1;
 }
 
+//  reads a KVS pair value
 string enKVS_Read(list name)
-{ // reads a KVS pair value
+{
     #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Read", ["name"], [
             enList_Elem(name)
@@ -79,8 +74,9 @@ string enKVS_Read(list name)
 	return llList2String(_ENKVS_DATA, i);
 }
 
+//  deletes a KVS pair
 enKVS_Delete(list name)
-{ // deletes a KVS pair
+{
     #if defined ENKVS_TRACE
         enLog_TraceParams("enKVS_Delete", ["name"], [
             enList_Elem(name)

@@ -1,40 +1,40 @@
 /*
-    ManageLoglevel.lsl
-	Utility Script
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+ManageLoglevel.lsl
+Utility Script
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ INSTRUCTIONS                                                                 │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This is a full script that sets the loglevel used by enLog functions. This value
-    is stored in the "loglevel" linkset data pair. Unlike SetLoglevel, this script
-    will remain in the object and editing its name will change the loglevel.
+This is a full script that sets the loglevel used by enLog functions. This value
+is stored in the "loglevel" linkset data pair. Unlike SetLoglevel, this script
+will remain in the object and editing its name will change the loglevel.
 
-    This script must be named with the desired loglevel as the last element of the
-    script's name. For example, "En ManageLoglevel.lsl INFO" causes En scripts in
-    the same linkset to use the default loglevel (INFO). The text in front of the
-    desired loglevel can be anything (or nothing).
+This script must be named with the desired loglevel as the last element of the
+script's name. For example, "En ManageLoglevel.lsl INFO" causes En scripts in
+the same linkset to use the default loglevel (INFO). The text in front of the
+desired loglevel can be anything (or nothing).
 
-    Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
+Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 */
 
 #include "en-lsl-framework/libraries.lsl"

@@ -1,36 +1,30 @@
 /*
-    enInteger.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enInteger.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TBD
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == macros
-// ==
+//  ==
+//  ==  MACROS
+//  ==
 
 #define enInteger_Rand() \
     (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ))
@@ -60,9 +54,9 @@
 #define enInteger_ResetTarget(i,m,x,t) \
     (i + ((t - i) * (i < m || i > x)))
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
 string enInteger_ElemBitfield(integer var)
 {
@@ -76,7 +70,8 @@ string enInteger_ElemBitfield(integer var)
     return "{" + llList2CSV(flags) + "}";
 }
 
-string enInteger_ToHex( // converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
+// converts a 32-bit signed integer in its entirety to hex - for the reverse, use: integer i = (integer)( "0x" + h );
+string enInteger_ToHex(
     integer i, // integer
     integer digits // number of hex digits
     )
@@ -97,7 +92,8 @@ string enInteger_ToHex( // converts a 32-bit signed integer in its entirety to h
     return hex;
 }
 
-integer enInteger_ToNybbles( // grabs the specified nybbles out of an integer
+// grabs the specified nybbles out of an integer
+integer enInteger_ToNybbles(
     integer i, // integer
     integer start_index, // start index
     integer digits // number of nybbles to return
@@ -112,7 +108,8 @@ integer enInteger_ToNybbles( // grabs the specified nybbles out of an integer
     return nybbles;
 }
 
-string enInteger_ToString64( // converts int to string of length using 64-character charset, ENTYPE_CHARSET_64
+// converts int to string of length using 64-character charset, ENTYPE_CHARSET_64
+string enInteger_ToString64(
     integer int,
     integer length
     )
@@ -133,7 +130,8 @@ string enInteger_ToString64( // converts int to string of length using 64-charac
     return o;
 }
 
-integer enInteger_FromStr64( // inverse of enInteger_ToString64
+// inverse of enInteger_ToString64
+integer enInteger_FromStr64(
     string str
     )
 {
