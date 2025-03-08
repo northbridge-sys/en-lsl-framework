@@ -1,36 +1,30 @@
 /*
-    enTimer.lsl
-    Library
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+enTimer.lsl
+Library
+En LSL Framework
+Copyright (C) 2024  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+╒══════════════════════════════════════════════════════════════════════════════╕
+│ LICENSE                                                                      │
+└──────────────────────────────────────────────────────────────────────────────┘
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    TODO
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// ==
-// == globals
-// ==
+//  ==
+//  ==  GLOBALS
+//  ==
 
 #if defined ENTIMER_DISABLE_MULTIPLE
     list _ENTIMER_QUEUE; // id, callback, length
@@ -40,49 +34,33 @@
     #define _ENTIMER_QUEUE_STRIDE 4
 #endif
 
-/*  ENTIMER_ENABLE_PREEMPTION is required to enable "preemption" mode, which exposes
-    the enTimer_SetPreempt accessor function. If enTimer_SetPreempt(1) is called,
-    all future timer events will skip the slow enTimer_Check call and, in
-    combination with EN_TIMER, pass the timer event directly to en_timer.
+/*  
+ENTIMER_ENABLE_PREEMPTION is required to enable "preemption" mode, which exposes
+the enTimer_SetPreempt accessor function. If enTimer_SetPreempt(1) is called,
+all future timer events will skip the slow enTimer_Check call and, in
+combination with EN_TIMER, pass the timer event directly to en_timer.
 
-    This is useful for scripts that need to temporarily process high-frequency timer
-    events and can tolerate delaying enTimer triggers until enTimer_SetPreempt(0) is
-    called.
+This is useful for scripts that need to temporarily process high-frequency timer
+events and can tolerate delaying enTimer triggers until enTimer_SetPreempt(0) is
+called.
 */
 #if defined ENTIMER_ENABLE_PREEMPTION
     integer _ENTIMER_PREEMPT;
 #endif
 
-// ==
-// == functions
-// ==
+//  ==
+//  ==  FUNCTIONS
+//  ==
 
-#if defined ENTIMER_ENABLE_PREEMPTION
-/*  Note that this needs to be set BEFORE setting the timer with llSetTimerEvent,
-    since the timer will be reset when calling enTimer_SetPreempt(1)
-*/
-    enTimer_SetPreempt(
-        integer i
-    )
-    {
-        #if defined ENTIMER_TRACE
-            enLog_TraceParams("enTimer_SetPreempt", [ "i" ], [
-                i
-                ]);
-        #endif
-        _ENTIMER_PREEMPT = !!i;
-        enTimer_Check(); // check immediately in case no longer preempting - cheaper memory-wise to call and let it return early
-        if (_ENTIMER_PREEMPT) llSetTimerEvent(0.0); // now preempting, so stop timer immediately
-    }
-#endif
-
+//  clears enTimer timers
 enTimer_Reset()
 {
     _ENTIMER_QUEUE = [];
     llSetTimerEvent(0.0);
 }
 
-string enTimer_Start( // adds a timer
+//  adds an enTimer timer
+string enTimer_Start(
     float interval,
     integer periodic,
     string callback
@@ -119,8 +97,9 @@ string enTimer_Start( // adds a timer
     return id;
 }
 
-integer enTimer_Cancel( // removes a timer
-    string id // required unless ENTIMER_DISABLE_MULTIPLE is set
+//  removes an enTimer timer
+integer enTimer_Cancel(
+    string id // required unless ENTIMER_DISABLE_MULTIPLE is set - use enTimer_Find if not known
     )
 {
     #if defined ENTIMER_TRACE
@@ -142,7 +121,8 @@ integer enTimer_Cancel( // removes a timer
     return 1;
 }
 
-string enTimer_Find( // finds a timer by callback
+//  finds a timer by callback
+string enTimer_Find(
     string callback
     )
 {
@@ -156,6 +136,7 @@ string enTimer_Find( // finds a timer by callback
     return llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE );
 }
 
+//  internal loopback function used for En libraries that use enTimer
 integer enTimer_InternalLoopback(
     string callback
 )
@@ -168,7 +149,8 @@ integer enTimer_InternalLoopback(
     return 0;
 }
 
-enTimer_Check() // checks the MIT timers to see if any are triggered
+//  internal function to check enTimer queue to see if any timers are due to be triggered
+enTimer_Check()
 {
     #if defined ENTIMER_ENABLE_PREEMPTION
         if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
@@ -225,3 +207,23 @@ enTimer_Check() // checks the MIT timers to see if any are triggered
         }
     #endif
 }
+
+#if defined ENTIMER_ENABLE_PREEMPTION
+/* 
+Note that this needs to be set BEFORE setting the timer with llSetTimerEvent,
+since the timer will be reset when calling enTimer_SetPreempt(1)
+*/
+    enTimer_SetPreempt(
+        integer i
+    )
+    {
+        #if defined ENTIMER_TRACE
+            enLog_TraceParams("enTimer_SetPreempt", [ "i" ], [
+                i
+                ]);
+        #endif
+        _ENTIMER_PREEMPT = !!i;
+        enTimer_Check(); // check immediately in case no longer preempting - cheaper memory-wise to call and let it return early
+        if (_ENTIMER_PREEMPT) llSetTimerEvent(0.0); // now preempting, so stop timer immediately
+    }
+#endif
