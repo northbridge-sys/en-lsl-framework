@@ -346,6 +346,7 @@ integer enCLEP_Process(
     integer flags = (integer)llList2String(_ENCLEP_DOMAINS, match_ind + 2);
     if (flags & ENCLEP_LISTEN_OWNERONLY)
     { // owner only flag enabled for this listener
+        // NOTE: THIS WILL NOT WORK FOR CROSS-REGION COMMUNICATIONS! DO NOT USE THIS FLAG FOR THAT
         if (llGetOwnerKey(id) != llGetOwner()) return 0; // not sent by same-owner object/agent
     }
 
