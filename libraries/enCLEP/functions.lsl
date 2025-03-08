@@ -242,7 +242,7 @@ integer enCLEP_Listen(
 //  resets and removes all enCLEP listeners, for single-purpose scripts to not have to independently keep track of listen handles
 enCLEP_Reset()
 {
-    #if defined ENCLEP_TRACE || defined ENCLEP_PROCESS_TRACE
+    #if defined ENCLEP_TRACE
         enLog_TraceParams("enCLEP_Reset", [], []);
     #endif
     enCLEP_UnListenDomains();
@@ -315,6 +315,9 @@ integer enCLEP_Process(
             return 0;
         }
     #endif
+
+    // enList_ToString(["CLEP", service, prim, domain, type, message])
+
     if (llList2String(data, 0) != "CLEP") return __LINE__; // not a valid enCLEP message
     // note: at this point we have a valid enCLEP message, so all returns should be 0 to indicate that the enCLEP message was processed
     string service = llList2String(data, 1);
@@ -324,7 +327,7 @@ integer enCLEP_Process(
     if (match_ind == -1) return 0; // not listening to this service + domain (channel interference)
 
     // process flags for the matched listen
-    integer flags = (integer)llList2String(_ENCLEP_DOMAINS, match_ind + 1);
+    integer flags = (integer)llList2String(_ENCLEP_DOMAINS, match_ind + 2);
     if (flags & ENCLEP_LISTEN_OWNERONLY)
     { // owner only flag enabled for this listener
         if (llGetOwnerKey(id) != llGetOwner()) return 0; // not sent by same-owner object/agent
@@ -340,6 +343,7 @@ integer enCLEP_Process(
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 4) return 0; // error in LEP unserialize operation
             ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
+            ENCLEP_LEP_SOURCE_SERVICE = service; // same with service
             ENCLEP_LEP_SOURCE_DOMAIN = domain; // same with domain
             enLEP_Process(
                 -1,
@@ -348,6 +352,7 @@ integer enCLEP_Process(
                 llList2String(data, 2)
                 );
             ENCLEP_LEP_SOURCE_PRIM = NULL_KEY; // reset values to be safe
+            ENCLEP_LEP_SOURCE_SERVICE = "";
             ENCLEP_LEP_SOURCE_DOMAIN = "";
     #endif
     #if defined ENLEP_MESSAGE
