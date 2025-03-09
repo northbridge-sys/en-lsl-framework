@@ -50,6 +50,6 @@
 
 #if defined EN_COLLISION_END
         // event unused, so pass to user-defined function only
-        en_collision_end( integer count );
+        en_collision_end( count );
 	}
 #endif
