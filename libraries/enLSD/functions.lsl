@@ -68,57 +68,56 @@ enLSD_Reset()
     }
 }
 
-integer enLSD_Write(list name, string data)
+integer enLSD_Write(integer flags, list name, string data)
 {
-    #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_Write", ["name", "data"], [
-            enList_Elem(name),
-            enString_Elem(data)
-            ]);
-    #endif
-	if (_ENLSD_PASS == "") return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
-    return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(name, "\n"), data, _ENLSD_PASS);
+    string prim = (string)llGetKey();
+    if (flags & ENLSD_ROOT) prim = enObject_Root()
+	if (flags & ENLSD_PASS) return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(llDeleteSubList(name, 0, 0), "\n"), data, llList2String(name, 0));
+    return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
 }
 
-string enLSD_Read(list name)
+string enLSD_Read(integer flags, list name)
 {
-    #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_Read", ["name"], [
-            enList_Elem(name)
-            ]);
-    #endif
-	if (_ENLSD_PASS == "") return llLinksetDataRead(enLSD_Head() + llDumpList2String(name, "\n"));
-    return llLinksetDataReadProtected(enLSD_Head() + llDumpList2String(name, "\n"), _ENLSD_PASS);
+    string prim = (string)llGetKey();
+    if (flags & ENLSD_ROOT) prim = enObject_Root()
+	if (flags & ENLSD_PASS) return llLinksetDataReadProtected(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(llDeleteSubList(name, 0, 0), "\n"), llList2String(name, 0));
+    return llLinksetDataRead(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
 
-list enLSD_Delete(list name)
+list enLSD_Delete(integer flags, list name)
 {
-    #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_Delete", ["name"], [
-            enList_Elem(name)
-            ]);
-    #endif
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", _ENLSD_PASS);
+    string prim = (string)llGetKey();
+    if (flags & ENLSD_ROOT) prim = enObject_Root();
+    string pass;
+    if (flags & ENLSD_PASS)
+    {
+        pass = llList2String(name, 0);
+        name = llDeleteSubList(name, 0, 0);
+    }
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", pass);
 }
 
-integer enLSD_Exists(list name)
+integer enLSD_Exists(integer flags, list name)
 {
-    return (enLSD_Find(name, 0, 1) != []);
+    return (enLSD_Find(flags, name, 0, 1) != []);
 }
 
-list enLSD_Find(list name, integer start, integer count)
+list enLSD_Find(integer flags, list name, integer start, integer count)
 {
     #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_Find", ["name", "start", "count"], [
+        enLog_TraceParams("enLSD_Find", ["flags", "name", "start", "count"], [
+            enInteger_ElemBitfield(flags),
             enString_Elem(name),
             start,
             count
             ]);
     #endif
-	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head() + llDumpList2String(name, "\n")) + "$", start, count);
+    string prim = (string)llGetKey();
+    if (flags & ENLSD_ROOT) prim = enObject_Root();
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
-list enLSD_FindRegex(string regex, integer start, integer count)
+list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
     #if defined ENLSD_TRACE
         enLog_TraceParams("enLSD_FindRegex", ["regex", "start", "count"], [
@@ -127,7 +126,9 @@ list enLSD_FindRegex(string regex, integer start, integer count)
             count
             ]);
     #endif
-	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + regex + "$", start, count);
+    string prim = (string)llGetKey();
+    if (flags & ENLSD_ROOT) prim = enObject_Root();
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
 }
 
 string enLSD_BuildHead(
