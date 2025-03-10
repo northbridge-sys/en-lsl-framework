@@ -20,25 +20,6 @@ PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-╒══════════════════════════════════════════════════════════════════════════════╕
-│ PREPROCESSOR OPTIONS                                                         │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-For quick reference only. For information on these options, see documentation.
-
-// feature flags
-#define ENLSD_DISABLE_UUID_CHECK
-#define ENLSD_ENABLE_SCRIPT_NAME_HEADER
-#define ENLSD_ENABLE_UUID_HEADER
-
-// event flags
-
-// callback flags
-
-// overrides
-#define ENLSD_ENABLE_SCRIPT_NAME_HEADER_HASH_LENGTH 8
-#define ENLSD_ENABLE_UUID_HEADER_HASH_LENGTH 8
 */
 
 // safely resets linkset data
@@ -72,7 +53,6 @@ integer enLSD_Write(integer flags, list name, string data)
 {
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-	if (flags & ENLSD_PASS) return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(llDeleteSubList(name, 0, 0), "\n"), data, llList2String(name, 0));
     return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
 }
 
@@ -80,7 +60,6 @@ string enLSD_Read(integer flags, list name)
 {
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-	if (flags & ENLSD_PASS) return llLinksetDataReadProtected(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(llDeleteSubList(name, 0, 0), "\n"), llList2String(name, 0));
     return llLinksetDataRead(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
 
@@ -88,13 +67,7 @@ list enLSD_Delete(integer flags, list name)
 {
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-    string pass;
-    if (flags & ENLSD_PASS)
-    {
-        pass = llList2String(name, 0);
-        name = llDeleteSubList(name, 0, 0);
-    }
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", pass);
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", "");
 }
 
 integer enLSD_Exists(integer flags, list name)
@@ -198,16 +171,8 @@ enLSD_MoveAllPairs(
             string old_pair = llList2String(l, 0);
             string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
             enLog_Trace("LSD pair \"" + pair_name + "\" moved");
-            if (_ENLSD_PASS == "")
-            {
-                llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
-                llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
-            }
-            else
-            {
-                llLinksetDataWriteProtected(enLSD_Head() + pair_name, llLinksetDataReadProtected(old_pair, _ENLSD_PASS), _ENLSD_PASS); // write with updated header
-                llLinksetDataDeleteProtected(old_pair, _ENLSD_PASS); // immediately delete old pair to save memory
-            }
+            llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
+            llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
         }
     } while (l != []); // repeat until we didn't find any keys left with old header
 }
