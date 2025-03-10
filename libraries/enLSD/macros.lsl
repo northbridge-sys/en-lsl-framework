@@ -22,6 +22,9 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define ENLSD_ROOT 0x1
+#define ENLSD_PASS 0x2
+
 #if defined EN_TRACE_LIBRARIES
     #define ENLSD_TRACE
 #endif
@@ -42,13 +45,7 @@ string _ENLSD_PASS;
     (llGetListLength(llParseStringKeepNulls(enLSD_Head(), ["\n"], [])) - 1)
 
 #define enLSD_WriteRaw(name, data) \
-    llLinksetDataWrite(enLSD_Head() + name, data)
+    llLinksetDataWrite(0, enLSD_Head() + name, data)
 
 #define enLSD_ReadRaw(name, data) \
-    llLinksetDataRead(enLSD_Head() + name)
-
-#define enLSD_WriteProtectedRaw(name, data, pass) \
-    llLinksetDataWriteProtected(enLSD_Head() + name, data, pass)
-
-#define enLSD_ReadProtectedRaw(name, pass) \
-    llLinksetDataReadProtected(enLSD_Head() + name, pass)
+    llLinksetDataRead(0, enLSD_Head() + name)
