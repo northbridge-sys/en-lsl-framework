@@ -71,7 +71,7 @@ enLSD_Reset()
 integer enLSD_Write(integer flags, list name, string data)
 {
     string prim = (string)llGetKey();
-    if (flags & ENLSD_ROOT) prim = enObject_Root()
+    if (flags & ENLSD_ROOT) prim = enObject_Root();
 	if (flags & ENLSD_PASS) return llLinksetDataWriteProtected(enLSD_Head() + llDumpList2String(llDeleteSubList(name, 0, 0), "\n"), data, llList2String(name, 0));
     return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
 }
@@ -79,7 +79,7 @@ integer enLSD_Write(integer flags, list name, string data)
 string enLSD_Read(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & ENLSD_ROOT) prim = enObject_Root()
+    if (flags & ENLSD_ROOT) prim = enObject_Root();
 	if (flags & ENLSD_PASS) return llLinksetDataReadProtected(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(llDeleteSubList(name, 0, 0), "\n"), llList2String(name, 0));
     return llLinksetDataRead(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
