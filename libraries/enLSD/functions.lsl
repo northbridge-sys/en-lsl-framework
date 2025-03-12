@@ -67,7 +67,9 @@ list enLSD_Delete(integer flags, list name)
 {
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", "");
+    string regex;
+    if (flags & ENLSD_DELETE_CHILDREN) regex = "\n.*";
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
 }
 
 integer enLSD_Exists(integer flags, list name)

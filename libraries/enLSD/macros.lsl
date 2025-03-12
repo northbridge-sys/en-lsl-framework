@@ -25,6 +25,8 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define ENLSD_ROOT 0x1
 #define ENLSD_PASS 0x2
 
+#define ENLSD_DELETE_CHILDREN 0x80000000
+
 #if defined EN_TRACE_LIBRARIES
     #define ENLSD_TRACE
 #endif
