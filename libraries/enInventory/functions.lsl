@@ -73,35 +73,6 @@ integer enInventory_OwnedByCreator(
     return llGetInventoryCreator( name ) == llGetOwner();
 }
 
-//  rezzes a remote object with Remote.lsl
-integer enInventory_RezRemote(
-    string name,
-    vector pos,
-    vector vel,
-    rotation rot,
-    integer param,
-    list scripts,
-    list runs
-    )
-{
-    #if defined ENINVENTORY_TRACE
-        enLog_TraceParams( "enInventory_RezRemote", [ "name", "pos", "vel", "rot", "param", "scripts", "runs" ], [
-            enString_Elem( name ),
-            (string)pos,
-            (string)vel,
-            (string)rot,
-            (string)param,
-            enList_Elem( scripts ),
-            enList_Elem( runs )
-            ] );
-    #endif
-    enLog_Debug("Rezzing remote object with loglevel " + enLog_LevelToString( (integer)llLinksetDataRead( "loglevel" ) ) + "." );
-    llRezAtRoot( name, pos, vel, rot, (integer)llLinksetDataRead( "loglevel" ) );
-    _ENINVENTORY_REMOTE += [ param, enList_ToString( scripts ), enList_ToString( runs ) ];
-    // TODO: somehow timeout _ENINVENTORY_REMOTE
-    return 1;
-}
-
 //  opens a notecard for enInventory_NC* operations using a partial name
 integer enInventory_NCOpenByPartialName(
     string name
