@@ -73,8 +73,6 @@ vector enVector_WorldToCorner(
     return <(integer)(world.x / 256.0) * 256, (integer)(world.y / 256.0) * 256, 0.0>;
 }
 
-// TODO: local pos conversion stuff, pos from root with rot, all sorts of stuff
-
 //  ==  MANIPULATION
 
 //  scales a vector by multiplying with each element of another vector
