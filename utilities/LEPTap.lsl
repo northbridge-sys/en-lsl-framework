@@ -40,7 +40,7 @@ enabled.
 #define ENLEP_MESSAGE
 #define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
-#include "en-lsl-framework/libraries.lsl"
+#include "nbs/en-lsl-framework/libraries.lsl"
 
 enlep_message(
     integer source_link,
@@ -65,5 +65,5 @@ enlep_message(
 
 default
 {
-    #include "en-lsl-framework/event-handlers.lsl"
+    #include "nbs/en-lsl-framework/event-handlers.lsl"
 }

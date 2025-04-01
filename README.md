@@ -32,10 +32,12 @@ Some of the useful features En provides:
 If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
 
 For the latest **development** release:
-- Clone the repository directly into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
+- Create a directory called `nbs` in your LSL preprocessor include directory, if you haven't already.
+- Inside the `nbs` directory, clone the repository into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
 
 Or, for the latest **stable** release, or if you don't want to use git:
-- Create a directory called `en-lsl-framework` in your LSL preprocessor include directory.
+- Create a directory called `nbs` in your LSL preprocessor include directory, if you haven't already.
+- Create a directory called `en-lsl-framework` in the `nbs` directory.
 - [Download](https://github.com/northbridge-sys/en-lsl-framework/archive/refs/heads/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-framework/libraries.lsl`. **Do not** name the folder "en-lsl-framework-main"!
 
 ## Usage
@@ -49,7 +51,7 @@ The following information is only an overview meant to describe how the En frame
 Include the framework libraries by placing the following line at the top of your script:
 
 ```
-#include "en-lsl-framework/libraries.lsl"
+#include "nbs/en-lsl-framework/libraries.lsl"
 ```
 
 Then, in the script body, include the framework event handlers in each state
@@ -57,7 +59,7 @@ Then, in the script body, include the framework event handlers in each state
 ```
 default
 {
-    #include "en-lsl-framework/event-handlers.lsl"
+    #include "nbs/en-lsl-framework/event-handlers.lsl"
 }
 ```
 
@@ -67,7 +69,7 @@ To run your own code on an event, most event handlers can forward them to user-d
 #define EN_STATE_ENTRY
 #define EN_ON_REZ
 
-#include "en-lsl-framework/libraries.lsl"
+#include "nbs/en-lsl-framework/libraries.lsl"
 
 en_state_entry()
 {
@@ -89,7 +91,7 @@ En also injects its own trace logging if the following macros are defined:
 - `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
 - `EN_*_TRACE` enables logging for a *specific* event (such as `EN_LINK_MESSAGE_TRACE`)
 
-If you need to define any preprocessor values, make sure you do so *above* `#include "en-lsl-framework/libraries.lsl"`.
+If you need to define any preprocessor values, make sure you do so *above* `#include "nbs/en-lsl-framework/libraries.lsl"`.
 
 Here's an example of a script that does nothing but log En function calls and events used by En:
 
@@ -97,11 +99,11 @@ Here's an example of a script that does nothing but log En function calls and ev
 #define EN_TRACE_LIBRARIES
 #define EN_TRACE_EVENT_HANDLERS
 
-#include "en-lsl-framework/libraries.lsl"
+#include "nbs/en-lsl-framework/libraries.lsl"
 
 default
 {
-    #include "en-lsl-framework/event-handlers.lsl"
+    #include "nbs/en-lsl-framework/event-handlers.lsl"
 }
 ```
 
@@ -181,7 +183,7 @@ and the other script - if compiled with En - will call the `enlep_message` funct
 ```
 #define ENLEP_MESSAGE
 
-#include "en-lsl-framework/libraries.lsl"
+#include "nbs/en-lsl-framework/libraries.lsl"
 
 enlep_message(
     integer source_link,
@@ -205,7 +207,7 @@ enlep_message(
 
 default
 {
-    #include "en-lsl-framework/event-handlers.lsl"
+    #include "nbs/en-lsl-framework/event-handlers.lsl"
 }
 ```
 
