@@ -97,8 +97,8 @@ float enFloat_ResetChunk(
 {
     if (c < 0) c = -c; // make c positive
     // this is not as efficient as enInteger's version but whatever
-    while (i < m) i += c; // add c until over min
-    while (i > x) i -= c; // subtract c until under max
+    while (i < m) i += c; // add c until over or equal to min
+    while (i >= x) i -= c; // subtract c until under max
     return i;
 }
 
