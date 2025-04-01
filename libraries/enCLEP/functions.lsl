@@ -503,7 +503,7 @@ enCLEP_ListenDomains()
         c += [enCLEP_Channel(llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE), llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 1))];
         llListReplaceList(_ENCLEP_DOMAINS, [llListen(llList2Integer(c, -1), "", "", "")], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
     }
-    enLog_Debug("enCLEP channels: " + enList_ElemNumbers(c));
+    enLog_Trace("enCLEP channels: " + enList_ElemNumbers(c));
 }
 
 //  internal function that runs after key change to reset any listens based on previous UUID
