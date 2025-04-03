@@ -103,13 +103,13 @@ float enFloat_ResetChunk(
 }
 
 integer enFloat_FlipCoin(
-    float chance // values that are not BETWEEN 0.0 and 1.0, EXCLUSIVE, are treated as 50/50
+    float chance
     )
 {
     if ( chance <= 0.0 ) return 0;
     if ( chance >= 1.0 ) return 1;
-    if ( llFrand( 1.0 ) < chance ) return 0;
-    return 1;
+    if ( llFrand( 1.0 ) < chance ) return 1;
+    return 0;
 }
 
 float enFloat_RandRange(
