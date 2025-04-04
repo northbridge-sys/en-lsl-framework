@@ -200,11 +200,43 @@ integer enLog_StringToLevel(
         ], [ llToUpper( llStringTrim( s, STRING_TRIM ) ) ] ) + 1;
 }
 
-enLog_TraceParams( string function_name, list param_names, list param_values )
+// can't do this as a macro because of lists
+enLog_Vars(
+    integer level,
+    list var_names,
+    list var_values
+    )
+{
+    enLog_Params(level, "", var_names, var_values);
+}
+
+enLog_TraceVars(
+    list var_names,
+    list var_values
+    )
+{
+    enLog_Vars(TRACE, var_names, var_values);
+}
+
+enLog_Params(
+    integer level,
+    string function_name,
+    list param_names,
+    list param_values
+    )
 {
     string params;
-    if ( param_values != [] ) params = "\n        " + llDumpList2String( enList_Concatenate( "", param_names, " = ", param_values, "" ), ",\n        " ) + "\n    ";
-    enLog_Trace( function_name + "(" + params + ")" );
+    if (param_values != []) params = "\n        " + llDumpList2String(enList_Concatenate("", param_names, " = ", param_values, ""), ",\n        ") + "\n    ";
+    enLog_To(level, __LINE__, "", function_name + enString_If(function_name == "", "[", "(") + params + enString_If(function_name == "", "]", ")"));
+}
+
+enLog_TraceParams(
+    string function_name,
+    list param_names,
+    list param_values
+    )
+{
+    enLog_Params(TRACE, function_name, param_names, param_values);
 }
 
 integer enLog_GetLoglevel()
