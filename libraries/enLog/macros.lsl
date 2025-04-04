@@ -54,9 +54,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enLog_DebugTo(...) enLog_To( 5, __LINE__, __VA_ARGS__ )
 #define enLog_TraceTo(...) enLog_To( 6, __LINE__, __VA_ARGS__ )
 
-#define enLog_TraceVars(var_names, var_values) \
-    enLog_TraceParams("enLog_TraceVars", var_names, var_values)
-
 #define enLog_GetLogtarget() \
     llLinksetDataRead("logtarget")
 
