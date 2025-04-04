@@ -39,7 +39,7 @@ Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 
 #define ENOBJECT_DISABLE_STOPIFFLAGGED
 
-#include "nbs/en-lsl-framework/libraries.lsl"
+#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
 
 setLoglevel()
 {
