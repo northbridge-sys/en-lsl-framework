@@ -37,7 +37,7 @@ desired loglevel can be anything (or nothing).
 Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 */
 
-#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 setLoglevel()
 {
