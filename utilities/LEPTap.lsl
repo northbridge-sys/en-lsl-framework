@@ -40,7 +40,7 @@ enabled.
 #define ENLEP_MESSAGE
 #define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
-#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 enlep_message(
     integer source_link,
@@ -65,5 +65,5 @@ enlep_message(
 
 default
 {
-    #include "northbridge-business-systems/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
 }

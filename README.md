@@ -51,7 +51,7 @@ The following information is only an overview meant to describe how the En frame
 Include the framework libraries by placing the following line at the top of your script:
 
 ```
-#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
 ```
 
 Then, in the script body, include the framework event handlers in each state
@@ -59,7 +59,7 @@ Then, in the script body, include the framework event handlers in each state
 ```
 default
 {
-    #include "northbridge-business-systems/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
 }
 ```
 
@@ -69,7 +69,7 @@ To run your own code on an event, most event handlers can forward them to user-d
 #define EN_STATE_ENTRY
 #define EN_ON_REZ
 
-#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 en_state_entry()
 {
@@ -91,7 +91,7 @@ En also injects its own trace logging if the following macros are defined:
 - `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
 - `EN_*_TRACE` enables logging for a *specific* event (such as `EN_LINK_MESSAGE_TRACE`)
 
-If you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"`.
+If you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-sys/en-lsl-framework/libraries.lsl"`.
 
 Here's an example of a script that does nothing but log En function calls and events used by En:
 
@@ -99,11 +99,11 @@ Here's an example of a script that does nothing but log En function calls and ev
 #define EN_TRACE_LIBRARIES
 #define EN_TRACE_EVENT_HANDLERS
 
-#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 default
 {
-    #include "northbridge-business-systems/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
 }
 ```
 
@@ -183,7 +183,7 @@ and the other script - if compiled with En - will call the `enlep_message` funct
 ```
 #define ENLEP_MESSAGE
 
-#include "northbridge-business-systems/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 enlep_message(
     integer source_link,
@@ -207,7 +207,7 @@ enlep_message(
 
 default
 {
-    #include "northbridge-business-systems/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
 }
 ```
 
