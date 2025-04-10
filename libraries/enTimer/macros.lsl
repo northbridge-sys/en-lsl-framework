@@ -22,6 +22,9 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define ENTIMER_ONESHOT 0x0
+#define ENTIMER_PERIODIC 0x1
+
 #ifndef ENTIMER_MINIMUM_INTERVAL
     #define ENTIMER_MINIMUM_INTERVAL 0.1
 #endif
