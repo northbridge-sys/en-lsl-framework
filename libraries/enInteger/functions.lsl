@@ -95,7 +95,7 @@ string enInteger_ToString64(
 }
 
 // inverse of enInteger_ToString64
-integer enInteger_FromStr64(
+integer enInteger_FromString64(
     string str
     )
 {
