@@ -32,14 +32,14 @@ enTimer_Reset()
 //  adds an enTimer timer
 string enTimer_Start(
     float interval,
-    integer periodic,
+    integer flags,
     string callback
     )
 {
     #if defined ENTIMER_TRACE
-        enLog_TraceParams("enTimer_Start", [ "interval", "periodic", "callback" ], [
+        enLog_TraceParams("enTimer_Start", [ "interval", "flags", "callback" ], [
             interval,
-            periodic,
+            flags,
             enString_Elem( callback )
             ]);
     #endif
@@ -52,14 +52,14 @@ string enTimer_Start(
         _ENTIMER_QUEUE = [ // multiple timers not enabled, so set queue
             id,
             callback,
-            (integer)( interval * 1000 ) * !!periodic
+            (integer)( interval * 1000 ) * (flags & ENTIMER_PERIODIC)
         ];
         llSetTimerEvent( interval ); // then start single timer
     #else
         _ENTIMER_QUEUE += [ // multiple timers enabled, so add to queue
             id,
             callback,
-            (integer)( interval * 1000 ) * !!periodic,
+            (integer)( interval * 1000 ) * (flags & ENTIMER_PERIODIC),
             enDate_MSAdd( enDate_MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
         enTimer_Check(); // then reprocess queue
