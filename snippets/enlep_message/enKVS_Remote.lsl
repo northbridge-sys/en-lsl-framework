@@ -1,6 +1,6 @@
 /*
-enKVS-remote.lsl
-LEP Processor Snippet
+enKVS_Remote.lsl
+enlep_message Snippet
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
@@ -22,54 +22,55 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-if (llList2String(params, 0) == "enKVS-remote" && status & ENLEP_TYPE_REQUEST)
+if (llList2String(parameters, 0) == "enKVS-remote" && flags & ENLEP_TYPE_REQUEST)
 {
-	string kvs_check_op = llList2String(params, 1);
-	if (kvs_check_op == "write" || kvs_check_op == "read")
+	string kvs_op = llList2String(parameters, 1);
+	list kvs_pair = enList_FromString(llList2String(parameters, 2));
+	if (kvs_op == "write" || kvs_op == "read")
 	{ // check name for write or read operation first
-		if (!enKVS_Exists(llList2String(params, 1)))
+		if (!enKVS_Exists(kvs_pair))
 		{ // invalid name
 			enLEP_Send(
 				source_link,
 				source_script,
 				ENLEP_TYPE_RESPONSE | ENLEP_STATUS_ERROR,
-				params + ["undefined"],
+				parameters + ["undefined"],
 				data
 			);
 			return;
 		}
 	}
-	if (kvs_check_op == "write")
+	if (kvs_op == "write")
 	{ // writing an enKVS pair
-		enKVS_Write(llList2String(params, 1), data); // this should never fail
+		enKVS_Write(kvs_pair, data); // this should never fail
 		enLEP_Send(
 			source_link,
 			source_script,
 			ENLEP_TYPE_RESPONSE,
-			params,
+			parameters,
 			data
 		);
 		return;
 	}
-	if (kvs_check_op == "read")
+	if (kvs_op == "read")
 	{ // reading an enKVS pair
 		enLEP_Send(
 			source_link,
 			source_script,
 			ENLEP_TYPE_RESPONSE,
-			params,
-			enKVS_Read(llList2String(params, 1))
+			parameters,
+			enKVS_Read(kvs_pair)
 		);
 		return;
 	}
-	if (kvs_check_op == "list")
+	if (kvs_op == "list")
 	{ // return list of KVS pairs
 		enLEP_Send(
 			source_link,
 			source_script,
 			ENLEP_TYPE_RESPONSE,
-			params,
-			llDumpList2String(ENKVS_NAMES, "\n")
+			parameters,
+			enList_ToString(_ENKVS_NAMES)
 		);
 	}
 	return;
