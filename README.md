@@ -32,12 +32,12 @@ Some of the useful features En provides:
 If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
 
 For the latest **development** release:
-- Create a directory called `nortbridge-business-systems` in your LSL preprocessor include directory, if you haven't already.
-- Inside the `northbridge-business-systems` directory, clone the repository into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
+- Create a directory called `nortbridge-sys` in your LSL preprocessor include directory, if you haven't already.
+- Inside the `northbridge-sys` directory, clone the repository into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
 
 Or, for the latest **stable** release, or if you don't want to use git:
-- Create a directory called `nortbridge-business-systems` in your LSL preprocessor include directory, if you haven't already.
-- Create a directory called `en-lsl-framework` in the `nortbridge-business-systems` directory.
+- Create a directory called `nortbridge-sys` in your LSL preprocessor include directory, if you haven't already.
+- Create a directory called `en-lsl-framework` in the `nortbridge-sys` directory.
 - [Download](https://github.com/northbridge-sys/en-lsl-framework/archive/refs/heads/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-framework/libraries.lsl`. **Do not** name the folder "en-lsl-framework-main"!
 
 ## Usage
