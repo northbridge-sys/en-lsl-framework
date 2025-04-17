@@ -38,7 +38,7 @@ For the latest **development** release:
 Or, for the latest **stable** release, or if you don't want to use git:
 - Create a directory called `nortbridge-sys` in your LSL preprocessor include directory, if you haven't already.
 - Create a directory called `en-lsl-framework` in the `nortbridge-sys` directory.
-- [Download](https://github.com/northbridge-sys/en-lsl-framework/archive/refs/heads/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/en-lsl-framework/libraries.lsl`. **Do not** name the folder "en-lsl-framework-main"!
+- [Download](https://github.com/northbridge-sys/en-lsl-framework/archive/refs/heads/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-lsl-framework/libraries.lsl`. **Do not** name the folder "en-lsl-framework-main"!
 
 ## Usage
 
