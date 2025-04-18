@@ -95,7 +95,8 @@ list enLSD_Find(integer flags, list name, integer start, integer count)
 list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
     #if defined ENLSD_TRACE
-        enLog_TraceParams("enLSD_FindRegex", ["regex", "start", "count"], [
+        enLog_TraceParams("enLSD_FindRegex", ["flags", "regex", "start", "count"], [
+            enInteger_ElemBitfield(flags),
             enString_Elem(regex),
             start,
             count
@@ -104,6 +105,19 @@ list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
 	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
+}
+
+list enLSD_DeleteRegex(integer flags, string regex)
+{ // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
+    #if defined ENLSD_TRACE
+        enLog_TraceParams("enLSD_DeleteRegex", ["flags", "regex"], [
+            enInteger_ElemBitfield(flags),
+            enString_Elem(regex)
+            ]);
+    #endif
+    string prim = (string)llGetKey();
+    if (flags & ENLSD_ROOT) prim = enObject_Root();
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
 }
 
 string enLSD_BuildHead(
