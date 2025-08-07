@@ -70,3 +70,17 @@ list _ENOBJECT_UUIDS_SELF;
 
 #define enObject_StopIfFlagged() \
     if ((integer)llLinksetDataRead("stop")) enLog_FatalStop("enObject_StopIfFlagged() triggered.")
+
+// gets the current object's world position
+#define enObject_MyWorldPos() \
+    enVector_RegionToWorld(llGetPos())
+
+// gets the root prim's world position
+#define enObject_RootWorldPos() \
+    enVector_RegionToWorld(llGetRootPosition())
+
+// gets another object's world position (same region only), or avatar within the avatar detection range of llGetObjectDetails
+// for objects outside that range with known positions, you'll have to do this yourself using enVector_RegionCornerToWorld
+// you'll want to first add some sort of validation that the key is in the region, otherwise this just returns the region corner (maybe check for that and hope for the best?)
+#define enObject_WorldPos(object_or_avatar_uuid) \
+    enVector_RegionToWorld(llList2Vector(llGetObjectDetails(object_or_avatar_uuid, [OBJECT_POS]), 0))
