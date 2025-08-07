@@ -47,17 +47,3 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 // converts a region CORNER and POSITION to a world-scope position
 #define enVector_RegionCornerToWorld(region_position, region_corner) \
     (region_position + region_corner)
-
-// gets the current object's world position
-#define enVector_MyWorld() \
-    enVector_RegionToWorld(llGetPos())
-
-// gets the root prim's world position
-#define enVector_RootWorld() \
-    enVector_RegionToWorld(llGetRootPosition())
-
-// gets another object's world position (same region only), or within the avatar detection range
-// for other regions, you'll have to do this yourself using enVector_RegionCornerToWorld
-// you'll want to first add some sort of validation that the key is in the region, otherwise this just returns the region corner (maybe check for that and hope for the best?)
-#define enVector_OtherWorld(object_uuid) \
-    enVector_RegionToWorld(llList2Vector(llGetObjectDetails(object_uuid, [OBJECT_POS]), 0))
