@@ -144,12 +144,15 @@ enLSD_Purge()
         pair = llLinksetDataFindKeys("^[0-9a-fA-F-]{36}\n.*$", i, 1);
         if (pair != [])
         {
-            string owner = llGetSubString(llList2String(pair, 0), 0, 35);
-            if (llList2String(llGetObjectDetails(owner, [OBJECT_ROOT]), 0) != root)
-            {
-                enLog_Trace("Purging enLSD pairs owned by \"" + enObject_Elem(owner) + "\"");
-                llLinksetDataDeleteFound("^" + owner + "\n.*$", ""); // delete all pairs owned by this prim, since it's gone
+            string prim = llGetSubString(llList2String(pair, 0), 0, 35);
+            string prim_root = llList2String(llGetObjectDetails(prim, [OBJECT_ROOT]), 0);
+            if (prim_root != root)
+            { // this pair is associated with a prim that doesn't share the same root as us
+                enLog_Debug("Purging enLSD pairs associated with prim " + enObject_Elem(prim) + " (root " + enObject_Elem(prim_root) + ")");
+                llLinksetDataDeleteFound("^" + prim + "\n.*$", ""); // delete all pairs owned by this prim, since it's gone
+                i = 0; // start search again
             }
+            else i++; // progress to next index
         }
     }
     while (pair != []);
