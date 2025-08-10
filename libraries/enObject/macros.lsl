@@ -58,8 +58,13 @@ list _ENOBJECT_UUIDS_SELF;
 #define enObject_Parent() \
     llList2String(llGetObjectDetails(llGetKey(), [OBJECT_REZZER_KEY]), 0)
 
+// gets UUID of root prim in linkset
+// if llGetNumberOfPrims() is...
+//  1 (unlinked object): index is !(1-1)=!!(0)=0, return llGetLinkKey(0)
+//  2+ (linked object): index is !(2-1)=!!(1)=1, reutrn llGetLinkKey(1)
+// this is required because llGetLinkKey requires 0 for root in unlinked objects and 1 in linked objects
 #define enObject_Root() \
-    llList2String([llGetKey(), llGetLinkKey(1)], !(llGetNumberOfPrims() - 1))
+    llGetLinkKey(!!(llGetNumberOfPrims() - 1))
 
 //  returns either own object's current UUID or one of its previous UUIDs
 #define enObject_Self(i) \
