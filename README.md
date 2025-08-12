@@ -119,7 +119,7 @@ Many Second Life viewers provide the ability to use an external LSL editor, and 
 
 We develop a lot of different projects at the same time that share the same code or need to take advantage of the same tricks (or avoid the same pitfalls), so the preprocessor lets us call functions out of shared LSL libraries. If we need to add or change something in a library, all it takes is recompiling all the scripts that use that library instead of manually copying and pasting the code to each script. This simplifies development across multiple product lines and facilitates rapid prototyping and development of complex LSL scripts.
 
-Focus on the code, not the infrastructure. Thanks to the LSL preprocessor, these additional functions and background routines just work.
+The overarching strategy of En is to focus on the code, not the infrastructure. Thanks to the LSL preprocessor, these additional functions and background routines just work.
 
 ### How does it work?
 
