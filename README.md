@@ -147,27 +147,25 @@ En is intended for complex projects, especially "networked" scripts - that is, o
 
 For example, if an object has multiple scripts in a prim and you need to use `llMessageLinked` to send a message to one of them, there is simply no way to do that without triggering `link_message` in every single script in the prim. enLEP, therefore, includes a filter to optionally target a specific script, so if/when a different script receives that message, the enLEP handler in the other script will drop the event as quickly as possible to reduce script time instead of wasting time processing the message further.
 
-Generally, En is designed to scale better than common, traditional LSL scripts. However, under the hood, it's just LSL.
+While we use En for most of our projects, there are still some limited circumstances where raw LSL is good enough or provides a slight edge in performance. Generally, En is designed for scaling at the expense of script memory and some limited performance in certain scenarios in simple scripts. It is primarily efficient in a code-factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
 
 ### Why use En compared to Lua/Luau?
 
-Luau support in Second Life is currently in beta and does not have a preprocessor. It is, therefore, difficult to write and maintain Lua scripts "at scale" since the scripts need to be individually copied into the viewer and compiled manually. The LSL preprocessor, instead, lets you `#include` entire LSL/En scripts off your local computer, meaning you can mass recompile many scripts and they will all pull the latest copy from your computer instead of needing each to be manually copy-pasted and recompiled. From a development perspective - especially if you use version control - LSL is still a lot easier.
+Luau support in Second Life is currently in beta and does not have a preprocessor. It is, therefore, difficult to write and maintain Lua scripts "at scale" since the scripts need to be individually copied into the viewer and compiled manually. The LSL preprocessor, instead, lets you `#include` entire LSL/En scripts off your local computer, meaning you can mass recompile many scripts and they will all pull the latest copy from your computer instead of needing each to be manually copy-pasted and recompiled. From a development perspective - especially if you use version control - LSL is still a lot easier. For example, scripts in the `utilities` folder can be `#include`d directly into an empty LSL script and compiled.
 
-If this ever changes, we hope to port En to Lua to take advantage of the significant performance improvements; however, until then, LSL/En is the fastest way to develop scripts.
+If this ever changes, we hope to port En to Lua to take advantage of the significant performance improvements; however, until then, LSL/En is still significantly easier from a development perspective.
 
 ### Why redirect events? Don't the additional function definitions increase script memory?
 
 En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
 
-Since there is no way for the LSL preprocessor to easily inject this code into a user-written `listen` event handler, En manages the actual event handler itself.
+Since there is no way for the LSL preprocessor to easily inject this code into a user-written `listen` event handler, En manages the event handler itself.
 
 Passing events to user-defined functions only adds a trivial amount of memory usage. (Functions have not implicitly allocated 512 bytes in Mono since at least 2013.)
 
 ### If I don't need any of the En functions, why use En at all?
 
 En provides a limited set of basic functionality that is always enabled unless specifically disabled via flags. For example, if the `"stop"` linkset data pair contains a truthy value, En will automatically stop the script on `state_entry`. This can be used for, e.g., updater and script distribution tools that have scripts inside them that must never run until added to another object.
-
-En is intended to be used as a drop-in tool, not as a hyper-obsessive way to reduce script memory. It is designed to be efficient in a code-factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
 
 ## Examples
 
@@ -262,3 +260,7 @@ default
 ```
 
 and all other En scripts in the object will ignore the message.
+
+## License
+
+The En LSL Framework is licensed under the GNU Lesser General Public License v3.0. In short, you (yes, you!) may use the En LSL Framework in any LSL scripts - whether commercial or non-commercial - but you may not redistribute the En LSL Framework itself, in whole or in part, as a derivative work under any other license. Northbridge Business Systems and contributors to the En LSL Framework cannot be held liable for legal issues or damages due to its use.
