@@ -113,29 +113,79 @@ default
 
 LSL is over twenty years old and still has no function that returns a random integer. While it's still fun, coding in any other language makes LSL feel barbaric.
 
-En augments LSL with features that should have been in LSL a decade ago, but aren't. While LSL does enjoy occasional improvements, a lot of code snippets end up copied and pasted across multiple projects, each with its own tweaks and bugs. Most LSL code is, as a result, ugly, incomprehensible, and unmaintainable.
+While LSL does enjoy occasional improvements, a lot of code snippets end up copied and pasted across multiple projects, each with its own tweaks and bugs. Most LSL code is, as a result, ugly, incomprehensible, and unmaintainable.
 
-En is centralizes all of these handy snippets into one omnibus framework. With all the tricks at your fingertips, there's no need to reinvent the wheel in every new script. Focus on the code, not the infrastructure. Thanks to the LSL preprocessor, these additional functions and background routines just work.
+Many Second Life viewers provide the ability to use an external LSL editor, and some also include the LSL preprocessor, a tool that allows developers to use a limited set of C preprocessor directives to manipulate LSL source code.
 
-### How?
+We develop a lot of different projects at the same time that share the same code or need to take advantage of the same tricks (or avoid the same pitfalls), so the preprocessor lets us call functions out of shared LSL libraries. If we need to add or change something in a library, all it takes is recompiling all the scripts that use that library instead of manually copying and pasting the code to each script. This simplifies development across multiple product lines and facilitates rapid prototyping and development of complex LSL scripts.
 
-The LSL preprocessor makes all of the helper functions defined in the En libraries available within LSL scripts. Additionally, the En framework creates and redirects event handlers (`state_entry`, `link_message`, etc.) dynamically based on the functionality you enable to optimize script performance.
+Focus on the code, not the infrastructure. Thanks to the LSL preprocessor, these additional functions and background routines just work.
 
-For example, enLog enables in-the-field debugging out-of-the-box. With En, just write:
+### How does it work?
+
+The LSL preprocessor makes all of the helper functions defined in the En libraries available within LSL scripts. Since the LSL preprocessor can automatically remove functions that aren't referenced in the final script, these functions are only compiled into the script if they are called; otherwise, they don't take any script memory.
+
+Additionally, the En framework creates and redirects event handlers (`state_entry`, `link_message`, etc.) dynamically based on the functionality you enable to optimize script performance. If you need to handle certain events yourself, En can do so by passing them through to user-defined functions. If an event handler isn't needed for an En feature and you don't specifically request it, it won't be added to the compiled script.
+
+Certain En features require that you define certain flags or variables before they work to minimize unnecessary memory usage and script time; see [the documentation](https://docs.northbridgesys.com/en-lsl-framework) for more information.
+
+### Why "En"?
+
+"En" is a reference to the Sumerian cuneiform of the same name, particularly the term's thematic presence throughout *Snow Crash*, the novel that directly inspired the creation of Second Life.
+
+>" . . . Primitive societies were controlled by verbal rules called *me*. The *me* were like little programs for humans. They were a necessary part of the transition from caveman society to an organized, agricultural society. For example, there was a program for plowing a furrow in the ground and planting grain. There was a program for baking bread and another one for making a house. There were also *me* for higher-level functions such as war, diplomacy, and religious ritual. All the skills required to operate a self-sustaining culture were contained in these *me*, which were written down on tablets or passed around in an oral tradition. In any case, the repository for the *me* was the local temple, which was a database of *me*, controlled by a priest/king called an *en*. When someone needed bread, they would go to the *en* or one of his underlings and download the bread-making *me* from the temple. Then they would carry out the instructions -- run the program -- and when they were finished, they'd have a loaf of bread.
+>
+>"A central database was necessary, among other reasons, because some of the *me* had to be properly timed. If people carried out the plowing-and-planting *me* at the wrong time of year, the harvest would fail and everyone would starve. The only way to make sure that the *me* were properly timed was to build astronomical observatories to watch the skies for the changes of season. So the Sumerians built towers 'with their tops with the heavens' -- topped with astronomical diagrams. The *en* would watch the skies and dispense the agricultural *me* at the proper times of year to keep the economy running."
+
+- Neal Stephenson, *Snow Crash* (1992).
+
+The En framework provides a "central database" of "little programs" for all sorts of "functions" in the "society" of LSL, of which many need to be "properly timed" to run on certain events... so the name just made sense.
+
+### Why use En compared to raw LSL?
+
+En is intended for complex projects, especially "networked" scripts - that is, one or more objects with multiple scripts that need a standardized and efficient way to communicate with each other. The performance impact of multiple scripts in an object is trivial, but LSL is not designed to handle these sorts of scenarios well at runtime.
+
+For example, if an object has multiple scripts in a prim and you need to use `llMessageLinked` to send a message to one of them, there is simply no way to do that without triggering `link_message` in every single script in the object. enLEP, therefore, includes a filter to optionally target a specific script, so if/when a different script receives that message, the enLEP handler in the other script will drop the event as quickly as possible to reduce script time instead of wasting time processing the message further.
+
+Generally, En is designed to scale better than common, traditional LSL scripts. However, under the hood, it's just LSL.
+
+### Why use En compared to Lua/Luau?
+
+Luau support in Second Life is currently in beta and does not have a preprocessor. It is, therefore, difficult to write and maintain Lua scripts "at scale" since the scripts need to be individually copied into the viewer and compiled manually. The LSL preprocessor, instead, lets you `#include` entire LSL/En scripts off your local computer, meaning you can mass recompile many scripts and they will all pull the latest copy from your computer instead of needing each to be manually copy-pasted and recompiled. From a development perspective - especially if you use version control - LSL is still a lot easier.
+
+If this ever changes, we hope to port En to Lua to take advantage of the significant performance improvements; however, until then, LSL/En is the fastest way to develop scripts.
+
+### Why redirect events? Don't the additional function definitions increase script memory?
+
+En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
+
+Since there is no way for the LSL preprocessor to easily inject this code into a user-written `listen` event handler, En manages the actual event handler itself.
+
+Passing events to user-defined functions only adds a trivial amount of memory usage. (Functions have not implicitly allocated 512 bytes in Mono since at least 2013.)
+
+### If I don't need any of the En functions, why use En at all?
+
+En provides a limited set of basic functionality that is always enabled unless specifically disabled via flags. For example, if the `"stop"` linkset data pair contains a truthy value, En will automatically stop the script on `state_entry`. This can be used for, e.g., updater and script distribution tools that have scripts inside them that must never run until added to another object.
+
+En is intended to be used as a drop-in tool, not as a hyper-obsessive way to reduce script memory. It is designed to be efficient in a code-factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
+
+## Examples
+
+enLog enables in-the-field debugging out-of-the-box. With En, just write:
 
 ```
-someFunction( integer x, integer y )
+someFunction(integer x, integer y)
 {
-    enLog_TraceParams( "someFunction", [ "x", "y" ], [ x, y ] );
-    enLog_Debug( "This will only appear if loglevel is DEBUG or above." );
-    enLog_Info( "Function called with parameters " + (string)x + " and " + (string)y + "." );
-    if ( x ) enLog_Warn( "Non-zero values of x are discouraged." );
-    if ( y ) enLog_Error( "Non-zero values of y are prohibited (normally you would return at this point)." );
-    if ( x && y ) enLog_FatalStop( "Everything is terrible." ); // script will stop when enLog_FatalStop is called
+    enLog_TraceParams("someFunction", ["x", "y"], [x, y] );
+    enLog_Debug("This will only appear if loglevel is DEBUG or above.");
+    enLog_Info("Function called with parameters " + (string)x + " and " + (string)y + ".");
+    if (x) enLog_Warn("Non-zero values of x are discouraged.");
+    if (y) enLog_Error("Non-zero values of y are prohibited (normally you would return at this point).");
+    if (x && y) enLog_FatalStop("Everything is terrible."); // script will stop when enLog_FatalStop is called
 }
 ```
 
-and when you call `someFunction( 1, 2 );`, you'll see:
+and when you call `someFunction(1, 2);`, you'll see the following sent to you via `llOwnerSay` by default:
 
 ```
 💬 Function called with parameters 1 and 2.
@@ -144,7 +194,7 @@ and when you call `someFunction( 1, 2 );`, you'll see:
 🛑 FATAL ERROR: Script stopped: Everything is terrible.
 ```
 
-or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel( TRACE );`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
+or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel(TRACE);`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
 
 ```
 🔽 [12:11:24.81] (16% 13a1 @25) New Script
@@ -164,7 +214,7 @@ or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel
 🛑 FATAL ERROR: Script stopped: Everything is terrible.
 ```
 
-You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` value.
+You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` linkset data value.
 
 En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
 
@@ -194,8 +244,8 @@ enlep_message(
     string data
 )
 {
-    if ( ~flags & ENLEP_TYPE_REQUEST ) return; // only respond to requests
-    if ( llList2String( parameters, 0 ) != "ping" ) return; // only respond if first element of params is "ping"
+    if (~flags & ENLEP_TYPE_REQUEST) return; // only respond to requests
+    if (llList2String( parameters, 0) != "ping") return; // only respond if first element of params is "ping"
     enLEP_Send( // respond via enLEP
         source_link,
         source_script,
@@ -212,21 +262,3 @@ default
 ```
 
 and all other En scripts in the object will ignore the message.
-
-### Why "En"?
-
-"En" is a reference to the Sumerian cuneiform of the same name, particularly the term's thematic presence throughout *Snow Crash*, the novel that directly inspired the creation of Second Life.
-
->" . . . Primitive societies were controlled by verbal rules called *me*. The *me* were like little programs for humans. They were a necessary part of the transition from caveman society to an organized, agricultural society. For example, there was a program for plowing a furrow in the ground and planting grain. There was a program for baking bread and another one for making a house. There were also *me* for higher-level functions such as war, diplomacy, and religious ritual. All the skills required to operate a self-sustaining culture were contained in these *me*, which were written down on tablets or passed around in an oral tradition. In any case, the repository for the *me* was the local temple, which was a database of *me*, controlled by a priest/king called an *en*. When someone needed bread, they would go to the *en* or one of his underlings and download the bread-making *me* from the temple. Then they would carry out the instructions -- run the program -- and when they were finished, they'd have a loaf of bread.
->
->"A central database was necessary, among other reasons, because some of the *me* had to be properly timed. If people carried out the plowing-and-planting *me* at the wrong time of year, the harvest would fail and everyone would starve. The only way to make sure that the *me* were properly timed was to build astronomical observatories to watch the skies for the changes of season. So the Sumerians built towers 'with their tops with the heavens' -- topped with astronomical diagrams. The *en* would watch the skies and dispense the agricultural *me* at the proper times of year to keep the economy running."
-
-- Neal Stephenson, *Snow Crash* (1992).
-
-The En framework provides a "central database" of "little programs" for all sorts of "functions" in the "society" of LSL, of which many need to be "properly timed" to run on certain events... so the name just made sense.
-
-### Is it efficient?
-
-En is intended to be flexible and human-readable. It is designed to be efficient in a code factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
-
-Efforts are taken to use macros instead of functions where possible to reduce the overhead of so many function definitions. (Note that functions have not implicitly allocated 512 bytes in Mono since at least 2013.)
