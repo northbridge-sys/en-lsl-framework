@@ -500,10 +500,14 @@ enCLEP_ListenDomains()
     // for each domain in _ENCLEP_DOMAINS, add listen and update _ENCLEP_DOMAINS with handle
     for (i = 0; i < l; i++)
     {
-        c += [enCLEP_Channel(llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE), llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 1))];
-        llListReplaceList(_ENCLEP_DOMAINS, [llListen(llList2Integer(c, -1), "", "", "")], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
+        string service = llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE);
+        string domain = llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE + 1);
+        integer channel = enCLEP_Channel(service, domain);
+        c += [channel];
+        integer handle = llListen(llList2Integer(c, -1), "", "", "");
+        llListReplaceList(_ENCLEP_DOMAINS, [handle], i * _ENCLEP_DOMAINS_STRIDE + 3, i * _ENCLEP_DOMAINS_STRIDE + 3);
+        enLog_Trace("enCLEP listening on service \"" + service + "\" domain \"" + domain + "\" channel " + (string)channel + " handle " + (string)handle);
     }
-    enLog_Trace("enCLEP channels: " + enList_ElemNumbers(c));
 }
 
 //  internal function that runs after key change to reset any listens based on previous UUID
