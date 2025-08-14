@@ -130,8 +130,8 @@ enTimer_Check()
     #endif
     llSetTimerEvent(0.0);
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
-    #if defined ENMIT_DISABLE_MULTIPLE
-        enTimer_timer(
+    #if defined ENTIMER_DISABLE_MULTIPLE
+        entimer_timer(
             llList2String( _ENTIMER_QUEUE, 0 ),
             llList2String( _ENTIMER_QUEUE, 1 )
         );
@@ -183,8 +183,8 @@ enTimer_Check()
         for (i = 0; i < l; i++)
         {
             entimer_timer( // fire function
-                llList2String(triggers, i * 2),
-                llList2String(triggers, i * 2 + 1)
+                llList2String(triggers, i * 2), // timer id
+                llList2String(triggers, i * 2 + 1) // callback
                 );
         }
     #endif
