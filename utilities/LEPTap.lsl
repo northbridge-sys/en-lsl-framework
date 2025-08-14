@@ -40,6 +40,8 @@ enabled.
 #define ENLEP_MESSAGE
 #define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
+#define ENCLEP_ENABLE
+
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 enlep_message(
@@ -52,10 +54,10 @@ enlep_message(
 )
 {
     enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data", "ENCLEP_LEP_SOURCE_PRIM", "ENCLEP_LEP_SOURCE_DOMAIN"], [
-        source_link + " (" + enString_Elem(llGetLinkName(source_link)) + ")",
+        (string)source_link + " (" + enString_Elem(llGetLinkName(source_link)) + ")",
         enString_Elem(source_script),
         enString_Elem(target_script),
-        enInteger_ElemBitwise(flags),
+        enInteger_ElemBitfield(flags),
         enList_Elem(parameters),
         enString_Elem(data),
         enObject_Elem(ENCLEP_LEP_SOURCE_PRIM),
