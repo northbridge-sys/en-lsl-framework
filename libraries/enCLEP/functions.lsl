@@ -156,7 +156,7 @@ enCLEP_SendRaw( // send via enCLEP
             enString_Elem(message)
             ]);
     #endif
-    enCLEP_MultiSayTo(target_prim, enCLEP_Channel(service, domain), enList_ToString(["CLEP", service, target_prim, domain, type, message]));
+    enCLEP_MultiSayTo(target_prim, enCLEP_Channel(service, domain), enList_ToString(["CLEP", service, domain, target_prim, type, message]));
 }
 
 /*
@@ -184,7 +184,7 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
         enLog_Warn("enCLEP_SendPTP called but ENCLEP_ENABLE_PTP not defined.");
     #else
         // TODO: message really should be dynamically loaded from linkset data - maybe with some way of loading data of arbitrary length into safe ~1K chunks in linkset data for situations like this?
-        message = enList_ToString(["CLEP", service, target_prim, domain, type, message]); // add enCLEP_PTP header to message to be sent
+        message = enList_ToString(["CLEP", service, domain, target_prim, type, message]); // add enCLEP_PTP header to message to be sent
         // 51 + llStringLength(...) is length of "10\nenCLEP_PTP32\n00000000000000000000000000000000" + {packet_size} + "\n"
         max = ENCLEP_PTP_SIZE - (51 + llStringLength((string)llStringLength(ENCLEP_PTP_SIZE))); // get maximum length of packet after enCLEP_PTP header via enList_ToString
         string k = llGenerateKey(); // transfer key for identifying a specific message in transit
@@ -324,7 +324,7 @@ integer enCLEP_Process(
         }
     #endif
 
-    // enList_ToString(["CLEP", service, prim, domain, type, message])
+    // enList_ToString(["CLEP", service, domain, target_prim, type, message])
 
     if (llList2String(data, 0) != "CLEP") return __LINE__; // not a valid enCLEP message
     // note: at this point we have a valid enCLEP message, so all returns should be 0 to indicate that the enCLEP message was processed
