@@ -244,7 +244,7 @@ enLSD_CheckScriptName()
             enString_Elem(name)
             ]);
     #endif
-    enCLEP_SendRaw(prim, domain, "enLSD_PullLSD", enList_ToString([use_header, name]));
+    enCLEP_SendRaw(domain, prim, "enLSD_PullLSD", enList_ToString([use_header, name]));
 }
 
 enLSD_Push( // writes a linkset data name-value pair TO another script, optionally using the active enLSD header
@@ -269,7 +269,7 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     #if defined ENLSD_ENABLE_UUID_HEADER
         u = 1; // if ENLSD_ENABLE_UUID_HEADER defined, note in response
     #endif
-    enCLEP_SendRaw(prim, domain, "enLSD_Push", enList_ToString([u, use_header, _ENLSD_HEADER, name, v]));
+    enCLEP_SendRaw(domain, prim, "enLSD_Push", enList_ToString([u, use_header, _ENLSD_HEADER, name, v]));
 }
 
 enLSD_Process( // writes a linkset data name-value pair FROM another script

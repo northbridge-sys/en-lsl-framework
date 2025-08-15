@@ -56,8 +56,8 @@ enLog_To(
             string domain = llDeleteSubString( t, 0, 35 );
             enCLEP_Send(
                 "enLog",
-                prim,
                 domain,
+                prim,
                 "",
                 0,
                 [level, line, llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName()],

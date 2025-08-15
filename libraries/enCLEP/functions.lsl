@@ -54,8 +54,8 @@ The target_script, flags, parameters, and data values are the same as used by LE
 */
 enCLEP_Send(
     string service,
-    string prim,
     string domain,
+    string target_prim,
     string target_script,
     integer flags,
     list parameters,
@@ -63,10 +63,10 @@ enCLEP_Send(
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_Send", ["service", "prim", "domain", "target_script", "flags", "parameters", "data"], [
+        enLog_TraceParams("enCLEP_Send", ["service", "domain", "target_prim", "target_script", "flags", "parameters", "data"], [
             enString_Elem(service),
-            enObject_Elem(prim),
             enString_Elem(domain),
+            enObject_Elem(target_prim),
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
@@ -75,8 +75,8 @@ enCLEP_Send(
     #endif
     enCLEP_SendRaw(
         service,
-        prim,
         domain,
+        target_prim,
         "LEP",
         enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
     );
@@ -91,9 +91,9 @@ TODO: Add a macro to automatically search for the link via the enObject link cac
 */
 enCLEP_SendHybrid(
     string service,
-    integer target_link,
-    string prim,
     string domain,
+    string target_prim,
+    integer target_link,
     string target_script,
     integer flags,
     list parameters,
@@ -101,11 +101,11 @@ enCLEP_SendHybrid(
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendHybrid", ["service", "target_link", "prim", "domain", "target_script", "flags", "parameters", "data"], [
+        enLog_TraceParams("enCLEP_SendHybrid", ["service", "domain", "target_prim", "target_link", "target_script", "flags", "parameters", "data"], [
             enString_Elem(service),
-            target_link,
-            enObject_Elem(prim),
             enString_Elem(domain),
+            enObject_Elem(target_prim),
+            target_link,
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
             enList_Elem(parameters),
@@ -116,8 +116,8 @@ enCLEP_SendHybrid(
     { // prim not part of same linkset, send via enCLEP
         enCLEP_SendRaw(
             service,
-            prim,
             domain,
+            target_prim,
             "LEP",
             enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
         );
@@ -141,22 +141,22 @@ Can be useful for situations where you don't need LEP features but still want to
 */
 enCLEP_SendRaw( // send via enCLEP
     string service,
-    string prim,
     string domain,
+    string target_prim,
     string type,
     string message
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendRaw", ["service", "prim", "domain", "type", "message"], [
+        enLog_TraceParams("enCLEP_SendRaw", ["service", "domain", "target_prim", "type", "message"], [
             enString_Elem(service),
-            enObject_Elem(prim),
             enString_Elem(domain),
+            enObject_Elem(target_prim),
             enString_Elem(type),
             enString_Elem(message)
             ]);
     #endif
-    enCLEP_MultiSayTo(prim, enCLEP_Channel(service, domain), enList_ToString(["CLEP", service, prim, domain, type, message]));
+    enCLEP_MultiSayTo(target_prim, enCLEP_Channel(service, domain), enList_ToString(["CLEP", service, target_prim, domain, type, message]));
 }
 
 /*
@@ -165,17 +165,17 @@ WARNING: This function hasn't been tested since major CLEP rework and is probabl
 */
 enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
     string service,
-    string prim,
     string domain,
+    string target_prim,
     string type,
     string message
     )
 {
     #if defined ENCLEP_TRACE
-        enLog_TraceParams("enCLEP_SendPTP", ["service", "prim", "domain", "type", "message"], [
+        enLog_TraceParams("enCLEP_SendPTP", ["service", "domain", "target_prim", "type", "message"], [
             enString_Elem(service),
-            enObject_Elem(prim),
             enString_Elem(domain),
+            enObject_Elem(target_prim),
             enString_Elem(type),
             enString_Elem(message)
             ]);
@@ -184,7 +184,7 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
         enLog_Warn("enCLEP_SendPTP called but ENCLEP_ENABLE_PTP not defined.");
     #else
         // TODO: message really should be dynamically loaded from linkset data - maybe with some way of loading data of arbitrary length into safe ~1K chunks in linkset data for situations like this?
-        message = enList_ToString(["CLEP", service, prim, domain, type, message]); // add enCLEP_PTP header to message to be sent
+        message = enList_ToString(["CLEP", service, target_prim, domain, type, message]); // add enCLEP_PTP header to message to be sent
         // 51 + llStringLength(...) is length of "10\nenCLEP_PTP32\n00000000000000000000000000000000" + {packet_size} + "\n"
         max = ENCLEP_PTP_SIZE - (51 + llStringLength((string)llStringLength(ENCLEP_PTP_SIZE))); // get maximum length of packet after enCLEP_PTP header via enList_ToString
         string k = llGenerateKey(); // transfer key for identifying a specific message in transit
@@ -382,7 +382,7 @@ integer enCLEP_Process(
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 2) return 0; // error in operation unserialize operation
             enLSD_Push(
-                id, // prim
+                id, // target_prim
                 domain, // domain
                 (integer)llList2String(data, 0) // use_header
                 llList2String(data, 1), // name
@@ -414,7 +414,7 @@ integer enCLEP_Process(
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 5) return 0; // error in operation unserialize operation
             enInventory_Pull(
-                id, // prim
+                id, // target_prim
                 domain, // domain
                 llList2String(data, 0), // name
                 (integer)llList2String(data, 1), // required type
@@ -429,7 +429,7 @@ integer enCLEP_Process(
             data = enList_FromString(llList2String(data, 5));
             if (llGetListLength(data) != 5) return 0; // error in operation unserialize operation
             enInventory_Push(
-                id, // prim
+                id, // target_prim
                 domain, // domain
                 llList2String(data, 0), // name
                 (integer)llList2String(data, 1), // required type
@@ -451,7 +451,7 @@ integer enCLEP_Process(
             for ( i = 0; i < l; i++ )
             { // copy each script into remote
                 enInventory_Copy( // copies an inventory item to another object
-                    id, // prim
+                    id, // target_prim
                     llList2String( scripts, i * 2 ), // name
                     INVENTORY_SCRIPT, // type
                     (integer)llList2String( data, 5 ), // pin
