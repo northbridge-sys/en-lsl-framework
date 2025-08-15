@@ -329,7 +329,9 @@ integer enCLEP_Process(
     if (llList2String(data, 0) != "CLEP") return __LINE__; // not a valid enCLEP message
     // note: at this point we have a valid enCLEP message, so all returns should be 0 to indicate that the enCLEP message was processed
     string service = llList2String(data, 1);
-    string domain = llList2String(data, 3);
+    string domain = llList2String(data, 2);
+    string target_prim = llList2String(data, 3);
+    if (target_prim != "" && target_prim != (string)llGetKey()) return __LINE__; // enCLEP message targeted to a different prim
     // we do a little trick here - this can technically be hacked if you use integers for your service and domain, so don't do that
     integer match_ind = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
     if (match_ind == -1)
