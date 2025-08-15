@@ -467,12 +467,13 @@ integer enCLEP_Process(
 
     // process as generic message
     #if !defined ENCLEP_MESSAGE
-        enLog_Debug("Raw CLEP message received from " + id + " on domain \"" + llList2String( data, 2 ) + "\", but ENCLEP_MESSAGE not defined: " + llList2String( data, 4 ) );
+        enLog_Debug("Raw/unknown CLEP message received from " + id + " on domain \"" + llList2String(data, 2) + "\" with type \"" + llList2String(data, 4) + "\", but ENCLEP_MESSAGE not defined: " + llList2String(data, 5));
     #else
         enclep_message(
             id, // source id
             llList2String(data, 2), // domain
-            llList2String(data, 4) // message
+            llList2String(data, 4), // type
+            llList2String(data, 5) // message
             );
     #endif
     return 0;
