@@ -22,6 +22,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+// NOTE: do not use ENCLEP_LISTEN_OWNERONLY across region borders!
 #define ENCLEP_LISTEN_OWNERONLY 0x1
 #define ENCLEP_LISTEN_REMOVE 0x80000000
 

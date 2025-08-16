@@ -36,8 +36,5 @@ integer _ENINVENTORY_NC_T = -1; // notecard total lines
 string _ENINVENTORY_NC_H; // notecard read handle
 string _ENINVENTORY_NC_G; // llGetNumberOfNotecardLines handle
 
-list _ENINVENTORY_REMOTE; // start_param, script_name, running
-#define _ENINVENTORY_REMOTE_STRIDE 3
-
 #define enInventory_NCOpenedName() _ENINVENTORY_NC_N
 #define enInventory_NCOpenedKey() _ENINVENTORY_NC_K
