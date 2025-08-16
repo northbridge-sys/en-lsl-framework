@@ -29,7 +29,7 @@ Some of the useful features En provides:
 
 ## Installation
 
-If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files.
+If you haven't, enable the LSL preprocessor in your viewer and set the directory where the LSL preprocessor will check for include files. This can be any directory, as long as the Second Life viewer can read from it, though we recommend placing it somewhere you won't accidentally delete it, such as a folder in your user directory.
 
 For the latest **development** release:
 - Create a directory called `northbridge-sys` in your LSL preprocessor include directory, if you haven't already.
