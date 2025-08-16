@@ -38,7 +38,7 @@ For the latest **development** release:
 Or, for the current **stable** release, or if you don't want to use git:
 - Create a directory called `northbridge-sys` in your LSL preprocessor include directory, if you haven't already.
 - Create a directory called `en-lsl-framework` in the `northbridge-sys` directory.
-- [Download](https://git.catlab.systems/northbridge-sys/en-lsl-framework/archive/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-lsl-framework/libraries.lsl`. **Make sure you don't name the folder "en-lsl-framework-main"!**
+- [Download](https://git.catlab.systems/northbridge-sys/en-lsl-framework/archive/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-lsl-framework/libraries.lsl` (or with backslashes - \ - for Windows users). **Make sure you don't name the folder "en-lsl-framework-main"!**
 
 Note that you'll need to repeat this process for each update; there is no auto-updater.
 
