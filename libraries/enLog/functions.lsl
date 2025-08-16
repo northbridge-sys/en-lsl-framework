@@ -74,8 +74,7 @@ enLog_SuccessStop(
 {
     if (m != "") m = " " + m;
     enLog_Print("✅ SUCCESS: Script stopped:" + m);
-    llSetScriptState(llGetScriptName(), FALSE);
-    llSleep(1.0); // give the simulator time to stop the script to be safe
+    enLog_Stop();
 }
 
 // logs a success and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
@@ -105,8 +104,7 @@ enLog_FatalStop(
 {
     if (m != "") m = " " + m;
     enLog_Fatal("Script stopped:" + m);
-    llSetScriptState(llGetScriptName(), FALSE);
-    llSleep(1.0); // give the simulator time to stop the script to be safe
+    enLog_Stop();
 }
 
 // logs a fatal error and deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
@@ -129,6 +127,14 @@ enLog_FatalDie(
     enLog_Die();
 }
 
+// stops the script
+enLog_Stop()
+{
+    llSetScriptState(llGetScriptName(), FALSE);
+    llSleep(1.0); // give the simulator time to stop the script to be safe
+    llResetScript();
+}
+
 // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
 enLog_Delete()
 {
@@ -143,8 +149,7 @@ enLog_Delete()
     #else
         llRemoveInventory(llGetScriptName());
     #endif
-    llSetScriptState(llGetScriptName(), FALSE);
-    llSleep(1.0); // give the simulator time to stop and delete the script to be safe
+    enLog_Stop();
 }
 
 // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
@@ -164,8 +169,7 @@ enLog_Die()
             else llDie();
         }
     #endif
-    llSetScriptState( llGetScriptName(), FALSE );
-    llSleep( 1.0 ); // give the simulator time to remove the object to be safe
+    enLog_Stop();
 }
 
 // converts integer level number into string representation
