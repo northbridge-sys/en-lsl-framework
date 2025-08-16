@@ -33,12 +33,12 @@ If you haven't, enable the LSL preprocessor in your viewer and set the directory
 
 For the latest **development** release:
 - Create a directory called `nortbridge-sys` in your LSL preprocessor include directory, if you haven't already.
-- Inside the `northbridge-sys` directory, clone the repository into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-lsl-framework`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
+- Inside the `northbridge-sys` directory, clone the repository into your preprocessor include directory using the command `git clone https://git.catlab.systems/northbridge-sys/en-lsl-framework.git`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
 
 Or, for the latest **stable** release, or if you don't want to use git:
 - Create a directory called `nortbridge-sys` in your LSL preprocessor include directory, if you haven't already.
 - Create a directory called `en-lsl-framework` in the `nortbridge-sys` directory.
-- [Download](https://github.com/northbridge-sys/en-lsl-framework/archive/refs/heads/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-lsl-framework/libraries.lsl`. **Do not** name the folder "en-lsl-framework-main"!
+- [Download](https://git.catlab.systems/northbridge-sys/en-lsl-framework/archive/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-lsl-framework/libraries.lsl`. **Make sure you don't name the folder "en-lsl-framework-main"!**
 
 ## Usage
 
