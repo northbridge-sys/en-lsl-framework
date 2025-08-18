@@ -22,7 +22,6 @@ Some of the useful features En provides:
 - enLSD - functions to safely write, read, and manipulate key-value pairs in the `llLinksetData*` store
 - enKVS - simple in-memory key-value store, particularly useful for backing up critical linkset data
 - enTimer - `llSetTimerEvent` with string callbacks, multiple concurrent timers, and one-shot timers
-- enTest - unit testing utilities
 - Helper libraries for integers (including hex & bitwise), floats, vectors, rotations, strings, lists, and keys
 - Miscellaneous additional libraries for avatars, environments, inventory, object parameters, and time/dates
 - Complete utility scripts, as well as drop-in `#import`able snippets for special use cases

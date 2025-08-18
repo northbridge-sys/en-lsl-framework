@@ -57,7 +57,6 @@ Make sure the "Script optimizer" setting is enabled in your preprocessor!
 #include "northbridge-sys/en-lsl-framework/libraries/enRotation/macros.lsl"
 #include "northbridge-sys/en-lsl-framework/libraries/enString/macros.lsl"
 #include "northbridge-sys/en-lsl-framework/libraries/enTimer/macros.lsl"
-#include "northbridge-sys/en-lsl-framework/libraries/enTest/macros.lsl"
 #include "northbridge-sys/en-lsl-framework/libraries/enVector/macros.lsl"
 
 // functions
@@ -79,5 +78,4 @@ Make sure the "Script optimizer" setting is enabled in your preprocessor!
 #include "northbridge-sys/en-lsl-framework/libraries/enRotation/functions.lsl"
 #include "northbridge-sys/en-lsl-framework/libraries/enString/functions.lsl"
 #include "northbridge-sys/en-lsl-framework/libraries/enTimer/functions.lsl"
-#include "northbridge-sys/en-lsl-framework/libraries/enTest/functions.lsl"
 #include "northbridge-sys/en-lsl-framework/libraries/enVector/functions.lsl"
