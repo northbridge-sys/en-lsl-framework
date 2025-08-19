@@ -45,6 +45,17 @@ list enList_Empty(
     return in;
 }
 
+// returns list element a if x is truthy, or b if falsey
+list enList_If(
+    integer x,
+    list a,
+    list b
+    )
+{
+    if (x) return a;
+    return b;
+}
+
 // returns a string with each element converted to an escaped JSON string
 list enList_ToJson(
     list in
