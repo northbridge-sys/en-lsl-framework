@@ -29,6 +29,13 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define ENINVENTORY_TRACE
 #endif
 
+// buffer for free memory available when using llGetNotecardLineSync vs. llGetNotecardLine
+// if less than ENINVENTORY_NC_MEMORY_BUFFER is available, use llGetNotecardLine
+// this allows garbage collection to trigger before the dataserver event is called
+#if !defined ENINVENTORY_NC_MEMORY_BUFFER
+    #define ENINVENTORY_NC_MEMORY_BUFFER 8192
+#endif
+
 string _ENINVENTORY_NC_N; // notecard name
 string _ENINVENTORY_NC_K; // notecard key
 integer _ENINVENTORY_NC_L = -1; // notecard line being read
