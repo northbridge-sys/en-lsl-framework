@@ -166,7 +166,7 @@ Passing events to user-defined functions only adds a trivial amount of memory us
 
 ### If I don't need any of the En functions, why use En at all?
 
-En provides a limited set of basic functionality that is always enabled unless specifically disabled via flags. For example, if the `"stop"` linkset data pair contains a truthy value, En will automatically stop the script on `state_entry`. This can be used for, e.g., updater and script distribution tools that have scripts inside them that must never run until added to another object.
+You don't have to! But En also provides a limited set of basic functionality that is always enabled unless specifically disabled via flags. For example, if the `"stop"` linkset data pair contains a truthy value, En will automatically stop the script on `state_entry`. This can be used for, e.g., updater and script distribution tools that have scripts inside them that must never run until added to another object.
 
 ## Examples
 
@@ -193,7 +193,7 @@ and when you call `someFunction(1, 2);`, you'll see the following sent to you vi
 🛑 FATAL ERROR: Script stopped: Everything is terrible.
 ```
 
-or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel(TRACE);`), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
+or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel(TRACE);` from this or any other script in the object), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
 
 ```
 🔽 [12:11:24.81] (16% 13a1 @25) New Script
@@ -244,7 +244,7 @@ enlep_message(
 )
 {
     if (~flags & ENLEP_TYPE_REQUEST) return; // only respond to requests
-    if (llList2String( parameters, 0) != "ping") return; // only respond if first element of params is "ping"
+    if (llList2String(parameters, 0) != "ping") return; // only respond if first element of params is "ping"
     enLEP_Send( // respond via enLEP
         source_link,
         source_script,
