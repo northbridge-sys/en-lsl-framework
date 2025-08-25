@@ -1,25 +1,7 @@
 /*
-enDate.lsl
-Library Macros
-En LSL Framework
-Copyright (C) 2024  Northbridge Business Systems
+enDate
+Copyright (C) 2025  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
-
-╒══════════════════════════════════════════════════════════════════════════════╕
-│ LICENSE                                                                      │
-└──────────────────────────────────────────────────────────────────────────────┘
-
-This script is free software: you can redistribute it and/or modify it under the
-terms of the GNU Lesser General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
-
-This script is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License along
-with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #define ENDATE_12_HOUR 0x1
@@ -30,3 +12,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 #define enDate_MSNow() enDate_MS(llGetTimestamp())
+
+#define enDate_Weekday(year, month, day) \
+    llList2String(["Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"], (year + (year >> 2) - ((month < 3) & !(year & 3)) + day + (integer)llGetSubString("_033614625035", month, month)) % 7);
