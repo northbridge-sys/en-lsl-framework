@@ -76,3 +76,17 @@ integer enDate_MSAdd(
     if ( ms + add > 617316352 ) return ( ms + add ) + 2764800000 * ( -1 * ( add > 0 ) ); // if we are adding +, subtract the entire range; otherwise, add it
     return ms + add; // no adjustment needed
 }
+
+integer enDate_DaysInMonth(
+    integer month,
+    integer year
+)
+{
+    if (month == 4 || month == 6 || month == 9 || month == 11) return 30;
+    else if (month == 2)
+    {
+        if (year % 4 == 0) return 29;
+        else return 28;
+    }
+    else return 31;
+}
