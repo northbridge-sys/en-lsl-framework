@@ -94,12 +94,19 @@ integer enLEP_Process(
     #if defined ENLEP_ALLOWED_TARGET_SCRIPTS
         allowed_targets += ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro ENLEP_ALLOWED_TARGET_SCRIPTS
     #endif
-    #ifndef ENLEP_ALLOW_ALL_TARGET_SCRIPTS
-        if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1)
-        {
-            if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard message, not targeted to us
-        }
+    #if defined ENLEP_ALLOW_ALL_TARGET_SCRIPTS
+        allowed_targets += [llList2String(parameters, 1)]; // always match - this is less efficient, but this flag is only used for debugging anyway
     #endif
+    if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1)
+    {
+        #if defined ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
+            // using substring matching due to ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
+            if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard message, not targeted to us
+        #else
+            // using exact matching
+            return 0; // discard messages, not targeted to us
+        #endif
+    }
     #if defined ENLEP_MESSAGE && defined ENLEP_MESSAGE_TRACE
         enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
             source_link,
