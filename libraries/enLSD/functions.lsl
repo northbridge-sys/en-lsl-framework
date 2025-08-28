@@ -146,10 +146,17 @@ enLSD_Purge()
         {
             string prim = llGetSubString(llList2String(pair, 0), 0, 35);
             string prim_root = llList2String(llGetObjectDetails(prim, [OBJECT_ROOT]), 0);
-            if (prim_root != root)
+            string script = llList2String(pair, 1);
+            if (prim != "" && prim_root != root)
             { // this pair is associated with a prim that doesn't share the same root as us
                 enLog_Debug("Purging enLSD pairs associated with prim " + enObject_Elem(prim) + " (root " + enObject_Elem(prim_root) + ")");
-                llLinksetDataDeleteFound("^" + prim + "\n.*$", ""); // delete all pairs owned by this prim, since it's gone
+                llLinksetDataDeleteFound("^" + prim + "\n.*$", ""); // delete all pairs scoped to this prim, since it's gone
+                i = 0; // start search again
+            }
+            else if (prim == (string)llGetKey() && llGetInventoryType(script) != INVENTORY_SCRIPT)
+            { // this pair is associated with a script that is no longer in this prim
+                enLog_Debug("Purging enLSD pairs associated with script \"" + script + "\" in prim " + enObject_Elem(prim) + " (root " + enObject_Elem(prim_root) + ")");
+                llLinksetDataDeleteFound("^" + prim + "\n" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, script) + "\n.*$", ""); // delete all pairs scoped to this prim & script, since it's gone
                 i = 0; // start search again
             }
             else i++; // progress to next index
