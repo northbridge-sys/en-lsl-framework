@@ -163,7 +163,6 @@ string enList_ToString(
     string out;
     integer i;
     integer l = llGetListLength(in);
-    string elem;
     for ( i = 0; i < l; i++ )
     {
         out += llEscapeURL(llList2String(in, i)) + ",";
