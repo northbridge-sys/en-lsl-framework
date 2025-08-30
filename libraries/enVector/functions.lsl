@@ -100,3 +100,39 @@ vector enVector_NormalizeOffset(vector v)
     while (v.y < 0.0) v.y += 1.0;
     return v;
 }
+
+/*
+Returns the interpolated position of a point along a cubic Bézier curve given four points.
+*/
+vector enVector_Interpolate4P(
+    vector P0,
+    vector P1,
+    vector P2,
+    vector P3,
+    float t
+)
+{
+    return P0 * llPow(1 - t, 3) + P1 * 3 * llPow(1 - t, 2) * t + P2 * 3 * (1 - t) * llPow(t, 2) + P3 * llPow(t, 3);
+}
+
+/*
+Returns the interpolated position of a point along a cubic Bézier curve given two points, rotations for each point, and an arbitrary curve scale factor.
+This is similar to enVector_Interpolate4P but generates the P1 and P2 points by using the scale factor and the rotations at P0 and P3.
+*/
+vector enVector_Interpolate2P(
+    vector P0,
+    vector P3,
+    rotation R0,
+    rotation R3,
+    float scale,
+    float t
+)
+{
+    return enVector_Interpolate4P(
+        P0,
+        P0 + <scale, 0.0, 0.0> * R0,
+        P3 + <-scale, 0.0, 0.0> * R3,
+        P3,
+        t
+    );
+}
