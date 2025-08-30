@@ -35,6 +35,9 @@ rotation enRotation_Normalize(
     return < r.x * m, r.y * m, r.z * m, r.s * m >;
 }
 
+/*
+Fast rotational interpolation (angular velocity is NOT constant).
+*/
 rotation enRotation_Nlerp(
     rotation a,
     rotation b,
@@ -46,6 +49,9 @@ rotation enRotation_Nlerp(
     return enRotation_Normalize( r );
 }
 
+/*
+Slow rotational interpolation (angular velocity IS constant).
+*/
 rotation enRotation_Slerp(
     rotation a,
     rotation b,
