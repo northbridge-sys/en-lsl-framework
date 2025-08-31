@@ -54,6 +54,9 @@ list _ENOBJECT_UUIDS_SELF;
 #define enObject_GetLinkColor(link,face) \
     (vector)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 0)
 
+#define enObject_GetLinkAlpha(link,face) \
+    (float)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 1)
+
 //  gets UUID of entity that rezzed the object
 #define enObject_Parent() \
     llList2String(llGetObjectDetails(llGetKey(), [OBJECT_REZZER_KEY]), 0)
