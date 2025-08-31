@@ -136,3 +136,34 @@ vector enVector_Interpolate2P(
         t
     );
 }
+
+/*
+Checks if a specified position is on a specified side of an object.
+*/
+integer enVector_OnSide(
+    vector source, // usually llGetPos()
+    rotation source_rot, // usually llGetRot()
+    vector target, // position of object/avatar you want to know the axis of
+    vector axis // unit axis to use for offset (returns 1 if closer to this offset, -1 if closer to opposite)
+)
+{
+    axis *= source_rot; // adjust axis with source_rot since we're working with grid-reference positions
+    if (llVecDist(source + axis, target) < llVecDist(source - axis, target)) return 1; // closer to axis
+    return -1; // closer to opposite of axis
+}
+
+/*
+Gets enVector_OnSide results for all 3 local axes.
+*/
+vector enVector_OnAxes(
+    vector source,
+    rotation source_rot,
+    vector target
+)
+{
+    return <
+        enVector_OnSide(source, source_rot, target, <1.0, 0.0, 0.0>),
+        enVector_OnSide(source, source_rot, target, <0.0, 1.0, 0.0>),
+        enVector_OnSide(source, source_rot, target, <0.0, 0.0, 1.0>)
+    >;
+}
