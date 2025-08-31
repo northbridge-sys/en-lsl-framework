@@ -153,7 +153,7 @@ enLSD_Purge()
                 llLinksetDataDeleteFound("^" + prim + "\n.*$", ""); // delete all pairs scoped to this prim, since it's gone
                 i = 0; // start search again
             }
-            else if (prim == (string)llGetKey() && llGetInventoryType(script) != INVENTORY_SCRIPT)
+            else if (script != "" && prim == (string)llGetKey() && llGetInventoryType(script) != INVENTORY_SCRIPT)
             { // this pair is associated with a script that is no longer in this prim
                 enLog_Debug("Purging enLSD pairs associated with script \"" + script + "\" in prim " + enObject_Elem(prim) + " (root " + enObject_Elem(prim_root) + ")");
                 llLinksetDataDeleteFound("^" + prim + "\n" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, script) + "\n.*$", ""); // delete all pairs scoped to this prim & script, since it's gone
