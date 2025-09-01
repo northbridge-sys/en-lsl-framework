@@ -38,7 +38,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 
 // converts a world-scope position to a region-scope position, as in a position within a region
 #define enVector_WorldToRegion(world_position) \
-    (world - enVector_WorldToCorner(world_position))
+    (world_position - enVector_WorldToCorner(world_position))
 
 // converts the current region-scope position to world-scope position
 #define enVector_RegionToWorld(region_position) \
