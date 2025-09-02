@@ -47,3 +47,18 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 // converts a region CORNER and POSITION to a world-scope position
 #define enVector_RegionCornerToWorld(region_position, region_corner) \
     (region_position + region_corner)
+
+/*
+Converts region-scope position to local-scope position.
+Includes rotation adjustment to orient it as an offset at ZERO_ROTATION.
+Uses the current prim's position and rotation.
+*/
+#define enVector_RegionToLocal(region_position) \
+    ((region_position - llGetPos()) / llGetRot())
+
+/*
+Converts local-scope position to region-scope position.
+Uses the current prim's position and rotation.
+*/
+#define enVector_LocalToRegion(local_position) \
+    (local_position * llGetRot() + llGetPos())
