@@ -43,6 +43,10 @@ enCLEP_MultiSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of sil
     else if (llGetObjectDetails(prim, [OBJECT_PHANTOM]) != []) llRegionSayTo(prim, channel, message); // RST if prim is in region
 #if defined ENCLEP_ENABLE_SHOUT
     else llShout(channel, message); // shout if prim is not in region and ENCLEP_ENABLE_SHOUT is defined
+#elif defined ENCLEP_ENABLE_SAY
+    else llSay(channel, message); // say if prim is not in region and ENCLEP_ENABLE_SAY is defined
+#elif defined ENCLEP_ENABLE_WHISPER
+    else llWhisper(channel, message); // whisper if prim is not in region and ENCLEP_ENABLE_WHISPER is defined
 #endif
 }
 
