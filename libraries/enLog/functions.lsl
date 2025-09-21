@@ -72,8 +72,7 @@ enLog_SuccessStop(
     string m // message
 )
 {
-    if (m != "") m = " " + m;
-    enLog_Print("✅ SUCCESS: Script stopped:" + m);
+    enLog_Success("Script stopped: " + m);
     enLog_Stop();
 }
 
@@ -82,8 +81,7 @@ enLog_SuccessDelete(
     string m // message
 )
 {
-    if (m != "") m = " " + m;
-    enLog_Print("✅ SUCCESS: Script deleted:" + m);
+    enLog_Success("Script deleted: " + m);
     enLog_Delete();
 }
 
@@ -92,8 +90,7 @@ enLog_SuccessDie(
     string m // message
 )
 {
-    if (m != "") m = " " + m;
-    enLog_Print("✅ SUCCESS: Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ":" + m);
+    enLog_Success("Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ": " + m);
     enLog_Die();
 }
 
@@ -102,8 +99,7 @@ enLog_FatalStop(
     string m // message
     )
 {
-    if (m != "") m = " " + m;
-    enLog_Fatal("Script stopped:" + m);
+    enLog_Fatal("Script stopped: " + m);
     enLog_Stop();
 }
 
@@ -112,8 +108,7 @@ enLog_FatalDelete(
     string m // message
 )
 {
-    if (m != "") m = " " + m;
-    enLog_Fatal("Script deleted:" + m);
+    enLog_Fatal("Script deleted: " + m);
     enLog_Delete();
 }
 
@@ -122,8 +117,7 @@ enLog_FatalDie(
     string m // message
 )
 {
-    if (m != "") m = " " + m;
-    enLog_Fatal("Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ":" + m);
+    enLog_Fatal("Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ": " + m);
     enLog_Die();
 }
 

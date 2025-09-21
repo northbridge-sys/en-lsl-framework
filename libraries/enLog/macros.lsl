@@ -54,6 +54,9 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enLog_DebugTo(...) enLog_To( 5, __LINE__, __VA_ARGS__ )
 #define enLog_TraceTo(...) enLog_To( 6, __LINE__, __VA_ARGS__ )
 
+#define enLog_Success(m) enLog_To( 0, __LINE__, "", "✅ SUCCESS: " + m)
+#define enLog_SuccessTo(u, m) enLog_To( 0, __LINE__, u, "✅ SUCCESS: " + m)
+
 #define enLog_GetLogtarget() \
     llLinksetDataRead("logtarget")
 
