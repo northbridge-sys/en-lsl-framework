@@ -56,8 +56,8 @@ list enList_If(
     return b;
 }
 
-// returns a string with each element converted to an escaped JSON string
-list enList_ToJson(
+// returns a string with each second element converted to an escaped JSON string
+list enList_ToJsonPairs(
     list in
 )
 {
@@ -66,9 +66,19 @@ list enList_ToJson(
     integer l = llGetListLength(in);
     for (i = 0; i < l; i++)
     {
-        out += ["\"" + enString_Escape(ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""];
+        if (i % 2) out += ["\"" + enString_Escape(ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""]; // value
+        else out += [enString_Escape(ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i))]; // key - must be raw string, otherwiseh llList2Json breaks
     }
     return out;
+}
+
+// fast way to generate a JSON object safely with all string values
+// can't be a macro because the preprocessor doesn't like list parameters
+string enList_ToJsonObject(
+    list in
+)
+{
+    return llList2Json(JSON_OBJECT, enList_ToJsonPairs(in));
 }
 
 list enList_Reverse(
