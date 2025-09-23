@@ -58,7 +58,7 @@ setLoglevel()
         );
     if ( !loglevel )
     {
-        enLog_Error("Could not read desired loglevel. Rename this script so that the last character is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
+        enLog_Error("Could not read desired loglevel. Rename this script so that the last word is a valid loglevel (FATAL, ERROR, WARN, INFO, DEBUG, or TRACE)." );
         return;
     }
     string lsd = llLinksetDataRead( "loglevel" );
