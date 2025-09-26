@@ -303,3 +303,10 @@ list enList_ReplaceExact(
     while (~ind); // != -1
     return haystack;
 }
+
+string enList_RandomElement(
+    list l
+)
+{
+    return llList2String(l, (integer)llFrand((float)llGetListLength(l)));
+}
