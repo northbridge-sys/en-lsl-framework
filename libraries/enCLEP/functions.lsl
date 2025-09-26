@@ -363,18 +363,18 @@ integer enCLEP_Process(
         // enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
         data = enList_FromString(llList2String(data, 5));
         if (llGetListLength(data) != 3) return 0; // error in LEP unserialize operation
-        ENCLEP_LEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
-        ENCLEP_LEP_SOURCE_SERVICE = service; // same with service
-        ENCLEP_LEP_SOURCE_DOMAIN = domain; // same with domain
+        ENCLEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
+        ENCLEP_SOURCE_SERVICE = service; // same with service
+        ENCLEP_SOURCE_DOMAIN = domain; // same with domain
         enLEP_Process(
             -1,
             (integer)llList2String(data, 0),
             llList2String(data, 1),
             llList2String(data, 2)
             );
-        ENCLEP_LEP_SOURCE_PRIM = NULL_KEY; // reset values to be safe
-        ENCLEP_LEP_SOURCE_SERVICE = "";
-        ENCLEP_LEP_SOURCE_DOMAIN = "";
+        ENCLEP_SOURCE_PRIM = NULL_KEY; // reset values to be safe
+        ENCLEP_SOURCE_SERVICE = "";
+        ENCLEP_SOURCE_DOMAIN = "";
     #else
         enLog_Debug("LEP message received on service \"" + service + "\" domain \"" + domain + "\" but ENLEP_MESSAGE is not defined: " + message);
     #endif

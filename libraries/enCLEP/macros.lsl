@@ -50,9 +50,9 @@ list _ENCLEP_DOMAINS; // service, domain, flags, handle
 
 #if defined ENCLEP_ENABLE && defined ENLEP_MESSAGE
     // enLEP via enCLEP is enabled automatically
-    string ENCLEP_LEP_SOURCE_PRIM = NULL_KEY;
-    string ENCLEP_LEP_SOURCE_SERVICE;
-    string ENCLEP_LEP_SOURCE_DOMAIN;
+    string ENCLEP_SOURCE_PRIM = NULL_KEY;
+    string ENCLEP_SOURCE_SERVICE;
+    string ENCLEP_SOURCE_DOMAIN;
 #endif
 
 /*
