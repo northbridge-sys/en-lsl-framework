@@ -40,6 +40,9 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define ENCLEP_TRACE
 #endif
 
+// used by enCLEP_DialogListen()
+integer _ENCLEP_DIALOG_LSN;
+
 list _ENCLEP_DOMAINS; // service, domain, flags, handle
 #define _ENCLEP_DOMAINS_STRIDE 4
 
@@ -64,3 +67,12 @@ This also avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL (0x7FFFFFF
 */
 #define enCLEP_Channel(service, domain) \
     (llHash(service + domain) | INTEGER_NEGATIVE)
+
+#define enCLEP_Reserved() \
+    (!!_ENCLEP_DIALOG_LSN + ENCLEP_RESERVE_LISTENS)
+
+/*
+enCLEP_DialogChannel can be used to get the channel we are listing to if enCLEP_DialogListen was called.
+*/
+#define enCLEP_DialogChannel() \
+    enCLEP_Channel((string)llGetKey(), llGetScriptName())

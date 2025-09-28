@@ -415,6 +415,11 @@ enCLEP_ListenDomains()
 
     integer i;
     integer l = llGetListLength(_ENCLEP_DOMAINS) / _ENCLEP_DOMAINS_STRIDE;
+    if (l > 64 - enCLEP_Reserved())
+    {
+        enLog_Warn("enCLEP overflow (" + (string)l + " + " + (string)enCLEP_Reserved() + " reserved > 64)");
+        l = 64 - enCLEP_Reserved();
+    }
     list c;
     // for each domain in _ENCLEP_DOMAINS, add listen and update _ENCLEP_DOMAINS with handle
     for (i = 0; i < l; i++)
@@ -448,5 +453,29 @@ enCLEP_RefreshLinkset()
                 index * _ENCLEP_DOMAINS_STRIDE + 1); // we are listening to a self prim domain, so update it
         }
     }
+    enCLEP_ListenDomains();
+}
+
+/*
+enCLEP_DialogListen opens a regular llListen on an enCLEP channel tied to this prim UUID and script name.
+This can be used in conjunction with enCLEP_DialogChannel for a safe nearly-guaranteed-random channel for this script.
+*/
+enCLEP_DialogListen()
+{
+    enCLEP_UnListenDomains();
+    if (_ENCLEP_DIALOG_LSN) llListenRemove(_ENCLEP_DIALOG_LSN);
+    _ENCLEP_DIALOG_LSN = llListen(enCLEP_DialogChannel(), "", "", "");
+    enCLEP_ListenDomains();
+}
+
+/*
+Removes the listen created by enCLEP_DialogListen.
+*/
+enCLEP_DialogListenRemove()
+{
+    if (!_ENCLEP_DIALOG_LSN) return;
+    enCLEP_UnListenDomains();
+    llListenRemove(_ENCLEP_DIALOG_LSN);
+    _ENCLEP_DIALOG_LSN = 0;
     enCLEP_ListenDomains();
 }
