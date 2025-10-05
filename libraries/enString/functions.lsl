@@ -48,6 +48,20 @@ string enString_If(
     return b;
 }
 
+/*
+fast, memory-efficient way of left-padding src with leading zeroes up to l_target
+use this instead of enString_Pad to save a bunch of memory for numerical uses
+note: this does NOT trim src down to l_target!
+*/
+string enString_PadZeroes(
+    string src,
+    integer l_target
+)
+{
+    while (llStringLength(src) < l_target) src = "0" + src;
+    return src;
+}
+
 //  pads (or trims) a string to length l_target using specified alignment and padding
 //  example:
 //      "bank balance: $1" + enString_Pad("5", "0", 5, )
