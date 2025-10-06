@@ -67,3 +67,10 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 // except at extremely large ranges
 #define enInteger_ResetTarget(i,m,x,t) \
     (i + ((t - i) * (i < m || i > x)))
+
+/*
+flips bits efficiently
+just a reminder that bitwise XOR exists, so you don't try doing any shenanigans with enInteger_SetBit
+*/
+#define enInteger_FlipBits(bitfield, position) \
+    (bitfield ^ position)

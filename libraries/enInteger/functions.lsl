@@ -112,3 +112,17 @@ integer enInteger_ResetChunk(
     if (i > x) i -= c * ((i - x) + (c - 1) / c);
     return i;
 }
+
+/*
+sets any number of bitfield positions all to true or false
+am i stupid? is there a better way to do this?
+*/
+integer enInteger_SetBits(
+    integer bitfield,
+    integer positions,
+    integer value
+)
+{
+    if (value) return bitfield | positions;
+    return bitfield & ~positions;
+}
