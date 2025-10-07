@@ -93,7 +93,8 @@ list enList_Reverse(
     return llList2List(l, (l != []) >> 1, -1);
 }
 
-list enList_Collate(
+// previously enList_Collate
+list enList_Interleave(
     list a,
     list b
     )
