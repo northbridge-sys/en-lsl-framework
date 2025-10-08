@@ -44,8 +44,12 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ))
 
 // good enough!
-#define enInteger_GetSign(i) \
-    (!!(i & INTEGER_NEGATIVE) * 2 - 1)
+#define enInteger_IsPositiveOrZero(i) \
+    !(i & INTEGER_NEGATIVE)
+#define enInteger_IsNegative(i) \
+    (i & INTEGER_NEGATIVE)
+#define enInteger_GetSignZeroPositive(i) \
+    (enInteger_IsPositiveOrZero(i) * 2 - 1)
 
 #define enInteger_InvertNegative(i) \
     (i ^ INTEGER_NEGATIVE)
