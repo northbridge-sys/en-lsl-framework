@@ -43,7 +43,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enInteger_Rand() \
     (integer)( "0x" + llGetSubString( llGenerateKey(), 0, 7 ))
 
-// WARNING: THIS IS LAZY AND BAD, DON'T USE
+// good enough!
 #define enInteger_GetSign(i) \
     (!!(i & INTEGER_NEGATIVE) * 2 - 1)
 
