@@ -173,3 +173,43 @@ string enString_JsonAttempt(
     if (new_val != JSON_INVALID) return new_val;
     return val;
 }
+
+/*
+parses a string as a command by splitting elements by spaces, except between un-escaped " chars
+
+TODO: this doesn't handle spaces yet! only start/end quotes! don't use this until this message is removed, it doesn't work!
+*/
+list enString_ParseCommand(
+    string line
+)
+{
+    list out;
+    string element;
+    integer quoted;
+    do
+    {
+        integer quote = llSubStringIndex(line, "\"");
+        if (quote == -1)
+        { // no quotes remaining in line
+            element += line; // append remainder of line to existing element
+            return out + [element]; // return out + final element
+        }
+        if (llGetSubString(line, quote - 1, quote - 1) == "\\" && quote)
+        { // this quotation mark is preceded by a backslash, so it's part of the current element
+            line = llDeleteSubString(line, quote - 1, quote - 1); // delete escape backslash
+            element += llGetSubString(line, 0, quote - 1); // append to element from line from 0 through quote (less backslash)
+            line = llDeleteSubString(line, 0, quote - 1); // delete from line from 0 through quote (less backslash)
+        }
+        else
+        { // opening or closing a quoted element
+            if (quote > 0) element += llGetSubString(line, 0, quote - 1); // append section of line from start to just before quote to element, if we quoted anything
+            out += [element]; // purge element prior to quote (if not already quoted) or quoted element (if already quoted)
+            element = "";
+            line = llDeleteSubString(line, 0, quote); // delete from line from 0 through quote
+            quoted = !quoted;
+        }
+    } while (TRUE);
+
+    // should not be possible to get here
+    return [];
+}
