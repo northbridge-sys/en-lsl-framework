@@ -464,7 +464,9 @@ enCLEP_DialogListen()
 {
     enCLEP_UnListenDomains();
     if (_ENCLEP_DIALOG_LSN) llListenRemove(_ENCLEP_DIALOG_LSN);
-    _ENCLEP_DIALOG_LSN = llListen(enCLEP_DialogChannel(), "", "", "");
+    integer channel = enCLEP_DialogChannel();
+    _ENCLEP_DIALOG_LSN = llListen(channel, "", "", "");
+    enLog_Trace("Dialog listening on channel " + (string)channel + " handle " + (string)_ENCLEP_DIALOG_LSN);
     enCLEP_ListenDomains();
 }
 
