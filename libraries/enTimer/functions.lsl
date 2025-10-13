@@ -49,20 +49,39 @@ string enTimer_Start(
     if ( interval < ENTIMER_MINIMUM_INTERVAL ) interval = ENTIMER_MINIMUM_INTERVAL; // clamp to minimum interval
     string id = llGenerateKey();
     #if defined ENTIMER_DISABLE_MULTIPLE
-        _ENTIMER_QUEUE = [ // multiple timers not enabled, so set queue
+        // multiple timers not enabled, so just overwrite queue
+        _ENTIMER_QUEUE = [
             id,
             callback,
             (integer)( interval * 1000 ) * (flags & ENTIMER_PERIODIC)
         ];
-        llSetTimerEvent( interval ); // then start single timer
+
+        // start single timer
+        llSetTimerEvent( interval );
     #else
-        _ENTIMER_QUEUE += [ // multiple timers enabled, so add to queue
+        // multiple timers enabled, so we need to do a little more
+
+        // check if the callback already exists in the queue
+        integer existing_index = llListFindList(llList2ListSlice(_ENTIMER_QUEUE, 0, -1, _ENTIMER_QUEUE_STRIDE, 1), [callback]);
+        if (existing_index != -1)
+        { // this callback already exists, so delete in preparating for re-adding the timer
+            // grab existing id
+            id = llList2String(_ENTIMER_QUEUE, existing_index * _ENTIMER_QUEUE_STRIDE);
+
+            // delete existing timer
+            _ENTIMER_QUEUE = llDeleteSubList(_ENTIMER_QUEUE, existing_index * _ENTIMER_QUEUE_STRIDE, (existing_index + 1) * _ENTIMER_QUEUE_STRIDE - 1);
+        }
+
+        // add to queue
+        _ENTIMER_QUEUE += [
             id,
             callback,
             (integer)( interval * 1000 ) * (flags & ENTIMER_PERIODIC),
             enDate_MSAdd( enDate_MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
-        enTimer_Check(); // then reprocess queue
+
+        // reprocess queue
+        enTimer_Check();
     #endif
     return id;
 }
