@@ -6,14 +6,35 @@ Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
 */
 
-string enInteger_ElemBitfield(integer var)
+string enInteger_ElemBitfield(
+    integer var
+)
 {
     list flags;
     integer bit;
     // TODO: support for non-32-bit bitfields?
     for (bit = 0; bit < 32; bit++)
     {
-        if (var & (0x1 << bit)) flags += ["0x" + enInteger_ToHex(var & (0x1 << bit), 1) + " (" + (string)(var & (0x1 << bit)) + ")"];
+        integer flag = var & (0x1 << bit);
+        if (flag) flags += ["0x" + enInteger_ToHex(flag, 1)];
+    }
+    return "{" + llList2CSV(flags) + "}";
+}
+
+string enInteger_ElemBitfieldLabeled(
+    integer var,
+    list labels // labels for 0x1, 0x2, 0x4, 0x8, 0x10, 0x20...
+)
+{
+    list flags;
+    integer bit;
+    // TODO: support for non-32-bit bitfields?
+
+    // start at 0x1, shift left from 0 to 31 times to check each bit through 0x80000000
+    for (bit = 0; bit < 32; bit++)
+    {
+        integer flag = var & (0x1 << bit);
+        if (flag) flags += [llList2String(labels, bit) + " (0x" + enInteger_ToHex(flag, 1) + ")"];
     }
     return "{" + llList2CSV(flags) + "}";
 }
