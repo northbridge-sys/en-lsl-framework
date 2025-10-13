@@ -34,7 +34,7 @@ string enTimer_Start(
     float interval,
     integer flags,
     string callback
-    )
+)
 {
     #if defined ENTIMER_TRACE
         enLog_TraceParams("enTimer_Start", [ "interval", "flags", "callback" ], [
@@ -151,10 +151,11 @@ enTimer_Check()
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
     #if defined ENTIMER_DISABLE_MULTIPLE
         entimer_timer(
-            llList2String( _ENTIMER_QUEUE, 0 ),
-            llList2String( _ENTIMER_QUEUE, 1 )
+            llList2String( _ENTIMER_QUEUE, 0 ), // id
+            llList2String( _ENTIMER_QUEUE, 1 ), // callback
+            ((integer)llList2String( _ENTIMER_QUEUE, 2 ) * (integer)llList2String( _ENTIMER_QUEUE, 3 )) * 0.001 // length * periodic
         );
-        if ( (integer)llList2String( _ENTIMER_QUEUE, 3 ) ) llSetTimerEvent( (integer)llList2String( _ENTIMER_QUEUE, 3 ) * 0.001 ); // periodic
+        if ( (integer)llList2String( _ENTIMER_QUEUE, 3 ) ) llSetTimerEvent( (integer)llList2String( _ENTIMER_QUEUE, 2 ) * 0.001 ); // periodic
         else _ENTIMER_QUEUE = []; // one-shot
     #else
         integer now = enDate_MSNow();
@@ -181,7 +182,7 @@ enTimer_Check()
                 {
                     #if defined ENTIMER_TIMER
                         enLog_Trace("enTimer \"" + t_id + "\": " + t_callback);
-                        triggers += [t_id, t_callback];
+                        triggers += [t_id, t_callback, t_length, t_trigger];
                     #endif
                 }
             }
@@ -203,8 +204,9 @@ enTimer_Check()
         {
             entimer_timer( // fire function
                 llList2String(triggers, i * 2), // timer id
-                llList2String(triggers, i * 2 + 1) // callback
-                );
+                llList2String(triggers, i * 2 + 1), // callback
+                ((integer)llList2String(triggers, i * 2 + 2) * (integer)llList2String(triggers, i * 2 + 3)) * 0.001 // length * periodic
+            );
         }
     #endif
 }
