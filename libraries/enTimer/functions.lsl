@@ -190,7 +190,9 @@ enTimer_Check()
         if ( lowest != 0x7FFFFFFF )
         { // a timer is still in the queue
             llSetTimerEvent( lowest * 0.001 );
-            enLog_Trace("enTimer llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
+            #if defined ENTIMER_TRACE
+                enLog_Trace("enTimer llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
+            #endif
         }
         /*
         entimer_timer calls need to be made AFTER the next timer is scheduled, because otherwise there is an ordering problem
@@ -220,9 +222,15 @@ since the timer will be reset when calling enTimer_SetPreempt(1)
     )
     {
         #if defined ENTIMER_TRACE
-            enLog_TraceParams("enTimer_SetPreempt", [ "i" ], [
-                i
-                ]);
+            enLog_TraceParams(
+                "enTimer_SetPreempt",
+                [
+                    "i"
+                ],
+                [
+                    i
+                ]
+            );
         #endif
         _ENTIMER_PREEMPT = !!i;
         enTimer_Check(); // check immediately in case no longer preempting - cheaper memory-wise to call and let it return early
