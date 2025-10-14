@@ -181,7 +181,6 @@ enTimer_Check()
                 if (!enTimer_InternalLoopback(t_callback))
                 {
                     #if defined ENTIMER_TIMER
-                        enLog_Trace("enTimer \"" + t_id + "\": " + t_callback);
                         triggers += [t_id, t_callback, t_length, t_trigger];
                     #endif
                 }
@@ -199,13 +198,13 @@ enTimer_Check()
         but if this function then sets the timer to the OLD timer, it causes the old lowest timer to be used instead of the new one
         moving these triggers out to be enumerated separately solves this problem - calls to enTimer_Start will correctly reschedule the timer
         */
-        l = llGetListLength(triggers) / 2;
+        l = llGetListLength(triggers) / 4;
         for (i = 0; i < l; i++)
         {
             entimer_timer( // fire function
-                llList2String(triggers, i * 2), // timer id
-                llList2String(triggers, i * 2 + 1), // callback
-                ((integer)llList2String(triggers, i * 2 + 2) * (integer)llList2String(triggers, i * 2 + 3)) * 0.001 // length * periodic
+                llList2String(triggers, i * 4), // timer id
+                llList2String(triggers, i * 4 + 1), // callback
+                ((integer)llList2String(triggers, i * 4 + 2) * (integer)llList2String(triggers, i * 4 + 3)) * 0.001 // length * periodic
             );
         }
     #endif
