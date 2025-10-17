@@ -66,7 +66,7 @@ enCLEP channels are always negative, so we just set the 0x80000000 bit to force 
 This also avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL (0x7FFFFFFF -> 0xFFFFFFFF) automatically.
 */
 #define enCLEP_Channel(service, domain) \
-    (llHash(service + domain) | INTEGER_NEGATIVE)
+    (llHash((service) + (domain)) | INTEGER_NEGATIVE)
 
 #define enCLEP_Reserved() \
     (!!_ENCLEP_DIALOG_LSN + ENCLEP_RESERVE_LISTENS)
