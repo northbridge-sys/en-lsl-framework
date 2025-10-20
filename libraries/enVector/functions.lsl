@@ -46,6 +46,56 @@ vector enVector_FromString(
     return <(float)llList2String(l, 0), (float)llList2String(l, 1), (float)llList2String(l, 2)>;
 }
 
+/*
+attempts to convert the following ways of describing colors into a <0.0-1.0, 0.0-1.0, 0.0-1.0> LSL RGB vector:
+<0-255, 0-255, 0-255>
+(0-255, 0-255, 0-255)
+rgb(0-255, 0-255, 0-255)
+rgba(0-255, 0-255, 0-255, 0.0-1.0)      * NOTE: the alpha channel is ignored; see enFloat_AlphaFromRGBA
+any of the above vectors, without spaces and/or any punctuation other than commas
+any of the above vectors in 0.0-1.0 scale instead of 0-255 (detected automatically)
+#000 - #fff
+#000000 - #ffffff
+any of the above hex codes, without #
+*/
+vector enVector_FromColor(
+    string c
+)
+{
+    // strip out all spaces
+    c = llReplaceSubString(c, " ", "", 0);
+
+    // if the first or last chars are < or >, respectively, trim them off in preparation for a vector
+    // if the first or last chars are ( or ), respectively, trim them off in preparation for an rgb format
+    // if the first char is #, trim it off in preparation for a hex code
+    if (llListFindList(["<", "(", "#"], [llGetSubString(c, 0, 0)]) != -1) c = llDeleteSubString(c, 0, 0);
+    if (llListFindList([">", ")"], [llGetSubString(c, -1, -1)]) != -1) c = llDeleteSubString(c, -1, -1);
+
+    // if the first 4 chars are "rgb(", trim them off in preparation for an rgb format
+    if (llToLower(llGetSubString(c, 0, 3)) == "rgb(") c = llDeleteSubString(c, 0, 3);
+
+    // parse into a vector
+    list v = llParseStringKeepNulls(c, [","], []);
+    integer l = llGetListLength(v);
+    if (l == 3 || l == 4)
+    { // we have a vector, with a possible alpha value (ignored for this function)
+        float r = (float)llList2String(v, 0);
+        float g = (float)llList2String(v, 1);
+        float b = (float)llList2String(v, 2);
+        if (r > 1.0 || g > 1.0 || b > 1.0) // 0-255 scale
+            return <r * 0.00390625, g * 0.00390625, b * 0.00390625>;
+        return <r, g, b>; // 0.0-1.0 scale
+    }
+
+    if (llStringLength(c) == 3) // presume a 3-nybble hex color code
+        return <(integer)("0x" + llGetSubString(c, 0, 0)) * 0.0666667, (integer)("0x" + llGetSubString(c, 1, 1)) * 0.0666667, (integer)("0x" + llGetSubString(c, 2, 2)) * 0.0666667>;
+
+    if (llStringLength(c) == 6) // presume a 6-nybble hex color code
+        return <(integer)("0x" + llGetSubString(c, 0, 1)) * 0.00390625, (integer)("0x" + llGetSubString(c, 2, 3)) * 0.00390625, (integer)("0x" + llGetSubString(c, 4, 5)) * 0.00390625>;
+    
+    return ZERO_VECTOR;
+}
+
 //  converts a vector to a Base64 string, can be converted back with enVector_Decompress
 string enVector_Compress(
     vector v
