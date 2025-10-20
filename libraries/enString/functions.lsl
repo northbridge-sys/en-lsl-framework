@@ -67,7 +67,7 @@ string enString_Generate(
 	integer l_target // number of characters to generate
 )
 {
-    if (!l_target) return pattern;
+    if (pattern == "" || !l_target) return pattern;
 
     integer i;
     for (i = llStringLength(pattern); i < l_target; i *= 2)
