@@ -64,13 +64,13 @@ string enString_PadZeroes(
 
 string enString_Generate(
 	string pattern, // pattern to use - typically " "
-	integer l_target // number of digits to generate
+	integer l_target // number of characters to generate
 )
 {
     if (!l_target) return pattern;
 
     integer i;
-    for (i = 1; i < l_target; i *= 2)
+    for (i = llStringLength(pattern); i < l_target; i *= 2)
         pattern += pattern;
     return llGetSubString(pattern, 0, l_target - 1);
 }
