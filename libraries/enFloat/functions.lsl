@@ -119,3 +119,27 @@ float enFloat_RandRange(
 {
     return min + llFrand( max - min );
 }
+
+/*
+attempts to parse out the alpha value from an rgba(0-255, 0-255, 0-255, 0.0-1.0)
+if the rgba(R, G, B, A) format is not detected, returns -1.0
+see enVector_FromColor to get the RGB values
+*/
+float enFloat_AlphaFromRGBA(
+    string c
+)
+{
+    // strip out all spaces
+    c = llReplaceSubString(c, " ", "", 0);
+    
+    // check for and strip rgba()
+    if (llToLower(llGetSubString(c, 0, 4)) != "rgba(" || llGetSubString(c, -1, -1) != ")") return -1.0; // not rgba, return now
+    c = llGetSubString(c, 4, -2);
+
+    // parse values
+    list v = llParseStringKeepNulls(c, [","], []);
+    integer l = llGetListLength(v);
+    if (l != 4) return -1.0; // no alpha value
+
+    return (float)llList2String(v, 3);
+}
