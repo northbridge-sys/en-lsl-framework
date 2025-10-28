@@ -27,6 +27,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define ENOBJECT_PROFILE_PHANTOM 0x2
 #define ENOBJECT_PROFILE_TEMP_ON_REZ 0x4
 #define ENOBJECT_PROFILE_TEMP_ATTACHED 0x8
+
 #define ENOBJECT_TEXT_SUCCESS 0x10
 #define ENOBJECT_TEXT_BUSY 0x20
 #define ENOBJECT_TEXT_PROMPT 0x40
@@ -34,6 +35,9 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define ENOBJECT_TEXT_TEMP 0x100
 #define ENOBJECT_TEXT_PROGRESS_NC 0x200
 #define ENOBJECT_TEXT_PROGRESS_THROB 0x400
+
+#define ENOBJECT_VM_LSO -1
+#define ENOBJECT_VM_MONO 1
 
 #ifndef ENOBJECT_LIMIT_SELF
     // number of own object UUIDs to store, retrievable via enObject_Self

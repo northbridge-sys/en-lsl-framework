@@ -290,3 +290,12 @@ enObject_AlwaysPhantom()
     else if (llGetLinkNumber()) enLog_Debug("ENOBJECT_ALWAYS_PHANTOM cannot be used in root prim of linkset");
     else llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHANTOM, TRUE]);
 }
+
+/*
+detects the VM
+courtesy of Pedro Oval via the LSL Portal
+*/
+enObject_VM()
+{
+    return ("" != "x");
+}
