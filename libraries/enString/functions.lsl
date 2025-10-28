@@ -226,3 +226,62 @@ list enString_ParseCommand(
     // should not be possible to get here
     return [];
 }
+
+/*
+returns bytes used by a string in memory
+this automatically uses UTF-16 for Mono and UTF-8 for all other scripts
+if you know which you're using or need to know the string's size as encoded
+in a specific encoding, call enString_UTF*Bytes directly to save memory
+*/
+integer enString_Bytes(
+    string s
+)
+{
+    if (enObject_VM() == ENOBJECT_VM_MONO) return enString_UTF16Bytes(); // mono uses UTF-16 strings
+    return enString_UTF8Bytes(); // LSO/Lua uses UTF-8 strings (faster to measure)
+}
+
+/*
+measures bytes used by a string in UTF-8 bytes
+WARNING: this is VERY SLOW! consider just doing llStringLength(s) * 2 and assuming no characters are above 0xFFFF
+*/
+integer enString_UTF16Bytes(
+    string s
+)
+{
+    integer b;
+    // iterate through each character in the string and figure out how many bytes it would be in UTF-16
+    // if any bits above 0xFFFF are true, we are outside the UTF-16 2-byte range, so 4 bytes
+    integer l = llStringLength(s);
+    for (i = 0; i < l; i++)
+        b += 2 + 2 * !!(llOrd(s, i) & 0xFFFF0000);
+    return b;
+}
+
+/*
+sends llOwnerSay, splitting it up into multiple lines for messages over 1024 bytes
+WARNING: this is VERY SLOW! it should only be used for reading very large strings while debugging
+note that this uses UTF-16 assuming you are using the mono VM!
+if you're using LSO/Luau, it should still work, except for code points U+8000 to U+FFFF, which are 3 bytes each in UTF-8
+i'll worry about it once Luau actually supports includes
+*/
+enString_SlownerSay(
+    string s
+)
+{
+    integer b; // bytes in "buffer"
+    integer x; // buffer start index
+    integer i; // current index
+    integer l = llStringLength(s);
+    for (i = 0; i < l; i++)
+    {
+        b += 2 + 2 * !!(llOrd(s, i) & 0xFFFF0000);
+        if (b > 1020)
+        { // flush buffer
+            llOwnerSay(llGetSubString(s, x, i));
+            x = i + 1;
+            b = 0;
+        }
+    }
+    if (x != i) llOwnerSay(llGetSubString(s, x, -1));
+}

@@ -36,5 +36,5 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enString_Elem(s) \
     "\"" + s + "\""
 
-#define enString_Bytes(s) \
+#define enString_UTF8Bytes(s) \
     ((llStringLength((string)llParseString2List(llStringToBase64(s), ["="], [])) * 3) >> 2)
