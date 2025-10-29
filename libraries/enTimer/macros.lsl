@@ -25,15 +25,15 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define ENTIMER_ONESHOT 0x0
 #define ENTIMER_PERIODIC 0x1
 
-#ifndef ENTIMER_MINIMUM_INTERVAL
-    #define ENTIMER_MINIMUM_INTERVAL 0.1
+#ifndef OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL
+    #define OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL 0.1
 #endif
 
 #if defined EN_TRACE_LIBRARIES
     #define ENTIMER_TRACE
 #endif
 
-#if defined ENTIMER_DISABLE_MULTIPLE
+#if defined FEATURE_ENTIMER_DISABLE_MULTIPLE
     list _ENTIMER_QUEUE; // id, callback, length
     #define _ENTIMER_QUEUE_STRIDE 3
 #else

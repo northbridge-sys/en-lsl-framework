@@ -36,18 +36,18 @@
 		}
 */
 
-#if defined EN_LISTEN || defined ENCLEP_ENABLE
+#if defined EN_LISTEN || defined FEATURE_ENCLEP_ENABLE
 	listen( integer channel, string name, key id, string message )
 	{
 #endif
 
         // log event if requested
-        #if defined EN_LISTEN_TRACE && (defined EN_LISTEN || defined ENCLEP_ENABLE)
+        #if defined EN_LISTEN_TRACE && (defined EN_LISTEN || defined FEATURE_ENCLEP_ENABLE)
             enLog_TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, enString_Elem( name ), enObject_Elem( id ), enString_Elem( message ) ] );
         #endif
 
-        #if defined ENCLEP_ENABLE
-		    if ( !enCLEP_Process( channel, name, id, message ) ) return; // valid enCLEP message
+        #if defined FEATURE_ENCLEP_ENABLE
+		    if ( !_enclep_listen( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
         // pass to user-defined function if requested
@@ -55,6 +55,6 @@
 			en_listen( channel, name, id, message );
 		#endif
 
-#if defined EN_LISTEN || defined ENCLEP_ENABLE
+#if defined EN_LISTEN || defined FEATURE_ENCLEP_ENABLE
 	}
 #endif

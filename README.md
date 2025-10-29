@@ -158,7 +158,7 @@ If this ever changes, we hope to port En to Lua to take advantage of the signifi
 
 ### Why redirect events? Don't the additional function definitions increase script memory?
 
-En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
+En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `FEATURE_ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
 
 Since there is no way for the LSL preprocessor to easily inject this code into a user-written `listen` event handler, En manages the event handler itself.
 

@@ -54,13 +54,13 @@
         #endif
 
 		// update _ENOBJECT_UUIDS_SELF
-        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+        #if defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
             enObject_UpdateUUIDs();
         #endif
 
         // update enCLEP channels if any are just the UUID
-        #if defined ENCLEP_ENABLE
-            enCLEP_RefreshLinkset();
+        #if defined FEATURE_ENCLEP_ENABLE
+            _enCLEP_RefreshLinkset();
         #endif
 
         // update enLSD names if any use the UUID header

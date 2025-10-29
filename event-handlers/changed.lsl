@@ -36,7 +36,7 @@
 		}
 */
 
-#if defined EN_CHANGED || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+#if defined EN_CHANGED || defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
 	changed( integer change )
 	{
 #endif
@@ -46,24 +46,24 @@
         #endif
 
         // log event if requested
-        #if defined EN_CHANGED_TRACE && (defined EN_CHANGED || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM)
+        #if defined EN_CHANGED_TRACE && (defined EN_CHANGED || defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM)
             enLog_TraceParams( "changed", [ "change" ], [ enInteger_ElemBitfield( change ) ] );
         #endif
 
-        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+        #if defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
             if ( change & CHANGED_LINK )
             {
         #endif
         
-                #if defined ENCLEP_ENABLE
-                    enCLEP_RefreshLinkset();
+                #if defined FEATURE_ENCLEP_ENABLE
+                    _enCLEP_RefreshLinkset();
                 #endif
 
                 #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
                     enLSD_CheckUUID();
                 #endif
 
-                #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+                #if defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
                     enObject_UpdateUUIDs();
                 #endif
 
@@ -75,7 +75,7 @@
                     enObject_AlwaysPhantom();
                 #endif
 
-        #if defined ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+        #if defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
             }
         #endif
 
@@ -91,6 +91,6 @@
 			en_changed( change );
 		#endif
 
-#if defined EN_CHANGED || defined ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+#if defined EN_CHANGED || defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
 	}
 #endif

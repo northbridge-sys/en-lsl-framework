@@ -36,7 +36,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 #define enLSD_Head() \
-    enLSD_BuildHead(llGetScriptName(), llGetKey())
+    _enLSD_BuildHead(llGetScriptName(), llGetKey())
 
 #define enLSD_GetHeadCount() \
     (llGetListLength(llParseStringKeepNulls(enLSD_Head(), ["\n"], [])) - 1)

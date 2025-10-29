@@ -46,9 +46,9 @@ string enTimer_Start(
 
     // check inputs
     if ( interval < 0.01 ) return NULL_KEY; // invalid interval
-    if ( interval < ENTIMER_MINIMUM_INTERVAL ) interval = ENTIMER_MINIMUM_INTERVAL; // clamp to minimum interval
+    if ( interval < OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL ) interval = OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL; // clamp to minimum interval
     string id = llGenerateKey();
-    #if defined ENTIMER_DISABLE_MULTIPLE
+    #if defined FEATURE_ENTIMER_DISABLE_MULTIPLE
         // multiple timers not enabled, so just overwrite queue
         _ENTIMER_QUEUE = [
             id,
@@ -81,14 +81,14 @@ string enTimer_Start(
         ];
 
         // reprocess queue
-        enTimer_Check();
+        _entimer_timer();
     #endif
     return id;
 }
 
 //  removes an enTimer timer
 integer enTimer_Cancel(
-    string id // required unless ENTIMER_DISABLE_MULTIPLE is set - use enTimer_Find if not known
+    string id // required unless FEATURE_ENTIMER_DISABLE_MULTIPLE is set - use enTimer_Find if not known
     )
 {
     #if defined ENTIMER_TRACE
@@ -96,7 +96,7 @@ integer enTimer_Cancel(
             enString_Elem( id )
             ]);
     #endif
-    #if defined ENTIMER_DISABLE_MULTIPLE
+    #if defined FEATURE_ENTIMER_DISABLE_MULTIPLE
         _ENTIMER_QUEUE = []; // we only have one timer, so cancel it
         llSetTimerEvent( 0.0 );
     #else
@@ -105,7 +105,7 @@ integer enTimer_Cancel(
         if ( i == -1 ) return 0; // not found
         // found, delete it
         _ENTIMER_QUEUE = llDeleteSubList( _ENTIMER_QUEUE, i, i + _ENTIMER_QUEUE_STRIDE - 1 );
-        enTimer_Check(); // then reprocess queue
+        _entimer_timer(); // then reprocess queue
     #endif
     return 1;
 }
@@ -125,31 +125,18 @@ string enTimer_Find(
     return llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE );
 }
 
-//  internal loopback function used for En libraries that use enTimer
-integer enTimer_InternalLoopback(
-    string callback
-)
-{
-    if (callback == "enObject_TextTemp")
-    {
-        enObject_TextTemp();
-        return 1;
-    }
-    return 0;
-}
-
 //  internal function to check enTimer queue to see if any timers are due to be triggered
-enTimer_Check()
+_entimer_timer()
 {
     #if defined ENTIMER_ENABLE_PREEMPTION
         if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
     #endif
     #if defined ENTIMER_TRACE
-        enLog_TraceParams("enTimer_Check", [], []);
+        enLog_TraceParams("_entimer_timer", [], []);
     #endif
     llSetTimerEvent(0.0);
     if ( _ENTIMER_QUEUE == [] ) return; // no timer to check
-    #if defined ENTIMER_DISABLE_MULTIPLE
+    #if defined FEATURE_ENTIMER_DISABLE_MULTIPLE
         entimer_timer(
             llList2String( _ENTIMER_QUEUE, 0 ), // id
             llList2String( _ENTIMER_QUEUE, 1 ), // callback
@@ -170,7 +157,7 @@ enTimer_Check()
             integer t_length = (integer)llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE + 2 );
             integer t_trigger = (integer)llList2String( _ENTIMER_QUEUE, i * _ENTIMER_QUEUE_STRIDE + 3 );
             integer remain = enDate_MSAdd( t_trigger, -now );
-            if ( remain * 0.001 < ENTIMER_MINIMUM_INTERVAL )
+            if ( remain * 0.001 < OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL )
             { // timer triggered
                 if ( !t_length )
                 { // one-shot, so drop it from the queue
@@ -178,7 +165,10 @@ enTimer_Check()
                     i--; l--; // shift for loop to account for lost queue stride
                 }
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
-                if (!enTimer_InternalLoopback(t_callback))
+
+                // internal loopbacks
+                if (t_callback == "enObject_TextTemp") enObject_TextTemp();
+                else
                 {
                     #if defined ENTIMER_TIMER
                         triggers += [t_id, t_callback, t_length, t_trigger];
@@ -233,7 +223,7 @@ since the timer will be reset when calling enTimer_SetPreempt(1)
             );
         #endif
         _ENTIMER_PREEMPT = !!i;
-        enTimer_Check(); // check immediately in case no longer preempting - cheaper memory-wise to call and let it return early
+        _entimer_timer(); // check immediately in case no longer preempting - cheaper memory-wise to call and let it return early
         if (_ENTIMER_PREEMPT) llSetTimerEvent(0.0); // now preempting, so stop timer immediately
     }
 #endif

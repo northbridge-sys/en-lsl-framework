@@ -26,8 +26,8 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define ENCLEP_LISTEN_OWNERONLY 0x1
 #define ENCLEP_LISTEN_REMOVE 0x80000000
 
-#ifndef ENCLEP_RESERVE_LISTENS
-    #define ENCLEP_RESERVE_LISTENS 0
+#ifndef OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS
+    #define OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS 0
 #endif
 
 #ifndef ENCLEP_PTP_SIZE
@@ -46,12 +46,12 @@ integer _ENCLEP_DIALOG_LSN;
 list _ENCLEP_DOMAINS; // service, domain, flags, handle
 #define _ENCLEP_DOMAINS_STRIDE 4
 
-#if defined ENCLEP_ENABLE_PTP
+#if defined FEATURE_ENCLEP_ENABLE_PTP
     list ENCLEP_PTP; // transfer_key, prim ("" for inbound), domain, message_buffer
     #define ENCLEP_PTP_STRIDE 4
 #endif
 
-#if defined ENCLEP_ENABLE && defined ENLEP_MESSAGE
+#if defined FEATURE_ENCLEP_ENABLE && defined ENLEP_MESSAGE
     // enLEP via enCLEP is enabled automatically
     string ENCLEP_SOURCE_PRIM = NULL_KEY;
     string ENCLEP_SOURCE_SERVICE;
@@ -69,7 +69,7 @@ This also avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL (0x7FFFFFF
     (llHash((service) + (domain)) | INTEGER_NEGATIVE)
 
 #define enCLEP_Reserved() \
-    (!!_ENCLEP_DIALOG_LSN + ENCLEP_RESERVE_LISTENS)
+    (!!_ENCLEP_DIALOG_LSN + OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS)
 
 /*
 enCLEP_DialogChannel can be used to get the channel we are listing to if enCLEP_DialogListen was called.

@@ -60,7 +60,7 @@ string enLSD_Read(integer flags, list name)
 {
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-    return llLinksetDataRead(enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
+    return llLinksetDataRead(_enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
 
 list enLSD_Delete(integer flags, list name)
@@ -69,7 +69,7 @@ list enLSD_Delete(integer flags, list name)
     if (flags & ENLSD_ROOT) prim = enObject_Root();
     string regex;
     if (flags & ENLSD_DELETE_CHILDREN) regex = "\n.*";
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
 }
 
 integer enLSD_Exists(integer flags, list name)
@@ -89,7 +89,7 @@ list enLSD_Find(integer flags, list name, integer start, integer count)
     #endif
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
 list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
@@ -104,7 +104,7 @@ list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
     #endif
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
 }
 
 list enLSD_DeleteRegex(integer flags, string regex)
@@ -117,10 +117,10 @@ list enLSD_DeleteRegex(integer flags, string regex)
     #endif
     string prim = (string)llGetKey();
     if (flags & ENLSD_ROOT) prim = enObject_Root();
-	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
 }
 
-string enLSD_BuildHead(
+string _enLSD_BuildHead(
     string script_name,
     string uuid
 )
@@ -185,9 +185,9 @@ enLSD_MoveAllPairs(
 {
     list l;
     #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        string old_head = enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
+        string old_head = _enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
     #else
-        string old_head = enLSD_BuildHead("", k);
+        string old_head = _enLSD_BuildHead("", k);
     #endif
     do
     {

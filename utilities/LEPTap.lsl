@@ -40,7 +40,7 @@ enabled.
 #define ENLEP_MESSAGE
 #define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
-#define ENCLEP_ENABLE
+#define FEATURE_ENCLEP_ENABLE
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
