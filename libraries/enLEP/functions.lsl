@@ -75,7 +75,7 @@ integer enLEP_Process(
     string k
 )
 {
-    #if defined TRACE_ENLEP || defined ENLEP_PROCESS_TRACE
+    #if defined TRACE_ENLEP || defined TRACE_ENLEP_PROCESS
         enLog_TraceParams("enLEP_Process", ["source_link", "flags", "s", "k"], [
             source_link,
             flags,
@@ -86,28 +86,28 @@ integer enLEP_Process(
     list parameters = llParseStringKeepNulls(s, ["\n"], []);
     if (llGetListLength(parameters) < 2) return 0; // not a valid LEP message
     if (source_link == llGetLinkNumber() && llList2String(parameters, 0) == llGetScriptName()) return 1; // discard message loopback even
-    #if defined ENLEP_ALLOWED_SOURCE_SCRIPTS
+    #if defined OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS
         // filter out messages that don't match the allowed source script list
-        if (llListFindList(ENLEP_ALLOWED_SOURCE_SCRIPTS, [llList2String(parameters, 0)]) == -1) return 1; // discard message, not sent from an allowed source script
+        if (llListFindList(OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS, [llList2String(parameters, 0)]) == -1) return 1; // discard message, not sent from an allowed source script
     #endif
     list allowed_targets = ["", llGetScriptName()]; // allow messages targeted to "" (all) and this script only
-    #if defined ENLEP_ALLOWED_TARGET_SCRIPTS
-        allowed_targets += ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro ENLEP_ALLOWED_TARGET_SCRIPTS
+    #if defined OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS
+        allowed_targets += OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS
     #endif
-    #if defined ENLEP_ALLOW_ALL_TARGET_SCRIPTS
+    #if defined FEATURE_ENLEP_ALLOW_ALL_TARGET_SCRIPTS
         allowed_targets += [llList2String(parameters, 1)]; // always match - this is less efficient, but this flag is only used for debugging anyway
     #endif
     if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1)
     {
-        #if defined ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
-            // using substring matching due to ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
+        #if defined FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
+            // using substring matching due to FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
             if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard message, not targeted to us
         #else
             // using exact matching
             return 0; // discard messages, not targeted to us
         #endif
     }
-    #if defined EVENT_ENLEP_MESSAGE && defined EVENT_ENLEP_MESSAGE_TRACE
+    #if defined EVENT_ENLEP_MESSAGE && defined TRACE_ENLEP_MESSAGE
         enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
             source_link,
             enString_Elem(llList2String(parameters, 0)),

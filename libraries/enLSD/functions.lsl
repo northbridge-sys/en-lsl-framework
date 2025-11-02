@@ -209,7 +209,7 @@ enLSD_CheckUUID()
     #if defined TRACE_ENLSD
         enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif
-    #if defined ENLSD_ENABLE_UUID_HEADER
+    #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER
         string k = enObject_Self(1); // get last key
         if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
         enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
@@ -273,8 +273,8 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     if (use_header) v = enLSD_Read(name);
     else v = llLinksetDataRead(name);
     integer u;
-    #if defined ENLSD_ENABLE_UUID_HEADER
-        u = 1; // if ENLSD_ENABLE_UUID_HEADER defined, note in response
+    #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER
+        u = 1; // if FEATURE_ENLSD_ENABLE_UUID_HEADER defined, note in response
     #endif
     enCLEP_SendRaw(domain, prim, "enLSD_Push", enList_ToString([u, use_header, _ENLSD_HEADER, name, v]));
 }

@@ -167,10 +167,10 @@ _entimer_timer()
                 else if ( t_length < lowest ) lowest = t_length; // periodic, and it is currently the next timer to trigger
 
                 // internal loopbacks
-                if (t_callback == "enObject_TextTemp") enObject_TextTemp();
+                if (t_callback == "enObject_TextClear") enObject_TextClear();
                 else
                 {
-                    #if defined ENTIMER_TIMER
+                    #if defined EVENT_ENTIMER_TIMER
                         triggers += [t_id, t_callback, t_length, t_trigger];
                     #endif
                 }

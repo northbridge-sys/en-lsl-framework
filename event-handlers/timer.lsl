@@ -36,18 +36,18 @@
 		}
 */
 
-#if defined EN_TIMER || defined ENTIMER_TIMER
+#if defined EN_TIMER || defined EVENT_ENTIMER_TIMER
 	timer()
 	{
 #endif
 
         // log event if requested
-        #if defined EN_TIMER_TRACE && (defined EN_TIMER || defined ENTIMER_TIMER)
+        #if defined EN_TIMER_TRACE && (defined EN_TIMER || defined EVENT_ENTIMER_TIMER)
             enLog_TraceParams( "timer", [], [] );
         #endif
 
         // forward timers directly to enTimer if enabled
-        #if defined ENTIMER_TIMER
+        #if defined EVENT_ENTIMER_TIMER
             _entimer_timer();
         #endif
 
@@ -56,6 +56,6 @@
 			en_timer();
 		#endif
 
-#if defined EN_TIMER || defined ENTIMER_TIMER
+#if defined EN_TIMER || defined EVENT_ENTIMER_TIMER
 	}
 #endif

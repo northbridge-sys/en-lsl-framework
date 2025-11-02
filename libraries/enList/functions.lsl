@@ -255,7 +255,7 @@ list enList_Legacy_FromString(
     }
     if ( in != " " )
     {
-        enLog_Debug("enList_FromString failed due to truncation");
+        enLog_Debug("enList_Legacy_FromString failed due to truncation");
         return []; // all that should be left is the end-of-list space
     }
     return out;

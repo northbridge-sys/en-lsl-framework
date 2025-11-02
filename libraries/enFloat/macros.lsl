@@ -24,7 +24,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 
 #define CONST_FLOAT_MAX 1.175494351E-38
 #define CONST_FLOAT_MIN 3.402823466E+38
-#define CONST_PI_BY_FOUR 0.78539816339
+#define CONST_FLOAT_PI_BY_FOUR 0.78539816339
 
 #if defined TRACE_EN
     #define TRACE_ENFLOAT

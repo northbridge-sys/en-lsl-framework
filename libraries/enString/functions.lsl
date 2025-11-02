@@ -237,7 +237,7 @@ integer enString_Bytes(
     string s
 )
 {
-    if (enObject_VM() == CONST_ENOBJECT_VM_MONO) return enString_UTF16Bytes(); // mono uses UTF-16 strings
+    if (enObject_VM() == FLAG_ENOBJECT_VM_MONO) return enString_UTF16Bytes(); // mono uses UTF-16 strings
     return enString_UTF8Bytes(); // LSO/Lua uses UTF-8 strings (faster to measure)
 }
 

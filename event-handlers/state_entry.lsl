@@ -54,12 +54,12 @@
         #endif
 
 		// update _ENOBJECT_UUIDS_SELF if needed
-        #if defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+        #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
             enObject_UpdateUUIDs();
         #endif
 
         // check if any En libraries want to intercept this event
-        #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
+        #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
             enLSD_CheckUUID();
         #endif
 

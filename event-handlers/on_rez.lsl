@@ -54,7 +54,7 @@
         #endif
 
 		// update _ENOBJECT_UUIDS_SELF
-        #if defined FEATURE_ENCLEP_ENABLE || defined ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+        #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
             enObject_UpdateUUIDs();
         #endif
 
@@ -64,7 +64,7 @@
         #endif
 
         // update enLSD names if any use the UUID header
-        #if defined ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
+        #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
             enLSD_CheckUUID();
         #endif
 

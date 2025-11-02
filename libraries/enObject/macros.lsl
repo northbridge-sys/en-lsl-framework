@@ -36,8 +36,8 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define FLAG_ENOBJECT_TEXT_PROGRESS_NC 0x200
 #define FLAG_ENOBJECT_TEXT_PROGRESS_THROB 0x400
 
-#define CONST_ENOBJECT_VM_LSO -1
-#define CONST_ENOBJECT_VM_MONO 1
+#define FLAG_ENOBJECT_VM_LSO -1
+#define FLAG_ENOBJECT_VM_MONO 1
 
 #ifndef OVERRIDE_ENOBJECT_LIMIT_SELF
     // number of own object UUIDs to store, retrievable via enObject_Self

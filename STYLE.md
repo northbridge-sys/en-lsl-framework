@@ -25,8 +25,9 @@ Options must be #define-d before #include-ing `libraries.lsl`, which automatical
 
 Additionally, some macros should not be #define-d but may be referenced in scripts:
 
-- **CONST_ENLIBRARYNAME_FLAG_NAME** is a constant that is used by an En library that may not be redefined.
-- **FLAG_ENLIBRARYNAME_FLAG_NAME** is a flag (integer or bitfield) that is used by an En library, such as *FLAG_FLAG_ENCLEP_LISTEN_OWNERONLY* and *FLAG_FLAG_ENTIMER_ONESHOT*.
+- **CONST_TYPE_NAME** is a constant that cannot be redefined, such as *CONST_FLOAT_PI_BY_FOUR* or *CONST_VECTOR_GREEN*.
+- **FLAG_ENLIBRARYNAME_FLAG_NAME** is a flag (integer or bitfield) that is used by an En library, such as *FLAG_ENCLEP_LISTEN_OWNERONLY* and *FLAG_ENTIMER_ONESHOT*.
+- The seven default loglevels: **PRINT**, **FATAL**, **ERROR**, **WARN**, **INFO**, **DEBUG**, and **TRACE**.
 
 ## Global Variables
 

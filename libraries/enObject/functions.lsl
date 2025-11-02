@@ -135,27 +135,27 @@ enObject_Text(
     list lines
 )
 {
-    vector color = CONST_WHITE;
+    vector color = CONST_VECTOR_WHITE;
     string icon = "";
     if (flags & FLAG_ENOBJECT_TEXT_PROMPT)
     {
-        color = CONST_YELLOW;
+        color = CONST_VECTOR_YELLOW;
         icon = "🚩";
     }
     else if (flags & FLAG_ENOBJECT_TEXT_ERROR)
     {
-        color = CONST_RED;
+        color = CONST_VECTOR_RED;
         icon = "❌";
     }
     else if (flags & FLAG_ENOBJECT_TEXT_BUSY)
     {
-        color = CONST_BLUE;
+        color = CONST_VECTOR_BLUE;
         integer ind = (enDate_MSNow() / 83) % 12; // approenmately +1 ind every 1/12th of a second
         icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
     else if (flags & FLAG_ENOBJECT_TEXT_SUCCESS)
     {
-        color = CONST_GREEN;
+        color = CONST_VECTOR_GREEN;
         icon = "✅";
     }
     if (flags & 0x7)
@@ -175,15 +175,15 @@ enObject_Text(
     }
                                                                                            // this is a nbsp
     llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
-    #if defined ENTIMER_TIMER
-        if (flags & FLAG_ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextTemp");
-        else enTimer_Cancel(enTimer_Find("enObject_TextTemp"));
+    #if defined EVENT_ENTIMER_TIMER
+        if (flags & FLAG_ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextClear");
+        else enTimer_Cancel(enTimer_Find("enObject_TextClear"));
     #endif
 }
 
-enObject_TextTemp()
+enObject_TextClear()
 {
-    llSetText("", CONST_BLACK, 0.0);
+    llSetText("", CONST_VECTOR_BLACK, 0.0);
 }
 
 string enObject_GetAttachedString(

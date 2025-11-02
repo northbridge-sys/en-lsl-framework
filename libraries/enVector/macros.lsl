@@ -22,15 +22,15 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define CONST_RED <1.0, 0.25, 0.0>
-#define CONST_ORANGE <1.0, 0.5, 0.0>
-#define CONST_YELLOW <1.0, 0.8, 0.0>
-#define CONST_GREEN <0.5, 1.0, 0.0>
-#define CONST_BLUE <0.2, 0.8, 1.0>
-#define CONST_PURPLE <0.5, 0.0, 1.0>
-#define CONST_PINK <1.0, 0.0, 0.5>
-#define CONST_WHITE <1.0, 1.0, 1.0>
-#define CONST_BLACK <0.0, 0.0, 0.0>
+#define CONST_VECTOR_RED <1.0, 0.25, 0.0>
+#define CONST_VECTOR_ORANGE <1.0, 0.5, 0.0>
+#define CONST_VECTOR_YELLOW <1.0, 0.8, 0.0>
+#define CONST_VECTOR_GREEN <0.5, 1.0, 0.0>
+#define CONST_VECTOR_BLUE <0.2, 0.8, 1.0>
+#define CONST_VECTOR_PURPLE <0.5, 0.0, 1.0>
+#define CONST_VECTOR_PINK <1.0, 0.0, 0.5>
+#define CONST_VECTOR_WHITE <1.0, 1.0, 1.0>
+#define CONST_VECTOR_BLACK <0.0, 0.0, 0.0>
 
 #if defined TRACE_EN
     #define TRACE_ENVECTOR

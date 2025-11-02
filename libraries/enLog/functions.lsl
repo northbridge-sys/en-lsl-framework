@@ -48,7 +48,7 @@ enLog_To(
         if (target == "") llOwnerSay(message); // target to owner
         else llRegionSayTo(target, 0, message); // log to specific user
     }
-    #ifndef ENLOG_DISABLE_LOGTARGET
+    #ifndef FEATURE_ENLOG_DISABLE_LOGTARGET
         string t = enLog_GetLogtarget();
         string prim = llGetSubString( t, 0, 35 );
         if ( enKey_IsPrimInRegion( prim ) )
@@ -132,14 +132,14 @@ enLog_Stop()
 // deletes the script (WARNING: SCRIPT IS IRRETRIEVABLE)
 enLog_Delete()
 {
-    // remove inventory if ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
-    #ifndef ENLOG_ENABLE_DELETE_OWNEDBYCREATOR
-        if ( enInventory_OwnedByCreator( llGetScriptName() ) ) enLog_Error("Script deletion failed because ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is not defined.");
+    // remove inventory if FEATURE_ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef FEATURE_ENLOG_ENABLE_DELETE_OWNEDBYCREATOR
+        if ( enInventory_OwnedByCreator( llGetScriptName() ) ) enLog_Error("Script deletion failed because FEATURE_ENLOG_ENABLE_DELETE_OWNEDBYCREATOR is not defined.");
         else
     #endif
-    // only remove inventory if ENLOG_DISABLE_DELETE is NOT defined
-    #if defined ENLOG_DISABLE_DELETE
-        enLog_Error("Script deletion failed because ENLOG_DISABLE_DELETE is defined.");
+    // only remove inventory if FEATURE_ENLOG_DISABLE_DELETE is NOT defined
+    #if defined FEATURE_ENLOG_DISABLE_DELETE
+        enLog_Error("Script deletion failed because FEATURE_ENLOG_DISABLE_DELETE is defined.");
     #else
         llRemoveInventory(llGetScriptName());
     #endif
@@ -149,14 +149,14 @@ enLog_Delete()
 // deletes the OBJECT (or, if it is attached, detaches it) (WARNING: OBJECT IS IRRETRIEVABLE IF NOT ATTACHED)
 enLog_Die()
 {
-    // delete object if ENLOG_ENABLE_DIE_OWNEDBYCREATOR is defined, OR script is not owned by creator
-    #ifndef ENLOG_ENABLE_DIE_OWNEDBYCREATOR
-        if ( enInventory_OwnedByCreator( llGetScriptName() ) ) enLog_Error("Object delete/detach failed because ENLOG_ENABLE_DIE_OWNEDBYCREATOR is not defined.");
+    // delete object if FEATURE_ENLOG_ENABLE_DIE_OWNEDBYCREATOR is defined, OR script is not owned by creator
+    #ifndef FEATURE_ENLOG_ENABLE_DIE_OWNEDBYCREATOR
+        if ( enInventory_OwnedByCreator( llGetScriptName() ) ) enLog_Error("Object delete/detach failed because FEATURE_ENLOG_ENABLE_DIE_OWNEDBYCREATOR is not defined.");
         else
     #endif
-    // only delete object if ENLOG_DISABLE_DIE is NOT defined
-    #if defined ENLOG_DISABLE_DIE
-        enLog_Error("Object delete/detach failed because ENLOG_DISABLE_DIE is defined.");
+    // only delete object if FEATURE_ENLOG_DISABLE_DIE is NOT defined
+    #if defined FEATURE_ENLOG_DISABLE_DIE
+        enLog_Error("Object delete/detach failed because FEATURE_ENLOG_DISABLE_DIE is defined.");
     #else
         {
             if (llGetAttached()) llDetachFromAvatar();

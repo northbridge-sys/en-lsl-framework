@@ -31,23 +31,23 @@ _enCLEP_MultiSayTo( // llRegionSayTo with llRegionSay for NULL_KEY instead of si
     string message
     )
 {
-#if defined ENCLEP_MULTISAYTO_TRACE
-    enLog_TraceParams("enCLEP_MultiSayTo", ["prim", "channel", "message"], [
-        enString_Elem(prim),
-        channel,
-        enString_Elem(message)
-    ]);
-#endif
-    if (prim == "") prim = NULL_KEY;
-    if (prim == NULL_KEY) llRegionSay(channel, message); // RS if prim is not specified
-    else if (llGetObjectDetails(prim, [OBJECT_PHANTOM]) != []) llRegionSayTo(prim, channel, message); // RST if prim is in region
-#if defined FEATURE_ENCLEP_ENABLE_SHOUT
-    else llShout(channel, message); // shout if prim is not in region and FEATURE_ENCLEP_ENABLE_SHOUT is defined
-#elif defined FEATURE_ENCLEP_ENABLE_SAY
-    else llSay(channel, message); // say if prim is not in region and FEATURE_ENCLEP_ENABLE_SAY is defined
-#elif defined FEATURE_ENCLEP_ENABLE_WHISPER
-    else llWhisper(channel, message); // whisper if prim is not in region and FEATURE_ENCLEP_ENABLE_WHISPER is defined
-#endif
+    #if defined TRACE_ENCLEP_MULTISAYTO
+        enLog_TraceParams("enCLEP_MultiSayTo", ["prim", "channel", "message"], [
+            enString_Elem(prim),
+            channel,
+            enString_Elem(message)
+        ]);
+    #endif
+        if (prim == "") prim = NULL_KEY;
+        if (prim == NULL_KEY) llRegionSay(channel, message); // RS if prim is not specified
+        else if (llGetObjectDetails(prim, [OBJECT_PHANTOM]) != []) llRegionSayTo(prim, channel, message); // RST if prim is in region
+    #if defined FEATURE_ENCLEP_ENABLE_SHOUT
+        else llShout(channel, message); // shout if prim is not in region and FEATURE_ENCLEP_ENABLE_SHOUT is defined
+    #elif defined FEATURE_ENCLEP_ENABLE_SAY
+        else llSay(channel, message); // say if prim is not in region and FEATURE_ENCLEP_ENABLE_SAY is defined
+    #elif defined FEATURE_ENCLEP_ENABLE_WHISPER
+        else llWhisper(channel, message); // whisper if prim is not in region and FEATURE_ENCLEP_ENABLE_WHISPER is defined
+    #endif
 }
 
 /*
@@ -276,7 +276,7 @@ integer _enclep_listen(
 )
 {
     list data = enList_FromString(message);
-    #if defined TRACE_ENCLEP || defined ENCLEP_PROCESS_TRACE
+    #if defined TRACE_ENCLEP || defined TRACE_ENCLEP_PROCESS
         enLog_TraceParams("_enCLEP_listen", ["channel", "name", "id", "message", "(data)"], [
             channel,
             enString_Elem(name),
@@ -339,12 +339,12 @@ integer _enclep_listen(
     // we do a little trick here - this can technically be hacked if you use integers for your service and domain, so don't do that
     integer match_ind = llListFindList(_ENCLEP_DOMAINS, [service, domain]);
     if (match_ind == -1)
-    #if defined ENCLEP_REPORT_INTERFERENCE
+    #if defined FEATURE_ENCLEP_REPORT_INTERFERENCE
         {
             enLog_Debug(llList2String(data, 4) + " interference on channel " + (string)channel + " from service \"" + service + "\" domain \"" + domain + "\": " + llList2String(data, 5));
     #endif
     return 0; // not listening to this service + domain (channel interference)
-    #if defined ENCLEP_REPORT_INTERFERENCE
+    #if defined FEATURE_ENCLEP_REPORT_INTERFERENCE
         } // memory trick :)
     #endif
 

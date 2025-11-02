@@ -94,8 +94,8 @@ integer enInventory_NCOpen(
             enString_Elem(name)
             ]);
     #endif
-    #ifndef ENINVENTORY_ENABLE_NC
-        enLog_Debug("ENINVENTORY_ENABLE_NC not defined.");
+    #ifndef FEATURE_ENINVENTORY_ENABLE_NC
+        enLog_Debug("FEATURE_ENINVENTORY_ENABLE_NC not defined.");
         return;
     #endif
     _ENINVENTORY_NC_N = name;
@@ -119,8 +119,8 @@ enInventory_NCRead(
             i
             ]);
     #endif
-    #ifndef ENINVENTORY_ENABLE_NC
-        enLog_Debug("ENINVENTORY_ENABLE_NC not defined.");
+    #ifndef FEATURE_ENINVENTORY_ENABLE_NC
+        enLog_Debug("FEATURE_ENINVENTORY_ENABLE_NC not defined.");
         return;
     #else
         _ENINVENTORY_NC_L = i;
