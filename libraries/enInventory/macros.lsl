@@ -22,18 +22,18 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define ENINVENTORY_NC_OPENED 0x1
-#define ENINVENTORY_NC_MODIFIED 0x2
+#define FLAG_ENINVENTORY_NC_OPENED 0x1
+#define FLAG_ENINVENTORY_NC_MODIFIED 0x2
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENINVENTORY_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENINVENTORY
 #endif
 
 // buffer for free memory available when using llGetNotecardLineSync vs. llGetNotecardLine
-// if less than ENINVENTORY_NC_MEMORY_BUFFER is available, use llGetNotecardLine
+// if less than OVERRIDE_ENINVENTORY_NC_MEMORY_BUFFER is available, use llGetNotecardLine
 // this allows garbage collection to trigger before the dataserver event is called
-#if !defined ENINVENTORY_NC_MEMORY_BUFFER
-    #define ENINVENTORY_NC_MEMORY_BUFFER 8192
+#if !defined OVERRIDE_ENINVENTORY_NC_MEMORY_BUFFER
+    #define OVERRIDE_ENINVENTORY_NC_MEMORY_BUFFER 8192
 #endif
 
 string _ENINVENTORY_NC_N; // notecard name

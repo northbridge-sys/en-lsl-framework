@@ -63,7 +63,7 @@
             enLSD_CheckUUID();
         #endif
 
-        #if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
+        #if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
             enLSD_CheckScriptName();
         #endif
 

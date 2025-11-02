@@ -87,8 +87,8 @@ en_on_rez( integer param )
 
 En also injects its own trace logging if the following macros are defined:
 
-- `EN_TRACE_LIBRARIES` enables all *library* logging
-- `EN*_TRACE` enables logging for a *specific* library (such as `ENCLEP_TRACE`)
+- `TRACE_EN` enables all *library* logging
+- `EN*_TRACE` enables logging for a *specific* library (such as `TRACE_ENCLEP`)
 - `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
 - `EN_*_TRACE` enables logging for a *specific* event (such as `EN_LINK_MESSAGE_TRACE`)
 
@@ -97,7 +97,7 @@ If you need to define any preprocessor values, make sure you do so *above* `#inc
 Here's an example of a script that does nothing but log En function calls and events used by En:
 
 ```
-#define EN_TRACE_LIBRARIES
+#define TRACE_EN
 #define EN_TRACE_EVENT_HANDLERS
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
@@ -221,7 +221,7 @@ En also implements a structured request-response protocol, standard linkset data
 enLEP_Send(
     LINK_THIS,
     "Target Script Name",
-    ENLEP_TYPE_REQUEST,
+    FLAG_ENLEP_TYPE_REQUEST,
     ["ping"], // parameters passed to target
     "" // data string passed to target
 );
@@ -230,7 +230,7 @@ enLEP_Send(
 and the other script - if compiled with En - will call the `enlep_message` function defined by the script:
 
 ```
-#define ENLEP_MESSAGE
+#define EVENT_ENLEP_MESSAGE
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
@@ -243,12 +243,12 @@ enlep_message(
     string data
 )
 {
-    if (~flags & ENLEP_TYPE_REQUEST) return; // only respond to requests
+    if (~flags & FLAG_ENLEP_TYPE_REQUEST) return; // only respond to requests
     if (llList2String(parameters, 0) != "ping") return; // only respond if first element of params is "ping"
     enLEP_Send( // respond via enLEP
         source_link,
         source_script,
-        ENLEP_TYPE_RESPONSE,
+        FLAG_ENLEP_TYPE_RESPONSE,
         ["ping"],
         data // send data back, just in case
     );

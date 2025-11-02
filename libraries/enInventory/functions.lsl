@@ -46,7 +46,7 @@ integer enInventory_Copy(
     integer param
     )
 {
-    #if defined ENINVENTORY_TRACE
+    #if defined TRACE_ENINVENTORY
         enLog_TraceParams("enInventory_Copy", ["prim", "name", "type", "pin", "run", "param"], [
             enObject_Elem(prim),
             enString_Elem(name),
@@ -89,7 +89,7 @@ integer enInventory_NCOpen(
     string name
     )
 {
-    #if defined ENINVENTORY_TRACE
+    #if defined TRACE_ENINVENTORY
         enLog_TraceParams("enInventory_NCOpen", ["name"], [
             enString_Elem(name)
             ]);
@@ -114,7 +114,7 @@ enInventory_NCRead(
     integer i // line number, starting from 0
     )
 {
-    #if defined ENINVENTORY_TRACE
+    #if defined TRACE_ENINVENTORY
         enLog_TraceParams("enInventory_NCRead", ["i"], [
             i
             ]);
@@ -125,7 +125,7 @@ enInventory_NCRead(
     #else
         _ENINVENTORY_NC_L = i;
         string s = NAK;
-        if (llGetFreeMemory() > ENINVENTORY_NC_MEMORY_BUFFER && _ENINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_ENINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
+        if (llGetFreeMemory() > OVERRIDE_ENINVENTORY_NC_MEMORY_BUFFER && _ENINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_ENINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
         if (s == NAK) _ENINVENTORY_NC_H = llGetNotecardLine(_ENINVENTORY_NC_N, i); // sync read failed, do dataserver read
         else en_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, s);
     #endif

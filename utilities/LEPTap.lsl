@@ -31,13 +31,13 @@ enLog_TraceParams.
 
 Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
 can either set the loglevel to 6 as follows to permanently enable output:
-    #define ENLOG_DEFAULT_LOGLEVEL 6
+    #define OVERRIDE_ENLOG_DEFAULT_LOGLEVEL 6
 or you can set the "loglevel" linkset data pair to the desired loglevel as
 needed, so that inbound messages will only be reported when TRACE logging is
 enabled.
 */
 
-#define ENLEP_MESSAGE
+#define EVENT_ENLEP_MESSAGE
 #define ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 
 #define FEATURE_ENCLEP_ENABLE

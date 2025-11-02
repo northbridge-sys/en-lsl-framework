@@ -22,7 +22,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-if (llList2String(parameters, 0) == "enKVS-remote" && flags & ENLEP_TYPE_REQUEST)
+if (llList2String(parameters, 0) == "enKVS-remote" && flags & FLAG_ENLEP_TYPE_REQUEST)
 {
 	string kvs_op = llList2String(parameters, 1);
 	list kvs_pair = enList_FromString(llList2String(parameters, 2));
@@ -33,7 +33,7 @@ if (llList2String(parameters, 0) == "enKVS-remote" && flags & ENLEP_TYPE_REQUEST
 			enLEP_Send(
 				source_link,
 				source_script,
-				ENLEP_TYPE_RESPONSE | ENLEP_STATUS_ERROR,
+				FLAG_ENLEP_TYPE_RESPONSE | FLAG_ENLEP_STATUS_ERROR,
 				parameters + ["undefined"],
 				data
 			);
@@ -46,7 +46,7 @@ if (llList2String(parameters, 0) == "enKVS-remote" && flags & ENLEP_TYPE_REQUEST
 		enLEP_Send(
 			source_link,
 			source_script,
-			ENLEP_TYPE_RESPONSE,
+			FLAG_ENLEP_TYPE_RESPONSE,
 			parameters,
 			data
 		);
@@ -57,7 +57,7 @@ if (llList2String(parameters, 0) == "enKVS-remote" && flags & ENLEP_TYPE_REQUEST
 		enLEP_Send(
 			source_link,
 			source_script,
-			ENLEP_TYPE_RESPONSE,
+			FLAG_ENLEP_TYPE_RESPONSE,
 			parameters,
 			enKVS_Read(kvs_pair)
 		);
@@ -68,7 +68,7 @@ if (llList2String(parameters, 0) == "enKVS-remote" && flags & ENLEP_TYPE_REQUEST
 		enLEP_Send(
 			source_link,
 			source_script,
-			ENLEP_TYPE_RESPONSE,
+			FLAG_ENLEP_TYPE_RESPONSE,
 			parameters,
 			enList_ToString(_ENKVS_NAMES)
 		);

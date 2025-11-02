@@ -82,7 +82,7 @@ string enString_Pad(
 	string src, // string to start with
 	string pad, // padding string to use to grow src if necessary
 	integer l_target, // number of digits to pad - if POSITIVE, also trims down to this length; if NEGATIVE, only pads to this length, overlength strings will be returned as overlength
-	integer flags // either ENSTRING_PAD_ALIGN_LEFT, ENSTRING_PAD_ALIGN_CENTER, or ENSTRING_PAD_ALIGN_RIGHT (note that CENTER uses a left-aligned trim for memory reasons)
+	integer flags // either FLAG_ENSTRING_PAD_ALIGN_LEFT, FLAG_ENSTRING_PAD_ALIGN_CENTER, or FLAG_ENSTRING_PAD_ALIGN_RIGHT (note that CENTER uses a left-aligned trim for memory reasons)
 )
 {
     // len: positive to pad or trim to l_target, negative to only pad (do not trim if already too long)
@@ -95,7 +95,7 @@ string enString_Pad(
     { // overlength
         if (trim)
         { // we're allowed to trim it back down
-            if (flags & ENSTRING_PAD_ALIGN_LEFT) src = llDeleteSubString(src, 0, -l_diff - 1); // trim from left
+            if (flags & FLAG_ENSTRING_PAD_ALIGN_LEFT) src = llDeleteSubString(src, 0, -l_diff - 1); // trim from left
             else src = llDeleteSubString(src, l_diff, -1); // trim from right
         }
     }
@@ -105,12 +105,12 @@ string enString_Pad(
         integer l_pad;
         for (l_pad = llStringLength(pad); l_pad < l_diff; l_pad *= 2) pad += pad; // duplicate pad until it exceeds diff
         if (l_pad > l_diff) pad = llDeleteSubString(pad, -l_pad + l_diff, -1); // trim the pad back down to diff
-        if (flags & ENSTRING_PAD_ALIGN_CENTER)
+        if (flags & FLAG_ENSTRING_PAD_ALIGN_CENTER)
         { // center align
             if (l_diff == 1) src += llGetSubString(pad, 0, 0);
             else src = llGetSubString(pad, 0, (l_diff / 2) - 1) + src + llGetSubString(pad, 0, (l_diff - (l_diff / 2)) - 1);
         }
-        else if (flags & ENSTRING_PAD_ALIGN_RIGHT) src = pad + src; // right align
+        else if (flags & FLAG_ENSTRING_PAD_ALIGN_RIGHT) src = pad + src; // right align
         else src += pad; // left align
     }
     return src; // return src as-modified
@@ -134,15 +134,15 @@ string enString_MultiByteUnit(
 
 //  multi-purpose string escaping function for regex and JSON
 //  example:
-//      llLinksetDataFindKeys("^" + enString_Escape(ENSTRING_ESCAPE_FILTER_REGEX, needle) + ".*$"")
+//      llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, needle) + ".*$"")
 string enString_Escape(
     integer f, // filter string flag
     string x
     )
 {
     list y;
-    if (f & ENSTRING_ESCAPE_FILTER_REGEX) y = ["\\", "^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]"]; // note that \\ must be the first entry, otherwise previously escaped characters will be double-escaped
-    if (f & ENSTRING_ESCAPE_FILTER_JSON) y = ["\""];
+    if (f & FLAG_ENSTRING_ESCAPE_FILTER_REGEX) y = ["\\", "^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]"]; // note that \\ must be the first entry, otherwise previously escaped characters will be double-escaped
+    if (f & FLAG_ENSTRING_ESCAPE_FILTER_JSON) y = ["\""];
     integer i;
     integer l = llGetListLength(y);
     // run llReplaceSubString on each possible character that needs to be escaped
@@ -237,7 +237,7 @@ integer enString_Bytes(
     string s
 )
 {
-    if (enObject_VM() == ENOBJECT_VM_MONO) return enString_UTF16Bytes(); // mono uses UTF-16 strings
+    if (enObject_VM() == CONST_ENOBJECT_VM_MONO) return enString_UTF16Bytes(); // mono uses UTF-16 strings
     return enString_UTF8Bytes(); // LSO/Lua uses UTF-8 strings (faster to measure)
 }
 

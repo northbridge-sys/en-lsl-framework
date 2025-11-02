@@ -22,16 +22,16 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define ENLSD_ROOT 0x1
-#define ENLSD_PASS 0x2
+#define FLAG_ENLSD_ROOT 0x1
+#define FLAG_ENLSD_PASS 0x2
 
-#define ENLSD_DELETE_CHILDREN 0x80000000
+#define FLAG_ENLSD_DELETE_CHILDREN 0x80000000
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENLSD_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENLSD
 #endif
 
-#if defined ENLSD_ENABLE_SCRIPT_NAME_HEADER
+#if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
     string _ENLSD_SCRIPT_NAME;
 #endif
 

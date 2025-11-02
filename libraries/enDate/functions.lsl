@@ -32,7 +32,7 @@ string enDate_PrettyHMS(
 )
 {
     string xm;
-    if (flags & ENDATE_12_HOUR)
+    if (flags & FLAG_ENDATE_12_HOUR)
     {
         xm = "A";
         integer h = (integer)llList2String(hms, 0);
@@ -44,7 +44,7 @@ string enDate_PrettyHMS(
         }
         hms = llListReplaceList(hms, [(integer)llList2String(hms, 0) - 12], 0, 0);
     }
-    if (flags & ENDATE_PAD_ZEROES)
+    if (flags & FLAG_ENDATE_PAD_ZEROES)
     {
         while (llStringLength(llList2String(hms, 0)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 0)], 0, 0);
         while (llStringLength(llList2String(hms, 1)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 1)], 1, 1);

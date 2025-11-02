@@ -22,15 +22,15 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define ENTIMER_ONESHOT 0x0
-#define ENTIMER_PERIODIC 0x1
+#define FLAG_ENTIMER_ONESHOT 0x0
+#define FLAG_ENTIMER_PERIODIC 0x1
 
 #ifndef OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL
     #define OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL 0.1
 #endif
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENTIMER_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENTIMER
 #endif
 
 #if defined FEATURE_ENTIMER_DISABLE_MULTIPLE
@@ -42,7 +42,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 /*  
-ENTIMER_ENABLE_PREEMPTION is required to enable "preemption" mode, which exposes
+FEATURE_ENTIMER_ENABLE_PREEMPTION is required to enable "preemption" mode, which exposes
 the enTimer_SetPreempt accessor function. If enTimer_SetPreempt(1) is called,
 all future timer events will skip the slow enTimer_Check call and, in
 combination with EN_TIMER, pass the timer event directly to en_timer.
@@ -51,6 +51,6 @@ This is useful for scripts that need to temporarily process high-frequency timer
 events and can tolerate delaying enTimer triggers until enTimer_SetPreempt(0) is
 called.
 */
-#if defined ENTIMER_ENABLE_PREEMPTION
+#if defined FEATURE_ENTIMER_ENABLE_PREEMPTION
     integer _ENTIMER_PREEMPT;
 #endif

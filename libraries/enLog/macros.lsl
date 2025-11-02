@@ -30,12 +30,12 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define DEBUG 5
 #define TRACE 6
 
-#ifndef ENLOG_DEFAULT_LOGLEVEL
-    #define ENLOG_DEFAULT_LOGLEVEL INFO
+#ifndef OVERRIDE_ENLOG_DEFAULT_LOGLEVEL
+    #define OVERRIDE_ENLOG_DEFAULT_LOGLEVEL INFO
 #endif
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENLOG_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENLOG
 #endif
 
 #define enLog_Print(...) enLog_To( 0, __LINE__, "", __VA_ARGS__ )

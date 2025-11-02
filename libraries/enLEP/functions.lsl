@@ -31,7 +31,7 @@ enLEP_Send(
     string data
 )
 {
-    #if defined ENLEP_TRACE
+    #if defined TRACE_ENLEP
         enLog_TraceParams("enLEP_Send", ["target_link", "target_script", "flags", "paramters", "data"], [
             target_link,
             enString_Elem(target_script),
@@ -40,7 +40,7 @@ enLEP_Send(
             enString_Elem(data)
             ]);
     #endif
-    if (!target_link) target_link = ENLEP_LINK_MESSAGE_SCOPE;
+    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
     llMessageLinked(target_link, flags, enLEP_Generate(target_script, parameters), data);
 }
 
@@ -54,7 +54,7 @@ enLEP_SendAs(
     string data
 )
 {
-    #if defined ENLEP_TRACE
+    #if defined TRACE_ENLEP
         enLog_TraceParams("enLEP_SendAs", ["source_script", "target_link", "target_script", "flags", "paramters", "data"], [
             enString_Elem(source_script),
             target_link,
@@ -64,7 +64,7 @@ enLEP_SendAs(
             enString_Elem(data)
             ]);
     #endif
-    if (!target_link) target_link = ENLEP_LINK_MESSAGE_SCOPE;
+    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
     llMessageLinked(target_link, flags, llDumpList2String([source_script, target_script] + parameters, "\n"), data);
 }
 
@@ -75,7 +75,7 @@ integer enLEP_Process(
     string k
 )
 {
-    #if defined ENLEP_TRACE || defined ENLEP_PROCESS_TRACE
+    #if defined TRACE_ENLEP || defined ENLEP_PROCESS_TRACE
         enLog_TraceParams("enLEP_Process", ["source_link", "flags", "s", "k"], [
             source_link,
             flags,
@@ -107,7 +107,7 @@ integer enLEP_Process(
             return 0; // discard messages, not targeted to us
         #endif
     }
-    #if defined ENLEP_MESSAGE && defined ENLEP_MESSAGE_TRACE
+    #if defined EVENT_ENLEP_MESSAGE && defined EVENT_ENLEP_MESSAGE_TRACE
         enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
             source_link,
             enString_Elem(llList2String(parameters, 0)),
@@ -117,7 +117,7 @@ integer enLEP_Process(
             enString_Elem(k)
         ]);
     #endif
-    #if defined ENLEP_MESSAGE
+    #if defined EVENT_ENLEP_MESSAGE
         enlep_message(
             source_link,
             llList2String(parameters, 0),

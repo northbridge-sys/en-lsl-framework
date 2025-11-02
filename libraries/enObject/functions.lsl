@@ -44,7 +44,7 @@ integer enObject_ClosestLinkDesc(
     string desc
 )
 {
-    #if defined ENOBJECT_TRACE
+    #if defined TRACE_ENOBJECT
         enLog_TraceParams("enObject_ClosestLinkDesc", ["desc"], [
             enString_Elem(desc)
             ]);
@@ -71,12 +71,12 @@ integer enObject_ClosestLinkDesc(
 //  finds the linknum of the closest prim in the linkset with the specified name
 integer enObject_ClosestLink(string name)
 {
-    #if defined ENOBJECT_TRACE
+    #if defined TRACE_ENOBJECT
         enLog_TraceParams("enObject_ClosestLink", ["name"], [
             enString_Elem(name)
             ]);
     #endif
-    #if defined ENOBJECT_ENABLE_LINK_CACHE
+    #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
         if (~i) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1);  // != -1; return cached linknum
     #endif
@@ -109,8 +109,8 @@ integer enObject_CacheClosestLink(
     string name
 )
 {
-    #ifndef ENOBJECT_ENABLE_LINK_CACHE
-        enLog_Error("enObject_CacheClosestLink called but ENOBJECT_ENABLE_LINK_CACHE not defined.");
+    #ifndef FEATURE_ENOBJECT_ENABLE_LINK_CACHE
+        enLog_Error("enObject_CacheClosestLink called but FEATURE_ENOBJECT_ENABLE_LINK_CACHE not defined.");
         return 0;
     #else
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
@@ -135,27 +135,27 @@ enObject_Text(
     list lines
 )
 {
-    vector color = WHITE;
+    vector color = CONST_WHITE;
     string icon = "";
-    if (flags & ENOBJECT_TEXT_PROMPT)
+    if (flags & FLAG_ENOBJECT_TEXT_PROMPT)
     {
-        color = YELLOW;
+        color = CONST_YELLOW;
         icon = "🚩";
     }
-    else if (flags & ENOBJECT_TEXT_ERROR)
+    else if (flags & FLAG_ENOBJECT_TEXT_ERROR)
     {
-        color = RED;
+        color = CONST_RED;
         icon = "❌";
     }
-    else if (flags & ENOBJECT_TEXT_BUSY)
+    else if (flags & FLAG_ENOBJECT_TEXT_BUSY)
     {
-        color = BLUE;
+        color = CONST_BLUE;
         integer ind = (enDate_MSNow() / 83) % 12; // approenmately +1 ind every 1/12th of a second
         icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
-    else if (flags & ENOBJECT_TEXT_SUCCESS)
+    else if (flags & FLAG_ENOBJECT_TEXT_SUCCESS)
     {
-        color = GREEN;
+        color = CONST_GREEN;
         icon = "✅";
     }
     if (flags & 0x7)
@@ -163,12 +163,12 @@ enObject_Text(
         icon = llList2String(["", "🛑", "❌", "🚩", "💬", "🪲", "🚦"], flags & 0x7);
     }
     string progress = "▼";
-    if (flags & ENOBJECT_TEXT_PROGRESS_NC)
+    if (flags & FLAG_ENOBJECT_TEXT_PROGRESS_NC)
     {
         integer ind = llRound(((float)_ENINVENTORY_NC_L / _ENINVENTORY_NC_T) * 16);
         if (_ENINVENTORY_NC_T > 0) progress = llGetSubString("████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁", 16 - ind, 31 - ind); // such a lazy hack!! who cares
     }
-    if (flags & ENOBJECT_TEXT_PROGRESS_THROB)
+    if (flags & FLAG_ENOBJECT_TEXT_PROGRESS_THROB)
     {
         integer ind = (enDate_MSNow() / 62) % 16; // approenmately +1 ind every 1/16th of a second
         progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
@@ -176,14 +176,14 @@ enObject_Text(
                                                                                            // this is a nbsp
     llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
     #if defined ENTIMER_TIMER
-        if (flags & ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextTemp");
+        if (flags & FLAG_ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextTemp");
         else enTimer_Cancel(enTimer_Find("enObject_TextTemp"));
     #endif
 }
 
 enObject_TextTemp()
 {
-    llSetText("", BLACK, 0.0);
+    llSetText("", CONST_BLACK, 0.0);
 }
 
 string enObject_GetAttachedString(
@@ -257,24 +257,24 @@ integer enObject_Profile(
 {
     list l = llGetObjectDetails(k, [OBJECT_PHYSICS, OBJECT_PHANTOM, OBJECT_TEMP_ON_REZ, OBJECT_TEMP_ATTACHED]);
     if (l == []) return 0;
-    integer f = ENOBJECT_PROFILE_EXISTS;
-    if ((integer)llList2String(l, 0)) f += ENOBJECT_PROFILE_PHYSICS;
-    if ((integer)llList2String(l, 1)) f += ENOBJECT_PROFILE_PHANTOM;
-    if ((integer)llList2String(l, 2)) f += ENOBJECT_PROFILE_TEMP_ON_REZ;
-    if ((integer)llList2String(l, 3)) f += ENOBJECT_PROFILE_TEMP_ATTACHED;
+    integer f = FLAG_ENOBJECT_PROFILE_EXISTS;
+    if ((integer)llList2String(l, 0)) f += FLAG_ENOBJECT_PROFILE_PHYSICS;
+    if ((integer)llList2String(l, 1)) f += FLAG_ENOBJECT_PROFILE_PHANTOM;
+    if ((integer)llList2String(l, 2)) f += FLAG_ENOBJECT_PROFILE_TEMP_ON_REZ;
+    if ((integer)llList2String(l, 3)) f += FLAG_ENOBJECT_PROFILE_TEMP_ATTACHED;
     return f;
 }
 
 enObject_UpdateUUIDs()
 {
-    #if defined ENOBJECT_TRACE
+    #if defined TRACE_ENOBJECT
         enLog_TraceParams("enObject_UpdateUUIDs", [], []);
     #endif
-	if (ENOBJECT_LIMIT_SELF)
+	if (OVERRIDE_ENOBJECT_LIMIT_SELF)
 	{ // check own UUID
 		if ((string)llGetKey() != llList2String(_ENOBJECT_UUIDS_SELF, 0))
 		{ // key change
-			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, ENOBJECT_LIMIT_SELF - 1);
+			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, OVERRIDE_ENOBJECT_LIMIT_SELF - 1);
 		}
 	}
 }

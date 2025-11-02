@@ -22,16 +22,16 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define ENLEP_TYPE_REQUEST 0x1
-#define ENLEP_TYPE_RESPONSE 0x2
-#define ENLEP_STATUS_ERROR 0x4
+#define FLAG_ENLEP_TYPE_REQUEST 0x1
+#define FLAG_ENLEP_TYPE_RESPONSE 0x2
+#define FLAG_ENLEP_STATUS_ERROR 0x4
 
-#ifndef ENLEP_LINK_MESSAGE_SCOPE
-    #define ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
+#ifndef OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE
+    #define OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENLEP_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENLEP
 #endif
 
 #define enLEP_Generate(target_script, parameters) \

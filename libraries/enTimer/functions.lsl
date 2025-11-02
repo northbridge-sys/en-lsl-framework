@@ -36,7 +36,7 @@ string enTimer_Start(
     string callback
 )
 {
-    #if defined ENTIMER_TRACE
+    #if defined TRACE_ENTIMER
         enLog_TraceParams("enTimer_Start", [ "interval", "flags", "callback" ], [
             interval,
             flags,
@@ -53,7 +53,7 @@ string enTimer_Start(
         _ENTIMER_QUEUE = [
             id,
             callback,
-            (integer)( interval * 1000 ) * (flags & ENTIMER_PERIODIC)
+            (integer)( interval * 1000 ) * (flags & FLAG_ENTIMER_PERIODIC)
         ];
 
         // start single timer
@@ -76,7 +76,7 @@ string enTimer_Start(
         _ENTIMER_QUEUE += [
             id,
             callback,
-            (integer)( interval * 1000 ) * (flags & ENTIMER_PERIODIC),
+            (integer)( interval * 1000 ) * (flags & FLAG_ENTIMER_PERIODIC),
             enDate_MSAdd( enDate_MSNow(), (integer)( interval * 1000 ) ) // convert to ms
         ];
 
@@ -91,7 +91,7 @@ integer enTimer_Cancel(
     string id // required unless FEATURE_ENTIMER_DISABLE_MULTIPLE is set - use enTimer_Find if not known
     )
 {
-    #if defined ENTIMER_TRACE
+    #if defined TRACE_ENTIMER
         enLog_TraceParams("enTimer_Cancel", [ "id" ], [
             enString_Elem( id )
             ]);
@@ -115,7 +115,7 @@ string enTimer_Find(
     string callback
     )
 {
-    #if defined ENTIMER_TRACE
+    #if defined TRACE_ENTIMER
         enLog_TraceParams("enTimer_Find", [ "callback" ], [
             enString_Elem( callback )
             ]);
@@ -128,10 +128,10 @@ string enTimer_Find(
 //  internal function to check enTimer queue to see if any timers are due to be triggered
 _entimer_timer()
 {
-    #if defined ENTIMER_ENABLE_PREEMPTION
+    #if defined FEATURE_ENTIMER_ENABLE_PREEMPTION
         if (_ENTIMER_PREEMPT) return; // check preemption here, return early if preempted
     #endif
-    #if defined ENTIMER_TRACE
+    #if defined TRACE_ENTIMER
         enLog_TraceParams("_entimer_timer", [], []);
     #endif
     llSetTimerEvent(0.0);
@@ -180,7 +180,7 @@ _entimer_timer()
         if ( lowest != 0x7FFFFFFF )
         { // a timer is still in the queue
             llSetTimerEvent( lowest * 0.001 );
-            #if defined ENTIMER_TRACE
+            #if defined TRACE_ENTIMER
                 enLog_Trace("enTimer llSetTimerEvent(" + (string)(lowest * 0.001) + ")");
             #endif
         }
@@ -202,7 +202,7 @@ _entimer_timer()
     #endif
 }
 
-#if defined ENTIMER_ENABLE_PREEMPTION
+#if defined FEATURE_ENTIMER_ENABLE_PREEMPTION
 /* 
 Note that this needs to be set BEFORE setting the timer with llSetTimerEvent,
 since the timer will be reset when calling enTimer_SetPreempt(1)
@@ -211,7 +211,7 @@ since the timer will be reset when calling enTimer_SetPreempt(1)
         integer i
     )
     {
-        #if defined ENTIMER_TRACE
+        #if defined TRACE_ENTIMER
             enLog_TraceParams(
                 "enTimer_SetPreempt",
                 [

@@ -22,22 +22,22 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// NOTE: do not use ENCLEP_LISTEN_OWNERONLY across region borders!
-#define ENCLEP_LISTEN_OWNERONLY 0x1
-#define ENCLEP_LISTEN_REMOVE 0x80000000
+// NOTE: do not use FLAG_ENCLEP_LISTEN_OWNERONLY across region borders!
+#define FLAG_ENCLEP_LISTEN_OWNERONLY 0x1
+#define FLAG_ENCLEP_LISTEN_REMOVE 0x80000000
 
 #ifndef OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS
     #define OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS 0
 #endif
 
-#ifndef ENCLEP_PTP_SIZE
+#ifndef OVERRIDE_ENCLEP_PTP_SIZE
     // note that this value is set to the maximum number of UTF-8 characters that can be sent via llRegionSayTo
     // if you are positive you will ALWAYS have ASCII-7 characters, this can be raised to 1024 for better performance and lower memory usage
-    #define ENCLEP_PTP_SIZE 512
+    #define OVERRIDE_ENCLEP_PTP_SIZE 512
 #endif
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENCLEP_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENCLEP
 #endif
 
 // used by enCLEP_DialogListen()
@@ -47,11 +47,11 @@ list _ENCLEP_DOMAINS; // service, domain, flags, handle
 #define _ENCLEP_DOMAINS_STRIDE 4
 
 #if defined FEATURE_ENCLEP_ENABLE_PTP
-    list ENCLEP_PTP; // transfer_key, prim ("" for inbound), domain, message_buffer
-    #define ENCLEP_PTP_STRIDE 4
+    list _ENCLEP_PTP; // transfer_key, prim ("" for inbound), domain, message_buffer
+    #define _ENCLEP_PTP_STRIDE 4
 #endif
 
-#if defined FEATURE_ENCLEP_ENABLE && defined ENLEP_MESSAGE
+#if defined FEATURE_ENCLEP_ENABLE && defined EVENT_ENLEP_MESSAGE
     // enLEP via enCLEP is enabled automatically
     string ENCLEP_SOURCE_PRIM = NULL_KEY;
     string ENCLEP_SOURCE_SERVICE;
@@ -66,7 +66,7 @@ enCLEP channels are always negative, so we just set the 0x80000000 bit to force 
 This also avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL (0x7FFFFFFF -> 0xFFFFFFFF) automatically.
 */
 #define enCLEP_Channel(service, domain) \
-    (llHash((service) + (domain)) | INTEGER_NEGATIVE)
+    (llHash((service) + (domain)) | CONST_INTEGER_NEGATIVE)
 
 #define enCLEP_Reserved() \
     (!!_ENCLEP_DIALOG_LSN + OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS)

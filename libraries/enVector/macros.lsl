@@ -22,18 +22,18 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define RED <1.0, 0.25, 0.0>
-#define ORANGE <1.0, 0.5, 0.0>
-#define YELLOW <1.0, 0.8, 0.0>
-#define GREEN <0.5, 1.0, 0.0>
-#define BLUE <0.2, 0.8, 1.0>
-#define PURPLE <0.5, 0.0, 1.0>
-#define PINK <1.0, 0.0, 0.5>
-#define WHITE <1.0, 1.0, 1.0>
-#define BLACK <0.0, 0.0, 0.0>
+#define CONST_RED <1.0, 0.25, 0.0>
+#define CONST_ORANGE <1.0, 0.5, 0.0>
+#define CONST_YELLOW <1.0, 0.8, 0.0>
+#define CONST_GREEN <0.5, 1.0, 0.0>
+#define CONST_BLUE <0.2, 0.8, 1.0>
+#define CONST_PURPLE <0.5, 0.0, 1.0>
+#define CONST_PINK <1.0, 0.0, 0.5>
+#define CONST_WHITE <1.0, 1.0, 1.0>
+#define CONST_BLACK <0.0, 0.0, 0.0>
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENVECTOR_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENVECTOR
 #endif
 
 // converts a world-scope position to a region-scope position, as in a position within a region

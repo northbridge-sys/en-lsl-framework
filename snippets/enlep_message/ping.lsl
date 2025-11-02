@@ -22,12 +22,12 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-if (llList2String(params, 0) == "ping" && status & ENLEP_TYPE_REQUEST)
+if (llList2String(params, 0) == "ping" && status & FLAG_ENLEP_TYPE_REQUEST)
 { // return script info
     enLEP_Send(
         source_link,
         source_script,
-        ENLEP_TYPE_RESPONSE,
+        FLAG_ENLEP_TYPE_RESPONSE,
         params,
         "lsl\n" + (string)llGetMemoryLimit() + "\n" + (string)llGetUsedMemory()
     );

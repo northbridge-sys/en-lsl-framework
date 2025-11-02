@@ -22,22 +22,22 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define INTEGER_MAX 0x7FFFFFFF
-#define INTEGER_MIN 0x80000000
-#define INTEGER_NEGATIVE 0x80000000
+#define CONST_INTEGER_MAX 0x7FFFFFFF
+#define CONST_INTEGER_MIN 0x80000000
+#define CONST_INTEGER_NEGATIVE 0x80000000
 
-#ifndef ENINTEGER_CHARSET_16
-    #define ENINTEGER_CHARSET_16 "0123456789abcdef"
+#ifndef OVERRIDE_ENINTEGER_CHARSET_16
+    #define OVERRIDE_ENINTEGER_CHARSET_16 "0123456789abcdef"
 #endif
-#ifndef ENINTEGER_CHARSET_64
-    #define ENINTEGER_CHARSET_64 "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-="
+#ifndef OVERRIDE_ENINTEGER_CHARSET_64
+    #define OVERRIDE_ENINTEGER_CHARSET_64 "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-="
 #endif
-#ifndef ENINTEGER_CHARSET_256
-    #define ENINTEGER_CHARSET_256 ""
+#ifndef OVERRIDE_ENINTEGER_CHARSET_256
+    #define OVERRIDE_ENINTEGER_CHARSET_256 ""
 #endif
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENINTEGER_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENINTEGER
 #endif
 
 #define enInteger_Rand() \
@@ -45,20 +45,20 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 
 // good enough!
 #define enInteger_IsPositiveOrZero(i) \
-    !(i & INTEGER_NEGATIVE)
+    !(i & CONST_INTEGER_NEGATIVE)
 #define enInteger_IsNegative(i) \
-    (i & INTEGER_NEGATIVE)
+    (i & CONST_INTEGER_NEGATIVE)
 #define enInteger_GetSignZeroPositive(i) \
     (enInteger_IsPositiveOrZero(i) * 2 - 1)
 
 #define enInteger_InvertNegative(i) \
-    (i ^ INTEGER_NEGATIVE)
+    (i ^ CONST_INTEGER_NEGATIVE)
 
 // this is not ideal C practice for this implementation due to llAbs
-// randomness at ranges larger than INTEGER_MAX will just have to do it themselves.
+// randomness at ranges larger than CONST_INTEGER_MAX will just have to do it themselves.
 // idk what you would even be doing that for tbh
 #define enInteger_RandRange(n,x) \
-    (n + llAbs(enInteger_Rand()) / (INTEGER_MAX / (x - n + 1) + 1))
+    (n + llAbs(enInteger_Rand()) / (CONST_INTEGER_MAX / (x - n + 1) + 1))
 
 // use enInteger_RandRange unless you absolutely need speed
 // this has really bad randomness on low-order bits

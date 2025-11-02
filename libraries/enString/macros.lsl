@@ -22,15 +22,15 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define ENSTRING_PAD_ALIGN_LEFT 0
-#define ENSTRING_PAD_ALIGN_RIGHT 1
-#define ENSTRING_PAD_ALIGN_CENTER 2
-#define ENSTRING_ESCAPE_FILTER_REGEX 0x1
-#define ENSTRING_ESCAPE_FILTER_JSON 0x2
-#define ENSTRING_ESCAPE_REVERSE 0x40000000
+#define FLAG_ENSTRING_PAD_ALIGN_LEFT 0
+#define FLAG_ENSTRING_PAD_ALIGN_RIGHT 1
+#define FLAG_ENSTRING_PAD_ALIGN_CENTER 2
+#define FLAG_ENSTRING_ESCAPE_FILTER_REGEX 0x1
+#define FLAG_ENSTRING_ESCAPE_FILTER_JSON 0x2
+#define FLAG_ENSTRING_ESCAPE_REVERSE 0x40000000
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENSTRING_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENSTRING
 #endif
 
 #define enString_Elem(s) \

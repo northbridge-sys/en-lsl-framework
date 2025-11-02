@@ -50,7 +50,7 @@ string enInteger_ToHex(
     string hex;
     do
     {
-        hex = llGetSubString( ENINTEGER_CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
+        hex = llGetSubString( OVERRIDE_ENINTEGER_CHARSET_16, lsn = ( i & 0xF ), lsn ) + hex;
         digits--;
     }
     while ( i = ( 0xFFFFFFF & ( i >> 4 ) ) );
@@ -91,9 +91,9 @@ string enInteger_ToString64(
         x = ( (0x7FFFFFFF & int) % 64 ) - ( 0x80000000 % 64 );
         y = x % 64;
         int = ( x / 64 ) + ( ( 0x7FFFFFFF & int ) / 64 ) - ( 0x80000000 / 64 );
-        o = llGetSubString( ENINTEGER_CHARSET_64, y, y );
+        o = llGetSubString( OVERRIDE_ENINTEGER_CHARSET_64, y, y );
     }
-    do o = llGetSubString( ENINTEGER_CHARSET_64, x = int % 64, x ) + o;
+    do o = llGetSubString( OVERRIDE_ENINTEGER_CHARSET_64, x = int % 64, x ) + o;
     while ( int /= 64 );
     while ( llStringLength(o) < length ) o = "0" + o;
     return o;
@@ -106,7 +106,7 @@ integer enInteger_FromString64(
 {
     integer i = -llStringLength(str);
     integer x = 0;
-    while (i) x = (x * 64) + llSubStringIndex(ENINTEGER_CHARSET_64, llGetSubString(str, i, i++));
+    while (i) x = (x * 64) + llSubStringIndex(OVERRIDE_ENINTEGER_CHARSET_64, llGetSubString(str, i, i++));
     return x;
 }
 

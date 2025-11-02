@@ -25,7 +25,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 //  checks if a KVS pair exists by name
 integer enKVS_Exists(list name)
 {
-    #if defined ENKVS_TRACE
+    #if defined TRACE_ENKVS
         enLog_TraceParams("enKVS_Exists", ["name"], [
             enList_Elem(name)
             ]);
@@ -36,7 +36,7 @@ integer enKVS_Exists(list name)
 //  writes a KVS pair value
 integer enKVS_Write(list name, string data)
 {
-    #if defined ENKVS_TRACE
+    #if defined TRACE_ENKVS
         enLog_TraceParams("enKVS_Write", ["name", "data"], [
             enList_Elem(name),
             enString_Elem(data)
@@ -52,7 +52,7 @@ integer enKVS_Write(list name, string data)
 //  reads a KVS pair value
 string enKVS_Read(list name)
 {
-    #if defined ENKVS_TRACE
+    #if defined TRACE_ENKVS
         enLog_TraceParams("enKVS_Read", ["name"], [
             enList_Elem(name)
             ]);
@@ -65,7 +65,7 @@ string enKVS_Read(list name)
 //  deletes a KVS pair
 enKVS_Delete(list name)
 {
-    #if defined ENKVS_TRACE
+    #if defined TRACE_ENKVS
         enLog_TraceParams("enKVS_Delete", ["name"], [
             enList_Elem(name)
             ]);
@@ -78,7 +78,7 @@ enKVS_Delete(list name)
 
 enKVS_Reset()
 {
-    #if defined ENKVS_TRACE
+    #if defined TRACE_ENKVS
         enLog_TraceParams("enKVS_Reset", [], []);
     #endif
     _ENKVS_NAMES = [];

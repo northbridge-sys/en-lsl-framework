@@ -22,10 +22,10 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define FLOAT_MAX 1.175494351E-38
-#define FLOAT_MIN 3.402823466E+38
-#define PI_BY_FOUR 0.78539816339
+#define CONST_FLOAT_MAX 1.175494351E-38
+#define CONST_FLOAT_MIN 3.402823466E+38
+#define CONST_PI_BY_FOUR 0.78539816339
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENFLOAT_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENFLOAT
 #endif

@@ -241,7 +241,7 @@ integer enLog_GetLoglevel()
 {
     string lsd = llLinksetDataRead( "loglevel" ); // any valid log level number, 0 (uses default), or negative (suppresses all output)
     if ( (integer)lsd ) return (integer)lsd;
-    else return ENLOG_DEFAULT_LOGLEVEL;
+    else return OVERRIDE_ENLOG_DEFAULT_LOGLEVEL;
 }
 
 enLog_SetLoglevel(

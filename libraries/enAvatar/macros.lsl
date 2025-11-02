@@ -22,6 +22,6 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EN_TRACE_LIBRARIES
-    #define ENAVATAR_TRACE
+#if defined TRACE_EN
+    #define TRACE_ENAVATAR
 #endif
