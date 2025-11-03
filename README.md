@@ -67,19 +67,19 @@ default
 To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
 
 ```
-#define EN_STATE_ENTRY
-#define EN_ON_REZ
+#define EVENT_EN_STATE_ENTRY
+#define EVENT_EN_ON_REZ
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 en_state_entry()
 {
-    // runs on state_entry if EN_STATE_ENTRY has been defined
+    // runs on state_entry if EVENT_EN_STATE_ENTRY has been defined
 }
 
 en_on_rez( integer param )
 {
-    // runs on on_rez if EN_ON_REZ has been defined
+    // runs on on_rez if EVENT_EN_ON_REZ has been defined
 }
 
 // ...
@@ -90,7 +90,7 @@ En also injects its own trace logging if the following macros are defined:
 - `TRACE_EN` enables all *library* logging
 - `EN*_TRACE` enables logging for a *specific* library (such as `TRACE_ENCLEP`)
 - `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
-- `EN_*_TRACE` enables logging for a *specific* event (such as `EN_LINK_MESSAGE_TRACE`)
+- `EN_*_TRACE` enables logging for a *specific* event (such as `TRACE_EVENT_EN_LINK_MESSAGE`)
 
 If you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-sys/en-lsl-framework/libraries.lsl"`.
 
@@ -158,7 +158,7 @@ If this ever changes, we hope to port En to Lua to take advantage of the signifi
 
 ### Why redirect events? Don't the additional function definitions increase script memory?
 
-En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `FEATURE_ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
+En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `FEATURE_ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EVENT_EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
 
 Since there is no way for the LSL preprocessor to easily inject this code into a user-written `listen` event handler, En manages the event handler itself.
 

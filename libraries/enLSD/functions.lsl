@@ -205,7 +205,7 @@ enLSD_MoveAllPairs(
 
 // updates LSD entries that use old UUID
 enLSD_CheckUUID()
-{ // note: if ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
+{ // note: if FEATURE_ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
     #if defined TRACE_ENLSD
         enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif

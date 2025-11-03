@@ -1,56 +1,54 @@
 /*
-    changed.lsl
-    Event Handler
-    En LSL Framework
-    Copyright (C) 2024  Northbridge Business Systems
-    https://docs.northbridgesys.com/en-lsl-framework
+En LSL Framework
+Copyright (C) 2024-25  Northbridge Business Systems
+https://docs.northbridgesys.com/en-lsl-framework
 
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ LICENSE                                                                      │
-    └──────────────────────────────────────────────────────────────────────────────┘
+This script is free software: you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
 
-    This script is free software: you can redistribute it and/or modify it under the
-    terms of the GNU Lesser General Public License as published by the Free Software
-    Foundation, either version 3 of the License, or (at your option) any later
-    version.
+This script is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
 
-    This script is distributed in the hope that it will be useful, but WITHOUT ANY
-    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-    PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License along
-    with this script.  If not, see <https://www.gnu.org/licenses/>.
-
-    ╒══════════════════════════════════════════════════════════════════════════════╕
-    │ INSTRUCTIONS                                                                 │
-    └──────────────────────────────────────────────────────────────────────────────┘
-
-    This snippet replaces the changed event handler with a version that calls
-    maintenance functions required by En libraries, then optionally executes a user-
-    defined function to handle event calls that are not intercepted by En libraries:
-
-		#define EN_CHANGED
-		en_changed( integer change )
-		{
-            // code to run when event occurs that is not intercepted by En
-		}
+You should have received a copy of the GNU Lesser General Public License along
+with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EN_CHANGED || defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+#if defined EVENT_EN_CHANGED \
+ || defined FEATURE_ENCLEP_ENABLE \
+ || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
+ || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
+ || defined FEATURE_ENOBJECT_ENABLE_SELF \
+ || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
+ || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
 	changed( integer change )
 	{
 #endif
 
-        #if defined EN_CHANGED_DROP
-            if (!(change & ~EN_CHANGED_DROP)) return;
+        #if defined EVENT_EN_CHANGED_DROP
+            if (!(change & ~EVENT_EN_CHANGED_DROP)) return;
         #endif
 
         // log event if requested
-        #if defined EN_CHANGED_TRACE && (defined EN_CHANGED || defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM)
+        #if defined EVENT_EN_CHANGED_TRACE && ( \
+                defined EVENT_EN_CHANGED \
+             || defined FEATURE_ENCLEP_ENABLE \
+             || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
+             || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
+             || defined FEATURE_ENOBJECT_ENABLE_SELF \
+             || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
+             || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM \
+            )
             enLog_TraceParams( "changed", [ "change" ], [ enInteger_ElemBitfield( change ) ] );
         #endif
 
-        #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+        #if defined FEATURE_ENCLEP_ENABLE \
+         || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
+         || defined FEATURE_ENOBJECT_ENABLE_SELF \
+         || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
+         || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
             if ( change & CHANGED_LINK )
             {
         #endif
@@ -59,11 +57,11 @@
                     _enCLEP_RefreshLinkset();
                 #endif
 
-                #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER && !defined ENLSD_DISABLE_UUID_CHECK
+                #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER && !defined FEATURE_ENLSD_DISABLE_UUID_CHECK
                     enLSD_CheckUUID();
                 #endif
 
-                #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF
+                #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined FEATURE_ENOBJECT_ENABLE_SELF
                     enObject_UpdateUUIDs();
                 #endif
 
@@ -71,11 +69,15 @@
                     enObject_LinkCacheUpdate();
                 #endif
 
-                #if defined ENOBJECT_ALWAYS_PHANTOM
+                #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
                     enObject_AlwaysPhantom();
                 #endif
 
-        #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+        #if defined FEATURE_ENCLEP_ENABLE \
+         || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
+         || defined FEATURE_ENOBJECT_ENABLE_SELF \
+         || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
+         || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
             }
         #endif
 
@@ -87,10 +89,16 @@
         #endif
 
         // pass to user-defined function if requested
-		#if defined EN_CHANGED
+		#if defined EVENT_EN_CHANGED
 			en_changed( change );
 		#endif
 
-#if defined EN_CHANGED || defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined ENOBJECT_ENABLE_SELF || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined ENOBJECT_ALWAYS_PHANTOM
+#if defined EVENT_EN_CHANGED \
+ || defined FEATURE_ENCLEP_ENABLE \
+ || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
+ || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
+ || defined FEATURE_ENOBJECT_ENABLE_SELF \
+ || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
+ || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
 	}
 #endif

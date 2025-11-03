@@ -12,22 +12,14 @@ Each "En style" script is laid out as follows:
 
 Options - macros that are optionally #define-d at the top of the script - are named and capitalized as follows:
 
-- **EVENT_EN_EVENT_NAME** is a user-defined raw event handler option. When defined, En will pass raw *event_name* LSL events through to the matching lowercase function, such as *EVENT_EN_LISTEN* to *en_listen(...)* and *EVENT_EN_TIMER* to *en_timer(...)*.
-- **EVENT_ENLIBRARYNAME_EVENT_NAME** is a user-defined En event handler option, like **EVENT_EN_EVENT_NAME** but used by an En library instead of En itself. Some of these options also inject additional code to handle events; for example, defining *EVENT_EVENT_ENLEP_MESSAGE* will create a *link_message* event and process any inbound LEP messages, passing valid ones to *enlep_message*, and passing any non-LEP messages to *en_link_message* if *EVENT_EN_LINK_MESSAGE* is defined.
+- **EVENT_EN_EVENT_NAME** is a user-defined raw event handler option. When defined, En will pass raw *event_name* LSL events through to the matching lowercase function, such as *EVENT_EVENT_EN_LISTEN* to *en_listen(...)* and *EVENT_EVENT_EN_TIMER* to *en_timer(...)*.
+- **EVENT_ENLIBRARYNAME_EVENT_NAME** is a user-defined En event handler option, like **EVENT_EN_EVENT_NAME** but used by an En library instead of En itself. Some of these options also inject additional code to handle events; for example, defining *EVENT_EVENT_ENLEP_MESSAGE* will create a *link_message* event and process any inbound LEP messages, passing valid ones to *enlep_message*, and passing any non-LEP messages to *en_link_message* if *EVENT_EVENT_EN_LINK_MESSAGE* is defined.
 - **FEATURE_ENLIBRARYNAME_OPTION_NAME** is a library feature option. When defined, En will enable or disable certain library features, such as *FEATURE_ENCLEP_ENABLE* and *FEATURE_ENTIMER_DISABLE_MULTIPLE*.
 - **OVERRIDE_TYPE_ENLIBRARYNAME_OPTION_NAME** is a library override option. When defined as a specific value, En's default configurable constants can be overridden on compile, such as *OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS* and *OVERRIDE_FLOAT_ENTIMER_MINIMUM_INTERVAL*.
 - **TRACE_EN** enables additional En trace logging at compile time.
 - **TRACE_ENLIBRARYNAME** enables additional En trace logging at compile time for a specific library.
 
 Options must be #define-d before #include-ing `libraries.lsl`, which automatically includes each library's `macros.lsl` (including global variables), then each library's `functions.lsl`.
-
-## Constant Macros
-
-Additionally, some macros should not be #define-d but may be referenced in scripts:
-
-- **CONST_TYPE_NAME** is a constant that cannot be redefined, such as *CONST_FLOAT_PI_BY_FOUR* or *CONST_VECTOR_GREEN*.
-- **FLAG_ENLIBRARYNAME_FLAG_NAME** is a flag (integer or bitfield) that is used by an En library, such as *FLAG_ENCLEP_LISTEN_OWNERONLY* and *FLAG_ENTIMER_ONESHOT*.
-- The seven default loglevels: **PRINT**, **FATAL**, **ERROR**, **WARN**, **INFO**, **DEBUG**, and **TRACE**.
 
 ## Global Variables
 
@@ -45,6 +37,14 @@ Functions and inline macros (which are effectively called as functions) are name
 - **enLibraryName_event_name** is a library's event handler function. Scripts do not need to call these because they can be automatically called depending on the feature options, but the naming convention should be used by third-party libraries that use their own event handler functions, which must be called in user-defined event handler functions.
 - **_enlibraryname_event_name** is a library's internal event handler that the script should not call directly, such as *_enclep_listen* and *_entimer_timer*.
 - **enLibraryName_FunctionName** is a library function or macro callable by the script, such as *enCLEP_Send* and *enTimer_Start*.
+
+## Constant Macros
+
+Additionally, some macros should not be #define-d but may be referenced in scripts:
+
+- **CONST_TYPE_NAME** is a constant that cannot be redefined, such as *CONST_FLOAT_PI_BY_FOUR* or *CONST_VECTOR_GREEN*.
+- **FLAG_ENLIBRARYNAME_FLAG_NAME** is a flag (integer or bitfield) that is used by an En library, such as *FLAG_ENCLEP_LISTEN_OWNERONLY* and *FLAG_ENTIMER_ONESHOT*.
+- The seven default loglevels: **PRINT**, **FATAL**, **ERROR**, **WARN**, **INFO**, **DEBUG**, and **TRACE**.
 
 # Third-Party Usage
 

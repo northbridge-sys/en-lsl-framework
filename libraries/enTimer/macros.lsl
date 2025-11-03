@@ -45,7 +45,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 FEATURE_ENTIMER_ENABLE_PREEMPTION is required to enable "preemption" mode, which exposes
 the enTimer_SetPreempt accessor function. If enTimer_SetPreempt(1) is called,
 all future timer events will skip the slow enTimer_Check call and, in
-combination with EN_TIMER, pass the timer event directly to en_timer.
+combination with EVENT_EN_TIMER, pass the timer event directly to en_timer.
 
 This is useful for scripts that need to temporarily process high-frequency timer
 events and can tolerate delaying enTimer triggers until enTimer_SetPreempt(0) is

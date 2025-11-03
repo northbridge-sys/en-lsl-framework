@@ -37,7 +37,7 @@ desired loglevel can be anything (or nothing).
 Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 */
 
-#define ENOBJECT_DISABLE_STOPIFFLAGGED
+#define FEATURE_ENOBJECT_DISABLE_STOPIFFLAGGED
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 

@@ -280,14 +280,14 @@ enObject_UpdateUUIDs()
 }
 
 /*
-    runs on certain events when ENOBJECT_ALWAYS_PHANTOM is defined
+    runs on certain events when FEATURE_ENOBJECT_ALWAYS_PHANTOM is defined
     used for building components that should always be phantom
-    can also be called independently without ENOBJECT_ALWAYS_PHANTOM if you only want to do this as a runtime option
+    can also be called independently without FEATURE_ENOBJECT_ALWAYS_PHANTOM if you only want to do this as a runtime option
 */
 enObject_AlwaysPhantom()
 {
     if (llGetLinkNumber() > 1) llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHYSICS_SHAPE_TYPE, PRIM_PHYSICS_SHAPE_NONE]);
-    else if (llGetLinkNumber()) enLog_Debug("ENOBJECT_ALWAYS_PHANTOM cannot be used in root prim of linkset");
+    else if (llGetLinkNumber()) enLog_Debug("FEATURE_ENOBJECT_ALWAYS_PHANTOM cannot be used in root prim of linkset");
     else llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHANTOM, TRUE]);
 }
 

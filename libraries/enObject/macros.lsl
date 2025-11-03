@@ -48,7 +48,9 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define TRACE_ENOBJECT
 #endif
 
-list _ENOBJECT_UUIDS_SELF;
+#if defined FEATURE_FEATURE_ENOBJECT_ENABLE_SELF
+    list _ENOBJECT_UUIDS_SELF;
+#endif
 
 #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
     list _ENOBJECT_LINK_CACHE; // prim name, current linknum, max distance
