@@ -53,15 +53,15 @@ enlep_message(
     string data
 )
 {
-    enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data", "ENCLEP_SOURCE_PRIM", "ENCLEP_SOURCE_DOMAIN"], [
+    enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data", "enCLEP_SourcePrim()", "enCLEP_SourceDomain()"], [
         (string)source_link + " (" + enString_Elem(llGetLinkName(source_link)) + ")",
         enString_Elem(source_script),
         enString_Elem(target_script),
         enInteger_ElemBitfield(flags),
         enList_Elem(parameters),
         enString_Elem(data),
-        enObject_Elem(ENCLEP_SOURCE_PRIM),
-        enObject_Elem(ENCLEP_SOURCE_DOMAIN)
+        enObject_Elem(enCLEP_SourcePrim()),
+        enObject_Elem(enCLEP_SourceDomain())
     ]);
 }
 

@@ -53,9 +53,9 @@ list _ENCLEP_DOMAINS; // service, domain, flags, handle
 
 #if defined FEATURE_ENCLEP_ENABLE && defined EVENT_ENLEP_MESSAGE
     // enLEP via enCLEP is enabled automatically
-    string ENCLEP_SOURCE_PRIM = NULL_KEY;
-    string ENCLEP_SOURCE_SERVICE;
-    string ENCLEP_SOURCE_DOMAIN;
+    string _ENCLEP_SOURCE_PRIM = NULL_KEY;
+    string _ENCLEP_SOURCE_SERVICE;
+    string _ENCLEP_SOURCE_DOMAIN;
 #endif
 
 /*
@@ -76,3 +76,8 @@ enCLEP_DialogChannel can be used to get the channel we are listing to if enCLEP_
 */
 #define enCLEP_DialogChannel() \
     enCLEP_Channel((string)llGetKey(), llGetScriptName())
+
+// getters used for enlep_message
+#define enCLEP_SourcePrim() _ENCLEP_SOURCE_PRIM
+#define enCLEP_SourceService() _ENCLEP_SOURCE_SERVICE
+#define enCLEP_SourceDomain() _ENCLEP_SOURCE_DOMAIN
