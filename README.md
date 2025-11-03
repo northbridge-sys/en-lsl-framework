@@ -64,7 +64,7 @@ default
 }
 ```
 
-To run your own code on an event, most event handlers can forward them to user-defined functions upon request:
+To run your own code on an event, most events can be forwarded to user-defined functions upon request:
 
 ```
 #define EVENT_EN_STATE_ENTRY
@@ -85,28 +85,9 @@ en_on_rez( integer param )
 // ...
 ```
 
-En also injects its own trace logging if the following macros are defined:
+You can also #define additional options for library features and override default constants; see the documentation for details.
 
-- `TRACE_EN` enables all *library* logging
-- `EN*_TRACE` enables logging for a *specific* library (such as `TRACE_ENCLEP`)
-- `EN_TRACE_EVENT_HANDLERS` enables all *event* logging (**this will add ALL events to your script!**)
-- `EN_*_TRACE` enables logging for a *specific* event (such as `TRACE_EVENT_EN_LINK_MESSAGE`)
-
-If you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-sys/en-lsl-framework/libraries.lsl"`.
-
-Here's an example of a script that does nothing but log En function calls and events used by En:
-
-```
-#define TRACE_EN
-#define EN_TRACE_EVENT_HANDLERS
-
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
-
-default
-{
-    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
-}
-```
+No matter what, if you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-sys/en-lsl-framework/libraries.lsl"`.
 
 ## Frequently Asked Questions
 
