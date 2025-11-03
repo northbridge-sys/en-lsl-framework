@@ -32,7 +32,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
         #endif
 
         // log event if requested
-        #if defined EVENT_EN_CHANGED_TRACE && ( \
+        #if defined TRACE_EVENT_EN_CHANGED && ( \
                 defined EVENT_EN_CHANGED \
              || defined FEATURE_ENCLEP_ENABLE \
              || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
