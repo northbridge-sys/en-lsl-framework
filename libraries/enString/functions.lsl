@@ -22,6 +22,29 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*
+utility function for safely reading private globals as macro getters
+when a getter macro is returned like so:
+#define enLibrary_Variable() _ENLIBRARY_VARIABLE
+the variable is not actually private, since it can still be modified accidentally like so:
+if (enLibrary_Variable() = "foo")
+preprocesses into:
+if (_ENLIBRARY_VARIABLE = "foo")
+whereas if written with enString_Read:
+#define enLibrary_Variable() enString_Read(_ENLIBRARY_VARIABLE)
+if (enLibrary_Variable() = "foo")
+preprocesses into:
+if (enString_Read(_ENLIBRARY_VARIABLE) = "foo")
+which generates a compile error
+
+NOTE: these should not be left in the code once complete
+the memory/performance impact is small but this function is only helpful when compiling, not at runtime
+*/
+string enString_Read(string s)
+{
+    return s;
+}
+
 //  returns pluralization ("s"/"es"/etc.) for specified integer
 //  example:
 //      (string)prim_count + " prim" + enString_Plural(prim_count, "s", "") + " counted"
