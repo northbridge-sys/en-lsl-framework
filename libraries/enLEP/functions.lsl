@@ -22,7 +22,63 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-//  sends a LEP message
+/*
+sends a LEP request, returning an enLEP token that will be also sent with enlep_response
+*/
+string enLEP_SendRequest(
+    integer target_link,
+    string target_script,
+    integer flags,
+    list parameters,
+    string data
+)
+{
+    #if defined TRACE_ENLEP
+        enLog_TraceParams("enLEP_SendRequest", ["target_link", "target_script", "flags", "paramters", "data"], [
+            target_link,
+            enString_Elem(target_script),
+            enInteger_ElemBitfield(flags),
+            enList_Elem(parameters),
+            enString_Elem(data)
+            ]);
+    #endif
+    flags = (flags | ENLEP_TYPE_REQUEST) & ~ENLEP_TYPE_RESPONSE; // add ENLEP_TYPE_REQUEST flag, remove ENLEP_TYPE_RESPONSE if it was provided
+    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
+    string token = (string)llGenerateKey();
+    llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, token), data);
+    return token;
+}
+
+/*
+responds to a LEP request
+*/
+enLEP_SendResponse(
+    string token,
+    integer target_link,
+    string target_script,
+    integer flags,
+    list parameters,
+    string data
+)
+{
+    #if defined TRACE_ENLEP
+        enLog_TraceParams("enLEP_SendResponse", ["token", "target_link", "target_script", "flags", "paramters", "data"], [
+            enString_Elem(token),
+            target_link,
+            enString_Elem(target_script),
+            enInteger_ElemBitfield(flags),
+            enList_Elem(parameters),
+            enString_Elem(data)
+            ]);
+    #endif
+    flags = (flags | ENLEP_TYPE_RESPONSE) & ~ENLEP_TYPE_REQUEST; // add ENLEP_TYPE_RESPONSE flag, remove ENLEP_TYPE_REQUEST
+    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
+    llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, token), data);
+}
+
+/*
+sends a generic LEP message
+*/
 enLEP_Send(
     integer target_link,
     string target_script,
@@ -41,7 +97,8 @@ enLEP_Send(
             ]);
     #endif
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    llMessageLinked(target_link, flags, enLEP_Generate(target_script, parameters), data);
+    // we don't need to send a token with this
+    llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, ""), data);
 }
 
 //  sends a LEP message as a specific source_script name

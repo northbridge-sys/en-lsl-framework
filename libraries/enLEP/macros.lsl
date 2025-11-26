@@ -34,5 +34,5 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define TRACE_ENLEP
 #endif
 
-#define enLEP_Generate(target_script, parameters) \
-    llDumpList2String([llGetScriptName(), target_script] + parameters, "\n")
+#define _enLEP_Generate(target_script, parameters, token) \
+    llDumpList2String([llGetScriptName(), target_script] + parameters + [token], "\n")
