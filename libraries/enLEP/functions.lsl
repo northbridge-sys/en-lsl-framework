@@ -164,25 +164,62 @@ integer enLEP_Process(
             return 0; // discard messages, not targeted to us
         #endif
     }
-    #if defined EVENT_ENLEP_MESSAGE && defined TRACE_ENLEP_MESSAGE
-        enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
-            source_link,
-            enString_Elem(llList2String(parameters, 0)),
-            enString_Elem(llList2String(parameters, 1)),
-            enInteger_ElemBitfield(flags),
-            enList_Elem(llDeleteSubList(parameters, 0, 1)),
-            enString_Elem(k)
-        ]);
-    #endif
-    #if defined EVENT_ENLEP_MESSAGE
-        enlep_message(
-            source_link,
-            llList2String(parameters, 0),
-            llList2String(parameters, 1),
-            flags,
-            llDeleteSubList(parameters, 0, 1),
-            k
+    string token = llList2String(parameters, -1);
+
+    if (token == "")
+    { // not using LEP token
+        #if defined EVENT_ENLEP_MESSAGE && defined TRACE_ENLEP_MESSAGE
+            enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
+                source_link,
+                enString_Elem(llList2String(parameters, 0)),
+                enString_Elem(llList2String(parameters, 1)),
+                enInteger_ElemBitfield(flags),
+                enList_Elem(llDeleteSubList(llDeleteSubList(parameters, 0, 1), -1, -1)),
+                enString_Elem(k)
+            ]);
+        #endif
+        #if defined EVENT_ENLEP_MESSAGE
+            enlep_message(
+                source_link,
+                llList2String(parameters, 0),
+                llList2String(parameters, 1),
+                flags,
+                llDeleteSubList(parameters, 0, 1),
+                k
             );
+        #endif
+    }
+
+    // using LEP token
+    #if defined EVENT_ENLEP_REQUEST
+        if (flags & ENLEP_TYPE_REQUEST)
+        {
+            enlep_request(
+                token,
+                source_link,
+                llList2String(parameters, 0),
+                llList2String(parameters, 1),
+                flags,
+                llDeleteSubList(parameters, 0, 1),
+                k
+            );
+        }
     #endif
+
+    #if defined EVENT_ENLEP_RESPONSE
+        if (flags & ENLEP_TYPE_RESPONSE)
+        {
+            enlep_response(
+                token,
+                source_link,
+                llList2String(parameters, 0),
+                llList2String(parameters, 1),
+                flags,
+                llDeleteSubList(parameters, 0, 1),
+                k
+            );
+        }
+    #endif
+
     return 1;
 }
