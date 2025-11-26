@@ -67,7 +67,7 @@ list enList_ToJsonPairs(
     for (i = 0; i < l; i++)
     {
         if (i % 2) out += ["\"" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""]; // value
-        else out += [enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i))]; // key - must be raw string, otherwiseh llList2Json breaks
+        else out += [enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i))]; // key - must be raw string, otherwise llList2Json breaks
     }
     return out;
 }
