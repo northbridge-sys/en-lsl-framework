@@ -165,26 +165,29 @@ integer enLEP_Process(
         #endif
     }
     string token = llList2String(parameters, -1);
+    string source_script = llList2String(parameters, 0);
+    string target_script = llList2String(parameters, 1);
+    list parameters = llDeleteSubList(llDeleteSubList(parameters, 0, 1), -1, -1);
 
     if (token == "")
     { // not using LEP token
         #if defined EVENT_ENLEP_MESSAGE && defined TRACE_ENLEP_MESSAGE
             enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
                 source_link,
-                enString_Elem(llList2String(parameters, 0)),
-                enString_Elem(llList2String(parameters, 1)),
+                enString_Elem(source_script),
+                enString_Elem(target_script),
                 enInteger_ElemBitfield(flags),
-                enList_Elem(llDeleteSubList(llDeleteSubList(parameters, 0, 1), -1, -1)),
+                enList_Elem(parameters),
                 enString_Elem(k)
             ]);
         #endif
         #if defined EVENT_ENLEP_MESSAGE
             enlep_message(
                 source_link,
-                llList2String(parameters, 0),
-                llList2String(parameters, 1),
+                source_script,
+                target_script,
                 flags,
-                llDeleteSubList(parameters, 0, 1),
+                parameters,
                 k
             );
         #endif
@@ -197,10 +200,10 @@ integer enLEP_Process(
             enlep_request(
                 token,
                 source_link,
-                llList2String(parameters, 0),
-                llList2String(parameters, 1),
+                source_script,
+                target_script,
                 flags,
-                llDeleteSubList(parameters, 0, 1),
+                parameters,
                 k
             );
         }
@@ -212,10 +215,10 @@ integer enLEP_Process(
             enlep_response(
                 token,
                 source_link,
-                llList2String(parameters, 0),
-                llList2String(parameters, 1),
+                source_script,
+                target_script,
                 flags,
-                llDeleteSubList(parameters, 0, 1),
+                parameters,
                 k
             );
         }
