@@ -26,6 +26,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 sends a LEP request, returning an enLEP token that will be also sent with enlep_response
 */
 string enLEP_SendRequest(
+    string token,
     integer target_link,
     string target_script,
     integer flags,
@@ -44,7 +45,6 @@ string enLEP_SendRequest(
     #endif
     flags = (flags | ENLEP_TYPE_REQUEST) & ~ENLEP_TYPE_RESPONSE; // add ENLEP_TYPE_REQUEST flag, remove ENLEP_TYPE_RESPONSE if it was provided
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    string token = (string)llGenerateKey();
     llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, token), data);
     return token;
 }
