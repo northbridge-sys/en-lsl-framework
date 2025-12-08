@@ -82,7 +82,7 @@ enCLEP_Send(
         domain,
         target_prim,
         "LEP",
-        enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
+        enList_ToString([flags, _enLEP_Generate(target_script, parameters, ""), data]) // TODO: enLEP token is left as "" for CLEP, change this
     );
 }
 
@@ -123,7 +123,7 @@ enCLEP_SendHybrid(
             domain,
             target_prim,
             "LEP",
-            enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
+            enList_ToString([flags, _enLEP_Generate(target_script, parameters, ""), data]) // TODO: enLEP token is left as "" for CLEP, change this
         );
     }
     else

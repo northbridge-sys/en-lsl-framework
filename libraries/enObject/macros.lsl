@@ -48,7 +48,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define TRACE_ENOBJECT
 #endif
 
-#if defined FEATURE_FEATURE_ENOBJECT_ENABLE_SELF
+#if defined FEATURE_ENOBJECT_ENABLE_SELF
     list _ENOBJECT_UUIDS_SELF;
 #endif
 
