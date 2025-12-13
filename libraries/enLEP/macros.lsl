@@ -49,39 +49,39 @@ Generate a LEP message string as a different source_script.
 
 /*
 sends a LEP broadcast
-target_script (if defined) in target_link will trigger first of: enlep_broadcast, enlep_message
+target_script (if defined) in target_link will trigger first of: enlep_broadcast, enlep_legacy_message
 */
-#define enLEP_Broadcast_Token(token, target_link, target_script, json, data) \
-    _enLEP_Message(0, token, target_link, target_script, json, data)
+#define enLEP_Broadcast_Token(target_link, target_script, token, json, data) \
+    _enLEP_Message(0, target_link, target_script, token, json, data)
 #define enLEP_Broadcast(target_link, target_script, json, data) \
-    _enLEP_Broadcast_Token(llGenerateKey(), target_link, target_script, json, data)
+    _enLEP_Broadcast_Token(target_link, target_script, llGenerateKey(), json, data)
 
 /*
 sends a LEP request
-target_script (if defined) in target_link will trigger first of: enlep_request, enlep_message
+target_script (if defined) in target_link will trigger first of: enlep_request, enlep_legacy_message
 */
-#define enLEP_Request_Token(token, target_link, target_script, json, data) \
-    _enLEP_Message(FLAG_ENLEP_TYPE_REQUEST, token, target_link, target_script, json, data)
+#define enLEP_Request_Token(target_link, target_script, token, json, data) \
+    _enLEP_Message(FLAG_ENLEP_TYPE_REQUEST, target_link, target_script, token, json, data)
 #define enLEP_Request(target_link, target_script, json, data) \
-    enLEP_Request_Token(llGenerateKey(), target_link, target_script, json, data)
+    enLEP_Request_Token(target_link, target_script, llGenerateKey(), json, data)
 
 /*
 responds to a LEP request without adding an error message
-target_script (if defined) in target_link will trigger first of: enlep_response, enlep_message
-note that enLEP_Response REQUIRES the token parameter, since you can't send a response without a token
+target_script (if defined) in target_link will trigger first of: enlep_response, enlep_legacy_message
+note that enLEP_Respond REQUIRES the token parameter, since you can't send a response without a token
 */
-#define enLEP_Response(token, target_link, target_script, json, data) \
-    _enLEP_Message(FLAG_ENLEP_TYPE_RESPONSE, token, target_link, target_script, json, data)
+#define enLEP_Respond(target_link, target_script, token, json, data) \
+    _enLEP_Message(FLAG_ENLEP_TYPE_RESPONSE, target_link, target_script, token, json, data)
 
 /*
 responds to a LEP request, adding an error message
-target_script (if defined) in target_link will trigger first of: enlep_response, enlep_message
+target_script (if defined) in target_link will trigger first of: enlep_response, enlep_legacy_message
 */
-#define enLEP_Response_Error(error, token, target_link, target_script, json, data) \
-    _enLEP_Message(FLAG_ENLEP_TYPE_RESPONSE | FLAG_ENLEP_STATUS_ERROR, token, target_link, target_script, llJsonSetValue(json, ["e"], error), data)
+#define enLEP_Respond_Error(target_link, target_script, token, json, data, error) \
+    _enLEP_Message(FLAG_ENLEP_TYPE_RESPONSE | FLAG_ENLEP_STATUS_ERROR, target_link, target_script, token, llJsonSetValue(json, ["e"], error), data)
 
 /*
 sends a message as self
 */
-#define _enLEP_Message(flags, token, target_link, target_script, json, data) \
-    _enLEP_Message_As(llGetScriptName(), flags, token, target_link, target_script, json, data)
+#define _enLEP_Message(flags, target_link, target_script, token, json, data) \
+    _enLEP_Message_As(flags, target_link, llGetScriptName(), target_script, token, json, data)

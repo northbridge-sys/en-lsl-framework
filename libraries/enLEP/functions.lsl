@@ -22,7 +22,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-integer _enLEP_Message_As(
+string _enLEP_Message_As(
     integer flags,
     integer target_link,
     string source_script,
@@ -50,16 +50,18 @@ integer _enLEP_Message_As(
     NOTE: JSON object is mandatory for LEP spec compliance, so do not disable this to use non-JSON messages unless you are OK with non-compliance!
     */
     #if !defined FEATURE_ENLEP_SKIP_JSON_VALIDATION
-        if (llJsonValueType(json) != JSON_OBJECT)
+        if (llJsonValueType(json, []) != JSON_OBJECT)
         {
             enLog_Error("_enLEP_Message_As JSON error: " + json);
-            return;
+            return "";
         }
     #endif
 
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
 
     llMessageLinked(target_link, flags, _enLEP_Generate_As(source_script, target_script, token, json), data);
+
+    return token;
 }
 
 /*!
@@ -73,7 +75,7 @@ integer _enLEP_link_message(
     string k
 )
 {
-    #if TRACE_ENLEP_LINK_MESSAGE
+    #if defined TRACE_ENLEP_LINK_MESSAGE
         enLog_TraceParams("_enLEP_link_message", [
             "l",
             "i",
@@ -91,11 +93,13 @@ integer _enLEP_link_message(
     integer n = llSubStringIndex(s, "\n");
     if (n == -1) return __LINE__; // not a valid LEP message
     string source_script = llDeleteSubString(s, n, -1);
+    s = llDeleteSubString(s, 0, n);
 
     // extract target_script
     n = llSubStringIndex(s, "\n");
     if (n == -1) return __LINE__; // not a valid LEP message
     string target_script = llDeleteSubString(s, n, -1);
+    s = llDeleteSubString(s, 0, n);
 
     // extract token
     n = llSubStringIndex(s, "\n");
@@ -131,54 +135,53 @@ integer _enLEP_link_message(
         #endif
     }
 
-    if (flags & FLAG_ENLEP_TYPE_REQUEST)
+    if (i & FLAG_ENLEP_TYPE_REQUEST)
     {
         #if defined EVENT_ENLEP_REQUEST
             enlep_request(
-                source_link,
+                l,
                 source_script,
                 target_script,
                 token,
-                json,
-                data
+                s,
+                k
             );
         #elif defined EVENT_ENLEP_MESSAGE
             enlep_message(
-                flags,
-                source_link,
+                i,
+                l,
                 source_script,
                 target_script,
                 token,
-                json,
-                data
+                s,
+                k
             );
         #endif
 
         return 0;
     }
 
-    if (flags & FLAG_ENLEP_TYPE_RESPONSE)
+    if (i & FLAG_ENLEP_TYPE_RESPONSE)
     {
         #if defined EVENT_ENLEP_RESPONSE
             enlep_response(
-                !(flags & FLAG_ENLEP_STATUS_ERROR),
-                source_link,
+                l,
                 source_script,
                 target_script,
                 token,
-                json,
-                data
+                s,
+                k,
+                !(i & FLAG_ENLEP_STATUS_ERROR)
             );
-        #endif
         #elif defined EVENT_ENLEP_MESSAGE
             enlep_message(
-                flags,
-                source_link,
+                i,
+                l,
                 source_script,
                 target_script,
                 token,
-                json,
-                data
+                s,
+                k
             );
         #endif
 
@@ -187,23 +190,22 @@ integer _enLEP_link_message(
 
     #if defined EVENT_ENLEP_BROADCAST
         enlep_broadcast(
-            source_link,
+            l,
             source_script,
             target_script,
             token,
-            json,
-            data
+            s,
+            k
         );
-    #endif
     #elif defined EVENT_ENLEP_MESSAGE
         enlep_message(
-            flags,
-            source_link,
+            i,
+            l,
             source_script,
             target_script,
             token,
-            json,
-            data
+            s,
+            k
         );
     #endif
 
@@ -302,62 +304,9 @@ integer enLEP_Process(
     string token = llList2String(parameters, -1);
     string source_script = llList2String(parameters, 0);
     string target_script = llList2String(parameters, 1);
-    list parameters = llDeleteSubList(llDeleteSubList(parameters, 0, 1), -1, -1);
+    parameters = llDeleteSubList(llDeleteSubList(parameters, 0, 1), -1, -1);
 
-    if (token == "")
-    { // not using LEP token
-        #if defined EVENT_ENLEP_MESSAGE && defined TRACE_ENLEP_MESSAGE
-            enLog_TraceParams("enlep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data"], [
-                source_link,
-                enString_Elem(source_script),
-                enString_Elem(target_script),
-                enInteger_ElemBitfield(flags),
-                enList_Elem(parameters),
-                enString_Elem(k)
-            ]);
-        #endif
-        #if defined EVENT_ENLEP_MESSAGE
-            enlep_message(
-                source_link,
-                source_script,
-                target_script,
-                flags,
-                parameters,
-                k
-            );
-        #endif
-    }
-
-    // using LEP token
-    #if defined EVENT_ENLEP_REQUEST
-        if (flags & ENLEP_TYPE_REQUEST)
-        {
-            enlep_request(
-                token,
-                source_link,
-                source_script,
-                target_script,
-                flags,
-                parameters,
-                k
-            );
-        }
-    #endif
-
-    #if defined EVENT_ENLEP_RESPONSE
-        if (flags & ENLEP_TYPE_RESPONSE)
-        {
-            enlep_response(
-                token,
-                source_link,
-                source_script,
-                target_script,
-                flags,
-                parameters,
-                k
-            );
-        }
-    #endif
+    // TODO: this doesn't do anything anymore! port code that uses old enlep_legacy_message to new one
 
     return 1;
 }
