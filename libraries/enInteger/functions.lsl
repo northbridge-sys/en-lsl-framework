@@ -6,6 +6,24 @@ Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
 */
 
+/*!
+Returns the ordinal text ("st", "nd", "rd", or "th") for a specified number.
+@param integer i Number.
+@return string Ordinal text. Does not include number.
+*/
+string enInteger_Ordinal(
+    integer i
+)
+{
+    integer t = (i % 100) / 10; // get "ten" place
+    if (t == 1) return "th"; // 10-19th
+    integer o = i % 10; // get "one" place
+    if (o == 1) return "st"; // 1st, 21st, 31st..
+    if (o == 2) return "nd"; // 2nd, 22nd, 32nd...
+    if (o == 3) return "rd"; // 3rd, 23rd, 33rd...
+    return "th"; // 4th, 5th, 6th, 7th, 8th, 9th, etc.
+}
+
 string enInteger_ElemBitfield(
     integer var
 )
