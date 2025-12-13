@@ -19,73 +19,68 @@ https://docs.northbridgesys.com/en-lsl-framework
     #define TRACE_ENDATE
 #endif
 
-#define enDate_NowToMillisec() enDate_TimestampToMillisec(llGetTimestamp())
+/*!
+Converts current environment time (sun position) at script's location to a percentage of day starting at midnight.
+NOTE: this shouldn't be used in attachments maybe because of llGetPos?
+@return float Daypart of 24 hours starting at midnight (0.0-1.0).
+*/
+#define enDate_EnvironmentToDaypart_Here() \
+    enDate_EnvironmentToDaypart(llGetPos())
 
 /*!
 Converts current environment time (sun position) at specified location to an HMS list.
 Environment sun positions are typically fast enough that subsecond precision is not accurate.
 @param vector p Region-scope position.
+@return list [h, m, s].
 */
 #define enDate_EnvironmentToHMS(p) \
-    enDate_ProportionToHMS(enDate_EnvironmentToProportion(p))
+    enDate_DaypartToHMS(enDate_EnvironmentToDaypart(p))
 
 /*!
 Converts current environment time (sun position) at script's location to a percentage of day starting at midnight.
 Environment sun positions are typically fast enough that subsecond precision is not accurate.
 NOTE: this shouldn't be used in attachments maybe because of llGetPos?
+@return list [h, m, s].
 */
 #define enDate_EnvironmentToHMS_Here() \
     enDate_EnvironmentToHMS(llGetPos())
 
 /*!
-Converts current environment time (sun position) at script's location to a percentage of day starting at midnight.
-NOTE: this shouldn't be used in attachments maybe because of llGetPos?
-*/
-#define enDate_EnvironmentToProportion_Here() \
-    enDate_EnvironmentToProportion(llGetPos())
-
-/*!
-Gets full textual representation of specified weekday using separate year, month, and day integers.
-For YMD list input, see enDate_YMDToWeekday().
-@param integer y Year.
-@param integer m Month.
-@param integer d Day.
-
-/*!
-Gets full textual representation of specified month.
-Avoid calling this in multiple places in the same script, because the entire month list will be stored multiple times in the bytecode! Use enDate_Month() instead.
-@param integer month Month of year (1-12).
-*/
-#define _enDate_Month(month) \
-    llList2String(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], month - 1)
-
-/*!
 Gets short textual representation of specified month, limited to 3 characters.
 Can be called in multiple places with minimal memory impact.
 @param integer month Month of year (1-12).
+@return string Month of year as 3-character text.
 */
-#define enDate_Month_Short(month) \
-    llDeleteSubString(enDate_Month(month), 3, -1)
+#define enDate_MToPrettyShort(month) \
+    llDeleteSubString(enDate_MToPretty(month), 3, -1)
 
 /*!
-Gets short textual representation of specified month, limited to 3 characters.
-Avoid calling this in multiple places in the same script, because the entire month list will be stored multiple times in the bytecode! Use enDate_Month_Short() instead.
-@param integer month Month of year (1-12).
+Gets the current datetime in enDate's millisec format.
+@return integer Millisecs.
 */
-#define _enDate_Month_Short(month) \
-    llDeleteSubString(_enDate_Month(month), 3, -1)
+#define enDate_NowToMillisec() \
+    enDate_TimestampToMillisec(llGetTimestamp())
 
 /*!
-Converts ISO 8601 timestamp from llGetTimestamp to Unix timestamp from llGetUnixTime.
-No validation is performed. NO subsecond precision.
-@param integer t ISO 8601 timestamp. See llGetTimestamp().
+Gets current time as ISO 8601 timestamp.
+Alias of llGetTimestamp().
+@return string ISO 8601 timestamp.
 */
-#define enDate_TimestampToUnix(t) \
-    enDate_ListToUnix(enDate_TimestampToList(t))
+#define enDate_NowToTimestamp() \
+    llGetTimestamp()
+
+/*!
+Gets current time as Unix timestamp.
+Alias of llGetUnixTime().
+@return integer Unix time.
+*/
+#define enDate_NowToUnix() \
+    llGetUnixTime()
 
 /*!
 Gets current time as enDate list.
 For subsecond precision, use enDate_NowToYMDHMSU().
+@return list [Y, M, D, h, m, s].
 */
 #define enDate_NowToYMDHMS() \
     enDate_UnixToYMDHMS(llGetUnixTime())
@@ -93,20 +88,52 @@ For subsecond precision, use enDate_NowToYMDHMSU().
 /*!
 Gets current time as enDate list, with subsecond precision.
 For integer precision, use enDate_NowToYMDHMS().
+@return list [Y, M, D, h, m, s, u].
 */
 #define enDate_NowToYMDHMSU() \
     enDate_TimestampToYMDHMSU(llGetTimestamp())
 
 /*!
-Gets current time as Unix timestamp.
-Alias of llGetUnixTime().
+Converts ISO 8601 timestamp to pretty datetime.
+@param string t ISO 8601 timestamp. See llGetTimestamp().
+@param integer flags FLAG_ENDATE_* flags.
+@return string Pretty datetime.
 */
-#define enDate_NowToUnix() \
-    llGetUnixTime()
+#define enDate_TimestampToPretty(t, flags) \
+    enDate_YMDHMSUToPretty(enDate_TimestampToYMDHMSU(t), flags)
 
 /*!
-Gets current time as ISO 8601 timestamp.
-Alias of llGetTimestamp().
+Converts ISO 8601 timestamp from llGetTimestamp to Unix timestamp from llGetUnixTime.
+No validation is performed. NO subsecond precision.
+@param string t ISO 8601 timestamp. See llGetTimestamp().
+@return integer Unix time.
 */
-#define enDate_NowToTimestamp() \
-    llGetTimestamp()
+#define enDate_TimestampToUnix(t) \
+    enDate_ListToUnix(enDate_TimestampToList(t))
+
+/*!
+Converts Unix time to pretty datetime.
+@param string Unix time. See llGetUnixTime().
+@param integer flags FLAG_ENDATE_* flags.
+@return string Pretty datetime.
+*/
+#define enDate_UnixToPretty(u, flags) \
+    enDate_YMDHMSToPretty(enDate_UnixToYMDHMS(u), flags)
+
+/*!
+Gets full textual representation of specified month.
+Avoid calling this in multiple places in the same script, because the entire month list will be stored multiple times in the bytecode! Use enDate_MToPretty() instead.
+@param integer month Month of year (1-12).
+@return string Month of year as full text.
+*/
+#define _enDate_MToPretty(month) \
+    llList2String(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], month - 1)
+
+/*!
+Gets short textual representation of specified month, limited to 3 characters.
+Avoid calling this in multiple places in the same script, because the entire month list will be stored multiple times in the bytecode! Use enDate_MToPrettyShort() instead.
+@param integer month Month of year (1-12).
+@return string Month of year as 3-character text.
+*/
+#define _enDate_MToPrettyShort(month) \
+    llDeleteSubString(_enDate_MToPretty(month), 3, -1)
