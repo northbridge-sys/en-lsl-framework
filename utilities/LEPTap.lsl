@@ -44,7 +44,7 @@ enabled.
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
-enlep_message(
+enlep_legacy_message(
     integer source_link,
     string source_script,
     string target_script,

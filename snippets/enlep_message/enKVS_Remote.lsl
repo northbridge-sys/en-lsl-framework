@@ -1,6 +1,6 @@
 /*
 enKVS_Remote.lsl
-enlep_message Snippet
+enlep_legacy_message Snippet
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework

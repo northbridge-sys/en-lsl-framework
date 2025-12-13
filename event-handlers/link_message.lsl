@@ -59,7 +59,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
         // process through hooks until one catches
 
         #if defined _HOOK_ENLEP_LINK_MESSAGE
-            if (enLEP_Process(l, i, s, k)) return; // valid prerelease LEP message TODO: remove this
             if (!_enLEP_link_message(l, i, s, k)) return; // if 0, valid LEP message
         #endif
 
@@ -67,6 +66,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 			en_link_message(l, i, s, k);
 		#endif
 
-#if defined _EVENT_EN_LINK_MESSAGE
+#if defined _EVENT_LINK_MESSAGE
 	}
 #endif

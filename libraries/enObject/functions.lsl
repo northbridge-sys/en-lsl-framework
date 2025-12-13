@@ -150,7 +150,7 @@ enObject_Text(
     else if (flags & FLAG_ENOBJECT_TEXT_BUSY)
     {
         color = CONST_VECTOR_BLUE;
-        integer ind = (enDate_MSNow() / 83) % 12; // approenmately +1 ind every 1/12th of a second
+        integer ind = (enDate_NowToMillisec() / 83) % 12; // approenmately +1 ind every 1/12th of a second
         icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
     else if (flags & FLAG_ENOBJECT_TEXT_SUCCESS)
@@ -170,7 +170,7 @@ enObject_Text(
     }
     if (flags & FLAG_ENOBJECT_TEXT_PROGRESS_THROB)
     {
-        integer ind = (enDate_MSNow() / 62) % 16; // approenmately +1 ind every 1/16th of a second
+        integer ind = (enDate_NowToMillisec() / 62) % 16; // approenmately +1 ind every 1/16th of a second
         progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
     }
                                                                                            // this is a nbsp

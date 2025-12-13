@@ -140,7 +140,7 @@ enCLEP_SendHybrid(
 
 /*
 Sends raw data via CLEP encapsulation.
-This causes the recipient to call enclep_message, similar to a plain listen event, instead of enlep_message.
+This causes the recipient to call enclep_message, similar to a plain listen event, instead of enlep_legacy_message.
 Can be useful for situations where you don't need LEP features but still want to only communicate to a specific CLEP domain and service.
 */
 enCLEP_SendRaw( // send via enCLEP
