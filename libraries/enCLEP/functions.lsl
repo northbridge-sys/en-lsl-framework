@@ -82,7 +82,7 @@ enCLEP_Send(
         domain,
         target_prim,
         "LEP",
-        enList_ToString([flags, _enLEP_Generate(target_script, parameters, ""), data]) // TODO: enLEP token is left as "" for CLEP, change this
+        enList_ToEscapedCSV([flags, _enLEP_GenerateLegacy(target_script, parameters, ""), data]) // TODO: enLEP token is left as "" for CLEP, change this
     );
 }
 
@@ -123,7 +123,7 @@ enCLEP_SendHybrid(
             domain,
             target_prim,
             "LEP",
-            enList_ToString([flags, _enLEP_Generate(target_script, parameters, ""), data]) // TODO: enLEP token is left as "" for CLEP, change this
+            enList_ToEscapedCSV([flags, _enLEP_GenerateLegacy(target_script, parameters, ""), data]) // TODO: enLEP token is left as "" for CLEP, change this
         );
     }
     else
@@ -160,7 +160,7 @@ enCLEP_SendRaw( // send via enCLEP
             enString_Elem(message)
             ]);
     #endif
-    _enCLEP_MultiSayTo(target_prim, enCLEP_Channel(service, domain), enList_ToString(["CLEP", service, domain, target_prim, type, message]));
+    _enCLEP_MultiSayTo(target_prim, enCLEP_Channel(service, domain), enList_ToEscapedCSV(["CLEP", service, domain, target_prim, type, message]));
 }
 
 /*
@@ -188,12 +188,12 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
         enLog_Warn("enCLEP_SendPTP called but FEATURE_ENCLEP_ENABLE_PTP not defined.");
     #else
         // TODO: message really should be dynamically loaded from linkset data - maybe with some way of loading data of arbitrary length into safe ~1K chunks in linkset data for situations like this?
-        message = enList_ToString(["CLEP", service, domain, target_prim, type, message]); // add enCLEP_PTP header to message to be sent
+        message = enList_ToEscapedCSV(["CLEP", service, domain, target_prim, type, message]); // add enCLEP_PTP header to message to be sent
         // 51 + llStringLength(...) is length of "10\nenCLEP_PTP32\n00000000000000000000000000000000" + {packet_size} + "\n"
         max = OVERRIDE_ENCLEP_PTP_SIZE - (51 + llStringLength((string)llStringLength(OVERRIDE_ENCLEP_PTP_SIZE))); // get maximum length of packet after enCLEP_PTP header via enList_ToString
         string k = llGenerateKey(); // transfer key for identifying a specific message in transit
         string c = enCLEP_Channel(service, domain);
-        _enCLEP_MultiSayTo(prim, c, enList_ToString(["CLEP_PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
+        _enCLEP_MultiSayTo(prim, c, enList_ToEscapedCSV(["CLEP_PTP", domain, k, llGetSubString(message, 0, max - 2)])); // first packet gets sent immediately
         if (llStringLength(message) > max) _ENCLEP_PTP += [k, prim, "", llDeleteSubString(message, 0, max - 2)]; // we don't need to save domain here
         // TODO: some cleanup function that clears stalled transfers (in and out) from _ENCLEP_PTP_QUEUE
     #endif
@@ -275,7 +275,7 @@ integer _enclep_listen(
     string message
 )
 {
-    list data = enList_FromString(message);
+    list data = enList_FromEscapedCSV(message);
     #if defined TRACE_ENCLEP || defined TRACE_ENCLEP_PROCESS
         enLog_TraceParams("_enCLEP_listen", ["channel", "name", "id", "message", "(data)"], [
             channel,
@@ -307,7 +307,7 @@ integer _enclep_listen(
             // TODO: if total length of message would exceed script memory, reject message
             else _ENCLEP_PTP = llListReplaceList(ENCLEP_PTP, [llList2String(ENCLEP_PTP, i * _ENCLEP_PTP_STRIDE + 3) + m], i * _ENCLEP_PTP_STRIDE + 3, i * _ENCLEP_PTP_STRIDE + 3); // append to existing buffer
             // TODO: SERVICE IS DEFINED AS "" HERE - NEED TO REWORK PTP PROTOCOL TO PASS SERVICE
-            _enCLEP_MultiSayTo(id, enCLEP_Channel("", d), enList_ToString(["CLEP_PTP_More", d, k])); // request next message fragment
+            _enCLEP_MultiSayTo(id, enCLEP_Channel("", d), enList_ToEscapedCSV(["CLEP_PTP_More", d, k])); // request next message fragment
             return 0;
         }
         if (llList2String(data, 0) == "CLEP_PTP_More")
@@ -317,18 +317,18 @@ integer _enclep_listen(
             integer i = llListFindList(llList2ListSlice(ENCLEP_PTP, 0, -1, _ENCLEP_PTP_STRIDE, 0), [k]);
             if (i == -1)
             { // we have nothing to send, because this transfer_key does not exist in the queue
-                _enCLEP_MultiSayTo(id, c, enList_ToString(["CLEP_PTP", d, k, ""])); // send empty packet to signal end of transfer
+                _enCLEP_MultiSayTo(id, c, enList_ToEscapedCSV(["CLEP_PTP", d, k, ""])); // send empty packet to signal end of transfer
                 return 0;
             }
             string m = llList2String(ENCLEP_PTP, i * _ENCLEP_PTP_STRIDE + 3);
-            _enCLEP_MultiSayTo(id, c, enList_ToString(["CLEP_PTP", d, k, llGetSubString(m, 0, max - 2)])); // send next packet
+            _enCLEP_MultiSayTo(id, c, enList_ToEscapedCSV(["CLEP_PTP", d, k, llGetSubString(m, 0, max - 2)])); // send next packet
             if (llStringLength(m) > max) _ENCLEP_PTP = llListReplaceList(ENCLEP_PTP, [llDeleteSubString(llList2String(ENCLEP_PTP, i * _ENCLEP_PTP_STRIDE + 3), 0, max - 1)], i * _ENCLEP_PTP_STRIDE + 3, i * _ENCLEP_PTP_STRIDE + 3); // trim from buffer
             else _ENCLEP_PTP = llDeleteSubList(ENCLEP_PTP, i * _ENCLEP_PTP_STRIDE, (i + 1) * _ENCLEP_PTP_STRIDE - 1);  // delete from buffer, message fully transferred; clear transfer from queue
             return 0;
         }
     #endif
 
-    // enList_ToString(["CLEP", service, domain, target_prim, type, message])
+    // enList_ToEscapedCSV(["CLEP", service, domain, target_prim, type, message])
 
     if (llList2String(data, 0) != "CLEP") return __LINE__; // not a valid enCLEP message
     // note: at this point we have a valid enCLEP message, so all returns should be 0 to indicate that the enCLEP message was processed
@@ -360,8 +360,8 @@ integer _enclep_listen(
     if (llList2String(data, 4) == "LEP")
     { // LEP message
     #if defined EVENT_ENLEP_MESSAGE
-        // enList_ToString([flags, enLEP_Generate(target_script, parameters), data])
-        data = enList_FromString(llList2String(data, 5));
+        // enList_ToEscapedCSV([flags, enLEP_Generate(target_script, parameters), data])
+        data = enList_FromEscapedCSV(llList2String(data, 5));
         if (llGetListLength(data) != 3) return 0; // error in LEP unserialize operation
         _ENCLEP_SOURCE_PRIM = (string)id; // since enLEP does not handle source UUID directly
         _ENCLEP_SOURCE_SERVICE = service; // same with service

@@ -2,7 +2,7 @@
 enLEP.lsl
 Library Functions
 En LSL Framework
-Copyright (C) 2024  Northbridge Business Systems
+Copyright (C) 2024-25  Northbridge Business Systems
 https://docs.northbridgesys.com/en-lsl-framework
 
 ╒══════════════════════════════════════════════════════════════════════════════╕
@@ -22,62 +22,197 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-/*
-sends a LEP request, returning an enLEP token that will be also sent with enlep_response
-*/
-string enLEP_SendRequest(
-    string token,
-    integer target_link,
-    string target_script,
+integer _enLEP_Message_As(
     integer flags,
-    list parameters,
+    integer target_link,
+    string source_script,
+    string target_script,
+    string token,
+    string json,
     string data
 )
 {
-    #if defined TRACE_ENLEP
-        enLog_TraceParams("enLEP_SendRequest", ["target_link", "target_script", "flags", "paramters", "data"], [
-            target_link,
-            enString_Elem(target_script),
+    #if defined TRACE_ENLEP_MESSAGE
+        enLog_TraceParams("_enLEP_Message_As", ["flags", "target_link", "source_script", "target_script", "token", "json", "data"], [
             enInteger_ElemBitfield(flags),
-            enList_Elem(parameters),
+            target_link,
+            enString_Elem(source_script),
+            enString_Elem(target_script),
+            enString_Elem(token),
+            enString_Elem(json),
             enString_Elem(data)
-            ]);
+        ]);
     #endif
-    flags = (flags | ENLEP_TYPE_REQUEST) & ~ENLEP_TYPE_RESPONSE; // add ENLEP_TYPE_REQUEST flag, remove ENLEP_TYPE_RESPONSE if it was provided
+
+    /*
+    llJsonValueType check should only be run if FEATURE_ENLEP_SKIP_JSON_VALIDATION is NOT defined
+    this can be defined to skip the check to save a few bytes of memory when enLEP functions won't be called with unsafe JSON (always hard-coded)
+    NOTE: JSON object is mandatory for LEP spec compliance, so do not disable this to use non-JSON messages unless you are OK with non-compliance!
+    */
+    #if !defined FEATURE_ENLEP_SKIP_JSON_VALIDATION
+        if (llJsonValueType(json) != JSON_OBJECT)
+        {
+            enLog_Error("_enLEP_Message_As JSON error: " + json);
+            return;
+        }
+    #endif
+
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, token), data);
-    return token;
+
+    llMessageLinked(target_link, flags, _enLEP_Generate_As(source_script, target_script, token, json), data);
 }
 
-/*
-responds to a LEP request
+/*!
+Processes link_message events if EVENT_ENLEP_* is defined.
+@param integer 
 */
-enLEP_SendResponse(
-    string token,
-    integer target_link,
-    string target_script,
-    integer flags,
-    list parameters,
-    string data
+integer _enLEP_link_message(
+    integer l,
+    integer i,
+    string s,
+    string k
 )
 {
-    #if defined TRACE_ENLEP
-        enLog_TraceParams("enLEP_SendResponse", ["token", "target_link", "target_script", "flags", "paramters", "data"], [
-            enString_Elem(token),
-            target_link,
-            enString_Elem(target_script),
-            enInteger_ElemBitfield(flags),
-            enList_Elem(parameters),
-            enString_Elem(data)
-            ]);
+    #if TRACE_ENLEP_LINK_MESSAGE
+        enLog_TraceParams("_enLEP_link_message", [
+            "l",
+            "i",
+            "s",
+            "k"
+        ], [
+            l,
+            i,
+            enString_Elem(s),
+            enString_Elem(k)
+        ]);
     #endif
-    flags = (flags | ENLEP_TYPE_RESPONSE) & ~ENLEP_TYPE_REQUEST; // add ENLEP_TYPE_RESPONSE flag, remove ENLEP_TYPE_REQUEST
-    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, token), data);
+
+    // extract source_script
+    integer n = llSubStringIndex(s, "\n");
+    if (n == -1) return __LINE__; // not a valid LEP message
+    string source_script = llDeleteSubString(s, n, -1);
+
+    // extract target_script
+    n = llSubStringIndex(s, "\n");
+    if (n == -1) return __LINE__; // not a valid LEP message
+    string target_script = llDeleteSubString(s, n, -1);
+
+    // extract token
+    n = llSubStringIndex(s, "\n");
+    if (n == -1) return __LINE__; // not a valid LEP message
+    string token = llDeleteSubString(s, n, -1);
+
+    // remaining message is presumably json
+    s = llDeleteSubString(s, 0, n);
+
+    // filter out messages that don't match OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS list
+    #if defined OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS
+        if (llListFindList(OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS, [source_script]) == -1) return 0; // discard otherwise valid LEP message, not sent from an allowed source script
+    #endif
+
+    /// generate allowed target_scripts list
+    list allowed_targets = ["", llGetScriptName()]; // allow messages targeted to "" (all) and this script only
+    #if defined OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS
+        allowed_targets += OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS list as well
+    #endif
+    #if defined FEATURE_ENLEP_ALLOW_ALL_TARGET_SCRIPTS
+        allowed_targets += [target_script]; // always match - this is less efficient, but this flag is only used for debugging anyway
+    #endif
+
+    // filter out messages not targeted to a script in allowed_targets
+    if (llListFindList(allowed_targets, [target_script]) == -1)
+    {
+        #if defined FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
+            // using substring matching
+            if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard otherwise valid LEP message, not targeted to us
+        #else
+            // using exact matching
+            return 0; // discard otherwise valid LEP message, not targeted to us
+        #endif
+    }
+
+    if (flags & FLAG_ENLEP_TYPE_REQUEST)
+    {
+        #if defined EVENT_ENLEP_REQUEST
+            enlep_request(
+                source_link,
+                source_script,
+                target_script,
+                token,
+                json,
+                data
+            );
+        #elif defined EVENT_ENLEP_MESSAGE
+            enlep_message(
+                flags,
+                source_link,
+                source_script,
+                target_script,
+                token,
+                json,
+                data
+            );
+        #endif
+
+        return 0;
+    }
+
+    if (flags & FLAG_ENLEP_TYPE_RESPONSE)
+    {
+        #if defined EVENT_ENLEP_RESPONSE
+            enlep_response(
+                !(flags & FLAG_ENLEP_STATUS_ERROR),
+                source_link,
+                source_script,
+                target_script,
+                token,
+                json,
+                data
+            );
+        #endif
+        #elif defined EVENT_ENLEP_MESSAGE
+            enlep_message(
+                flags,
+                source_link,
+                source_script,
+                target_script,
+                token,
+                json,
+                data
+            );
+        #endif
+
+        return 0;
+    }
+
+    #if defined EVENT_ENLEP_BROADCAST
+        enlep_broadcast(
+            source_link,
+            source_script,
+            target_script,
+            token,
+            json,
+            data
+        );
+    #endif
+    #elif defined EVENT_ENLEP_MESSAGE
+        enlep_message(
+            flags,
+            source_link,
+            source_script,
+            target_script,
+            token,
+            json,
+            data
+        );
+    #endif
+
+    return 0;
 }
 
 /*
 sends a generic LEP message
+DEPRECATED - use enLEP_Broadcast, enLEP_Request, enLEP_Response, or enLEP_Response_Error
 */
 enLEP_Send(
     integer target_link,
@@ -87,8 +222,8 @@ enLEP_Send(
     string data
 )
 {
-    #if defined TRACE_ENLEP
-        enLog_TraceParams("enLEP_Send", ["target_link", "target_script", "flags", "paramters", "data"], [
+    #if defined TRACE_ENLEP_SEND
+        enLog_TraceParams("enLEP_Send", ["target_link", "target_script", "flags", "parameters", "data"], [
             target_link,
             enString_Elem(target_script),
             enInteger_ElemBitfield(flags),
@@ -98,7 +233,7 @@ enLEP_Send(
     #endif
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
     // we don't need to send a token with this
-    llMessageLinked(target_link, flags, _enLEP_Generate(target_script, parameters, ""), data);
+    llMessageLinked(target_link, flags, _enLEP_GenerateLegacy(target_script, parameters, ""), data);
 }
 
 //  sends a LEP message as a specific source_script name
@@ -111,7 +246,7 @@ enLEP_SendAs(
     string data
 )
 {
-    #if defined TRACE_ENLEP
+    #if defined TRACE_ENLEP_SENDAS
         enLog_TraceParams("enLEP_SendAs", ["source_script", "target_link", "target_script", "flags", "paramters", "data"], [
             enString_Elem(source_script),
             target_link,

@@ -131,17 +131,18 @@ For example, if an object has multiple scripts in a prim and you need to use `ll
 
 While we use En for most of our projects, there are still some limited circumstances where raw LSL is good enough or provides a slight edge in performance. Generally, En is designed for scaling at the expense of script memory and some limited performance in certain scenarios in simple scripts. It is primarily efficient in a code-factoring sense - that is, by using En functions, En scripts do not unnecessarily duplicate code that could be consolidated into a single function.
 
-### Why use En compared to Lua/Luau?
+### Why use En/LSL compared to Lua/Luau/"SLuau"?
 
-Luau support in Second Life is currently in beta and does not have a preprocessor. It is, therefore, difficult to write and maintain Lua scripts "at scale" since the scripts need to be individually copied into the viewer and compiled manually. The LSL preprocessor, instead, lets you `#include` entire LSL/En scripts off your local computer, meaning you can mass recompile many scripts and they will all pull the latest copy from your computer instead of needing each to be manually copy-pasted and recompiled. From a development perspective - especially if you use version control - LSL is still a lot easier. For example, scripts in the `utilities` folder can be `#include`d directly into an empty LSL script and compiled.
+Several reasons:
+- Extant LSL scripts often do not justify being rewritten entirely in Lua. We have over 20 years of products and services built in LSL in varying states of completion and support; many En concepts are formalizations of unwritten standards and practices that can be easily "transposed" into En to improve maintainability of existing scripts without needing to completely rewrite them in Luau.
+- En development began before Luau implementation was announced. For most of En's development, SLuau had no preprocessing or `require`s, making it impossible to implement En in anything other than LSL. With the release of the official [https://github.com/secondlife/sl-vscode-plugin SL VSCode Plugin], these features now exist for Luau.
+- Luau support is currently in open beta and is limited to specific Luau-enabled regions. When Luau is released to production regions, we will port En to it, because key Luau features happen to be the core purpose of the En framework anyway (data structures, dynamic event subscription, multiple event handlers, coroutines, multiple timers), so a lot of the extant En superstructure can be simplified in Luau.
 
-If this ever changes, we hope to port En to Lua to take advantage of the significant performance improvements; however, until then, LSL/En is still significantly easier from a development perspective.
+### Don't the additional function definitions increase script memory?
 
-### Why redirect events? Don't the additional function definitions increase script memory?
+En dynamically generates event handlers depending on the flags you define in the script. For example, defining `FEATURE_ENCLEP_ENABLE` creates a `listen` event handler and passes its events to `_enCLEP_listen()` as a hook, and defining `EVENT_EN_LISTEN` passes any non-caught chat messages (if you haven't enabled CLEP, or receive a non-CLEP message) to `en_listen()`.
 
-En dynamically adds code in event handlers depending on the flags you defined in the script. For example, defining `FEATURE_ENCLEP_ENABLE` creates a `listen` event (if it doesn't already exist) and passes its events to an internal enCLEP function for processing CLEP messages. If a message is determined to not be a CLEP message and the `EVENT_EN_LISTEN` flag is defined, the script then passes the message to the `en_listen` user-defined function.
-
-Since there is no way for the LSL preprocessor to easily inject this code into a user-written `listen` event handler, En manages the event handler itself.
+Since LSL does not support dynamic event subscription or multiple event handlers, the only way to accomplish this is to have En generate event handlers itself and pass events to En-defined and user-defined functions depending on which features are enabled.
 
 Passing events to user-defined functions only adds a trivial amount of memory usage. (Functions have not implicitly allocated 512 bytes in Mono since at least 2013.)
 
@@ -198,40 +199,42 @@ You can also send a copy of all logs as they are written to a separate object by
 
 En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
 
-```
-enLEP_Send(
+```enLEP_Request(token, target_link, target_script, json, data)
+enLEP_Request(
     LINK_THIS,
     "Target Script Name",
-    FLAG_ENLEP_TYPE_REQUEST,
-    ["ping"], // parameters passed to target
-    "" // data string passed to target
+    "{op:"ping"}",
+    ""
 );
 ```
 
-and the other script - if compiled with En - will call the `enlep_message` function defined by the script:
+Only the script named "Target Script Name" in the same prim will call the `enlep_request` function defined by the script:
 
 ```
-#define EVENT_ENLEP_MESSAGE
+#define EVENT_ENLEP_REQUEST
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
-enlep_message(
+enlep_request(
+    string token,
     integer source_link,
     string source_script,
     string target_script,
-    integer flags,
-    list parameters,
+    string json,
     string data
 )
 {
-    if (~flags & FLAG_ENLEP_TYPE_REQUEST) return; // only respond to requests
-    if (llList2String(parameters, 0) != "ping") return; // only respond if first element of params is "ping"
-    enLEP_Send( // respond via enLEP
-        source_link,
-        source_script,
-        FLAG_ENLEP_TYPE_RESPONSE,
-        ["ping"],
-        data // send data back, just in case
+    // you can process this request however you like, but here's an example:
+
+    if (llJsonGetValue(json, ["op"]) != "ping") return; // only respond if "op"="ping"
+
+    // respond to request, adding "timestamp" value to json
+    enLEP_Respond(
+        token, // token must be returned, since that's how source_script knows which request this response relates to
+        source_link, // you may send messages to any link or script, not just source_link and source_script
+        source_script, // however, typically you'd only respond to the source_link and source_script that sent the request
+        llJsonSetValue(json, ["timestamp"], llGetTimestamp()),
+        data
     );
 }
 
@@ -241,7 +244,56 @@ default
 }
 ```
 
-and all other En scripts in the object will ignore the message.
+Then, the source script will trigger `enlep_response`:
+
+```
+#define EVENT_ENLEP_RESPONSE
+
+#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+
+enlep_response(
+    string token,
+    integer source_link,
+    string source_script,
+    string target_script,
+    string json,
+    string data
+)
+{
+    /*
+    you can process the response however you like!
+
+    this enlep_response function won't get called unless:
+    - this script receives a LEP response via link_message
+    - the response is targeted to this script, "" (all scripts), or any script in the OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS list (see also FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT)
+    - if OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS is defined, the response is from any script in that list (but note that source_script is self-reported, so this is NOT secure)
+    - this script has defined EVENT_ENLEP_RESPONSE (or EVENT_ENLEP_MESSAGE, not shown)
+    */
+
+    if (llJsonGetValue(json, ["op"]) != "ping") return; // if "op"!="ping", this response isn't to a ping
+
+    /*
+    best practice is to look up the response token to determine which request it relates to, but this example skips that
+    if you are implementing this in a security-sensitive application, make sure to harden against spurious messages
+    */
+
+    // respond to request, adding "timestamp" value to json
+    enLEP_Respond(
+        token, // token must be returned, since that's how source_script knows which request this response relates to
+        source_link, // you may send messages to any link or script, not just source_link and source_script
+        source_script, // however, typically you'd only respond to the source_link and source_script that sent the request
+        llJsonSetValue(json, ["timestamp"], llGetTimestamp()),
+        data // we never touch data, but it's generally good practice to return it, in case we want to use it for on-the-wire storage
+    );
+}
+
+default
+{
+    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
+}
+```
+
+All other En scripts will ignore both `link_message` events, returning them as quickly as possible.
 
 ## License
 

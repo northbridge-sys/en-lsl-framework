@@ -25,7 +25,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 if (llList2String(parameters, 0) == "enKVS-remote" && flags & FLAG_ENLEP_TYPE_REQUEST)
 {
 	string kvs_op = llList2String(parameters, 1);
-	list kvs_pair = enList_FromString(llList2String(parameters, 2));
+	list kvs_pair = enList_FromEscapedCSV(llList2String(parameters, 2));
 	if (kvs_op == "write" || kvs_op == "read")
 	{ // check name for write or read operation first
 		if (!enKVS_Exists(kvs_pair))
@@ -70,7 +70,7 @@ if (llList2String(parameters, 0) == "enKVS-remote" && flags & FLAG_ENLEP_TYPE_RE
 			source_script,
 			FLAG_ENLEP_TYPE_RESPONSE,
 			parameters,
-			enList_ToString(_ENKVS_NAMES)
+			enList_ToEscapedCSV(_ENKVS_NAMES)
 		);
 	}
 	return;

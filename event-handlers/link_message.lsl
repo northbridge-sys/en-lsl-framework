@@ -16,25 +16,57 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EVENT_EN_LINK_MESSAGE || defined EVENT_ENLEP_MESSAGE
-    link_message( integer l, integer i, string s, key k )
+// EVENT HOOK DEFINITIONS
+
+// en_link_message
+#if defined EVENT_EN_LINK_MESSAGE
+    #define _EVENT_LINK_MESSAGE
+    #define _HOOK_EN_LINK_MESSAGE
+#endif
+
+// _enLEP_link_message
+#if defined EVENT_ENLEP_REQUEST || defined EVENT_ENLEP_RESPONSE || defined EVENT_ENLEP_BROADCAST || defined EVENT_ENLEP_MESSAGE
+    #define _EVENT_LINK_MESSAGE
+    #define _HOOK_ENLEP_LINK_MESSAGE
+#endif
+
+// EVENT HANDLER
+
+#if defined _EVENT_LINK_MESSAGE
+    link_message(integer l, integer i, string s, key k)
     {
 #endif
 
-        // log event if requested
-        #if defined TRACE_EVENT_EN_LINK_MESSAGE && (defined EVENT_EN_LINK_MESSAGE || defined EVENT_ENLEP_MESSAGE)
-            enLog_TraceParams( "link_message", [ "l", "i", "s", "k" ], [ l, i, enString_Elem( s ), enString_Elem( k ) ] );
+        // trace event
+        
+        #if defined _EVENT_LINK_MESSAGE && defined TRACE_EVENT_LINK_MESSAGE
+            enLog_TraceParams(
+                "link_message",
+                [
+                    "l",
+                    "i",
+                    "s",
+                    "k"
+                ], [
+                    l,
+                    i,
+                    enString_Elem(s),
+                    enString_Elem(k)
+                ]
+            );
         #endif
 
-        #if defined EVENT_ENLEP_MESSAGE
-            if ( enLEP_Process(l, i, s, k)) return; // valid LEP message
+        // process through hooks until one catches
+
+        #if defined _HOOK_ENLEP_LINK_MESSAGE
+            if (enLEP_Process(l, i, s, k)) return; // valid prerelease LEP message TODO: remove this
+            if (!_enLEP_link_message(l, i, s, k)) return; // if 0, valid LEP message
         #endif
 
-        // pass to user-defined function if requested
-		#if defined EVENT_EN_LINK_MESSAGE
-			en_link_message( l, i, s, k );
+		#if defined _HOOK_EN_LINK_MESSAGE
+			en_link_message(l, i, s, k);
 		#endif
 
-#if defined EVENT_EN_LINK_MESSAGE || defined EVENT_ENLEP_MESSAGE
+#if defined _EVENT_EN_LINK_MESSAGE
 	}
 #endif
