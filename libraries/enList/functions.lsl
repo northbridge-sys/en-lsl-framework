@@ -313,3 +313,20 @@ string enList_RandomElement(
 {
     return llList2String(l, (integer)llFrand((float)llGetListLength(l)));
 }
+
+/*!
+Cast function for all list elements.
+Used when you have a mixed or string list that needs to be entirely integers.
+@param list l List to convert into integers.
+*/
+list enList_AllToInteger(
+    list l
+)
+{
+    integer i;
+    integer j = llGetListLength(l);
+    list r;
+    for (i = 0; i < j; i++)
+        r += [(integer)llList2String(l, j)];
+    return r;
+}
