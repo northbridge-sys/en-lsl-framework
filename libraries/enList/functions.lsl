@@ -318,6 +318,7 @@ string enList_RandomElement(
 Cast function for all list elements.
 Used when you have a mixed or string list that needs to be entirely integers.
 @param list l List to convert into integers.
+@return list List converted to integers.
 */
 list enList_AllToInteger(
     list l
