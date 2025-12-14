@@ -57,6 +57,18 @@ integer enDate_DaysInMonth(
 }
 
 /*!
+Gets number of days in a specific year as integer.
+@param integer y Year.
+@return integer Number of days in specified year.
+*/
+integer enDate_DaysInYear(
+    integer y
+)
+{
+    return 365 + ((!(y % 4) && y % 100) || !(y % 400));
+}
+
+/*!
 Converts current environment time (sun position) at specified location to a proportion.
 @param vector p Region-scope position.
 @return float Daypart of 24 hours starting at midnight (0.0-1.0).
@@ -115,11 +127,7 @@ string enDate_HMSUToPretty(
 )
 {
     hmsu = _enDate_PadZeroesHMS(hmsu, flags);
-    string ss = (string)((integer)llList2String(hmsu, 3) * 0.000001); // subseconds - note we do NOT validate if subseconds are <1.0 second!
-    string o = llList2String(hmsu, 0) + ":" + llList2String(hmsu, 1) + ":" + llList2String(hmsu, 2); // output
-    integer i = llSubStringIndex(ss, ".");
-    if (i == -1) return o; // subseconds DOES NOT have a decimal, return h:m:s only
-    return o + llDeleteSubString(ss, 0, i - 1); // subseconds DOES have a decimal, so we need to append subseconds to output, return only decimal and following digits
+    string o = llList2String(hmsu, 0) + ":" + llList2String(hmsu, 1) + ":" + llList2String(hmsu, 2) + _enDate_DecimalizeSubseconds((integer)llList2String(hmsu, 3), FALSE);
 }
 
 /*!
@@ -343,6 +351,46 @@ integer enDate_YMDHMSUToMillisec(
 }
 
 /*!
+Converts YMDHMSU list to ISO 8601 timestamp.
+@param list ymdhmsu [Y, M, D, h, m, s, u].
+@return string ISO 8601 timestamp.
+*/
+integer enDate_YMDHMSUToTimestamp(
+    list ymdhmsu
+)
+{
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 1, 2); // pad MM
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 2, 2); // pad DD
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 3, 2); // pad hh
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 4, 2); // pad mm
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 5, 2); // pad ss
+    return
+        llList2String(ymdhmsu, 0) // YYYY
+        + "-" + llList2String(ymdhmsu, 1) // MM
+        + "-" + llList2String(ymdhmsu, 2) // DD
+        + "T" + llList2String(ymdhmsu, 3) // hh
+        + ":" + llList2String(ymdhmsu, 4) // mm
+        + ":" + llList2String(ymdhmsu, 5) // ss
+        + _enDate_DecimalizeSubseconds((integer)llList2String(ymdhmsu, 6), TRUE) // .ff..f
+        + "Z";
+}
+
+string _enDate_DecimalizeSubseconds(
+    integer u,
+    integer force
+)
+{
+    string ss = (string)(u * 0.000001); // subseconds - note we do NOT validate if subseconds are <1.0 second!
+    integer i = llSubStringIndex(ss, ".");
+    if (i == -1)
+    { // subseconds DOES NOT have a decimal
+        if (force) return "0.0";
+        return "";
+    }
+    return llDeleteSubString(ss, 0, i - 1); // subseconds DOES have a decimal, return only decimal and following digits
+}
+
+/*!
 Internal function to convert H* list to 12-hour format, and append an "A"/"P" depending on the hour (may be modified depending on flags used).
 @param list h [h]. May include [m, s, u]. Do not include [Y, M, D].
 @param integer flags FLAG_ENDATE_12_HOUR* flags.
@@ -382,17 +430,25 @@ list _enDate_PadZeroesHMS(
     integer flags
 )
 {
-    if (flags & FLAG_ENDATE_PAD_ZEROES_HOURS)
-    {
-        while (llStringLength(llList2String(hms, 0)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 0)], 0, 0);
-    }
-    if (flags & FLAG_ENDATE_PAD_ZEROES_MINUTES)
-    {
-        while (llStringLength(llList2String(hms, 1)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 1)], 1, 1);
-    }
-    if (flags & FLAG_ENDATE_PAD_ZEROES_SECONDS)
-    {
-        while (llStringLength(llList2String(hms, 2)) < 2) hms = llListReplaceList(hms, ["0" + llList2String(hms, 2)], 2, 2);
-    }
+    if (flags & FLAG_ENDATE_PAD_ZEROES_HOURS) hms = _enDate_PadZeroesIndex(hms, 0, 2);
+    if (flags & FLAG_ENDATE_PAD_ZEROES_MINUTES) hms = _enDate_PadZeroesIndex(hms, 1, 2);
+    if (flags & FLAG_ENDATE_PAD_ZEROES_SECONDS) hms = _enDate_PadZeroesIndex(hms, 2, 2);
     return hms;
+}
+
+/*!
+Internal function to pad an element of a list with zeroes.
+@param list l Any list.
+@param integer i Index in list.
+@param integer d Digits to pad to.
+@return list Resulting list.
+*/
+list _enDate_PadZeroesIndex(
+    list l,
+    integer i, // index in list
+    integer d // digits
+)
+{
+    while (llStringLength(llList2String(l, i)) < d) l = llListReplaceList(l, ["0" + llList2String(l, i)], i, i);
+    return l;
 }

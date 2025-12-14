@@ -121,6 +121,14 @@ Converts Unix time to pretty datetime.
     enDate_YMDHMSToPretty(enDate_UnixToYMDHMS(u), flags)
 
 /*!
+Converts Unix time to ISO 8601 timestamp.
+@param string Unix time. See llGetUnixTime().
+@return string ISO 8601 timestamp.
+*/
+#define enDate_UnixToTimestamp(u) \
+    enDate_YMDHMSUToTimestamp(enDate_UnixToYMDHMS(u))
+
+/*!
 Gets full textual representation of specified month.
 Avoid calling this in multiple places in the same script, because the entire month list will be stored multiple times in the bytecode! Use enDate_MToPretty() instead.
 @param integer month Month of year (1-12).
