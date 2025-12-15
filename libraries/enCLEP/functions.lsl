@@ -185,7 +185,7 @@ enCLEP_SendPTP( // send via enCLEP using the Packet Transfer Protocol
             ]);
     #endif
     #ifndef FEATURE_ENCLEP_ENABLE_PTP
-        enLog_Warn("enCLEP_SendPTP called but FEATURE_ENCLEP_ENABLE_PTP not defined.");
+        enLog_Warn("enCLEP_SendPTP called but FEATURE_ENCLEP_ENABLE_PTP not defined");
     #else
         // TODO: message really should be dynamically loaded from linkset data - maybe with some way of loading data of arbitrary length into safe ~1K chunks in linkset data for situations like this?
         message = enList_ToEscapedCSV(["CLEP", service, domain, target_prim, type, message]); // add enCLEP_PTP header to message to be sent
@@ -444,9 +444,9 @@ _enCLEP_RefreshLinkset()
     if (OVERRIDE_ENOBJECT_LIMIT_SELF)
     { // we can check for self prim domains
         string new = (string)llGetKey();
-        if (enObject_Self(1) != new)
+        if (enObject_GetLast(1) != new)
         { // UUID change
-            integer index = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 1), [enObject_Self(1)]);
+            integer index = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 1), [enObject_GetLast(1)]);
             if (index) _ENCLEP_DOMAINS = llListReplaceList(_ENCLEP_DOMAINS,
                 [new],
                 index * _ENCLEP_DOMAINS_STRIDE + 1,

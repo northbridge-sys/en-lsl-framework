@@ -30,7 +30,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
         #if defined FUNCTION_EN_ATTACH_BLOCK
             if ((string)id != NULL_KEY && llGetAttached()) // check both to be safe, never know
             {
-                enLog_FatalDie("This object cannot be used as an attachment.");
+                enLog_FatalDie("This object cannot be used as an attachment");
                 return;
             }
         #endif

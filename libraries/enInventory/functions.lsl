@@ -95,7 +95,7 @@ integer enInventory_NCOpen(
             ]);
     #endif
     #ifndef FEATURE_ENINVENTORY_ENABLE_NC
-        enLog_Debug("FEATURE_ENINVENTORY_ENABLE_NC not defined.");
+        enLog_Debug("FEATURE_ENINVENTORY_ENABLE_NC not defined");
         return;
     #endif
     _ENINVENTORY_NC_N = name;
@@ -120,7 +120,7 @@ enInventory_NCRead(
             ]);
     #endif
     #ifndef FEATURE_ENINVENTORY_ENABLE_NC
-        enLog_Debug("FEATURE_ENINVENTORY_ENABLE_NC not defined.");
+        enLog_Debug("FEATURE_ENINVENTORY_ENABLE_NC not defined");
         return;
     #else
         _ENINVENTORY_NC_L = i;
@@ -184,4 +184,43 @@ string enInventory_TypeToString(
         "Setting",
         "Material"
         ], i);
+}
+
+/*!
+Generates a special combined permissions bitfield.
+@param string n Name of inventory, or "" for object itself
+@return integer Combined permissions bitfield. See CONST_ENINVENTORY_MASK_*_PERM_* for bit indexes.
+*/
+integer enInventory_GetPerms(
+    string n
+)
+{
+    /*
+    layout is:
+    C = COPY
+    M = MODIFY
+    T = TRANSFER
+    V = MOVE
+                    ============ <- ignored (zero)
+                                CMTV <- MASK_BASE
+                                    CMTV <- MASK_OWNER
+                                        CMTV <- MASK_GROUP
+                                            CMTV <- MASK_EVERYONE
+                                                CMTV <- MASK_NEXT
+    32-bit integer: 00000000000000000000000000000000
+    */
+    integer r;
+    integer i;
+    for (i = 0; i < 5; i++)
+    {
+        r = r << 4; // shift existing bits left to make room for these
+        integer p;
+        if (n == "") p = llGetObjectPermMask(i); // MASK_BASE, MASK_OWNER, MASK_GROUP, MASK_EVERYONE, MASK_NEXT are 0-4
+        else p = llGetInventoryPermMask(n, i);
+        r += !!(p & PERM_COPY)
+            + !!(p & PERM_MODIFY) * 0x2
+            + !!(p & PERM_TRANSFER) * 0x4
+            + !!(p & PERM_MOVE) * 0x8;
+    }
+    return r;
 }

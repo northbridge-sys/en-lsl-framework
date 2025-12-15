@@ -52,21 +52,21 @@ enLSD_Reset()
 integer enLSD_Write(integer flags, list name, string data)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_Root();
+    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetRoot();
     return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
 }
 
 string enLSD_Read(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_Root();
+    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetRoot();
     return llLinksetDataRead(_enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
 
 list enLSD_Delete(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_Root();
+    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetRoot();
     string regex;
     if (flags & FLAG_ENLSD_DELETE_CHILDREN) regex = "\n.*";
 	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
@@ -88,7 +88,7 @@ list enLSD_Find(integer flags, list name, integer start, integer count)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_Root();
+    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetRoot();
 	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
@@ -103,7 +103,7 @@ list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_Root();
+    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetRoot();
 	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
 }
 
@@ -116,7 +116,7 @@ list enLSD_DeleteRegex(integer flags, string regex)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_Root();
+    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetRoot();
 	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
 }
 
@@ -135,7 +135,7 @@ string _enLSD_BuildHead(
 //  purges all enLSD pairs assigned to UUIDs that are not part of this linkset
 enLSD_Purge()
 {
-    string root = enObject_Root();
+    string root = enObject_GetRoot();
     list pair;
     integer i;
     integer start = llLinksetDataCountKeys();
@@ -210,7 +210,7 @@ enLSD_CheckUUID()
         enLog_TraceParams("enLSD_CheckUUID", [], []);
     #endif
     #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER
-        string k = enObject_Self(1); // get last key
+        string k = enObject_GetLast(1); // get last key
         if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
         enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
         enLSD_MoveAllPairs(k);

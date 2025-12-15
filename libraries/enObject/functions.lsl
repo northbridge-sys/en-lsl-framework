@@ -110,7 +110,7 @@ integer enObject_CacheClosestLink(
 )
 {
     #ifndef FEATURE_ENOBJECT_ENABLE_LINK_CACHE
-        enLog_Error("enObject_CacheClosestLink called but FEATURE_ENOBJECT_ENABLE_LINK_CACHE not defined.");
+        enLog_Error("enObject_CacheClosestLink called but FEATURE_ENOBJECT_ENABLE_LINK_CACHE not defined");
         return 0;
     #else
         integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);

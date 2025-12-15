@@ -44,10 +44,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define OVERRIDE_ENOBJECT_LIMIT_SELF 2
 #endif
 
-#if defined TRACE_EN
-    #define TRACE_ENOBJECT
-#endif
-
 #if defined FEATURE_ENOBJECT_ENABLE_SELF
     list _ENOBJECT_UUIDS_SELF;
 #endif
@@ -57,14 +53,21 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define _ENOBJECT_LINK_CACHE_STRIDE 3
 #endif
 
+#define enObject_GetLastOwner() \
+    llList2String(llGetObjectDetails(llGetKey(), [OBJECT_LAST_OWNER_ID]), 0)
+
 #define enObject_GetLinkColor(link,face) \
     (vector)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 0)
 
 #define enObject_GetLinkAlpha(link,face) \
     (float)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 1)
 
+// gets the current object's world position
+#define enObject_GetMyWorldPos() \
+    enVector_RegionToWorld(llGetPos())
+
 //  gets UUID of entity that rezzed the object
-#define enObject_Parent() \
+#define enObject_GetParent() \
     llList2String(llGetObjectDetails(llGetKey(), [OBJECT_REZZER_KEY]), 0)
 
 // gets UUID of root prim in linkset
@@ -72,29 +75,25 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 //  1 (unlinked object): index is !(1-1)=!!(0)=0, return llGetLinkKey(0)
 //  2+ (linked object): index is !(2-1)=!!(1)=1, reutrn llGetLinkKey(1)
 // this is required because llGetLinkKey requires 0 for root in unlinked objects and 1 in linked objects
-#define enObject_Root() \
+#define enObject_GetRoot() \
     llGetLinkKey(!!(llGetNumberOfPrims() - 1))
 
-//  returns either own object's current UUID or one of its previous UUIDs
-#define enObject_Self(i) \
-    llList2String(_ENOBJECT_UUIDS_SELF, i)
-
-#define enObject_StopIfOwnerRezzed() \
-    if (enObject_Parent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered.")
-
-#define enObject_StopIfFlagged() \
-    if ((integer)llLinksetDataRead("stop")) enLog_FatalStop("enObject_StopIfFlagged() triggered.")
-
-// gets the current object's world position
-#define enObject_MyWorldPos() \
-    enVector_RegionToWorld(llGetPos())
-
 // gets the root prim's world position
-#define enObject_RootWorldPos() \
+#define enObject_GetRootWorldPos() \
     enVector_RegionToWorld(llGetRootPosition())
+
+//  returns either own object's current UUID or one of its previous UUIDs
+#define enObject_GetLast(i) \
+    llList2String(_ENOBJECT_UUIDS_SELF, i)
 
 // gets another object's world position (same region only), or avatar within the avatar detection range of llGetObjectDetails
 // for objects outside that range with known positions, you'll have to do this yourself using enVector_RegionCornerToWorld
 // you'll want to first add some sort of validation that the key is in the region, otherwise this just returns the region corner (maybe check for that and hope for the best?)
-#define enObject_WorldPos(object_or_avatar_uuid) \
+#define enObject_GetWorldPos(object_or_avatar_uuid) \
     enVector_RegionToWorld(llList2Vector(llGetObjectDetails(object_or_avatar_uuid, [OBJECT_POS]), 0))
+
+#define enObject_StopIfOwnerRezzed() \
+    if (enObject_GetParent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered")
+
+#define enObject_StopIfFlagged() \
+    if ((integer)llLinksetDataRead("stop")) enLog_FatalStop("enObject_StopIfFlagged() triggered")

@@ -158,21 +158,21 @@ enLog enables in-the-field debugging out-of-the-box. With En, just write:
 someFunction(integer x, integer y)
 {
     enLog_TraceParams("someFunction", ["x", "y"], [x, y] );
-    enLog_Debug("This will only appear if loglevel is DEBUG or above.");
-    enLog_Info("Function called with parameters " + (string)x + " and " + (string)y + ".");
-    if (x) enLog_Warn("Non-zero values of x are discouraged.");
-    if (y) enLog_Error("Non-zero values of y are prohibited (normally you would return at this point).");
-    if (x && y) enLog_FatalStop("Everything is terrible."); // script will stop when enLog_FatalStop is called
+    enLog_Debug("This will only appear if loglevel is DEBUG or above");
+    enLog_Info("Function called with parameters " + (string)x + " and " + (string)y);
+    if (x) enLog_Warn("Non-zero values of x are discouraged");
+    if (y) enLog_Error("Non-zero values of y are prohibited (normally you would return at this point)");
+    if (x && y) enLog_FatalStop("Everything is terrible"); // script will stop when enLog_FatalStop is called
 }
 ```
 
 and when you call `someFunction(1, 2);`, you'll see the following sent to you via `llOwnerSay` by default:
 
 ```
-💬 Function called with parameters 1 and 2.
-🚩 WARNING: Non-zero values of x are discouraged.
-❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
-🛑 FATAL ERROR: Script stopped: Everything is terrible.
+💬 Function called with parameters 1 and 2
+🚩 WARNING: Non-zero values of x are discouraged
+❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point)
+🛑 FATAL ERROR: Script stopped: Everything is terrible
 ```
 
 or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel(TRACE);` from this or any other script in the object), you'll not only get additional relevant logs, but a header that shows the exact time, the first 4 digits of the object's UUID (handy for distinguishing between objects with the same name), the current memory usage, the preprocessed source line number, and the name of the script logging the message:
@@ -184,15 +184,15 @@ or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel
         y = 2
     )
 🔽 [12:11:24.86] (16% 13a1 @26) New Script
-🪲 This will only appear if loglevel is DEBUG or above.
+🪲 This will only appear if loglevel is DEBUG or above
 🔽 [12:11:24.89] (16% 13a1 @27) New Script
-💬 Function called with parameters 1 and 2.
+💬 Function called with parameters 1 and 2
 🔽 [12:11:24.91] (16% 13a1 @28) New Script
-🚩 WARNING: Non-zero values of x are discouraged.
+🚩 WARNING: Non-zero values of x are discouraged
 🔽 [12:11:24.98] (16% 13a1 @29) New Script
-❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point).
+❌ ERROR: Non-zero values of y are prohibited (normally you would return at this point)
 🔽 [12:11:25.05] (16% 13a1 @30) New Script
-🛑 FATAL ERROR: Script stopped: Everything is terrible.
+🛑 FATAL ERROR: Script stopped: Everything is terrible
 ```
 
 You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` linkset data value.
