@@ -53,8 +53,8 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define _ENOBJECT_LINK_CACHE_STRIDE 3
 #endif
 
-#define enObject_GetLastOwner() \
-    llList2String(llGetObjectDetails(llGetKey(), [OBJECT_LAST_OWNER_ID]), 0)
+#define enObject_GetLastOwner(prim) \
+    llList2String(llGetObjectDetails(prim, [OBJECT_LAST_OWNER_ID]), 0)
 
 #define enObject_GetLinkColor(link,face) \
     (vector)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 0)
@@ -62,29 +62,53 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enObject_GetLinkAlpha(link,face) \
     (float)llList2String(llGetLinkPrimitiveParams(link, [PRIM_COLOR, face]), 1)
 
-// gets the current object's world position
-#define enObject_GetMyWorldPos() \
-    enVector_RegionToWorld(llGetPos())
+#define enObject_GetMyLastOwner() \
+    enObject_GetLastOwner(llGetKey())
 
-//  gets UUID of entity that rezzed the object
-#define enObject_GetParent() \
-    llList2String(llGetObjectDetails(llGetKey(), [OBJECT_REZZER_KEY]), 0)
+//  gets UUID of entity that rezzed THIS object
+#define enObject_GetMyParent() \
+    enObject_GetParent(llGetKey())
 
 // gets UUID of root prim in linkset
 // if llGetNumberOfPrims() is...
 //  1 (unlinked object): index is !(1-1)=!!(0)=0, return llGetLinkKey(0)
 //  2+ (linked object): index is !(2-1)=!!(1)=1, reutrn llGetLinkKey(1)
 // this is required because llGetLinkKey requires 0 for root in unlinked objects and 1 in linked objects
-#define enObject_GetRoot() \
+#define enObject_GetMyRoot() \
     llGetLinkKey(!!(llGetNumberOfPrims() - 1))
+
+// gets the current object's world position
+#define enObject_GetMyWorldPos() \
+    enVector_RegionToWorld(llGetPos())
+
+//  gets UUID of entity that rezzed the specified object
+#define enObject_GetParent(prim) \
+    llList2String(llGetObjectDetails(prim, [OBJECT_REZZER_KEY]), 0)
+
+/*!
+Gets root of specified prim UUID's linkset. See llGetObjectDetails(), OBJECT_ROOT.
+@param string prim Prim UUID.
+@return string UUID of root prim.
+*/
+#define enObject_GetRoot(prim) \
+    llList2String(llGetObjectDetails(llGetKey(), [OBJECT_ROOT]), 0)
 
 // gets the root prim's world position
 #define enObject_GetRootWorldPos() \
     enVector_RegionToWorld(llGetRootPosition())
 
 //  returns either own object's current UUID or one of its previous UUIDs
-#define enObject_GetLast(i) \
+#define enObject_GetMyLast(i) \
     llList2String(_ENOBJECT_UUIDS_SELF, i)
+
+/*!
+Gets link number of specified prim in its linkset.
+Note that there doesn't appear to be a way to confirm that a 0 value here is a missing key and not a single-prim linkset's root. Use some other method to check if the prim exists.
+@param string prim Prim UUID.
+@return integer Link number.
+*/
+#define enObject_GetLinkNumber(prim) \
+    (integer)llList2String(llGetObjectDetails(llGetKey(), [OBJECT_LINK_NUMBER]), 0)
 
 // gets another object's world position (same region only), or avatar within the avatar detection range of llGetObjectDetails
 // for objects outside that range with known positions, you'll have to do this yourself using enVector_RegionCornerToWorld
@@ -92,8 +116,16 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enObject_GetWorldPos(object_or_avatar_uuid) \
     enVector_RegionToWorld(llList2Vector(llGetObjectDetails(object_or_avatar_uuid, [OBJECT_POS]), 0))
 
+/*!
+Returns TRUE if specified prim has the same root as the script's, or FALSE otherwise.
+@param string prim Prim UUID to compare to.
+@return integer Boolean.
+*/
+#define enObject_SameRoot(prim) \
+    (enObject_GetRoot(prim) == enObject_GetMyRoot())
+
 #define enObject_StopIfOwnerRezzed() \
-    if (enObject_GetParent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered")
+    if (enObject_GetMyParent() == (string)llGetKey()) enLog_FatalStop("enObject_StopIfOwnerRezzed() triggered")
 
 #define enObject_StopIfFlagged() \
     if ((integer)llLinksetDataRead("stop")) enLog_FatalStop("enObject_StopIfFlagged() triggered")
