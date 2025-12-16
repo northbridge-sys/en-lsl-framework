@@ -43,8 +43,8 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 // used by enCLEP_DialogListen()
 integer _ENCLEP_DIALOG_LSN;
 
-list _ENCLEP_DOMAINS; // service, domain, flags, handle
-#define _ENCLEP_DOMAINS_STRIDE 4
+list _ENCLEP_DOMAINS; // domain, flags, handle
+#define _ENCLEP_DOMAINS_STRIDE 3
 
 #if defined FEATURE_ENCLEP_ENABLE_PTP
     list _ENCLEP_PTP; // transfer_key, prim ("" for inbound), domain, message_buffer

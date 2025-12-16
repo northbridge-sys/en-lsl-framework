@@ -27,7 +27,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
         #endif
 
         #if defined FEATURE_ENCLEP_ENABLE
-		    if ( !_enclep_listen( channel, name, id, message ) ) return; // valid enCLEP message
+		    if ( !_enCLEP_listen( channel, name, id, message ) ) return; // valid enCLEP message
         #endif
         
         // pass to user-defined function if requested

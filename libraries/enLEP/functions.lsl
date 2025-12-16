@@ -22,46 +22,160 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-string _enLEP_Message_As(
-    integer flags,
-    integer target_link,
+/*
+this is loosely based on JSON-RPC, optimized for LSL's tight memory limits and adding LEP routing metadata: https://en.wikipedia.org/wiki/JSON-RPC
+*/
+string _enLEP_FormJsonRPC(
     string source_script,
     string target_script,
-    string token,
-    string json,
-    string data
+    string method,
+    string id,
+    string result,
+    integer error_code,
+    string error_message,
+    string error_data
 )
 {
-    #if defined TRACE_ENLEP_MESSAGE
-        enLog_TraceParams("_enLEP_Message_As", ["flags", "target_link", "source_script", "target_script", "token", "json", "data"], [
-            enInteger_ElemBitfield(flags),
-            target_link,
-            enString_Elem(source_script),
-            enString_Elem(target_script),
-            enString_Elem(token),
-            enString_Elem(json),
-            enString_Elem(data)
-        ]);
-    #endif
-
     /*
-    llJsonValueType check should only be run if FEATURE_ENLEP_SKIP_JSON_VALIDATION is NOT defined
-    this can be defined to skip the check to save a few bytes of memory when enLEP functions won't be called with unsafe JSON (always hard-coded)
-    NOTE: JSON object is mandatory for LEP spec compliance, so do not disable this to use non-JSON messages unless you are OK with non-compliance!
-    */
-    #if !defined FEATURE_ENLEP_SKIP_JSON_VALIDATION
-        if (llJsonValueType(json, []) != JSON_OBJECT)
-        {
-            enLog_Error("_enLEP_Message_As JSON error: " + json);
-            return "";
+    LEP requests are:
+    {
+        "ss":"(name of source script)",
+        "ts":"(name of target script)",
+        "id":"(any string)", <- can be omitted if no response requested (broadcast)
+        "m":"any.method"
+    }
+    LEP responses swap "ss" and "ts", and add either:
+    {
+        "e":{
+            "c":(integer error code),
+            "m":"(string error message)",
+            "d":(any JSON data) <- can be omitted if no error_data provided
         }
+    }
+    or:
+    {
+        "r":(any JSON data)
+    }
+    LEP sends the raw "params" value to an independent string so it can handle any data (JSON-RPC packs it into the JSON).
+    LEP also passes through target_link and int directly to llMessageLinked().
+    The "p" param is optionally reserved for params (used in CLEP, but not LEP for message processing efficiency)
+    Technically no other params are allowed, and the whole spec is reserved for future expansion - all user values must be passed via existing params in the spec
+    */
+    string json = "{\"ss\":" + enString_EscapedQuote(source_script) + ",\"ts\":" + enString_EscapedQuote(target_script) + ",\"m\":" + enString_EscapedQuote(method) + "\"}";
+    if (id != "") json = llJsonSetValue(json, ["id"], enString_EscapedQuote(id));
+    if (llJsonGetType(result, []) != JSON_INVALID)
+    { // we are sending a response with a result
+        json = llJsonSetValue(json, ["r"], result);
+    }
+    else if (error_code || error_message != "" || error_data != "")
+    { // we are sending a response with an error
+        json = llJsonSetValue(json, ["e", "c"], (string)error_code);
+        json = llJsonSetValue(json, ["e", "m"], enString_EscapedQuote(error_message));
+    }
+    // else, we are sending a request
+    // return whatever we're sending
+    return json;
+}
+
+/*!
+Sends a request using the LEP-RPC protocol.
+@param integer target_link Target link number.
+@param string target_script Target script name ("" for all in targeted link(s)).
+@param integer int Any integer.
+@param string method Any method. Typically separated by periods ("."), e.g.: system.display.pixel.color
+@param string params Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
+@param string id Any string. If "", will be omitted.
+*/
+#define enLEP_RequestRPC(target_link, target_script, int, method, params, id) \
+    _enLEP_SendRPC(target_link, target_script, int, method, params, id, "", 0, "", "")
+
+/*!
+Responds using the LEP-RPC protocol.
+@param integer target_link source_link sent via link_message.
+@param string target_script source_script sent in request.
+@param integer int Integer sent in request.
+@param string method Method sent in request.
+@param string id ID sent in request.
+@param string result SUCCESSFUL RESPONSES ONLY: Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON. If "", will be omitted.
+@param integer error_code ERROR RESPONSES ONLY: Any integer. If 0 and both other error_* params are "", the error information will be omitted.
+@param string error_message ERROR RESPONSES ONLY: Any string.
+@param string error_data ERROR RESPONSES ONLY: Any JSON.
+*/
+#define _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data) \
+    _enLEP_SendRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data)
+
+/*!
+Responds with a result using the LEP-RPC protocol.
+@param integer target_link source_link sent via link_message.
+@param string target_script source_script sent in request.
+@param integer int Integer sent in request.
+@param string method Method sent in request.
+@param string id ID sent in request.
+@param string result Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
+*/
+#define enLEP_RespondRPCResult(target_link, target_script, int, method, params, id, result) \
+    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, 0, "", "")
+
+/*!
+Responds with an error using the LEP-RPC protocol.
+@param integer target_link source_link sent via link_message.
+@param string target_script source_script sent in request.
+@param integer int Integer sent in request.
+@param string method Method sent in request.
+@param string id ID sent in request.
+@param integer error_code Any integer.
+@param string error_message Any string.
+@param string error_data Any JSON.
+*/
+#define enLEP_RespondRPCError(target_link, target_script, int, method, params, id, error_code, error_message, error_data) \
+    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, "", error_code, error_message, error_data)
+
+string _enLEP_SendRPC(
+    integer target_link,
+    string target_script,
+    integer int,
+    string method,
+    string params,
+    string id,
+    string result,
+    integer error_code,
+    string error_message,
+    string error_data
+)
+{
+    #if defined TRACE_ENLEP_SENDRPC
+        enLog_TraceParams(
+            "_enLEP_SendRPC",
+            [
+                "target_link",
+                "target_script",
+                "int",
+                "method",
+                "params",
+                "id",
+                "result",
+                "error_code",
+                "error_message",
+                "error_data"
+            ],
+            [
+                target_link,
+                enString_Elem(target_script),
+                int,
+                method,
+                params,
+                id,
+                result,
+                error_code,
+                enString_Elem(error_message),
+                error_data
+            ]
+        );
     #endif
 
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-
-    llMessageLinked(target_link, flags, _enLEP_Generate_As(source_script, target_script, token, json), data);
-
-    return token;
+    llMessageLinked(target_link, int, _enLEP_FormJsonRPC(llGetScriptName(), target_script, method, id, result, error_code, error_message, error_data), params);
+    return id;
 }
 
 /*!
@@ -89,25 +203,35 @@ integer _enLEP_link_message(
         ]);
     #endif
 
-    // extract source_script
-    integer n = llSubStringIndex(s, "\n");
-    if (n == -1) return __LINE__; // not a valid LEP message
-    string source_script = llDeleteSubString(s, n, -1);
-    s = llDeleteSubString(s, 0, n);
+    /*
+    LEP requests are:
+    {
+        "ss":"(name of source script)",
+        "ts":"(name of target script)",
+        "i":"(any string)", <- can be omitted if no response requested (broadcast)
+        "m":"any.method",
+        "p":(any JSON data)
+    }
+    LEP responses swap "ss" and "ts", and add either:
+    {
+        "e":{
+            "c":(integer error code),
+            "m":"(string error message)",
+            "d":(any JSON data) <- can be omitted if no error_data provided
+        }
+    }
+    or:
+    {
+        "r":(any JSON data)
+    }
+    LEP sends the raw "params" value to an independent string so it can handle any data (JSON-RPC packs it into the JSON).
+    LEP also passes through target_link and int directly to llMessageLinked().
+    */
 
-    // extract target_script
-    n = llSubStringIndex(s, "\n");
-    if (n == -1) return __LINE__; // not a valid LEP message
-    string target_script = llDeleteSubString(s, n, -1);
-    s = llDeleteSubString(s, 0, n);
-
-    // extract token
-    n = llSubStringIndex(s, "\n");
-    if (n == -1) return __LINE__; // not a valid LEP message
-    string token = llDeleteSubString(s, n, -1);
-
-    // remaining message is presumably json
-    s = llDeleteSubString(s, 0, n);
+    if (llJsonGetType(s, []) != JSON_OBJECT) return __LINE__; // LEP messages are always objects
+    
+    string source_script = llJsonGetValue(s, ["ss"]);
+    string target_script = llJsonGetValue(s, ["ts"]);
 
     // filter out messages that don't match OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS list
     #if defined OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS
@@ -128,185 +252,145 @@ integer _enLEP_link_message(
     {
         #if defined FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
             // using substring matching
-            if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard otherwise valid LEP message, not targeted to us
+            if (llSubStringIndex(llGetScriptName(), target_script) == -1) return 0; // discard otherwise valid LEP message, not targeted to us
         #else
             // using exact matching
             return 0; // discard otherwise valid LEP message, not targeted to us
         #endif
     }
 
-    if (i & FLAG_ENLEP_TYPE_REQUEST)
+    string source_prim = llGetLinkKey(l);
+    string id = llJsonGetValue(s, ["id"]);
+    list method = llParseStringKeepNulls(llJsonGetValue(s, ["m"]), ["."], []);
+    string params = llJsonGetValue(s, ["p"]);
+    string result = llJsonGetValue(s, ["r"]);
+
+    if (result == JSON_INVALID)
     {
-        #if defined EVENT_ENLEP_REQUEST
-            enlep_request(
-                l,
-                source_script,
-                target_script,
-                token,
-                s,
-                k
-            );
-        #elif defined EVENT_ENLEP_MESSAGE
-            enlep_message(
-                i,
-                l,
-                source_script,
-                target_script,
-                token,
-                s,
-                k
+        if (llJsonGetType(s, ["e"]) == JSON_INVALID)
+        { // request
+            #if defined EVENT_ENLEP_RPC_REQUEST && defined TRACE_EVENT_ENLEP_RPC_REQUEST
+                enLog_TraceParams(
+                    "enlep_rpc_request",
+                    [
+                        "source_link",
+                        "source_script",
+                        "target_script",
+                        "int",
+                        "method",
+                        "params",
+                        "id"
+                    ], [
+                        l, // source_link
+                        enString_Elem(source_script),
+                        enString_Elem(target_script),
+                        int,
+                        method,
+                        params,
+                        id
+                    ]
+                );
+            #endif
+            #if defined EVENT_ENLEP_RPC_REQUEST
+                enlep_rpc_request(
+                    l, // source_link
+                    source_script,
+                    target_script,
+                    int,
+                    method,
+                    params,
+                    id
+                );
+            #endif
+            return 0;
+        }
+
+        // error response
+        integer error_code = (integer)llJsonGetValue(s, ["e", "c"]);
+        string error_message = llJsonGetValue(s, ["e", "m"]);
+        string error_data = llJsonGetValue(s, ["e", "d"]);
+        #if defined EVENT_ENLEP_RPC_ERROR && defined TRACE_EVENT_ENLEP_RPC_ERROR
+            enLog_TraceParams(
+                "enlep_rpc_error",
+                [
+                    "source_link",
+                    "source_script",
+                    "target_script",
+                    "int",
+                    "method",
+                    "params",
+                    "id",
+                    "error_code",
+                    "error_message",
+                    "error_data"
+                ], [
+                    l, // source_link
+                    enString_Elem(source_script),
+                    enString_Elem(target_script),
+                    int,
+                    method,
+                    params,
+                    id,
+                    error_code,
+                    enString_Elem(error_message),
+                    error_data
+                ]
             );
         #endif
-
+        #if defined EVENT_ENLEP_RPC_ERROR
+            enlep_rpc_error(
+                l, // source_link
+                source_script,
+                target_script,
+                int,
+                method,
+                params,
+                id,
+                error_code,
+                error_message,
+                error_data
+            );
+        #endif
         return 0;
     }
 
-    if (i & FLAG_ENLEP_TYPE_RESPONSE)
-    {
-        #if defined EVENT_ENLEP_RESPONSE
-            enlep_response(
-                l,
-                source_script,
-                target_script,
-                token,
-                s,
-                k,
-                !(i & FLAG_ENLEP_STATUS_ERROR)
-            );
-        #elif defined EVENT_ENLEP_MESSAGE
-            enlep_message(
-                i,
-                l,
-                source_script,
-                target_script,
-                token,
-                s,
-                k
-            );
-        #endif
-
-        return 0;
-    }
-
-    #if defined EVENT_ENLEP_BROADCAST
-        enlep_broadcast(
-            l,
-            source_script,
-            target_script,
-            token,
-            s,
-            k
-        );
-    #elif defined EVENT_ENLEP_MESSAGE
-        enlep_message(
-            i,
-            l,
-            source_script,
-            target_script,
-            token,
-            s,
-            k
+    // result response
+    integer result = llJsonGetValue(s, ["r"]);
+    #if defined EVENT_ENLEP_RPC_RESULT && defined TRACE_EVENT_ENLEP_RPC_RESULT
+        enLog_TraceParams(
+            "enlep_rpc_result",
+            [
+                "source_link",
+                "source_script",
+                "target_script",
+                "int",
+                "method",
+                "params",
+                "id",
+                "result"
+            ], [
+                l, // source_link
+                enString_Elem(source_script),
+                enString_Elem(target_script),
+                int,
+                method,
+                params,
+                id,
+                result
+            ]
         );
     #endif
-
+    #if defined EVENT_ENLEP_RPC_RESULT
+        enlep_rpc_result(
+            l, // source_link
+            source_script,
+            target_script,
+            int,
+            method,
+            params,
+            id,
+            result
+        );
+    #endif
     return 0;
-}
-
-/*
-sends a generic LEP message
-DEPRECATED - use enLEP_Broadcast, enLEP_Request, enLEP_Response, or enLEP_Response_Error
-*/
-enLEP_Send(
-    integer target_link,
-    string target_script,
-    integer flags,
-    list parameters,
-    string data
-)
-{
-    #if defined TRACE_ENLEP_SEND
-        enLog_TraceParams("enLEP_Send", ["target_link", "target_script", "flags", "parameters", "data"], [
-            target_link,
-            enString_Elem(target_script),
-            enInteger_ElemBitfield(flags),
-            enList_Elem(parameters),
-            enString_Elem(data)
-            ]);
-    #endif
-    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    // we don't need to send a token with this
-    llMessageLinked(target_link, flags, _enLEP_GenerateLegacy(target_script, parameters, ""), data);
-}
-
-//  sends a LEP message as a specific source_script name
-enLEP_SendAs(
-    string source_script,
-    integer target_link,
-    string target_script,
-    integer flags,
-    list parameters,
-    string data
-)
-{
-    #if defined TRACE_ENLEP_SENDAS
-        enLog_TraceParams("enLEP_SendAs", ["source_script", "target_link", "target_script", "flags", "paramters", "data"], [
-            enString_Elem(source_script),
-            target_link,
-            enString_Elem(target_script),
-            enInteger_ElemBitfield(flags),
-            enList_Elem(parameters),
-            enString_Elem(data)
-            ]);
-    #endif
-    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    llMessageLinked(target_link, flags, llDumpList2String([source_script, target_script] + parameters, "\n"), data);
-}
-
-integer enLEP_Process(
-    integer source_link,
-    integer flags,
-    string s,
-    string k
-)
-{
-    #if defined TRACE_ENLEP || defined TRACE_ENLEP_PROCESS
-        enLog_TraceParams("enLEP_Process", ["source_link", "flags", "s", "k"], [
-            source_link,
-            flags,
-            enString_Elem(s),
-            enString_Elem(k)
-            ]);
-    #endif
-    list parameters = llParseStringKeepNulls(s, ["\n"], []);
-    if (llGetListLength(parameters) < 2) return 0; // not a valid LEP message
-    if (source_link == llGetLinkNumber() && llList2String(parameters, 0) == llGetScriptName()) return 1; // discard message loopback even
-    #if defined OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS
-        // filter out messages that don't match the allowed source script list
-        if (llListFindList(OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS, [llList2String(parameters, 0)]) == -1) return 1; // discard message, not sent from an allowed source script
-    #endif
-    list allowed_targets = ["", llGetScriptName()]; // allow messages targeted to "" (all) and this script only
-    #if defined OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS
-        allowed_targets += OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS; // allow messages targeted to any value in the macro OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS
-    #endif
-    #if defined FEATURE_ENLEP_ALLOW_ALL_TARGET_SCRIPTS
-        allowed_targets += [llList2String(parameters, 1)]; // always match - this is less efficient, but this flag is only used for debugging anyway
-    #endif
-    if (llListFindList(allowed_targets, [llList2String(parameters, 1)]) == -1)
-    {
-        #if defined FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
-            // using substring matching due to FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT
-            if (llSubStringIndex(llGetScriptName(), llList2String(parameters, 1)) == -1) return 0; // discard message, not targeted to us
-        #else
-            // using exact matching
-            return 0; // discard messages, not targeted to us
-        #endif
-    }
-    string token = llList2String(parameters, -1);
-    string source_script = llList2String(parameters, 0);
-    string target_script = llList2String(parameters, 1);
-    parameters = llDeleteSubList(llDeleteSubList(parameters, 0, 1), -1, -1);
-
-    // TODO: this doesn't do anything anymore! port code that uses old enlep_legacy_message to new one
-
-    return 1;
 }
