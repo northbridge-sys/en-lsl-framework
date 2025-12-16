@@ -81,6 +81,24 @@ string enList_ToJsonObject(
     return llList2Json(JSON_OBJECT, enList_ToJsonPairs(in));
 }
 
+/*!
+Generates a JSON array, converting everything to strings.
+llList2Json interprets values as non-strings, causing weird effects (turning "true" to JSON_TRUE, etc.); this converts them all to strings first.
+@param list in Input values for array.
+@return string JSON array.
+*/
+string enList_ToJsonArray(
+    list in
+)
+{
+    list out;
+    integer i;
+    integer l = llGetListLength(in);
+    for (i = 0; i < l; i++)
+        out += ["\"" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""];
+    return "[" + llDumpList2String(out, ",") + "]";
+}
+
 list enList_Reverse(
     list l
 )
