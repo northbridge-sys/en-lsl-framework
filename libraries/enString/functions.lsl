@@ -165,7 +165,7 @@ string enString_Escape(
 {
     list y;
     if (f & FLAG_ENSTRING_ESCAPE_FILTER_REGEX) y = ["\\", "^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]"]; // note that \\ must be the first entry, otherwise previously escaped characters will be double-escaped
-    if (f & FLAG_ENSTRING_ESCAPE_FILTER_JSON) y = ["\""];
+    if (f & FLAG_ENSTRING_ESCAPE_FILTER_JSON) y = ["\\", "\""]; // note that you can also just use enString_EscapedQuote for this to save memory
     integer i;
     integer l = llGetListLength(y);
     // run llReplaceSubString on each possible character that needs to be escaped
