@@ -257,6 +257,8 @@ integer _enCLEP_listen(
         #endif
     }
 
+    if (llJsonGetValue(s, ["t"] != "RPC")) return __LINE__; // CLEP messages always have "t":"RPC", though other types may be added within CLEP spec eventually
+
     string id = llJsonGetValue(s, ["id"]);
     integer int = (integer)llJsonGetValue(s, ["i"]);
     list method = llParseStringKeepNulls(llJsonGetValue(s, ["m"]), ["."], []);

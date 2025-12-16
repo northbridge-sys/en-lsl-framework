@@ -39,6 +39,7 @@ string _enLEP_FormJsonRPC(
     /*
     LEP requests are:
     {
+        "t":"RPC",
         "ss":"(name of source script)",
         "ts":"(name of target script)",
         "id":"(any string)", <- can be omitted if no response requested (broadcast)
@@ -61,7 +62,7 @@ string _enLEP_FormJsonRPC(
     The "p" param is optionally reserved for params (used in CLEP, but not LEP for message processing efficiency)
     Technically no other params are allowed, and the whole spec is reserved for future expansion - all user values must be passed via existing params in the spec
     */
-    string json = "{\"ss\":" + enString_EscapedQuote(source_script) + ",\"ts\":" + enString_EscapedQuote(target_script) + ",\"m\":" + enString_EscapedQuote(method) + "\"}";
+    string json = "{\"t\":\"RPC\",\"ss\":" + enString_EscapedQuote(source_script) + ",\"ts\":" + enString_EscapedQuote(target_script) + ",\"m\":" + enString_EscapedQuote(method) + "\"}";
     if (id != "") json = llJsonSetValue(json, ["id"], enString_EscapedQuote(id));
     if (llJsonGetType(result, []) != JSON_INVALID)
     { // we are sending a response with a result
@@ -258,6 +259,8 @@ integer _enLEP_link_message(
             return 0; // discard otherwise valid LEP message, not targeted to us
         #endif
     }
+
+    if (llJsonGetValue(s, ["t"] != "RPC")) return __LINE__; // LEP messages always have "t":"RPC", though other types may be added within LEP spec eventually
 
     string source_prim = llGetLinkKey(l);
     string id = llJsonGetValue(s, ["id"]);
