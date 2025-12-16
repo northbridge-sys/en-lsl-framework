@@ -34,7 +34,13 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 #define enString_Elem(s) \
-    "\"" + s + "\""
+    enString_Quote(s)
 
 #define enString_UTF8Bytes(s) \
     ((llStringLength((string)llParseString2List(llStringToBase64(s), ["="], [])) * 3) >> 2)
+
+#define enString_Quote(s) \
+    "\"" + s + "\""
+
+#define enString_EscapedQuote(s) \
+    "\"" + llReplaceSubString(llReplaceSubString(s, "\\", "\\\\", 0), "\"", "\\\"", 0) + "\""
