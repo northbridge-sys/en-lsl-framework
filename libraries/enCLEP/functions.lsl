@@ -201,31 +201,6 @@ integer _enCLEP_listen(
             ]);
     #endif
 
-    /*
-    LEP requests are:
-    {
-        "ss":"(name of source script)",
-        "ts":"(name of target script)",
-        "i":"(any string)", <- can be omitted if no response requested (broadcast)
-        "m":"any.method",
-        "p":(any JSON data)
-    }
-    LEP responses swap "ss" and "ts", and add either:
-    {
-        "e":{
-            "c":(integer error code),
-            "m":"(string error message)",
-            "d":(any JSON data) <- can be omitted if no error_data provided
-        }
-    }
-    or:
-    {
-        "r":(any JSON data)
-    }
-    LEP sends the raw "params" value to an independent string so it can handle any data (JSON-RPC packs it into the JSON).
-    LEP also passes through target_link and int directly to llMessageLinked().
-    */
-
     if (llJsonGetType(s, []) != JSON_OBJECT) return __LINE__; // CLEP messages are always objects
     
     string source_script = llJsonGetValue(s, ["ss"]);
