@@ -78,59 +78,6 @@ string _enLEP_FormJsonRPC(
     return json;
 }
 
-/*!
-Sends a request using the LEP-RPC protocol.
-@param integer target_link Target link number.
-@param string target_script Target script name ("" for all in targeted link(s)).
-@param integer int Any integer.
-@param string method Any method. Typically separated by periods ("."), e.g.: system.display.pixel.color
-@param string params Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
-@param string id Any string. If "", will be omitted.
-*/
-#define enLEP_RequestRPC(target_link, target_script, int, method, params, id) \
-    _enLEP_SendRPC(target_link, target_script, int, method, params, id, "", 0, "", "")
-
-/*!
-Responds using the LEP-RPC protocol.
-@param integer target_link source_link sent via link_message.
-@param string target_script source_script sent in request.
-@param integer int Integer sent in request.
-@param string method Method sent in request.
-@param string id ID sent in request.
-@param string result SUCCESSFUL RESPONSES ONLY: Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON. If "", will be omitted.
-@param integer error_code ERROR RESPONSES ONLY: Any integer. If 0 and both other error_* params are "", the error information will be omitted.
-@param string error_message ERROR RESPONSES ONLY: Any string.
-@param string error_data ERROR RESPONSES ONLY: Any JSON.
-*/
-#define _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data) \
-    _enLEP_SendRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data)
-
-/*!
-Responds with a result using the LEP-RPC protocol.
-@param integer target_link source_link sent via link_message.
-@param string target_script source_script sent in request.
-@param integer int Integer sent in request.
-@param string method Method sent in request.
-@param string id ID sent in request.
-@param string result Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
-*/
-#define enLEP_RespondRPCResult(target_link, target_script, int, method, params, id, result) \
-    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, 0, "", "")
-
-/*!
-Responds with an error using the LEP-RPC protocol.
-@param integer target_link source_link sent via link_message.
-@param string target_script source_script sent in request.
-@param integer int Integer sent in request.
-@param string method Method sent in request.
-@param string id ID sent in request.
-@param integer error_code Any integer.
-@param string error_message Any string.
-@param string error_data Any JSON.
-*/
-#define enLEP_RespondRPCError(target_link, target_script, int, method, params, id, error_code, error_message, error_data) \
-    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, "", error_code, error_message, error_data)
-
 string _enLEP_SendRPC(
     integer target_link,
     string target_script,

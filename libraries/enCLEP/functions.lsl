@@ -99,8 +99,6 @@ string _enCLEP_SendRPC(
         );
     #endif
 
-    if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-
     string json = 
         llJsonSetValue(
             _enLEP_FormJsonRPC(llGetScriptName(), target_script, method, id, result, error_code, error_message, error_data),

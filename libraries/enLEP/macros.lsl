@@ -31,57 +31,55 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
-/*
-Generate a LEP message string.
+/*!
+Sends a request using the LEP-RPC protocol.
+@param integer target_link Target link number.
+@param string target_script Target script name ("" for all in targeted link(s)).
+@param integer int Any integer.
+@param string method Any method. Typically separated by periods ("."), e.g.: system.display.pixel.color
+@param string params Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
+@param string id Any string. If "", will be omitted.
 */
-#define _enLEP_Generate(target_script, token, json) \
-    _enLEP_Generate_As(llGetScriptName(), target_script, token, json)
+#define enLEP_RequestRPC(target_link, target_script, int, method, params, id) \
+    _enLEP_SendRPC(target_link, target_script, int, method, params, id, "", 0, "", "")
 
-/*
-Generate a LEP message string as a different source_script.
+/*!
+Responds using the LEP-RPC protocol.
+@param integer target_link source_link sent via link_message.
+@param string target_script source_script sent in request.
+@param integer int Integer sent in request.
+@param string method Method sent in request.
+@param string id ID sent in request.
+@param string result SUCCESSFUL RESPONSES ONLY: Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON. If "", will be omitted.
+@param integer error_code ERROR RESPONSES ONLY: Any integer. If 0 and both other error_* params are "", the error information will be omitted.
+@param string error_message ERROR RESPONSES ONLY: Any string.
+@param string error_data ERROR RESPONSES ONLY: Any JSON.
 */
-#define _enLEP_Generate_As(source_script, target_script, token, json) \
-    (llReplaceSubString(source_script, "\n", "", 0) + "\n" + llReplaceSubString(target_script, "\n", "", 0) + "\n" + llReplaceSubString(token, "\n", "", 0) + "\n" + json)
+#define _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data) \
+    _enLEP_SendRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data)
 
-// legacy link message generation
-#define _enLEP_GenerateLegacy(target_script, parameters, token) \
-    llDumpList2String([llGetScriptName(), target_script] + parameters + [token], "\n")
-
-/*
-sends a LEP broadcast
-target_script (if defined) in target_link will trigger first of: enlep_broadcast, enlep_legacy_message
+/*!
+Responds with a result using the LEP-RPC protocol.
+@param integer target_link source_link sent via link_message.
+@param string target_script source_script sent in request.
+@param integer int Integer sent in request.
+@param string method Method sent in request.
+@param string id ID sent in request.
+@param string result Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
 */
-#define enLEP_Broadcast_Token(target_link, target_script, token, json, data) \
-    _enLEP_Message(0, target_link, target_script, token, json, data)
-#define enLEP_Broadcast(target_link, target_script, json, data) \
-    _enLEP_Broadcast_Token(target_link, target_script, llGenerateKey(), json, data)
+#define enLEP_RespondRPCResult(target_link, target_script, int, method, params, id, result) \
+    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, 0, "", "")
 
-/*
-sends a LEP request
-target_script (if defined) in target_link will trigger first of: enlep_request, enlep_legacy_message
+/*!
+Responds with an error using the LEP-RPC protocol.
+@param integer target_link source_link sent via link_message.
+@param string target_script source_script sent in request.
+@param integer int Integer sent in request.
+@param string method Method sent in request.
+@param string id ID sent in request.
+@param integer error_code Any integer.
+@param string error_message Any string.
+@param string error_data Any JSON.
 */
-#define enLEP_Request_Token(target_link, target_script, token, json, data) \
-    _enLEP_Message(FLAG_ENLEP_TYPE_REQUEST, target_link, target_script, token, json, data)
-#define enLEP_Request(target_link, target_script, json, data) \
-    enLEP_Request_Token(target_link, target_script, llGenerateKey(), json, data)
-
-/*
-responds to a LEP request without adding an error message
-target_script (if defined) in target_link will trigger first of: enlep_response, enlep_legacy_message
-note that enLEP_Respond REQUIRES the token parameter, since you can't send a response without a token
-*/
-#define enLEP_Respond(target_link, target_script, token, json, data) \
-    _enLEP_Message(FLAG_ENLEP_TYPE_RESPONSE, target_link, target_script, token, json, data)
-
-/*
-responds to a LEP request, adding an error message
-target_script (if defined) in target_link will trigger first of: enlep_response, enlep_legacy_message
-*/
-#define enLEP_Respond_Error(target_link, target_script, token, json, data, error) \
-    _enLEP_Message(FLAG_ENLEP_TYPE_RESPONSE | FLAG_ENLEP_STATUS_ERROR, target_link, target_script, token, llJsonSetValue(json, ["e"], error), data)
-
-/*
-sends a message as self
-*/
-#define _enLEP_Message(flags, target_link, target_script, token, json, data) \
-    _enLEP_Message_As(flags, target_link, llGetScriptName(), target_script, token, json, data)
+#define enLEP_RespondRPCError(target_link, target_script, int, method, params, id, error_code, error_message, error_data) \
+    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, "", error_code, error_message, error_data)

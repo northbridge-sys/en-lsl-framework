@@ -25,44 +25,124 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 │ INSTRUCTIONS                                                                 │
 └──────────────────────────────────────────────────────────────────────────────┘
 
-This is a full script that reports all LEP messages sent via link message in the
-prim. These will be reported via "en_lep_message" event reports through
-enLog_TraceParams.
-
-Loglevel must be 6 (TRACE); otherwise, these messages will be surpressed.  You
-can either set the loglevel to 6 as follows to permanently enable output:
-    #define OVERRIDE_ENLOG_DEFAULT_LOGLEVEL 6
-or you can set the "loglevel" linkset data pair to the desired loglevel as
-needed, so that inbound messages will only be reported when TRACE logging is
-enabled.
+This is a full script that reports all LEP messages sent via link_message to
+this prim.
 */
 
-#define EVENT_ENLEP_MESSAGE
+#define EVENT_ENLEP_RPC_REQUEST
+#define EVENT_ENLEP_RPC_RESULT
+#define EVENT_ENLEP_RPC_ERROR
 #define FEATURE_ENLEP_ALLOW_ALL_TARGET_SCRIPTS
-
-#define FEATURE_ENCLEP_ENABLE
+#define OVERRIDE_ENLOG_DEFAULT_LOGLEVEL 6
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
-enlep_legacy_message(
+enlep_rpc_request(
     integer source_link,
     string source_script,
     string target_script,
-    integer flags,
-    list parameters,
-    string data
+    integer int,
+    list method,
+    string params,
+    string id
 )
 {
-    enLog_TraceParams("en_lep_message", ["source_link", "source_script", "target_script", "flags", "parameters", "data", "enCLEP_SourcePrim()", "enCLEP_SourceDomain()"], [
-        (string)source_link + " (" + enString_Elem(llGetLinkName(source_link)) + ")",
-        enString_Elem(source_script),
-        enString_Elem(target_script),
-        enInteger_ElemBitfield(flags),
-        enList_Elem(parameters),
-        enString_Elem(data),
-        enObject_Elem(enCLEP_SourcePrim()),
-        enObject_Elem(enCLEP_SourceDomain())
-    ]);
+    enLog_TraceParams(
+        "enlep_rpc_request",
+        [
+            "source_link",
+            "source_script",
+            "target_script",
+            "int",
+            "method",
+            "params",
+            "id"
+        ], [
+            source_link,
+            enString_Elem(source_script),
+            enString_Elem(target_script),
+            int,
+            method,
+            params,
+            id
+        ]
+    );
+}
+
+enlep_rpc_result(
+    integer source_link,
+    string source_script,
+    string target_script,
+    integer int,
+    list method,
+    string params,
+    string id,
+    string result
+)
+{
+    enLog_TraceParams(
+        "enlep_rpc_error",
+        [
+            "source_link",
+            "source_script",
+            "target_script",
+            "int",
+            "method",
+            "params",
+            "id",
+            "result"
+        ], [
+            source_link,
+            enString_Elem(source_script),
+            enString_Elem(target_script),
+            int,
+            method,
+            params,
+            id,
+            result
+        ]
+    );
+}
+
+enlep_rpc_error(
+    integer source_link,
+    string source_script,
+    string target_script,
+    integer int,
+    list method,
+    string params,
+    string id,
+    integer error_code,
+    string error_message,
+    string error_data
+)
+{
+    enLog_TraceParams(
+        "enlep_rpc_error",
+        [
+            "source_link",
+            "source_script",
+            "target_script",
+            "int",
+            "method",
+            "params",
+            "id",
+            "error_code",
+            "error_message",
+            "error_data"
+        ], [
+            source_link,
+            enString_Elem(source_script),
+            enString_Elem(target_script),
+            int,
+            method,
+            params,
+            id,
+            error_code,
+            enString_Elem(error_message),
+            error_data
+        ]
+    );
 }
 
 default
