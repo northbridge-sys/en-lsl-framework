@@ -16,89 +16,82 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EVENT_EN_CHANGED \
- || defined FEATURE_ENCLEP_ENABLE \
- || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
- || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
- || defined FEATURE_ENOBJECT_ENABLE_SELF \
- || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
- || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
+// if we want to receive any CLEP-RPC messages, CLEP is enabled, so trigger _enCLEP_changed() to catch UUID changes for automatic self-domain relistening
+#if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT
+    #define _EVENT_CHANGED
+    #define _HOOK_ENCLEP_CHANGED
+#endif
+
+// if we want enLSD to allow prim-scope or script-scope pairs, and we have not marked this as a "passive" script (only one script needs to run enLEP_changed() to maintain the datastore), trigger _enLEP_changed()
+#if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
+    #define _EVENT_CHANGED
+    #define _HOOK_ENLSD_CHANGED
+#endif
+
+/*
+if:
+- we want to receive any CLEP-RPC messages
+- we are using enLSD scopes
+- we have manually enabled enObject_GetMyLast() support
+- we have manually enabled enObject link caching
+- we have enabled FEATURE_ENOBJECT_ALWAYS_PHANTOM
+trigger _enObject_changed()
+*/
+#if defined _HOOK_ENCLEP_CHANGED || defined _HOOK_ENLSD_CHANGED || OVERRIDE_ENOBJECT_LIMIT_GETMYSELF > 0 || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
+    #define _EVENT_CHANGED
+    #define _HOOK_ENOBJECT_CHANGED
+#endif
+
+// if we defined EVENT_EN_CHANGED, pass all non-caught changed() events to en_changed()
+#if defined EVENT_EN_CHANGED
+    #define _EVENT_CHANGED
+    #define _HOOK_EN_CHANGED
+#endif
+
+// if we are using changed() and want to trace it, define the trace hook
+#if defined _EVENT_CHANGED && defined TRACE_EVENT_CHANGED
+    #define _TRACE_EVENT_CHANGED
+#endif
+
+#if defined _EVENT_CHANGED
 	changed( integer change )
 	{
 #endif
 
-        #if defined EVENT_EN_CHANGED_DROP
-            if (!(change & ~EVENT_EN_CHANGED_DROP)) return;
+        // drop changes that are in FEATURE_CHANGED_DROP (used to drop spurious changes in certain edge cases)
+        #if defined FEATURE_CHANGED_DROP
+            if (!(change & ~FEATURE_CHANGED_DROP)) return;
         #endif
 
         // log event if requested
-        #if defined TRACE_EVENT_EN_CHANGED && ( \
-                defined EVENT_EN_CHANGED \
-             || defined FEATURE_ENCLEP_ENABLE \
-             || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
-             || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
-             || defined FEATURE_ENOBJECT_ENABLE_SELF \
-             || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
-             || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM \
-            )
-            enLog_TraceParams( "changed", [ "change" ], [ enInteger_ElemBitfield( change ) ] );
+        #if defined _TRACE_EVENT_CHANGED
+            enLog_TraceParams(
+                "changed",
+                [
+                    "change"
+                ],
+                [
+                    enInteger_ElemBitfield(change)
+                ]
+            );
         #endif
 
-        #if defined FEATURE_ENCLEP_ENABLE \
-         || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
-         || defined FEATURE_ENOBJECT_ENABLE_SELF \
-         || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
-         || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
-            if ( change & CHANGED_LINK )
-            {
-        #endif
-        
-                #if defined FEATURE_ENCLEP_ENABLE
-                    _enCLEP_RefreshLinkset();
-                #endif
-
-                #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER && !defined FEATURE_ENLSD_DISABLE_UUID_CHECK
-                    enLSD_CheckUUID();
-                #endif
-
-                #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined FEATURE_ENOBJECT_ENABLE_SELF
-                    enObject_UpdateUUIDs();
-                #endif
-
-                #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
-                    enObject_LinkCacheUpdate();
-                #endif
-
-                #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
-                    enObject_AlwaysPhantom();
-                #endif
-
-        #if defined FEATURE_ENCLEP_ENABLE \
-         || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
-         || defined FEATURE_ENOBJECT_ENABLE_SELF \
-         || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
-         || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
-            }
+        #if defined _HOOK_ENCLEP_CHANGED
+            _enCLEP_changed(change); // WARNING: Must be called before enObject_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
         #endif
 
-        #if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
-            if ( change & CHANGED_INVENTORY )
-            {
-                enLSD_CheckScriptName();
-            }
+        #if defined _HOOK_ENLSD_CHANGED 
+            _enLSD_changed(change);
         #endif
 
-        // pass to user-defined function if requested
-		#if defined EVENT_EN_CHANGED
-			en_changed( change );
+        #if defined _HOOK_ENOBJECT_CHANGED
+            _enObject_changed(change);
+        #endif
+
+		#if defined _HOOK_EN_CHANGED
+			en_changed(change);
 		#endif
 
-#if defined EVENT_EN_CHANGED \
- || defined FEATURE_ENCLEP_ENABLE \
- || defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER \
- || defined FEATURE_ENLSD_ENABLE_UUID_HEADER \
- || defined FEATURE_ENOBJECT_ENABLE_SELF \
- || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE \
- || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
+#if defined _EVENT_CHANGED
 	}
 #endif

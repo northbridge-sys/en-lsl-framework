@@ -184,7 +184,6 @@ integer _enLEP_link_message(
 
     if (llJsonGetValue(s, ["t"] != "RPC")) return __LINE__; // LEP messages always have "t":"RPC", though other types may be added within LEP spec eventually
 
-    string source_prim = llGetLinkKey(l);
     string id = llJsonGetValue(s, ["id"]);
     list method = llParseStringKeepNulls(llJsonGetValue(s, ["m"]), ["."], []);
     string params = llJsonGetValue(s, ["p"]);

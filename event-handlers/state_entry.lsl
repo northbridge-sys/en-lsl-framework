@@ -16,40 +16,17 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*
+we always have a state_entry(), so there's no need to do _EVENT or _HOOK definitions - let the individual libraries handle everything
+*/
 	state_entry()
 	{
-        // log event if requested
-        #if defined TRACE_EVENT_EN_STATE_ENTRY
-            enLog_TraceParams( "state_entry", [], [] );
+        #if defined TRACE_EVENT_STATE_ENTRY
+            enLog_TraceParams("state_entry", [], []);
         #endif
 
-        // stop immediately if the "stop" LSD pair is set (used for updaters)
-        #if !defined FEATURE_ENOBJECT_DISABLE_STOPIFFLAGGED
-            enObject_StopIfFlagged();
-        #endif
-
-        // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
-        #if defined FEATURE_ENOBJECT_ENABLE_STOPIFOWNERREZZED
-            enObject_StopIfOwnerRezzed();
-        #endif
-
-		// update _ENOBJECT_UUIDS_SELF if needed
-        #if defined FEATURE_ENCLEP_ENABLE || defined FEATURE_ENLSD_ENABLE_UUID_HEADER || defined FEATURE_ENOBJECT_ENABLE_SELF
-            enObject_UpdateUUIDs();
-        #endif
-
-        // check if any En libraries want to intercept this event
-        #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER && !defined FEATURE_ENLSD_DISABLE_UUID_CHECK
-            enLSD_CheckUUID();
-        #endif
-
-        #if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
-            enLSD_CheckScriptName();
-        #endif
-
-        #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
-            enObject_AlwaysPhantom();
-        #endif
+        // enObject_StopIfFlagged(), enObject_StopIfOwnerRezzed(), enObject_UpdateUUIDs(), enObject_AlwaysPhantom()
+        enObject_state_entry(); // highest priority - do not run any state_entry() handlers before this
 
         // pass to user-defined function if requested
 		#if defined EVENT_EN_STATE_ENTRY

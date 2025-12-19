@@ -39,14 +39,15 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define FLAG_ENOBJECT_VM_LSO -1
 #define FLAG_ENOBJECT_VM_MONO 1
 
-#ifndef OVERRIDE_ENOBJECT_LIMIT_SELF
-    // number of own object UUIDs to store, retrievable via enObject_Self
-    #define OVERRIDE_ENOBJECT_LIMIT_SELF 2
+/*
+Number of PREVIOUS prim UUIDs to store. By default, this is 2 (_ENOBJECT_UUIDS_SELF contains current and previous 2 prim UUIDs).
+To disable enObject_GetMyLast() entirely, set this to 0. Do not do this if you use enCLEP self-domain relistening, enLSD scopes, or anything else that requires UUID monitoring
+*/
+#if !defined OVERRIDE_ENOBJECT_LIMIT_GETMYLAST
+    #define OVERRIDE_ENOBJECT_LIMIT_GETMYLAST 2
 #endif
 
-#if defined FEATURE_ENOBJECT_ENABLE_SELF
-    list _ENOBJECT_UUIDS_SELF;
-#endif
+list _ENOBJECT_UUIDS_SELF;
 
 #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
     list _ENOBJECT_LINK_CACHE; // prim name, current linknum, max distance
@@ -98,8 +99,12 @@ Gets root of specified prim UUID's linkset. See llGetObjectDetails(), OBJECT_ROO
     enVector_RegionToWorld(llGetRootPosition())
 
 //  returns either own object's current UUID or one of its previous UUIDs
-#define enObject_GetMyLast(i) \
-    llList2String(_ENOBJECT_UUIDS_SELF, i)
+/*
+Returns the last nth UUID of this prim, e.g. the last UUID would be n=1, the one before that n=2, etc.
+Limited by OVERRIDE_ENOBJECT_LIMIT_GETMYLAST to a maximum of 
+*/
+#define enObject_GetMyLast(n) \
+    llList2String(_ENOBJECT_UUIDS_SELF, n)
 
 /*!
 Gets link number of specified prim in its linkset.

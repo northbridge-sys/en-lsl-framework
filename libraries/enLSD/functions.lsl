@@ -203,20 +203,6 @@ enLSD_MoveAllPairs(
     } while (l != []); // repeat until we didn't find any keys left with old header
 }
 
-// updates LSD entries that use old UUID
-enLSD_CheckUUID()
-{ // note: if FEATURE_ENLSD_DISABLE_UUID_CHECK is defined, this function is never called - only need to run enLSD_CheckUUID in one script in each prim
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_CheckUUID", [], []);
-    #endif
-    #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER
-        string k = enObject_GetMyLast(1); // get last key
-        if (k == (string)llGetKey() || k == "") return; // no UUID change, or no UUID history stored
-        enLog_Debug("Moving LSD due to UUID change from \"" + k + "\" to \"" + (string)llGetKey() + "\"");
-        enLSD_MoveAllPairs(k);
-    #endif
-}
-
 // updates LSD entries that use old script name
 enLSD_CheckScriptName()
 {
@@ -231,6 +217,35 @@ enLSD_CheckScriptName()
             enLSD_MoveAllPairs(llGetKey());
         }
         _ENLSD_SCRIPT_NAME = llGetScriptName();
+    #endif
+}
+
+_enLSD_uuid_changed(
+    string last_uuid
+)
+{
+    // if FEATURE_ENLSD_PASSIVE_SCOPE is defined, this function is never called - only need to run this code in one script in each prim
+    #if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
+        enLog_Debug("Moving LSD due to UUID change from \"" + last_uuid + "\" to \"" + (string)llGetKey() + "\"");
+        enLSD_MoveAllPairs(last_uuid);
+    #endif
+}
+
+_enLSD_changed(
+    integer change
+)
+{
+    if (change & CHANGED_LINK) enLSD_CheckUUID(); // migrate prim-scope and script-scope pairs to new object UUID
+    if (change & CHANGED_INVENTORY) enLSD_CheckScriptName(); // migrate script-scope pairs to new script name
+}
+
+_enLSD_on_rez(
+    integer param
+)
+{
+    // update enLSD names if any use the UUID header
+    #if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
+        _enLSD_uuid_changed(enObject_GetMyLast(1));
     #endif
 }
 
@@ -273,8 +288,8 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
     if (use_header) v = enLSD_Read(name);
     else v = llLinksetDataRead(name);
     integer u;
-    #if defined FEATURE_ENLSD_ENABLE_UUID_HEADER
-        u = 1; // if FEATURE_ENLSD_ENABLE_UUID_HEADER defined, note in response
+    #if defined FEATURE_ENLSD_ENABLE_SCOPE
+        u = 1; // if FEATURE_ENLSD_ENABLE_SCOPE defined, note in response
     #endif
     enCLEP_SendRaw(domain, prim, "enLSD_Push", enList_ToEscapedCSV([u, use_header, _ENLSD_HEADER, name, v]));
 }

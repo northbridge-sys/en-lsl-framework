@@ -16,25 +16,59 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EVENT_EN_LISTEN || defined FEATURE_ENCLEP_ENABLE
-	listen( integer channel, string name, key id, string message )
+// if we want to receive any CLEP-RPC messages, trigger _enCLEP_listen()
+#if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT
+    #define _EVENT_LISTEN
+    #define _HOOK_ENCLEP_LISTEN
+#endif
+
+// if we defined EVENT_EN_LISTEN, pass all non-caught listen() events to en_listen()
+#if defined EVENT_EN_LISTEN
+    #define _EVENT_LISTEN
+    #define _HOOK_EN_LISTEN
+#endif
+
+// if we are using listen() and want to trace it, define the trace hook
+#if defined _EVENT_LISTEN && defined TRACE_EVENT_LISTEN
+    #define _TRACE_EVENT_LISTEN
+#endif
+
+#if defined _EVENT_LISTEN
+	listen(
+        integer channel,
+        string name,
+        key id,
+        string message
+    )
 	{
 #endif
 
-        // log event if requested
-        #if defined TRACE_EVENT_EN_LISTEN && (defined EVENT_EN_LISTEN || defined FEATURE_ENCLEP_ENABLE)
-            enLog_TraceParams( "listen", [ "channel", "name", "id", "message" ], [ channel, enString_Elem( name ), enObject_Elem( id ), enString_Elem( message ) ] );
+        #if defined _TRACE_EVENT_LISTEN
+            enLog_TraceParams(
+                "listen",
+                [
+                    "channel",
+                    "name",
+                    "id",
+                    "message"
+                ],
+                [
+                    channel,
+                    enString_Elem(name),
+                    enObject_Elem(id),
+                    enString_Elem(message)
+                ]
+            );
         #endif
 
-        #if defined FEATURE_ENCLEP_ENABLE
-		    if ( !_enCLEP_listen( channel, name, id, message ) ) return; // valid enCLEP message
+        #if defined _HOOK_ENCLEP_LISTEN
+		    if (!_enCLEP_listen(channel, name, id, message)) return; // valid enCLEP message
         #endif
         
-        // pass to user-defined function if requested
-		#if defined EVENT_EN_LISTEN
-			en_listen( channel, name, id, message );
+		#if defined _HOOK_EN_LISTEN
+			en_listen(channel, name, id, message);
 		#endif
 
-#if defined EVENT_EN_LISTEN || defined FEATURE_ENCLEP_ENABLE
+#if defined _EVENT_LISTEN
 	}
 #endif

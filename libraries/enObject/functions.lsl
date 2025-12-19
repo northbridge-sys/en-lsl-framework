@@ -270,11 +270,21 @@ enObject_UpdateUUIDs()
     #if defined TRACE_ENOBJECT
         enLog_TraceParams("enObject_UpdateUUIDs", [], []);
     #endif
-	if (OVERRIDE_ENOBJECT_LIMIT_SELF)
+	if (OVERRIDE_ENOBJECT_LIMIT_GETMYLAST)
 	{ // check own UUID
-		if ((string)llGetKey() != llList2String(_ENOBJECT_UUIDS_SELF, 0))
+        string record_key = llList2String(_ENOBJECT_UUIDS_SELF, 0);
+		if ((string)llGetKey() != record_key)
 		{ // key change
-			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, OVERRIDE_ENOBJECT_LIMIT_SELF - 1);
+			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, OVERRIDE_ENOBJECT_LIMIT_GETMYLAST);
+
+            // "hooks" to other En libraries that rely on UUID monitoring
+            _enLSD_uuid_changed(record_key);
+
+            #if defined EVENT_ENOBJECT_UUID_CHANGED
+                enobject_uuid_changed(
+                    record_key // last_key
+                );
+            #endif
 		}
 	}
 }
@@ -298,4 +308,63 @@ courtesy of Pedro Oval via the LSL Portal
 enObject_VM()
 {
     return ("" != "x");
+}
+
+_enObject_changed(
+    integer change
+)
+{
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENOBJECT_LIMIT_GETMYLAST > 0
+        enObject_UpdateUUIDs();
+    #endif
+
+    #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
+        enObject_LinkCacheUpdate();
+    #endif
+
+    #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
+        enObject_AlwaysPhantom();
+    #endif
+}
+
+_enObject_on_rez(
+    integer param
+)
+{
+    // stop immediately if the "stop" LSD pair is set (used for updaters)
+    #if !defined FEATURE_ENOBJECT_DISABLE_STOPIFFLAGGED
+        enObject_StopIfFlagged();
+    #endif
+
+    // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
+    #if defined FEATURE_ENOBJECT_ENABLE_STOPIFOWNERREZZED
+        enObject_StopIfOwnerRezzed();
+    #endif
+
+    // update _ENOBJECT_UUIDS_SELF
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENOBJECT_LIMIT_GETMYLAST > 0
+        enObject_UpdateUUIDs();
+    #endif
+}
+
+_enObject_state_entry()
+{
+    // stop immediately if the "stop" LSD pair is set (used for updaters)
+    #if !defined FEATURE_ENOBJECT_DISABLE_STOPIFFLAGGED
+        enObject_StopIfFlagged();
+    #endif
+
+    // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
+    #if defined FEATURE_ENOBJECT_ENABLE_STOPIFOWNERREZZED
+        enObject_StopIfOwnerRezzed();
+    #endif
+
+    // update _ENOBJECT_UUIDS_SELF if needed
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENOBJECT_LIMIT_GETMYLAST > 0
+        enObject_UpdateUUIDs();
+    #endif
+
+    #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
+        enObject_AlwaysPhantom();
+    #endif
 }

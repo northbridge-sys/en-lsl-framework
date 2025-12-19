@@ -407,24 +407,18 @@ _enCLEP_ListenDomains()
 }
 
 //  internal function that runs after key change to reset any listens based on previous UUID
-_enCLEP_RefreshLinkset()
+_enCLEP_uuid_changed(
+    string last_uuid
+)
 {
-    #if defined TRACE_ENCLEP
-        enLog_TraceParams("enCLEP_RefreshLinkset", [], []);
-    #endif
     _enCLEP_UnListenDomains();
-    if (OVERRIDE_ENOBJECT_LIMIT_SELF)
-    { // we can check for self prim domains
-        string new = (string)llGetKey();
-        if (enObject_GetMyLast(1) != new)
-        { // UUID change
-            integer index = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [enObject_GetMyLast(1)]);
-            if (index) _ENCLEP_DOMAINS = llListReplaceList(_ENCLEP_DOMAINS,
-                [new],
-                index * _ENCLEP_DOMAINS_STRIDE,
-                index * _ENCLEP_DOMAINS_STRIDE); // we are listening to a self prim domain, so update it
-        }
-    }
+    // are we listening to a self-domain?
+    integer index = llListFindList(llList2ListSlice(_ENCLEP_DOMAINS, 0, -1, _ENCLEP_DOMAINS_STRIDE, 0), [last_uuid]);
+    // if we are, replace it
+    if (index != -1) _ENCLEP_DOMAINS = llListReplaceList(_ENCLEP_DOMAINS,
+        [(string)llGetKey()],
+        index * _ENCLEP_DOMAINS_STRIDE,
+        index * _ENCLEP_DOMAINS_STRIDE);
     _enCLEP_ListenDomains();
 }
 
@@ -452,4 +446,24 @@ enCLEP_DialogListenRemove()
     llListenRemove(_ENCLEP_DIALOG_LSN);
     _ENCLEP_DIALOG_LSN = 0;
     _enCLEP_ListenDomains();
+}
+
+/*
+WARNING: Must be called before enObject_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
+*/
+_enCLEP_changed(
+    integer change
+)
+{
+    if (change & CHANGED_LINK) _enCLEP_RefreshLinkset();
+}
+
+_enCLEP_on_rez(
+    integer param
+)
+{
+    // update enCLEP channels if any are just the UUID
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT
+        _enCLEP_RefreshLinkset();
+    #endif
 }
