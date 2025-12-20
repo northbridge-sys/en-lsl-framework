@@ -52,21 +52,21 @@ enLSD_Reset()
 integer enLSD_Write(integer flags, list name, string data)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetMyRoot();
+    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
     return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
 }
 
 string enLSD_Read(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetMyRoot();
+    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
     return llLinksetDataRead(_enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
 
 list enLSD_Delete(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetMyRoot();
+    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
     string regex;
     if (flags & FLAG_ENLSD_DELETE_CHILDREN) regex = "\n.*";
 	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
@@ -88,7 +88,7 @@ list enLSD_Find(integer flags, list name, integer start, integer count)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetMyRoot();
+    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
 	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
@@ -103,7 +103,7 @@ list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetMyRoot();
+    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
 	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
 }
 
@@ -116,7 +116,7 @@ list enLSD_DeleteRegex(integer flags, string regex)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enObject_GetMyRoot();
+    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
 	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
 }
 
@@ -135,7 +135,7 @@ string _enLSD_BuildHead(
 //  purges all enLSD pairs assigned to UUIDs that are not part of this linkset
 enLSD_Purge()
 {
-    string root = enObject_GetMyRoot();
+    string root = enPrim_GetMyRoot();
     list pair;
     integer i;
     integer start = llLinksetDataCountKeys();
@@ -149,13 +149,13 @@ enLSD_Purge()
             string script = llList2String(pair, 1);
             if (prim != "" && prim_root != root)
             { // this pair is associated with a prim that doesn't share the same root as us
-                enLog_Debug("Purging enLSD pairs associated with prim " + enObject_Elem(prim) + " (root " + enObject_Elem(prim_root) + ")");
+                enLog_Debug("Purging enLSD pairs associated with prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
                 llLinksetDataDeleteFound("^" + prim + "\n.*$", ""); // delete all pairs scoped to this prim, since it's gone
                 i = 0; // start search again
             }
             else if (script != "" && prim == (string)llGetKey() && llGetInventoryType(script) != INVENTORY_SCRIPT)
             { // this pair is associated with a script that is no longer in this prim
-                enLog_Debug("Purging enLSD pairs associated with script \"" + script + "\" in prim " + enObject_Elem(prim) + " (root " + enObject_Elem(prim_root) + ")");
+                enLog_Debug("Purging enLSD pairs associated with script \"" + script + "\" in prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
                 llLinksetDataDeleteFound("^" + prim + "\n" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, script) + "\n.*$", ""); // delete all pairs scoped to this prim & script, since it's gone
                 i = 0; // start search again
             }
@@ -245,7 +245,7 @@ _enLSD_on_rez(
 {
     // update enLSD names if any use the UUID header
     #if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
-        _enLSD_uuid_changed(enObject_GetMyLast(1));
+        _enLSD_uuid_changed(enPrim_GetMyLast(1));
     #endif
 }
 
@@ -260,7 +260,7 @@ _enLSD_on_rez(
 {
     #if defined TRACE_ENLSD
         enLog_TraceParams("enLSD_Pull", ["prim", "domain", "use_header", "name"], [
-            enObject_Elem(prim),
+            enPrim_Elem(prim),
             enString_Elem(domain),
             use_header,
             enString_Elem(name)
@@ -278,7 +278,7 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
 {
     #if defined TRACE_ENLSD
         enLog_TraceParams("enLSD_Push", ["prim", "domain", "use_header", "name"], [
-            enObject_Elem(prim),
+            enPrim_Elem(prim),
             enString_Elem(domain),
             use_header,
             enString_Elem(name)
@@ -306,7 +306,7 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
 {
     #if defined TRACE_ENLSD
         enLog_TraceParams("enLSD_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
-            enObject_Elem(prim),
+            enPrim_Elem(prim),
             use_uuid,
             use_header,
             enString_Elem(uuid),

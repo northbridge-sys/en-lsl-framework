@@ -84,7 +84,7 @@ string _enCLEP_SendRPC(
                 "error_data"
             ],
             [
-                enObject_Elem(target_prim),
+                enPrim_Elem(target_prim),
                 enString_Elem(target_script),
                 enString_Elem(clep_domain),
                 int,
@@ -449,7 +449,7 @@ enCLEP_DialogListenRemove()
 }
 
 /*
-WARNING: Must be called before enObject_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
+WARNING: Must be called before enPrim_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
 */
 _enCLEP_changed(
     integer change

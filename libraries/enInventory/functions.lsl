@@ -48,7 +48,7 @@ integer enInventory_Copy(
 {
     #if defined TRACE_ENINVENTORY
         enLog_TraceParams("enInventory_Copy", ["prim", "name", "type", "pin", "run", "param"], [
-            enObject_Elem(prim),
+            enPrim_Elem(prim),
             enString_Elem(name),
             type,
             pin,

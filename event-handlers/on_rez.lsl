@@ -33,7 +33,7 @@ we always have an on_rez(), so there's no need to do _EVENT or _HOOK definitions
             );
         #endif
 
-        _enObject_on_rez(param); // highest priority - do not run any on_rez() handlers before this
+        _enPrim_on_rez(param); // highest priority - do not run any on_rez() handlers before this
         _enCLEP_on_rez(param);
         _enLSD_on_rez(param);
 

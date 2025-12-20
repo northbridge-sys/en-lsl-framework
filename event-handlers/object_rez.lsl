@@ -24,7 +24,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
         // log event if requested
         #if defined EVENT_EN_OBJECT_REZ && defined TRACE_EVENT_EN_OBJECT_REZ
             enLog_TraceParams( "object_rez", [ "id" ], [
-                enObject_Elem( id ),
+                enPrim_Elem( id ),
             ] );
         #endif
 

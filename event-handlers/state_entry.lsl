@@ -25,8 +25,8 @@ we always have a state_entry(), so there's no need to do _EVENT or _HOOK definit
             enLog_TraceParams("state_entry", [], []);
         #endif
 
-        // enObject_StopIfFlagged(), enObject_StopIfOwnerRezzed(), enObject_UpdateUUIDs(), enObject_AlwaysPhantom()
-        enObject_state_entry(); // highest priority - do not run any state_entry() handlers before this
+        // enPrim_StopIfFlagged(), enPrim_StopIfOwnerRezzed(), enPrim_UpdateUUIDs(), enPrim_AlwaysPhantom()
+        enPrim_state_entry(); // highest priority - do not run any state_entry() handlers before this
 
         // pass to user-defined function if requested
 		#if defined EVENT_EN_STATE_ENTRY

@@ -1,5 +1,5 @@
 /*
-enObject.lsl
+enPrim.lsl
 Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
@@ -22,7 +22,7 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-string enObject_Elem( string id )
+string enPrim_Elem( string id )
 {
     list details = llGetObjectDetails( id, [ OBJECT_NAME, OBJECT_POS ] );
     if ( details == [] ) return "\"" + id + "\" (not in region)";
@@ -30,7 +30,7 @@ string enObject_Elem( string id )
 }
 
 //  returns the linknum of a specified UUID if it is part of the same linkset, or -1 if it is not
-string enObject_RelativeLinknum(
+string enPrim_RelativeLinknum(
     string prim
 )
 {
@@ -40,12 +40,12 @@ string enObject_RelativeLinknum(
     return -1; // otherwise, it is not part of our linkset
 }
 
-integer enObject_ClosestLinkDesc(
+integer enPrim_ClosestLinkDesc(
     string desc
 )
 {
-    #if defined TRACE_ENOBJECT
-        enLog_TraceParams("enObject_ClosestLinkDesc", ["desc"], [
+    #if defined TRACE_ENPRIM
+        enLog_TraceParams("enPrim_ClosestLinkDesc", ["desc"], [
             enString_Elem(desc)
             ]);
     #endif
@@ -69,21 +69,21 @@ integer enObject_ClosestLinkDesc(
 }
 
 //  finds the linknum of the closest prim in the linkset with the specified name
-integer enObject_ClosestLink(string name)
+integer enPrim_ClosestLink(string name)
 {
-    #if defined TRACE_ENOBJECT
-        enLog_TraceParams("enObject_ClosestLink", ["name"], [
+    #if defined TRACE_ENPRIM
+        enLog_TraceParams("enPrim_ClosestLink", ["name"], [
             enString_Elem(name)
             ]);
     #endif
-    #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
-        integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-        if (~i) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1);  // != -1; return cached linknum
+    #if defined FEATURE_ENPRIM_ENABLE_LINK_CACHE
+        integer i = llListFindList(llList2ListSlice(_ENPRIM_LINK_CACHE, 0, -1, _ENPRIM_LINK_CACHE_STRIDE, 0), [name]);
+        if (~i) return (integer)llList2String(_ENPRIM_LINK_CACHE, i * _ENPRIM_LINK_CACHE_STRIDE + 1);  // != -1; return cached linknum
     #endif
-    return enObject_FindLink(-1.0, name);
+    return enPrim_FindLink(-1.0, name);
 }
 
-integer enObject_FindLink(float max_dist, string name)
+integer enPrim_FindLink(float max_dist, string name)
 {
     integer i;
     integer cl_i;
@@ -104,56 +104,56 @@ integer enObject_FindLink(float max_dist, string name)
     return 0; // no match
 }
 
-integer enObject_CacheClosestLink(
+integer enPrim_CacheClosestLink(
     float max_dist,
     string name
 )
 {
-    #ifndef FEATURE_ENOBJECT_ENABLE_LINK_CACHE
-        enLog_Error("enObject_CacheClosestLink called but FEATURE_ENOBJECT_ENABLE_LINK_CACHE not defined");
+    #ifndef FEATURE_ENPRIM_ENABLE_LINK_CACHE
+        enLog_Error("enPrim_CacheClosestLink called but FEATURE_ENPRIM_ENABLE_LINK_CACHE not defined");
         return 0;
     #else
-        integer i = llListFindList(llList2ListSlice(_ENOBJECT_LINK_CACHE, 0, -1, _ENOBJECT_LINK_CACHE_STRIDE, 0), [name]);
-        if (~i) return (integer)llList2String(_ENOBJECT_LINK_CACHE, i * _ENOBJECT_LINK_CACHE_STRIDE + 1);  // != -1; already caching
-        _ENOBJECT_LINK_CACHE += [name, enObject_FindLink(max_dist, name), max_dist];
-        return (integer)llList2String(_ENOBJECT_LINK_CACHE, -2); // return last element, since it is always ours
+        integer i = llListFindList(llList2ListSlice(_ENPRIM_LINK_CACHE, 0, -1, _ENPRIM_LINK_CACHE_STRIDE, 0), [name]);
+        if (~i) return (integer)llList2String(_ENPRIM_LINK_CACHE, i * _ENPRIM_LINK_CACHE_STRIDE + 1);  // != -1; already caching
+        _ENPRIM_LINK_CACHE += [name, enPrim_FindLink(max_dist, name), max_dist];
+        return (integer)llList2String(_ENPRIM_LINK_CACHE, -2); // return last element, since it is always ours
     #endif
 }
 
-enObject_LinkCacheUpdate()
+enPrim_LinkCacheUpdate()
 {
     integer i;
-    integer l = llGetListLength(_ENOBJECT_LINK_CACHE);
-    for (i = 0; i < l; i += _ENOBJECT_LINK_CACHE_STRIDE)
+    integer l = llGetListLength(_ENPRIM_LINK_CACHE);
+    for (i = 0; i < l; i += _ENPRIM_LINK_CACHE_STRIDE)
     {
-        _ENOBJECT_LINK_CACHE = llListReplaceList(_ENOBJECT_LINK_CACHE, [enObject_FindLink((float)llList2String(_ENOBJECT_LINK_CACHE, i + 2), llList2String(_ENOBJECT_LINK_CACHE, i))], i + 1, i + 1);
+        _ENPRIM_LINK_CACHE = llListReplaceList(_ENPRIM_LINK_CACHE, [enPrim_FindLink((float)llList2String(_ENPRIM_LINK_CACHE, i + 2), llList2String(_ENPRIM_LINK_CACHE, i))], i + 1, i + 1);
     }
 }
 
-enObject_Text(
+enPrim_Text(
     integer flags,
     list lines
 )
 {
     vector color = CONST_VECTOR_WHITE;
     string icon = "";
-    if (flags & FLAG_ENOBJECT_TEXT_PROMPT)
+    if (flags & FLAG_ENPRIM_TEXT_PROMPT)
     {
         color = CONST_VECTOR_YELLOW;
         icon = "🚩";
     }
-    else if (flags & FLAG_ENOBJECT_TEXT_ERROR)
+    else if (flags & FLAG_ENPRIM_TEXT_ERROR)
     {
         color = CONST_VECTOR_RED;
         icon = "❌";
     }
-    else if (flags & FLAG_ENOBJECT_TEXT_BUSY)
+    else if (flags & FLAG_ENPRIM_TEXT_BUSY)
     {
         color = CONST_VECTOR_BLUE;
         integer ind = (enDate_NowToMillisec() / 83) % 12; // approenmately +1 ind every 1/12th of a second
         icon = llList2String(["🕛", "🕐", "🕑", "🕒", "🕓", "🕔", "🕕", "🕖", "🕗", "🕘", "🕙", "🕚"], ind);
     }
-    else if (flags & FLAG_ENOBJECT_TEXT_SUCCESS)
+    else if (flags & FLAG_ENPRIM_TEXT_SUCCESS)
     {
         color = CONST_VECTOR_GREEN;
         icon = "✅";
@@ -163,12 +163,12 @@ enObject_Text(
         icon = llList2String(["", "🛑", "❌", "🚩", "💬", "🪲", "🚦"], flags & 0x7);
     }
     string progress = "▼";
-    if (flags & FLAG_ENOBJECT_TEXT_PROGRESS_NC)
+    if (flags & FLAG_ENPRIM_TEXT_PROGRESS_NC)
     {
         integer ind = llRound(((float)_ENINVENTORY_NC_L / _ENINVENTORY_NC_T) * 16);
         if (_ENINVENTORY_NC_T > 0) progress = llGetSubString("████████████████▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁", 16 - ind, 31 - ind); // such a lazy hack!! who cares
     }
-    if (flags & FLAG_ENOBJECT_TEXT_PROGRESS_THROB)
+    if (flags & FLAG_ENPRIM_TEXT_PROGRESS_THROB)
     {
         integer ind = (enDate_NowToMillisec() / 62) % 16; // approenmately +1 ind every 1/16th of a second
         progress = llGetSubString("▁▂▃▄▅▆▇█▇▆▅▄▃▂▁▂▃▄▅▆▇█▇▆▅▄▃▂▁", ind, ind + 15);
@@ -176,17 +176,17 @@ enObject_Text(
                                                                                            // this is a nbsp
     llSetText(llDumpList2String([icon] + enList_Reverse(enList_ReplaceExact(lines, [""], [" "])) + [progress], "\n"), color, 1.0);
     #if defined EVENT_ENTIMER_TIMER
-        if (flags & FLAG_ENOBJECT_TEXT_TEMP) enTimer_Start(2.0, 0, "enObject_TextClear");
-        else enTimer_Cancel(enTimer_Find("enObject_TextClear"));
+        if (flags & FLAG_ENPRIM_TEXT_TEMP) enTimer_Start(2.0, 0, "enPrim_TextClear");
+        else enTimer_Cancel(enTimer_Find("enPrim_TextClear"));
     #endif
 }
 
-enObject_TextClear()
+enPrim_TextClear()
 {
     llSetText("", CONST_VECTOR_BLACK, 0.0);
 }
 
-string enObject_GetAttachedString(
+string enPrim_GetAttachedString(
     integer i
     )
 {
@@ -251,36 +251,36 @@ string enObject_GetAttachedString(
 }
 
 // returns various bitwise flags for the state of an object
-integer enObject_Profile(
+integer enPrim_Profile(
     string k
     )
 {
     list l = llGetObjectDetails(k, [OBJECT_PHYSICS, OBJECT_PHANTOM, OBJECT_TEMP_ON_REZ, OBJECT_TEMP_ATTACHED]);
     if (l == []) return 0;
-    integer f = FLAG_ENOBJECT_PROFILE_EXISTS;
-    if ((integer)llList2String(l, 0)) f += FLAG_ENOBJECT_PROFILE_PHYSICS;
-    if ((integer)llList2String(l, 1)) f += FLAG_ENOBJECT_PROFILE_PHANTOM;
-    if ((integer)llList2String(l, 2)) f += FLAG_ENOBJECT_PROFILE_TEMP_ON_REZ;
-    if ((integer)llList2String(l, 3)) f += FLAG_ENOBJECT_PROFILE_TEMP_ATTACHED;
+    integer f = FLAG_ENPRIM_PROFILE_EXISTS;
+    if ((integer)llList2String(l, 0)) f += FLAG_ENPRIM_PROFILE_PHYSICS;
+    if ((integer)llList2String(l, 1)) f += FLAG_ENPRIM_PROFILE_PHANTOM;
+    if ((integer)llList2String(l, 2)) f += FLAG_ENPRIM_PROFILE_TEMP_ON_REZ;
+    if ((integer)llList2String(l, 3)) f += FLAG_ENPRIM_PROFILE_TEMP_ATTACHED;
     return f;
 }
 
-enObject_UpdateUUIDs()
+enPrim_UpdateUUIDs()
 {
-    #if defined TRACE_ENOBJECT
-        enLog_TraceParams("enObject_UpdateUUIDs", [], []);
+    #if defined TRACE_ENPRIM
+        enLog_TraceParams("enPrim_UpdateUUIDs", [], []);
     #endif
-	if (OVERRIDE_ENOBJECT_LIMIT_GETMYLAST)
+	if (OVERRIDE_ENPRIM_LIMIT_GETMYLAST)
 	{ // check own UUID
-        string record_key = llList2String(_ENOBJECT_UUIDS_SELF, 0);
+        string record_key = llList2String(_ENPRIM_UUIDS_SELF, 0);
 		if ((string)llGetKey() != record_key)
 		{ // key change
-			_ENOBJECT_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENOBJECT_UUIDS_SELF, 0, OVERRIDE_ENOBJECT_LIMIT_GETMYLAST);
+			_ENPRIM_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENPRIM_UUIDS_SELF, 0, OVERRIDE_ENPRIM_LIMIT_GETMYLAST);
 
             // "hooks" to other En libraries that rely on UUID monitoring
             _enLSD_uuid_changed(record_key);
 
-            #if defined EVENT_ENOBJECT_UUID_CHANGED
+            #if defined EVENT_ENPRIM_UUID_CHANGED
                 enobject_uuid_changed(
                     record_key // last_key
                 );
@@ -290,14 +290,14 @@ enObject_UpdateUUIDs()
 }
 
 /*
-    runs on certain events when FEATURE_ENOBJECT_ALWAYS_PHANTOM is defined
+    runs on certain events when FEATURE_ENPRIM_ALWAYS_PHANTOM is defined
     used for building components that should always be phantom
-    can also be called independently without FEATURE_ENOBJECT_ALWAYS_PHANTOM if you only want to do this as a runtime option
+    can also be called independently without FEATURE_ENPRIM_ALWAYS_PHANTOM if you only want to do this as a runtime option
 */
-enObject_AlwaysPhantom()
+enPrim_AlwaysPhantom()
 {
     if (llGetLinkNumber() > 1) llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHYSICS_SHAPE_TYPE, PRIM_PHYSICS_SHAPE_NONE]);
-    else if (llGetLinkNumber()) enLog_Debug("FEATURE_ENOBJECT_ALWAYS_PHANTOM cannot be used in root prim of linkset");
+    else if (llGetLinkNumber()) enLog_Debug("FEATURE_ENPRIM_ALWAYS_PHANTOM cannot be used in root prim of linkset");
     else llSetLinkPrimitiveParamsFast(LINK_THIS, [PRIM_PHANTOM, TRUE]);
 }
 
@@ -305,66 +305,66 @@ enObject_AlwaysPhantom()
 detects the VM
 courtesy of Pedro Oval via the LSL Portal
 */
-enObject_VM()
+enPrim_VM()
 {
     return ("" != "x");
 }
 
-_enObject_changed(
+_enPrim_changed(
     integer change
 )
 {
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENOBJECT_LIMIT_GETMYLAST > 0
-        enObject_UpdateUUIDs();
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
+        enPrim_UpdateUUIDs();
     #endif
 
-    #if defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE
-        enObject_LinkCacheUpdate();
+    #if defined FEATURE_ENPRIM_ENABLE_LINK_CACHE
+        enPrim_LinkCacheUpdate();
     #endif
 
-    #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
-        enObject_AlwaysPhantom();
+    #if defined FEATURE_ENPRIM_ALWAYS_PHANTOM
+        enPrim_AlwaysPhantom();
     #endif
 }
 
-_enObject_on_rez(
+_enPrim_on_rez(
     integer param
 )
 {
     // stop immediately if the "stop" LSD pair is set (used for updaters)
-    #if !defined FEATURE_ENOBJECT_DISABLE_STOPIFFLAGGED
-        enObject_StopIfFlagged();
+    #if !defined FEATURE_ENPRIM_DISABLE_STOPIFFLAGGED
+        enPrim_StopIfFlagged();
     #endif
 
     // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
-    #if defined FEATURE_ENOBJECT_ENABLE_STOPIFOWNERREZZED
-        enObject_StopIfOwnerRezzed();
+    #if defined FEATURE_ENPRIM_ENABLE_STOPIFOWNERREZZED
+        enPrim_StopIfOwnerRezzed();
     #endif
 
-    // update _ENOBJECT_UUIDS_SELF
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENOBJECT_LIMIT_GETMYLAST > 0
-        enObject_UpdateUUIDs();
+    // update _ENPRIM_UUIDS_SELF
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
+        enPrim_UpdateUUIDs();
     #endif
 }
 
-_enObject_state_entry()
+_enPrim_state_entry()
 {
     // stop immediately if the "stop" LSD pair is set (used for updaters)
-    #if !defined FEATURE_ENOBJECT_DISABLE_STOPIFFLAGGED
-        enObject_StopIfFlagged();
+    #if !defined FEATURE_ENPRIM_DISABLE_STOPIFFLAGGED
+        enPrim_StopIfFlagged();
     #endif
 
     // stop immediately if rezzed by owner and flag is set (used for objects intended to be rezzed by a rezzer)
-    #if defined FEATURE_ENOBJECT_ENABLE_STOPIFOWNERREZZED
-        enObject_StopIfOwnerRezzed();
+    #if defined FEATURE_ENPRIM_ENABLE_STOPIFOWNERREZZED
+        enPrim_StopIfOwnerRezzed();
     #endif
 
-    // update _ENOBJECT_UUIDS_SELF if needed
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENOBJECT_LIMIT_GETMYLAST > 0
-        enObject_UpdateUUIDs();
+    // update _ENPRIM_UUIDS_SELF if needed
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
+        enPrim_UpdateUUIDs();
     #endif
 
-    #if defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
-        enObject_AlwaysPhantom();
+    #if defined FEATURE_ENPRIM_ALWAYS_PHANTOM
+        enPrim_AlwaysPhantom();
     #endif
 }

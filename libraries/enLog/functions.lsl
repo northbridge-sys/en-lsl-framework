@@ -90,7 +90,7 @@ enLog_SuccessDie(
     string m // message
 )
 {
-    enLog_Success("Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ": " + m);
+    enLog_Success("Object " + llList2String(["deleted", "detached from " + enPrim_GetAttachedString(llGetAttached())], !!llGetAttached()) + ": " + m);
     enLog_Die();
 }
 
@@ -117,7 +117,7 @@ enLog_FatalDie(
     string m // message
 )
 {
-    enLog_Fatal("Object " + llList2String(["deleted", "detached from " + enObject_GetAttachedString(llGetAttached())], !!llGetAttached()) + ": " + m);
+    enLog_Fatal("Object " + llList2String(["deleted", "detached from " + enPrim_GetAttachedString(llGetAttached())], !!llGetAttached()) + ": " + m);
     enLog_Die();
 }
 

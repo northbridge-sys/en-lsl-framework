@@ -32,14 +32,14 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 if:
 - we want to receive any CLEP-RPC messages
 - we are using enLSD scopes
-- we have manually enabled enObject_GetMyLast() support
-- we have manually enabled enObject link caching
-- we have enabled FEATURE_ENOBJECT_ALWAYS_PHANTOM
-trigger _enObject_changed()
+- we have manually enabled enPrim_GetMyLast() support
+- we have manually enabled enPrim link caching
+- we have enabled FEATURE_ENPRIM_ALWAYS_PHANTOM
+trigger _enPrim_changed()
 */
-#if defined _HOOK_ENCLEP_CHANGED || defined _HOOK_ENLSD_CHANGED || OVERRIDE_ENOBJECT_LIMIT_GETMYSELF > 0 || defined FEATURE_ENOBJECT_ENABLE_LINK_CACHE || defined FEATURE_ENOBJECT_ALWAYS_PHANTOM
+#if defined _HOOK_ENCLEP_CHANGED || defined _HOOK_ENLSD_CHANGED || OVERRIDE_ENPRIM_LIMIT_GETMYSELF > 0 || defined FEATURE_ENPRIM_ENABLE_LINK_CACHE || defined FEATURE_ENPRIM_ALWAYS_PHANTOM
     #define _EVENT_CHANGED
-    #define _HOOK_ENOBJECT_CHANGED
+    #define _HOOK_ENPRIM_CHANGED
 #endif
 
 // if we defined EVENT_EN_CHANGED, pass all non-caught changed() events to en_changed()
@@ -77,15 +77,15 @@ trigger _enObject_changed()
         #endif
 
         #if defined _HOOK_ENCLEP_CHANGED
-            _enCLEP_changed(change); // WARNING: Must be called before enObject_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
+            _enCLEP_changed(change); // WARNING: Must be called before enPrim_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
         #endif
 
         #if defined _HOOK_ENLSD_CHANGED 
             _enLSD_changed(change);
         #endif
 
-        #if defined _HOOK_ENOBJECT_CHANGED
-            _enObject_changed(change);
+        #if defined _HOOK_ENPRIM_CHANGED
+            _enPrim_changed(change);
         #endif
 
 		#if defined _HOOK_EN_CHANGED

@@ -55,7 +55,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
                 [
                     channel,
                     enString_Elem(name),
-                    enObject_Elem(id),
+                    enPrim_Elem(id),
                     enString_Elem(message)
                 ]
             );
