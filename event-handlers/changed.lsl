@@ -23,7 +23,7 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #endif
 
 // if we want enLNX to allow prim-scope or script-scope pairs, and we have not marked this as a "passive" script (only one script needs to run enLEP_changed() to maintain the datastore), trigger _enLEP_changed()
-#if defined FEATURE_ENLNX_ENABLE_SCOPE && !defined FEATURE_ENLNX_PASSIVE_SCOPE
+#if defined FEATURE_ENLNX_ENABLE_SCOPE && defined FEATURE_ENLNX_PRIM_MONITOR
     #define _EVENT_CHANGED
     #define _HOOK_ENLNX_CHANGED
 #endif
