@@ -27,7 +27,7 @@ enLog_To(
     integer line,
     string target, // note - this is NOT related to the "logtarget" check
     string message
-    )
+)
 {
     // can use level 0 to always send, or a level constant for loglevel support
     integer lsd_level = enLog_GetLoglevel();
@@ -50,18 +50,18 @@ enLog_To(
     }
     #ifndef FEATURE_ENLOG_DISABLE_LOGTARGET
         string t = enLog_GetLogtarget();
-        string prim = llGetSubString( t, 0, 35 );
-        if ( enKey_IsPrimInRegion( prim ) )
+        string prim = llGetSubString(t, 0, 35); // prim is first 36 chars of logtarget
+        if (enKey_IsPrimInRegion(prim))
         { // log via enCLEP to logtarget
-            string domain = llDeleteSubString( t, 0, 35 );
-            enCLEP_Send(
-                "enLog",
-                domain,
-                prim,
-                "",
-                0,
-                [level, line, llGetTimestamp(), llGetUsedMemory(), llGetMemoryLimit(), llGetKey(), llGetScriptName()],
-                message
+            string domain = llDeleteSubString(t, 0, 35); // domain is remaining chars of logtarget
+            enCLEP_RequestRPC(
+                prim, // target_prim
+                "", // target_script
+                domain, // clep_domain
+                level, // int
+                "enLog." + enLog_LevelToString(level), // method
+                "{\"line\":" + (string)line + ",\"ts\":\"" + llGetTimestamp() + "\",\"used\":" + (string)llGetUsedMemory() + ",\"limit\":" + (string)llGetUsedMemory() + "}", // params
+                message // id
             );
         }
     #endif
@@ -169,33 +169,41 @@ enLog_Die()
 // converts integer level number into string representation
 string enLog_LevelToString(
     integer l
-    )
+)
 {
-    return llList2String( [
-        "0",
-        "FATAL",
-        "ERROR",
-        "WARN",
-        "INFO",
-        "DEBUG",
-        "TRACE",
-        "UNKNOWN_LEVEL_" + (string)l
-        ], l );
+    return llList2String(
+        [
+            "0",
+            "Fatal",
+            "Error",
+            "Warn",
+            "Info",
+            "Debug",
+            "Trace",
+            "Unk_" + (string)l
+        ],
+        l
+    );
 }
 
 // converts integer level number into string representation
 integer enLog_StringToLevel(
     string s
-    )
+)
 {
-    return llListFindList( [
-        "FATAL",
-        "ERROR",
-        "WARN",
-        "INFO",
-        "DEBUG",
-        "TRACE"
-        ], [ llToUpper( llStringTrim( s, STRING_TRIM ) ) ] ) + 1;
+    return llListFindList(
+        [
+            "FATAL",
+            "ERROR",
+            "WARN",
+            "INFO",
+            "DEBUG",
+            "TRACE"
+        ],
+        [
+            llToUpper(llStringTrim(s, STRING_TRIM))
+        ]
+    ) + 1;
 }
 
 // can't do this as a macro because of lists
