@@ -16,12 +16,6 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// if we want to receive any CLEP-RPC messages, CLEP is enabled, so trigger _enCLEP_changed() to catch UUID changes for automatic self-domain relistening
-#if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT
-    #define _EVENT_CHANGED
-    #define _HOOK_ENCLEP_CHANGED
-#endif
-
 // if we want enLNX to allow prim-scope or script-scope pairs, and we have not marked this as a "passive" script (only one script needs to run enLEP_changed() to maintain the datastore), trigger _enLEP_changed()
 #if defined FEATURE_ENLNX_ENABLE_SCOPE && defined FEATURE_ENLNX_PRIM_MONITOR
     #define _EVENT_CHANGED
@@ -74,10 +68,6 @@ trigger _enPrim_changed()
                     enInteger_ElemBitfield(change)
                 ]
             );
-        #endif
-
-        #if defined _HOOK_ENCLEP_CHANGED
-            _enCLEP_changed(change); // WARNING: Must be called before enPrim_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
         #endif
 
         #if defined _HOOK_ENLNX_CHANGED 

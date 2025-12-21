@@ -22,6 +22,91 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+/*
+enCLEP_DialogListen opens a regular llListen on an enCLEP channel tied to this prim UUID and script name.
+This can be used in conjunction with enCLEP_DialogChannel for a safe nearly-guaranteed-random channel for this script.
+*/
+enCLEP_DialogListen()
+{
+    _enCLEP_UnListenDomains();
+    if (_ENCLEP_DIALOG_LSN) llListenRemove(_ENCLEP_DIALOG_LSN);
+    integer channel = enCLEP_DialogChannel();
+    _ENCLEP_DIALOG_LSN = llListen(channel, "", "", "");
+    enLog_Trace("Dialog listening on channel " + (string)channel + " handle " + (string)_ENCLEP_DIALOG_LSN);
+    _enCLEP_ListenDomains();
+}
+
+/*
+Removes the listen created by enCLEP_DialogListen.
+*/
+enCLEP_DialogListenRemove()
+{
+    if (!_ENCLEP_DIALOG_LSN) return;
+    _enCLEP_UnListenDomains();
+    llListenRemove(_ENCLEP_DIALOG_LSN);
+    _ENCLEP_DIALOG_LSN = 0;
+    _enCLEP_ListenDomains();
+}
+
+/*
+Initializes or updates a dynamically managed enCLEP listener.
+This is like llListen, but easier to use.
+
+enCLEP_Listen(...) will return 0 and fail to add the listen if you attempt to
+add more than 65 listeners (the maximum allowed per script). If you call
+llListen separately, set the number of listens you want reserved for non-enCLEP\
+use by adding the following line:
+    #define OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS x
+where x is the number of listens you want to allocate for non-enCLEP use.
+
+Note: domains can be set as the local prim's UUID, in which case they will be
+automatically refreshed on key or link change. However, this ONLY works if the
+domain itself is just the UUID - no other data can be added.
+
+WARNING: If the local prim's UUID is used as the domain, you MUST use the
+state_entry, on_rez, and changed event handler include files, which will
+dynamically update the domain after a key change. (This is done automatically
+in event-handlers.lsl if you use it.)
+*/
+integer enCLEP_Listen(
+    string domain,  // domain to listen to
+    integer flags   // ENCLEP_LISTEN_* flags
+    )
+{
+    #if defined TRACE_ENCLEP
+        enLog_TraceParams("enCLEP_Listen", ["domain", "flags"], [
+            enString_Elem(domain),
+            enInteger_ElemBitfield(flags)
+            ]);
+    #endif
+    _enCLEP_UnListenDomains();
+    integer index = llListFindList(_ENCLEP_DOMAINS, [domain]);
+    if (index == -1 && flags & FLAG_ENCLEP_LISTEN_REMOVE)
+    { // nothing to remove, so return error
+        _enCLEP_ListenDomains();
+        return __LINE__;
+    }
+    if (~index) _ENCLEP_DOMAINS = llDeleteSubList(_ENCLEP_DOMAINS, index, index + _ENCLEP_DOMAINS_STRIDE - 1); // index == -1; delete existing domain enCLEP, so it can be cleanly appended to the end
+    if (llGetListLength(_ENCLEP_DOMAINS) / _ENCLEP_DOMAINS_STRIDE + OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS > 63)
+    { // too many listens (maximum 65, so if we are currently at 64 or more, fail)
+        _enCLEP_ListenDomains();
+        return __LINE__;
+    }
+    if (~flags & FLAG_ENCLEP_LISTEN_REMOVE) _ENCLEP_DOMAINS += [domain, flags, 0]; // add to _ENCLEP_DOMAINS only if we aren't removing it
+    _enCLEP_ListenDomains();
+    return 0;
+}
+
+//  resets and removes all enCLEP listeners, for single-purpose scripts to not have to independently keep track of listen handles
+enCLEP_Reset()
+{
+    #if defined TRACE_ENCLEP
+        enLog_TraceParams("enCLEP_Reset", [], []);
+    #endif
+    _enCLEP_UnListenDomains();
+    _ENCLEP_DOMAINS = [];
+}
+
 //  Internal function that dynamically selects a chat method to use based on the target prim
 //  NULL_KEY or "" can be passed as a prim to use llRegionSay automatically
 //  If FEATURE_ENCLEP_ENABLE_SHOUT is defined, a llRegionSayTo message will be sent via llShout to attempt to reach a prim across a nearby sim border
@@ -114,65 +199,6 @@ string _enCLEP_SendRPC(
     _enCLEP_SendRaw(target_prim, enCLEP_Channel(clep_domain), json);
 
     return id;
-}
-
-/*
-Initializes or updates a dynamically managed enCLEP listener.
-This is like llListen, but easier to use.
-
-enCLEP_Listen(...) will return 0 and fail to add the listen if you attempt to
-add more than 65 listeners (the maximum allowed per script). If you call
-llListen separately, set the number of listens you want reserved for non-enCLEP\
-use by adding the following line:
-    #define OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS x
-where x is the number of listens you want to allocate for non-enCLEP use.
-
-Note: domains can be set as the local prim's UUID, in which case they will be
-automatically refreshed on key or link change. However, this ONLY works if the
-domain itself is just the UUID - no other data can be added.
-
-WARNING: If the local prim's UUID is used as the domain, you MUST use the
-state_entry, on_rez, and changed event handler include files, which will
-dynamically update the domain after a key change. (This is done automatically
-in event-handlers.lsl if you use it.)
-*/
-integer enCLEP_Listen(
-    string domain,  // domain to listen to
-    integer flags   // ENCLEP_LISTEN_* flags
-    )
-{
-    #if defined TRACE_ENCLEP
-        enLog_TraceParams("enCLEP_Listen", ["domain", "flags"], [
-            enString_Elem(domain),
-            enInteger_ElemBitfield(flags)
-            ]);
-    #endif
-    _enCLEP_UnListenDomains();
-    integer index = llListFindList(_ENCLEP_DOMAINS, [domain]);
-    if (index == -1 && flags & FLAG_ENCLEP_LISTEN_REMOVE)
-    { // nothing to remove, so return error
-        _enCLEP_ListenDomains();
-        return __LINE__;
-    }
-    if (~index) _ENCLEP_DOMAINS = llDeleteSubList(_ENCLEP_DOMAINS, index, index + _ENCLEP_DOMAINS_STRIDE - 1); // index == -1; delete existing domain enCLEP, so it can be cleanly appended to the end
-    if (llGetListLength(_ENCLEP_DOMAINS) / _ENCLEP_DOMAINS_STRIDE + OVERRIDE_INTEGER_ENCLEP_RESERVE_LISTENS > 63)
-    { // too many listens (maximum 65, so if we are currently at 64 or more, fail)
-        _enCLEP_ListenDomains();
-        return __LINE__;
-    }
-    if (~flags & FLAG_ENCLEP_LISTEN_REMOVE) _ENCLEP_DOMAINS += [domain, flags, 0]; // add to _ENCLEP_DOMAINS only if we aren't removing it
-    _enCLEP_ListenDomains();
-    return 0;
-}
-
-//  resets and removes all enCLEP listeners, for single-purpose scripts to not have to independently keep track of listen handles
-enCLEP_Reset()
-{
-    #if defined TRACE_ENCLEP
-        enLog_TraceParams("enCLEP_Reset", [], []);
-    #endif
-    _enCLEP_UnListenDomains();
-    _ENCLEP_DOMAINS = [];
 }
 
 /*
@@ -420,50 +446,4 @@ _enCLEP_uuid_changed(
         index * _ENCLEP_DOMAINS_STRIDE,
         index * _ENCLEP_DOMAINS_STRIDE);
     _enCLEP_ListenDomains();
-}
-
-/*
-enCLEP_DialogListen opens a regular llListen on an enCLEP channel tied to this prim UUID and script name.
-This can be used in conjunction with enCLEP_DialogChannel for a safe nearly-guaranteed-random channel for this script.
-*/
-enCLEP_DialogListen()
-{
-    _enCLEP_UnListenDomains();
-    if (_ENCLEP_DIALOG_LSN) llListenRemove(_ENCLEP_DIALOG_LSN);
-    integer channel = enCLEP_DialogChannel();
-    _ENCLEP_DIALOG_LSN = llListen(channel, "", "", "");
-    enLog_Trace("Dialog listening on channel " + (string)channel + " handle " + (string)_ENCLEP_DIALOG_LSN);
-    _enCLEP_ListenDomains();
-}
-
-/*
-Removes the listen created by enCLEP_DialogListen.
-*/
-enCLEP_DialogListenRemove()
-{
-    if (!_ENCLEP_DIALOG_LSN) return;
-    _enCLEP_UnListenDomains();
-    llListenRemove(_ENCLEP_DIALOG_LSN);
-    _ENCLEP_DIALOG_LSN = 0;
-    _enCLEP_ListenDomains();
-}
-
-/*
-WARNING: Must be called before enPrim_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
-*/
-_enCLEP_changed(
-    integer change
-)
-{
-    if (change & CHANGED_LINK) _enCLEP_RefreshLinkset();
-}
-
-_enCLEP_on_rez(
-    integer param
-)
-{
-    // update enCLEP channels if any are just the UUID
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT
-        _enCLEP_RefreshLinkset();
-    #endif
 }

@@ -19,25 +19,24 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 /*
 we always have an on_rez(), so there's no need to do _EVENT or _HOOK definitions - let the individual libraries handle everything
 */
-	on_rez(integer param)
-	{
-        #if defined TRACE_EVENT_ON_REZ
-            enLog_TraceParams(
-                "on_rez",
-                [
-                    "param"
-                ],
-                [
-                    param
-                ]
-            );
-        #endif
+on_rez(integer param)
+{
+    #if defined TRACE_EVENT_ON_REZ
+        enLog_TraceParams(
+            "on_rez",
+            [
+                "param"
+            ],
+            [
+                param
+            ]
+        );
+    #endif
 
-        _enPrim_on_rez(param); // highest priority - do not run any on_rez() handlers before this
-        _enCLEP_on_rez(param);
-        _enLNX_on_rez(param);
+    _enPrim_on_rez(param); // highest priority - do not run any on_rez() handlers before this
+    _enLNX_on_rez(param);
 
-		#if defined EVENT_EN_ON_REZ
-			en_on_rez(param);
-		#endif
-	}
+    #if defined EVENT_EN_ON_REZ
+        en_on_rez(param);
+    #endif
+}
