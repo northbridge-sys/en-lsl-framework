@@ -36,7 +36,7 @@ Sends a request using the LEP-RPC protocol.
 @param integer target_link Target link number.
 @param string target_script Target script name ("" for all in targeted link(s)).
 @param integer int Any integer.
-@param string method Any method. Typically separated by periods ("."), e.g.: system.display.pixel.color
+@param string method Any method, separated by periods ("."), e.g.: system.display.pixel.color
 @param string params Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
 @param string id Any string. If "", will be omitted.
 */

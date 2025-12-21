@@ -42,7 +42,7 @@ enlep_rpc_request(
     string source_script,
     string target_script,
     integer int,
-    list method,
+    string method,
     string params,
     string id
 )
@@ -74,7 +74,7 @@ enlep_rpc_result(
     string source_script,
     string target_script,
     integer int,
-    list method,
+    string method,
     string params,
     string id,
     string result
@@ -109,7 +109,7 @@ enlep_rpc_error(
     string source_script,
     string target_script,
     integer int,
-    list method,
+    string method,
     string params,
     string id,
     integer error_code,

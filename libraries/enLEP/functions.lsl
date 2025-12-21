@@ -62,9 +62,9 @@ string _enLEP_FormJsonRPC(
     The "p" param is optionally reserved for params (used in CLEP, but not LEP for message processing efficiency)
     Technically no other params are allowed, and the whole spec is reserved for future expansion - all user values must be passed via existing params in the spec
     */
-    string json = "{\"t\":\"RPC\",\"ss\":" + enString_EscapedQuote(source_script) + ",\"ts\":" + enString_EscapedQuote(target_script) + ",\"m\":" + enString_EscapedQuote(method) + "\"}";
+    string json = "{\"t\":\"RPC\",\"ss\":" + enString_EscapedQuote(source_script) + ",\"ts\":" + enString_EscapedQuote(target_script) + ",\"m\":" + enString_EscapedQuote(method) + "}";
     if (id != "") json = llJsonSetValue(json, ["id"], enString_EscapedQuote(id));
-    if (llJsonGetType(result, []) != JSON_INVALID)
+    if (llJsonValueType(result, []) != JSON_INVALID)
     { // we are sending a response with a result
         json = llJsonSetValue(json, ["r"], result);
     }
@@ -72,7 +72,7 @@ string _enLEP_FormJsonRPC(
     { // we are sending a response with an error
         json = llJsonSetValue(json, ["e", "c"], (string)error_code);
         json = llJsonSetValue(json, ["e", "m"], enString_EscapedQuote(error_message));
-        if (llJsonGetType(error_data, []) != JSON_INVALID) json = llJsonSetValue(json, ["e", "d"], error_data);
+        if (llJsonValueType(error_data, []) != JSON_INVALID) json = llJsonSetValue(json, ["e", "d"], error_data);
     }
     // else, we are sending a request
     // return whatever we're sending
@@ -152,7 +152,7 @@ integer _enLEP_link_message(
         ]);
     #endif
 
-    if (llJsonGetType(s, []) != JSON_OBJECT) return __LINE__; // LEP messages are always objects
+    if (llJsonValueType(s, []) != JSON_OBJECT) return __LINE__; // LEP messages are always objects
     
     string source_script = llJsonGetValue(s, ["ss"]);
     string target_script = llJsonGetValue(s, ["ts"]);
@@ -183,16 +183,15 @@ integer _enLEP_link_message(
         #endif
     }
 
-    if (llJsonGetValue(s, ["t"] != "RPC")) return __LINE__; // LEP messages always have "t":"RPC", though other types may be added within LEP spec eventually
+    if (llJsonGetValue(s, ["t"]) != "RPC") return __LINE__; // LEP messages always have "t":"RPC", though other types may be added within LEP spec eventually
 
     string id = llJsonGetValue(s, ["id"]);
-    list method = llParseStringKeepNulls(llJsonGetValue(s, ["m"]), ["."], []);
-    string params = llJsonGetValue(s, ["p"]);
+    string method = llJsonGetValue(s, ["m"]);
     string result = llJsonGetValue(s, ["r"]);
 
     if (result == JSON_INVALID)
     {
-        if (llJsonGetType(s, ["e"]) == JSON_INVALID)
+        if (llJsonValueType(s, ["e"]) == JSON_INVALID)
         { // request
             #if defined EVENT_ENLEP_RPC_REQUEST && defined TRACE_EVENT_ENLEP_RPC_REQUEST
                 enLog_TraceParams(
@@ -209,9 +208,9 @@ integer _enLEP_link_message(
                         l, // source_link
                         enString_Elem(source_script),
                         enString_Elem(target_script),
-                        int,
+                        i,
                         method,
-                        params,
+                        k,
                         id
                     ]
                 );
@@ -221,9 +220,9 @@ integer _enLEP_link_message(
                     l, // source_link
                     source_script,
                     target_script,
-                    int,
+                    i,
                     method,
-                    params,
+                    k,
                     id
                 );
             #endif
@@ -252,9 +251,9 @@ integer _enLEP_link_message(
                     l, // source_link
                     enString_Elem(source_script),
                     enString_Elem(target_script),
-                    int,
+                    i,
                     method,
-                    params,
+                    k,
                     id,
                     error_code,
                     enString_Elem(error_message),
@@ -267,9 +266,9 @@ integer _enLEP_link_message(
                 l, // source_link
                 source_script,
                 target_script,
-                int,
+                i,
                 method,
-                params,
+                k,
                 id,
                 error_code,
                 error_message,
@@ -280,7 +279,6 @@ integer _enLEP_link_message(
     }
 
     // result response
-    integer result = llJsonGetValue(s, ["r"]);
     #if defined EVENT_ENLEP_RPC_RESULT && defined TRACE_EVENT_ENLEP_RPC_RESULT
         enLog_TraceParams(
             "enlep_rpc_result",
@@ -297,9 +295,9 @@ integer _enLEP_link_message(
                 l, // source_link
                 enString_Elem(source_script),
                 enString_Elem(target_script),
-                int,
+                i,
                 method,
-                params,
+                k,
                 id,
                 result
             ]
@@ -310,9 +308,9 @@ integer _enLEP_link_message(
             l, // source_link
             source_script,
             target_script,
-            int,
+            i,
             method,
-            params,
+            k,
             id,
             result
         );

@@ -16,19 +16,19 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EVENT_EVENT_EN_LAND_COLLISION_END
+#if defined EVENT_EN_LAND_COLLISION_END
 	land_collision_end( vector pos )
 	{
 #endif
 
         // log event if requested
-        #if defined EVENT_EVENT_EN_LAND_COLLISION_END && defined TRACE_EVENT_EVENT_EN_LAND_COLLISION
+        #if defined EVENT_EN_LAND_COLLISION_END && defined TRACE_EVENT_EN_LAND_COLLISION
             enLog_TraceParams( "land_collision_end", [ "pos" ], [
                 pos
             ] );
         #endif
 
-#if defined EVENT_EVENT_EN_LAND_COLLISION_END
+#if defined EVENT_EN_LAND_COLLISION_END
         // event unused, so pass to user-defined function only
         en_land_collision_end( pos );
 	}

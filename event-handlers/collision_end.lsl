@@ -16,19 +16,19 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EVENT_EVENT_EN_COLLISION_END
+#if defined EVENT_EN_COLLISION_END
 	collision_end( integer count )
 	{
 #endif
 
         // log event if requested
-        #if defined EVENT_EVENT_EN_COLLISION_END && defined TRACE_EVENT_EVENT_EN_COLLISION_END
+        #if defined EVENT_EN_COLLISION_END && defined TRACE_EVENT_EN_COLLISION_END
             enLog_TraceParams( "collision_end", [ "count" ], [
                 count
             ] );
         #endif
 
-#if defined EVENT_EVENT_EN_COLLISION_END
+#if defined EVENT_EN_COLLISION_END
         // event unused, so pass to user-defined function only
         en_collision_end( count );
 	}

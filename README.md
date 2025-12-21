@@ -197,46 +197,51 @@ or, if you change the runtime loglevel to TRACE (such as with `enLog_SetLoglevel
 
 You can also send a copy of all logs as they are written to a separate object by writing the object's UUID to the `"logtarget"` linkset data value.
 
-En also implements a structured request-response protocol, standard linkset data structures, and other methods for modular multi-script objects. For example, you can send a message to a specific script like so:
+En also implements LEP-RPC, LNX, and other tools for modular multi-script objects. For example, you can send a message to a specific script like so:
 
 ```
-string token = enLEP_Request(
+string id = enLEP_RequestRPC(
     LINK_THIS,
     "Target Script Name",
-    "{\"op\":\"ping\",\"start\":\"" + llGetTimestamp() + "\"}",
-    ""
+    0,
+    "ping",
+    "{\"start\":\"" + llGetTimestamp() + "\"}",
+    llGenerateKey()
 );
 ```
 
-The script named "Target Script Name" in the same prim will call the `enlep_request` function defined by the script:
+The script named "Target Script Name" in the same prim will call the `enlep_rpc_request()` callback function, as long as `EVENT_ENLEP_RPC_REQUEST` is defined:
 
 ```
-#define EVENT_ENLEP_REQUEST
+#define EVENT_ENLEP_RPC_REQUEST
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
-enlep_request(
+enlep_rpc_request(
     integer source_link,
     string source_script,
     string target_script,
-    string token,
-    string json,
-    string data
+    integer int,
+    string method,
+    string params,
+    string id
 )
 {
     // you can process this request however you like, but here's an example:
 
-    if (llJsonGetValue(json, ["op"]) != "ping") return; // only respond if "op"="ping"
+    if (method != "ping") return; // only respond if method is ["ping"]
 
-    enLog_Info("Got ping from " + token);
+    enLog_Info("Got ping with ID " + id + " and params " + params);
 
-    // respond to request, adding "timestamp" value to json
-    enLEP_Respond(
+    // respond to request
+    enLEP_RespondRPCResult(
         source_link, // you may send messages to any link or script, not just source_link and source_script
         source_script, // however, typically you'd only respond to the source_link and source_script that sent the request
-        token, // token must be returned, since that's how source_script knows which request this response relates to
-        llJsonSetValue(json, ["bounce"], llGetTimestamp()),
-        data // we never touch data, but it's generally good practice to return it, in case we want to use it for on-the-wire storage
+        int, // return int
+        method, // return method
+        params, // return params
+        id, // return id
+        "{\"mid\":\"" + llGetTimestamp() + "\"}" // respond with timestamp
     );
 }
 
@@ -246,63 +251,71 @@ default
 }
 ```
 
-Then, the source script will trigger `enlep_response`:
+Then, the source script will trigger `enlep_rpc_result()`, as long as `EVENT_ENLEP_RPC_RESULT` is defined:
 
 ```
 #define EVENT_EN_STATE_ENTRY
-#define EVENT_ENLEP_RESPONSE
+#define EVENT_ENLEP_RPC_RESULT
 
 #include "northbridge-sys/en-lsl-framework/libraries.lsl"
 
 en_state_entry()
 {
     /*
-    example of where the enLEP_Request() call could be made
-    note that enLEP_Request() returns a token UUID, like llHTTPRequest - this can be stored for reference in enlep_response if desired
+    example of where the enLEP_RequestRPC() call could be made
+    note that enLEP_RequestRPC() returns the id - this can be stored for reference in enlep_response if desired
     */
-    string token = enLEP_Request(
+    string id = enLEP_RequestRPC(
         LINK_THIS,
         "Target Script Name",
-        "{\"op\":\"ping\",\"start\":\"" + llGetTimestamp() + "\"}",
-        ""
+        0,
+        "ping",
+        "{\"start\":\"" + llGetTimestamp() + "\"}",
+        llGenerateKey()
     );
     
-    enLog_Info("Sent ping with " + token);
+    enLog_Info("Sent ping with ID " + id);
 }
 
-enlep_response(
+enlep_rpc_result(
     integer source_link,
     string source_script,
     string target_script,
-    string token,
-    string json,
-    string data,
-    integer ok
+    integer int,
+    string method,
+    string params,
+    string id,
+    string result
 )
 {
     /*
-    you can process the response however you like!
+    you can process the response however you like
 
-    this enlep_response function won't get called unless:
-    - this script receives a LEP response via link_message
-    - the response is targeted to this script, "" (all scripts), or any script in the OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS list (see also FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT)
+    this enlep_rpc_result() function won't get called unless all of the following are true:
+    - this script receives a LEP-RPC result via link_message
+    - the result is targeted to this script, "" (all scripts), or any script in the OVERRIDE_ENLEP_ALLOWED_TARGET_SCRIPTS list (see also FEATURE_ENLEP_ALLOW_FUZZY_TARGET_SCRIPT)
     - if OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS is defined, the response is from any script in that list (but note that source_script is self-reported, so this is NOT secure)
-    - this script has defined EVENT_ENLEP_RESPONSE (or EVENT_ENLEP_MESSAGE, not shown)
+    - this script has defined EVENT_ENLEP_RPC_RESULT
     */
 
-    if (llJsonGetValue(json, ["op"]) != "ping") return; // if "op"!="ping", this response isn't to a ping
+    if (method != "ping") return; // only care about this response if method is "ping"
+
+    /*
+    note that you can have multi-level methods, like "file.open", "foo.bar.baz", etc.
+    it is up to the script whether to branch through a logic tree for each element, or just check the entire method string
+    */
 
     /*
     best practice is to look up the response token to determine which request it relates to, but this example skips that
     if you are implementing this in a security-sensitive application, make sure to harden against spurious messages
     */
     
-    // note that this uses the enDate millisec format, which is not necessarily safe
-    integer start = enDate_TimestampToMillisec(llJsonGetValue(json, ["start"]));
-    integer bounce = enDate_TimestampToMillisec(llJsonGetValue(json, ["bounce"]));
+    // convert timestamps into arbitrary millisecond-accurate integers, then get the differences between them for benchmarking
+    integer start = enDate_TimestampToMillisec(llJsonGetValue(params, ["start"])); // params is a timestamp string
+    integer mid = enDate_TimestampToMillisec(llJsonGetValue(result, ["mid"])); // result is a timestamp string
     integer end = enDate_NowToMillisec();
     
-    enLog_Success("Got ping response to " + token + " (" + (string)enDate_AddMillisec(bounce, -start) + "ms to target, " + (string)enDate_AddMillisec(end, -bounce) + "ms to source)");
+    enLog_Success("Got ping result for ID " + id + " (" + (string)enDate_AddMillisec(mid, -start) + "ms for request, " + (string)enDate_AddMillisec(end, -mid) + "ms for result)");
 }
 
 default

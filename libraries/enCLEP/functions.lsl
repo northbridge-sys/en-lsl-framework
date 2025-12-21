@@ -191,10 +191,10 @@ string _enCLEP_SendRPC(
             (string)int
         );
     
-    if (llJsonGetType(clep_domain, []) == JSON_INVALID) json = llJsonSetValue(json, ["cd"], clep_domain);
+    if (llJsonValueType(clep_domain, []) == JSON_INVALID) json = llJsonSetValue(json, ["cd"], clep_domain);
     else json = llJsonSetValue(json, ["cd"], enString_EscapedQuote(clep_domain));
 
-    if (llJsonGetType(params, []) != JSON_INVALID) json = llJsonSetValue(json, ["p"], params);
+    if (llJsonValueType(params, []) != JSON_INVALID) json = llJsonSetValue(json, ["p"], params);
 
     _enCLEP_SendRaw(target_prim, enCLEP_Channel(clep_domain), json);
 
@@ -225,7 +225,7 @@ integer _enCLEP_listen(
             ]);
     #endif
 
-    if (llJsonGetType(s, []) != JSON_OBJECT) return __LINE__; // CLEP messages are always objects
+    if (llJsonValueType(s, []) != JSON_OBJECT) return __LINE__; // CLEP messages are always objects
     
     string source_script = llJsonGetValue(s, ["ss"]);
     string target_script = llJsonGetValue(s, ["ts"]);
@@ -266,7 +266,7 @@ integer _enCLEP_listen(
 
     if (result == JSON_INVALID)
     {
-        if (llJsonGetType(s, ["e"]) == JSON_INVALID)
+        if (llJsonValueType(s, ["e"]) == JSON_INVALID)
         { // request
             #if defined EVENT_ENCLEP_RPC_REQUEST && defined TRACE_EVENT_ENCLEP_RPC_REQUEST
                 enLog_TraceParams(
@@ -424,7 +424,7 @@ _enCLEP_ListenDomains()
     for (i = 0; i < l; i++)
     {
         string domain = llList2String(_ENCLEP_DOMAINS, i * _ENCLEP_DOMAINS_STRIDE);
-        integer channel = enCLEP_Channel(service, domain);
+        integer channel = enCLEP_Channel(domain);
         c += [channel];
         integer handle = llListen(llList2Integer(c, -1), "", "", "");
         llListReplaceList(_ENCLEP_DOMAINS, [handle], i * _ENCLEP_DOMAINS_STRIDE + 2, i * _ENCLEP_DOMAINS_STRIDE + 2);

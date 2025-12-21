@@ -16,20 +16,20 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#if defined EVENT_EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED
+#if defined EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED
 	experience_permissions_denied( key id, integer reason )
 	{
 #endif
 
         // log event if requested
-        #if defined EVENT_EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED && defined TRACE_EVENT_EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED
+        #if defined EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED && defined TRACE_EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED
             enLog_TraceParams( "experience_permissions_denied", [ "id", "reason" ], [
                 enAvatar_Elem( id ),
                 reason
             ] );
         #endif
 
-#if defined EVENT_EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED
+#if defined EVENT_EN_EXPERIENCE_PERMISSIONS_DENIED
         // event unused, so pass to user-defined function only
         en_experience_permissions_denied( id, reason );
 	}

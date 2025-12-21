@@ -292,7 +292,7 @@ enLNX_Migrate(
                     new_pair = llListReplaceList(new_pair, [llGetScriptName()], 1, 1);
 
                 string type = "prim-scope";
-                if (old_script_name != "") type = "script-scope (\"" + enString_Escape(old_script_name) + "\")";
+                if (old_script_name != "") type = "script-scope (\"" + enString_EscapeQuotes(old_script_name) + "\")";
                 enLog_Trace("LNX " + type + " pair [\"" + llDumpList2String(llList2List(old_pair, 2, -1), "\", \"") + "\"] migrated");
                 
                 llLinksetDataWrite(llDumpList2String(new_pair, "\n"), llLinksetDataRead(old_pair)); // write with modified pair name

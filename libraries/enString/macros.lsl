@@ -39,12 +39,12 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define enString_UTF8Bytes(s) \
     ((llStringLength((string)llParseString2List(llStringToBase64(s), ["="], [])) * 3) >> 2)
 
+#define enString_EscapedQuote(s) \
+    "\"" + llReplaceSubString(llReplaceSubString(s, "\\", "\\\\", 0), "\"", "\\\"", 0) + "\""
+
 // note: this ONLY escapes " to \", and \ to \\
-#define enString_Escape(s) \
+#define enString_EscapeQuotes(s) \
     llReplaceSubString(llReplaceSubString(s, "\\", "\\\\", 0), "\"", "\\\"", 0)
 
 #define enString_Quote(s) \
     "\"" + s + "\""
-
-#define enString_EscapedQuote(s) \
-    enString_Quote(enString_Escape(s))
