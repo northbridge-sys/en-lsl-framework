@@ -27,7 +27,7 @@ enLNX_Reset(
     integer flags
 )
 {
-    #if defined TRACE_ENLNX
+    #if defined TRACE_ENLNX_RESET
         enLog_TraceParams(
             "enLNX_Reset",
             [
@@ -45,25 +45,63 @@ enLNX_Reset(
 
 integer enLNX_Write(integer flags, list name, string data)
 {
-    string prim = (string)llGetKey();
-    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+    #if defined TRACE_ENLNX_WRITE
+        enLog_TraceParams(
+            "enLNX_Write",
+            [
+                "flags",
+                "name",
+                "data"
+            ],
+            [
+                flags,
+                enList_Elem(name),
+                enString_Elem(data)
+            ]
+        );
+    #endif
+
     return llLinksetDataWrite(enLNX_Head(flags) + llDumpList2String(name, "\n"), data);
 }
 
 string enLNX_Read(integer flags, list name)
 {
-    string prim = (string)llGetKey();
-    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
-    return llLinksetDataRead(_enLNX_BuildHead(flags, llGetScriptName(), prim) + llDumpList2String(name, "\n"));
+    #if defined TRACE_ENLNX_READ
+        enLog_TraceParams(
+            "enLNX_Read",
+            [
+                "flags",
+                "name"
+            ],
+            [
+                flags,
+                enList_Elem(name)
+            ]
+        );
+    #endif
+
+    return llLinksetDataRead(enLNX_Head(flags) + llDumpList2String(name, "\n"));
 }
 
 list enLNX_Delete(integer flags, list name)
 {
-    string prim = (string)llGetKey();
-    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+    #if defined TRACE_ENLNX_WRITE
+        enLog_TraceParams(
+            "enLNX_Delete",
+            [
+                "flags",
+                "name"
+            ],
+            [
+                flags,
+                enList_Elem(name)
+            ]
+        );
+    #endif
+
     string regex;
     if (flags & FLAG_ENLNX_DELETE_CHILDREN) regex = "\n.*";
-	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(flags, llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags) + llDumpList2String(name, "\n")) + regex + "$", "");
 }
 
 integer enLNX_Exists(integer flags, list name)
@@ -73,45 +111,73 @@ integer enLNX_Exists(integer flags, list name)
 
 list enLNX_Find(integer flags, list name, integer start, integer count)
 {
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_Find", ["flags", "name", "start", "count"], [
-            enInteger_ElemBitfield(flags),
-            enString_Elem(name),
-            start,
-            count
-            ]);
+    #if defined TRACE_ENLNX_FIND
+        enLog_TraceParams(
+            "enLNX_Find",
+            [
+                "flags",
+                "name",
+                "start",
+                "count"
+            ],
+            [
+                enInteger_ElemBitfield(flags),
+                enList_Elem(name),
+                start,
+                count
+            ]
+        );
     #endif
-    string prim = (string)llGetKey();
-    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
-	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(flags, llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
-list enLNX_FindRegex(integer flags, string regex, integer start, integer count)
+list enLNX_FindRegex(
+    integer flags,
+    string regex,
+    integer start,
+    integer count
+)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_FindRegex", ["flags", "regex", "start", "count"], [
-            enInteger_ElemBitfield(flags),
-            enString_Elem(regex),
-            start,
-            count
-            ]);
+    #if defined TRACE_ENLNX_FINDREGEX
+        enLog_TraceParams(
+            "enLNX_FindRegex",
+            [
+                "flags",
+                "regex",
+                "start",
+                "count"
+            ],
+            [
+                enInteger_ElemBitfield(flags),
+                enString_Elem(regex),
+                start,
+                count
+            ]
+        );
     #endif
-    string prim = (string)llGetKey();
-    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
-	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(flags, llGetScriptName(), prim)) + regex + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags)) + regex + "$", start, count);
 }
 
-list enLNX_DeleteRegex(integer flags, string regex)
+list enLNX_DeleteRegex(
+    integer flags,
+    string regex
+)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_DeleteRegex", ["flags", "regex"], [
-            enInteger_ElemBitfield(flags),
-            enString_Elem(regex)
-            ]);
+    #if defined TRACE_ENLNX_DELETEREGEX
+        enLog_TraceParams(
+            "enLNX_DeleteRegex",
+            [
+                "flags",
+                "regex"
+            ],
+            [
+                enInteger_ElemBitfield(flags),
+                enString_Elem(regex)
+            ]
+        );
     #endif
-    string prim = (string)llGetKey();
-    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
-	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(flags, llGetScriptName(), prim)) + regex + "$", "");
+
+	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags)) + regex + "$", "");
 }
 
 string _enLNX_BuildHead(
@@ -129,6 +195,10 @@ string _enLNX_BuildHead(
 //  purges all enLNX pairs assigned to UUIDs that are not part of this linkset
 enLNX_Purge()
 {
+    #if defined TRACE_ENLNX_PURGE
+        enLog_TraceParams("enLNX_Purge", [], []);
+    #endif
+
     string root = enPrim_GetMyRoot();
     list pair;
     integer i;
@@ -167,69 +237,85 @@ list enLNX_PairToName(
 {
     if (pair == "") return [];
     list elems = llParseStringKeepNulls(pair, ["\n"], []);
-    integer head = enLNX_GetHeadCount();
-    if (head) elems = llDeleteSubList(elems, 0, head - 1);
-    return elems;
+    return llDeleteSubList(elems, 0, 1); // trim out scope
 }
 
 /*
 NOTE: FLAG_ENLNX_PRIM_SCOPE and FLAG_ENLNX_SCRIPT_SCOPE do not limit the scope of migration, but rather the method:
-FLAG_ENLNX_PRIM_SCOPE migrates pairs where the old prim_uuid matches the selector, which is replaced by llGetKey()
-FLAG_ENLNX_SCRIPT_SCOPE migrates pairs where the old prim_uuid matches llGetKey() and the old script_name matches the selector, which is replaced by llGetScriptName()
+FLAG_ENLNX_PRIM_SCOPE migrates pairs where the old prim_uuid matches the filter, which is replaced by llGetKey()
+FLAG_ENLNX_SCRIPT_SCOPE migrates pairs where the old prim_uuid matches llGetKey() and the old script_name matches the filter, which is replaced by llGetScriptName()
 */
 enLNX_Migrate(
     integer flags,
-    string selector
+    string filter
 )
 {
-    // can't migrate linkset-scope pairs in prim mode, or linkset/prim-scope pairs in script mode
-    // can't migrate linkset-scope pairs (neither scope flag set)
-    // can't migrate if both flags are set
-    if (selector == "" || ~flags & (FLAG_ENLNX_PRIM_SCOPE | FLAG_ENLNX_SCRIPT_SCOPE) || (flags & FLAG_ENLNX_PRIM_SCOPE && flags & FLAG_ENLNX_SCRIPT_SCOPE)) return;
-    if (flags & FLAG_ENLNX_PRIM_SCOPE) enLog_Debug("Migrating LNX datastore for prim " + enPrim_Elem(selector));
-    else enLog_Debug("Migrating LNX datastore for script " + enString_EscapedQuote(selector));
-    list l;
-    do
-    {
-        if (flags & FLAG_ENLNX_PRIM_SCOPE) // find keys where prim_uuid matches selector, any script_name
-            l = llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, selector) + "\n.*\n.*$", 0, 1);
-        else // find keys where prim_uuid is llGetKey(), and script_name matches selector
-            l = llLinksetDataFindKeys("^" + (string)llGetKey() + "\n" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, selector) + "\n.*$", 0, 1);
-        if (l != [])
+    #if defined TRACE_ENLNX_MIGRATE
+        enLog_TraceParams(
+            "enLNX_Migrate",
+            [
+                "flags",
+                "filter"
+            ],
+            [
+                enInteger_ElemBitfield(flags),
+                enString_Elem(filter)
+            ]
+        );
+    #endif
+
+    // can't migrate anything if we haven't enabled LNX scopes - this is for memory management
+    #if defined FEATURE_ENLNX_ENABLE_SCOPE
+        // can't migrate linkset-scope pairs in prim mode, or linkset/prim-scope pairs in script mode
+        // can't migrate linkset-scope pairs (neither scope flag set)
+        // can't migrate if both flags are set
+        if (filter == "" || ~flags & (FLAG_ENLNX_PRIM_SCOPE | FLAG_ENLNX_SCRIPT_SCOPE) || (flags & FLAG_ENLNX_PRIM_SCOPE && flags & FLAG_ENLNX_SCRIPT_SCOPE)) return;
+        if (flags & FLAG_ENLNX_PRIM_SCOPE) enLog_Debug("Migrating LNX datastore for prim " + enPrim_Elem(filter));
+        else enLog_Debug("Migrating LNX datastore for script " + enString_EscapedQuote(filter));
+        list l;
+        do
         {
-            list old_pair = llParseStringKeepNulls(llList2String(l, 0), ["\n"], []);
-            string old_prim_uuid = llList2String(old_pair, 0);
-            string old_script_name = llList2String(old_pair, 1);
+            if (flags & FLAG_ENLNX_PRIM_SCOPE) // find keys where prim_uuid matches filter, any script_name
+                l = llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, filter) + "\n.*\n.*$", 0, 1);
+            else // find keys where prim_uuid is llGetKey(), and script_name matches filter
+                l = llLinksetDataFindKeys("^" + (string)llGetKey() + "\n" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, filter) + "\n.*$", 0, 1);
+            if (l != [])
+            {
+                list old_pair = llParseStringKeepNulls(llList2String(l, 0), ["\n"], []);
+                string old_prim_uuid = llList2String(old_pair, 0);
+                string old_script_name = llList2String(old_pair, 1);
 
-            list new_pair;
-            if (flags & FLAG_ENLNX_PRIM_SCOPE) // replace prim_uuid
-                new_pair = llListReplaceList(new_pair, [(string)llGetKey()], 0, 0);
-            else // replace script_name
-                new_pair = llListReplaceList(new_pair, [llGetScriptName()], 1, 1);
+                list new_pair;
+                if (flags & FLAG_ENLNX_PRIM_SCOPE) // replace prim_uuid
+                    new_pair = llListReplaceList(new_pair, [(string)llGetKey()], 0, 0);
+                else // replace script_name
+                    new_pair = llListReplaceList(new_pair, [llGetScriptName()], 1, 1);
 
-            string type = "prim-scope";
-            if (old_script_name != "") type = "script-scope (\"" + enString_Escape(old_script_name) + "\")";
-            enLog_Trace("LNX " + type + " pair [\"" + llDumpList2String(llList2List(old_pair, 2, -1), "\", \"") + "\"] migrated");
-            
-            llLinksetDataWrite(llDumpList2String(new_pair, "\n"), llLinksetDataRead(old_pair)); // write with modified pair name
-            llLinksetDataDelete(old_pair); // immediately delete old pair
+                string type = "prim-scope";
+                if (old_script_name != "") type = "script-scope (\"" + enString_Escape(old_script_name) + "\")";
+                enLog_Trace("LNX " + type + " pair [\"" + llDumpList2String(llList2List(old_pair, 2, -1), "\", \"") + "\"] migrated");
+                
+                llLinksetDataWrite(llDumpList2String(new_pair, "\n"), llLinksetDataRead(old_pair)); // write with modified pair name
+                llLinksetDataDelete(old_pair); // immediately delete old pair
+            }
         }
-    }
-    while (l != []); // repeat until we didn't find any keys left with old header
+        while (l != []); // repeat until we didn't find any keys left with old header
+    #endif
 }
 
 // updates LSD entries that use old script name
 enLNX_CheckScriptName()
 {
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_CheckScriptName", [], []);
+    #if defined TRACE_ENLNX_CHECKSCRIPTNAME
+        enLog_Trace("enLNX_CheckScriptName()");
     #endif
-    #if defined FEATURE_ENLNX_ENABLE_SCRIPT_NAME_HEADER
+
+    #if defined FEATURE_ENLNX_ENABLE_SCOPE
         if (llGetScriptName() == _ENLNX_SCRIPT_NAME) return; // no script name change
         if (_ENLNX_SCRIPT_NAME != "")
         {
             enLog_Debug("Migrating LNX namespaces due to script name change");
-            enLNX_Migrate(FLAG_ENLNX_SCRIPT_SCOPE, llGetKey());
+            enLNX_Migrate(FLAG_ENLNX_SCRIPT_SCOPE, _ENLNX_SCRIPT_NAME);
         }
         _ENLNX_SCRIPT_NAME = llGetScriptName();
     #endif
@@ -239,6 +325,18 @@ _enLNX_uuid_changed(
     string last_uuid
 )
 {
+    #if defined TRACE_ENLNX_UUID_CHANGED
+        enLog_TraceParams(
+            "_enLNX_uuid_changed",
+            [
+                "last_uuid"
+            ],
+            [
+                enString_Elem(last_uuid)
+            ]
+        );
+    #endif
+
     // if FEATURE_ENLNX_PRIM_MONITOR is not defined, we do not need to migrate
     #if defined FEATURE_ENLNX_ENABLE_SCOPE && defined FEATURE_ENLNX_PRIM_MONITOR
         enLog_Debug("Migrating LNX namespaces due to prim UUID change");
@@ -250,119 +348,41 @@ _enLNX_changed(
     integer change
 )
 {
-    if (change & CHANGED_INVENTORY) enLNX_CheckScriptName(); // migrate script-scope pairs to new script name
+    #if defined TRACE_ENLNX_CHANGED
+        enLog_TraceParams(
+            "_enLNX_changed",
+            [
+                "change"
+            ],
+            [
+                enInteger_ElemBitfield(change)
+            ]
+        );
+    #endif
+
+    #if defined FEATURE_ENLNX_ENABLE_SCOPE
+        if (change & CHANGED_INVENTORY) enLNX_CheckScriptName(); // migrate script-scope pairs to new script name
+    #endif
 }
 
 _enLNX_on_rez(
     integer param
 )
 {
+    #if defined TRACE_ENLNX_ON_REZ
+        enLog_TraceParams(
+            "_enLNX_on_rez",
+            [
+                "param"
+            ],
+            [
+                param
+            ]
+        );
+    #endif
+
     // update enLNX names if any use the UUID header
     #if defined FEATURE_ENLNX_ENABLE_SCOPE && defined FEATURE_ENLNX_PRIM_MONITOR
         _enLNX_uuid_changed(enPrim_GetMyLast(1));
     #endif
 }
-
-// the below functions were never tested and are no longer "enLNX-compliant" so need to be rewritten at some point
-
-/*enLNX_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLNX header
-    string prim,
-    string domain,
-    integer use_header,
-    string name
-    )
-{
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_Pull", ["prim", "domain", "use_header", "name"], [
-            enPrim_Elem(prim),
-            enString_Elem(domain),
-            use_header,
-            enString_Elem(name)
-            ]);
-    #endif
-    enCLEP_SendRaw(domain, prim, "enLNX_PullLSD", enList_ToEscapedCSV([use_header, name]));
-}
-
-enLNX_Push( // writes a linkset data name-value pair TO another script, optionally using the active enLNX header
-    string prim,
-    string domain,
-    integer use_header,
-    string name
-    )
-{
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_Push", ["prim", "domain", "use_header", "name"], [
-            enPrim_Elem(prim),
-            enString_Elem(domain),
-            use_header,
-            enString_Elem(name)
-            ]);
-    #endif
-    string v;
-    if (use_header) v = enLNX_Read(name);
-    else v = llLinksetDataRead(name);
-    integer u;
-    #if defined FEATURE_ENLNX_ENABLE_SCOPE
-        u = 1; // if FEATURE_ENLNX_ENABLE_SCOPE defined, note in response
-    #endif
-    enCLEP_SendRaw(domain, prim, "enLNX_Push", enList_ToEscapedCSV([u, use_header, _ENLNX_HEADER, name, v]));
-}
-
-enLNX_Process( // writes a linkset data name-value pair FROM another script
-    string prim,
-    integer use_uuid,
-    integer use_header,
-    string uuid,
-    string header,
-    string name,
-    string value
-    )
-{
-    #if defined TRACE_ENLNX
-        enLog_TraceParams("enLNX_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
-            enPrim_Elem(prim),
-            use_uuid,
-            use_header,
-            enString_Elem(uuid),
-            enString_Elem(header),
-            enString_Elem(name),
-            enString_Elem(value)
-            ]);
-    #endif
-    #if !defined ENLNX_PUSHED_ALLOW_BROADCAST
-        if (prim != (string)llGetKey()) return; // do not allow enLNX_Push calls sent to NULL_KEY
-    #endif
-    #if defined ENLNX_PUSHED_ADD_HEADER
-        use_header = 1; // always use header when writing
-    #endif
-    #if defined ENLNX_PUSHED_UPDATE_HEADER
-        if (use_header) header = _ENLNX_HEADER; // update header to local header
-    #endif
-    #if defined ENLNX_PUSHED_ADD_UUID
-        use_uuid = 1; // always use uuid when writing (also define ENLNX_PUSHED_ADD_HEADER)
-    #endif
-    #if defined ENLNX_PUSHED_REMOVE_UUID
-        use_uuid = 0; // never use uuid when writing (also define ENLNX_PUSHED_ADD_HEADER)
-    #endif
-    #if defined ENLNX_PUSHED_UPDATE_UUID
-        // change header key if used
-        if (use_uuid) header = llGetKey() + header;
-    #else
-        if (use_uuid) header = uuid + header;
-    #endif
-    #if defined ENLNX_PUSHED_EVENT
-        en_pushed_lsd(
-            prim,
-            use_uuid,
-            use_header,
-            uuid,
-            header,
-            name,
-            value
-            );
-    #endif
-    #if defined ENLNX_PUSHED_WRITE
-        if (!use_header) header = "";
-        llLinksetDataWrite(header + name, value);
-    #endif
-}*/
