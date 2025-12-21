@@ -181,9 +181,9 @@ list enLNX_DeleteRegex(
 }
 
 string _enLNX_BuildHead(
+    integer flags,
     string script_name,
-    string prim_uuid,
-    integer flags
+    string prim_uuid
 )
 {
     if (~flags & FLAG_ENLNX_SCRIPT_SCOPE) script_name = ""; // erase script_name if we are not in script-scope namespace

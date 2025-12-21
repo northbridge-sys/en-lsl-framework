@@ -53,7 +53,7 @@ This also naturally avoids PUBLIC_CHANNEL (0x0 -> 0x80000000) and DEBUG_CHANNEL 
 enCLEP_DialogChannel can be used to get the channel we are listing to if enCLEP_DialogListen was called.
 */
 #define enCLEP_DialogChannel() \
-    enCLEP_Channel((string)llGetKey() + llGetScriptName())
+    enCLEP_Channel((string)llGetInventoryKey(llGetScriptName()))
 
 /*!
 Sends a request using the CLEP-RPC protocol.
