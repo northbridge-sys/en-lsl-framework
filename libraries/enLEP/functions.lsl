@@ -72,6 +72,7 @@ string _enLEP_FormJsonRPC(
     { // we are sending a response with an error
         json = llJsonSetValue(json, ["e", "c"], (string)error_code);
         json = llJsonSetValue(json, ["e", "m"], enString_EscapedQuote(error_message));
+        if (llJsonGetType(error_data, []) != JSON_INVALID) json = llJsonSetValue(json, ["e", "d"], error_data);
     }
     // else, we are sending a request
     // return whatever we're sending
