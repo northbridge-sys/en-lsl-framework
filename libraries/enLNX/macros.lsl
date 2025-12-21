@@ -22,27 +22,26 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define FLAG_ENLNX_ROOT 0x1
-#define FLAG_ENLNX_PASS 0x2
+// uses prim-scope datastore
+#define FLAG_ENLNX_PRIM_SCOPE 0x1
+// uses script-scope datastore
+#define FLAG_ENLNX_SCRIPT_SCOPE 0x2
+// typically used with FLAG_ENLNX_PRIM_SCOPE - uses the root prim's prim-scope datastore
+#define FLAG_ENLNX_ROOT 0x4
 
 #define FLAG_ENLNX_DELETE_CHILDREN 0x80000000
 
-#if defined TRACE_EN
-    #define TRACE_ENLNX
-#endif
+// used to detect script name changes
+string _ENLNX_SCRIPT_NAME;
 
-#if defined FEATURE_ENLNX_ENABLE_SCRIPT_NAME_HEADER
-    string _ENLNX_SCRIPT_NAME;
-#endif
-
-#define enLNX_Head() \
-    _enLNX_BuildHead(llGetScriptName(), llGetKey())
+#define enLNX_Head(flags) \
+    _enLNX_BuildHead(flags, llGetScriptName(), llGetKey())
 
 #define enLNX_GetHeadCount() \
     (llGetListLength(llParseStringKeepNulls(enLNX_Head(), ["\n"], [])) - 1)
 
 #define enLNX_WriteRaw(name, data) \
-    llLinksetDataWrite(0, enLNX_Head() + name, data)
+    llLinksetDataWrite(enLNX_Head() + name, data, "")
 
 #define enLNX_ReadRaw(name, data) \
-    llLinksetDataRead(0, enLNX_Head() + name)
+    llLinksetDataRead(enLNX_Head() + name, "")
