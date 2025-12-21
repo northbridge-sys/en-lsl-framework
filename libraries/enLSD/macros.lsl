@@ -1,5 +1,5 @@
 /*
-enLSD.lsl
+enLNX.lsl
 Library
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
@@ -22,27 +22,27 @@ You should have received a copy of the GNU Lesser General Public License along
 with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#define FLAG_ENLSD_ROOT 0x1
-#define FLAG_ENLSD_PASS 0x2
+#define FLAG_ENLNX_ROOT 0x1
+#define FLAG_ENLNX_PASS 0x2
 
-#define FLAG_ENLSD_DELETE_CHILDREN 0x80000000
+#define FLAG_ENLNX_DELETE_CHILDREN 0x80000000
 
 #if defined TRACE_EN
-    #define TRACE_ENLSD
+    #define TRACE_ENLNX
 #endif
 
-#if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
-    string _ENLSD_SCRIPT_NAME;
+#if defined FEATURE_ENLNX_ENABLE_SCRIPT_NAME_HEADER
+    string _ENLNX_SCRIPT_NAME;
 #endif
 
-#define enLSD_Head() \
-    _enLSD_BuildHead(llGetScriptName(), llGetKey())
+#define enLNX_Head() \
+    _enLNX_BuildHead(llGetScriptName(), llGetKey())
 
-#define enLSD_GetHeadCount() \
-    (llGetListLength(llParseStringKeepNulls(enLSD_Head(), ["\n"], [])) - 1)
+#define enLNX_GetHeadCount() \
+    (llGetListLength(llParseStringKeepNulls(enLNX_Head(), ["\n"], [])) - 1)
 
-#define enLSD_WriteRaw(name, data) \
-    llLinksetDataWrite(0, enLSD_Head() + name, data)
+#define enLNX_WriteRaw(name, data) \
+    llLinksetDataWrite(0, enLNX_Head() + name, data)
 
-#define enLSD_ReadRaw(name, data) \
-    llLinksetDataRead(0, enLSD_Head() + name)
+#define enLNX_ReadRaw(name, data) \
+    llLinksetDataRead(0, enLNX_Head() + name)

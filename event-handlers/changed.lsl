@@ -22,22 +22,22 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define _HOOK_ENCLEP_CHANGED
 #endif
 
-// if we want enLSD to allow prim-scope or script-scope pairs, and we have not marked this as a "passive" script (only one script needs to run enLEP_changed() to maintain the datastore), trigger _enLEP_changed()
-#if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
+// if we want enLNX to allow prim-scope or script-scope pairs, and we have not marked this as a "passive" script (only one script needs to run enLEP_changed() to maintain the datastore), trigger _enLEP_changed()
+#if defined FEATURE_ENLNX_ENABLE_SCOPE && !defined FEATURE_ENLNX_PASSIVE_SCOPE
     #define _EVENT_CHANGED
-    #define _HOOK_ENLSD_CHANGED
+    #define _HOOK_ENLNX_CHANGED
 #endif
 
 /*
 if:
 - we want to receive any CLEP-RPC messages
-- we are using enLSD scopes
+- we are using enLNX scopes
 - we have manually enabled enPrim_GetMyLast() support
 - we have manually enabled enPrim link caching
 - we have enabled FEATURE_ENPRIM_ALWAYS_PHANTOM
 trigger _enPrim_changed()
 */
-#if defined _HOOK_ENCLEP_CHANGED || defined _HOOK_ENLSD_CHANGED || OVERRIDE_ENPRIM_LIMIT_GETMYSELF > 0 || defined FEATURE_ENPRIM_ENABLE_LINK_CACHE || defined FEATURE_ENPRIM_ALWAYS_PHANTOM
+#if defined _HOOK_ENCLEP_CHANGED || defined _HOOK_ENLNX_CHANGED || OVERRIDE_ENPRIM_LIMIT_GETMYSELF > 0 || defined FEATURE_ENPRIM_ENABLE_LINK_CACHE || defined FEATURE_ENPRIM_ALWAYS_PHANTOM
     #define _EVENT_CHANGED
     #define _HOOK_ENPRIM_CHANGED
 #endif
@@ -80,8 +80,8 @@ trigger _enPrim_changed()
             _enCLEP_changed(change); // WARNING: Must be called before enPrim_UpdateUUIDs() is called, since it requires previous object key list to NOT contain current key
         #endif
 
-        #if defined _HOOK_ENLSD_CHANGED 
-            _enLSD_changed(change);
+        #if defined _HOOK_ENLNX_CHANGED 
+            _enLNX_changed(change);
         #endif
 
         #if defined _HOOK_ENPRIM_CHANGED

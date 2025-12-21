@@ -278,7 +278,7 @@ enPrim_UpdateUUIDs()
 			_ENPRIM_UUIDS_SELF = llList2List([(string)llGetKey()] + _ENPRIM_UUIDS_SELF, 0, OVERRIDE_ENPRIM_LIMIT_GETMYLAST);
 
             // "hooks" to other En libraries that rely on UUID monitoring
-            _enLSD_uuid_changed(record_key);
+            _enLNX_uuid_changed(record_key);
 
             #if defined EVENT_ENPRIM_UUID_CHANGED
                 enobject_uuid_changed(
@@ -314,7 +314,7 @@ _enPrim_changed(
     integer change
 )
 {
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLNX_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
         enPrim_UpdateUUIDs();
     #endif
 
@@ -342,7 +342,7 @@ _enPrim_on_rez(
     #endif
 
     // update _ENPRIM_UUIDS_SELF
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLNX_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
         enPrim_UpdateUUIDs();
     #endif
 }
@@ -360,7 +360,7 @@ _enPrim_state_entry()
     #endif
 
     // update _ENPRIM_UUIDS_SELF if needed
-    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLSD_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
+    #if defined EVENT_ENCLEP_RPC_REQUEST || defined EVENT_ENCLEP_RPC_ERROR || defined EVENT_ENCLEP_RPC_RESULT || defined FEATURE_ENLNX_ENABLE_SCOPE || OVERRIDE_ENPRIM_LIMIT_GETMYLAST > 0
         enPrim_UpdateUUIDs();
     #endif
 

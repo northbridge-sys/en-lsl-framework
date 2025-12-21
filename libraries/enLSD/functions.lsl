@@ -1,5 +1,5 @@
 /*
-enLSD.lsl
+enLNX.lsl
 Library Functions
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
@@ -23,10 +23,10 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 // safely resets linkset data
-enLSD_Reset()
+enLNX_Reset()
 {
-    #if defined TRACE_ENLSD
-        enLog_TraceParams( "enLSD_Reset", [], [] );
+    #if defined TRACE_ENLNX
+        enLog_TraceParams( "enLNX_Reset", [], [] );
     #endif
     // note: retained pairs MUST be unprotected
     list retain = [
@@ -42,45 +42,45 @@ enLSD_Reset()
     { // store values temporarily
         values += [ llLinksetDataRead( llList2String( retain, i ) ) ];
     }
-    llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLSD_Head()) + ".*$", _FLAG_ENLSD_PASS);
+    llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head()) + ".*$", _FLAG_ENLNX_PASS);
     for ( i = 0; i < l; i++ )
     { // write retained values back to datastore
         llLinksetDataWrite( llList2String( retain, i ), llList2String( values, i ) );
     }
 }
 
-integer enLSD_Write(integer flags, list name, string data)
+integer enLNX_Write(integer flags, list name, string data)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
-    return llLinksetDataWrite(enLSD_Head() + llDumpList2String(name, "\n"), data);
+    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+    return llLinksetDataWrite(enLNX_Head() + llDumpList2String(name, "\n"), data);
 }
 
-string enLSD_Read(integer flags, list name)
+string enLNX_Read(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
-    return llLinksetDataRead(_enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
+    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+    return llLinksetDataRead(_enLNX_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n"));
 }
 
-list enLSD_Delete(integer flags, list name)
+list enLNX_Delete(integer flags, list name)
 {
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
+    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
     string regex;
-    if (flags & FLAG_ENLSD_DELETE_CHILDREN) regex = "\n.*";
-	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
+    if (flags & FLAG_ENLNX_DELETE_CHILDREN) regex = "\n.*";
+	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + regex + "$", "");
 }
 
-integer enLSD_Exists(integer flags, list name)
+integer enLNX_Exists(integer flags, list name)
 {
-    return (enLSD_Find(flags, name, 0, 1) != []);
+    return (enLNX_Find(flags, name, 0, 1) != []);
 }
 
-list enLSD_Find(integer flags, list name, integer start, integer count)
+list enLNX_Find(integer flags, list name, integer start, integer count)
 {
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_Find", ["flags", "name", "start", "count"], [
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_Find", ["flags", "name", "start", "count"], [
             enInteger_ElemBitfield(flags),
             enString_Elem(name),
             start,
@@ -88,14 +88,14 @@ list enLSD_Find(integer flags, list name, integer start, integer count)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
-	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
+    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(llGetScriptName(), prim) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
-list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
+list enLNX_FindRegex(integer flags, string regex, integer start, integer count)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_FindRegex", ["flags", "regex", "start", "count"], [
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_FindRegex", ["flags", "regex", "start", "count"], [
             enInteger_ElemBitfield(flags),
             enString_Elem(regex),
             start,
@@ -103,37 +103,37 @@ list enLSD_FindRegex(integer flags, string regex, integer start, integer count)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
-	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
+    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(llGetScriptName(), prim)) + regex + "$", start, count);
 }
 
-list enLSD_DeleteRegex(integer flags, string regex)
+list enLNX_DeleteRegex(integer flags, string regex)
 { // note: do NOT include ^ and $ anchors in regex string, they will be added automatically
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_DeleteRegex", ["flags", "regex"], [
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_DeleteRegex", ["flags", "regex"], [
             enInteger_ElemBitfield(flags),
             enString_Elem(regex)
             ]);
     #endif
     string prim = (string)llGetKey();
-    if (flags & FLAG_ENLSD_ROOT) prim = enPrim_GetMyRoot();
-	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLSD_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
+    if (flags & FLAG_ENLNX_ROOT) prim = enPrim_GetMyRoot();
+	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, _enLNX_BuildHead(llGetScriptName(), prim)) + regex + "$", "");
 }
 
-string _enLSD_BuildHead(
+string _enLNX_BuildHead(
     string script_name,
     string uuid
 )
 {
     return uuid + "\n"
-    #if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
+    #if defined FEATURE_ENLNX_ENABLE_SCRIPT_NAME_HEADER
         + script_name
     #endif
         + "\n";
 }
 
-//  purges all enLSD pairs assigned to UUIDs that are not part of this linkset
-enLSD_Purge()
+//  purges all enLNX pairs assigned to UUIDs that are not part of this linkset
+enLNX_Purge()
 {
     string root = enPrim_GetMyRoot();
     list pair;
@@ -149,13 +149,13 @@ enLSD_Purge()
             string script = llList2String(pair, 1);
             if (prim != "" && prim_root != root)
             { // this pair is associated with a prim that doesn't share the same root as us
-                enLog_Debug("Purging enLSD pairs associated with prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
+                enLog_Debug("Purging enLNX pairs associated with prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
                 llLinksetDataDeleteFound("^" + prim + "\n.*$", ""); // delete all pairs scoped to this prim, since it's gone
                 i = 0; // start search again
             }
             else if (script != "" && prim == (string)llGetKey() && llGetInventoryType(script) != INVENTORY_SCRIPT)
             { // this pair is associated with a script that is no longer in this prim
-                enLog_Debug("Purging enLSD pairs associated with script \"" + script + "\" in prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
+                enLog_Debug("Purging enLNX pairs associated with script \"" + script + "\" in prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
                 llLinksetDataDeleteFound("^" + prim + "\n" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, script) + "\n.*$", ""); // delete all pairs scoped to this prim & script, since it's gone
                 i = 0; // start search again
             }
@@ -163,31 +163,31 @@ enLSD_Purge()
         }
     }
     while (pair != []);
-    enLog_Debug("Purged " + (string)(start - llLinksetDataCountKeys()) + " enLSD pairs");
+    enLog_Debug("Purged " + (string)(start - llLinksetDataCountKeys()) + " enLNX pairs");
 }
 
-// converts a raw LSD pair name to an enLSD name list
-list enLSD_PairToName(
+// converts a raw LSD pair name to an enLNX name list
+list enLNX_PairToName(
     string pair
 )
 {
     if (pair == "") return [];
     list elems = llParseStringKeepNulls(pair, ["\n"], []);
-    integer head = enLSD_GetHeadCount();
+    integer head = enLNX_GetHeadCount();
     if (head) elems = llDeleteSubList(elems, 0, head - 1);
     return elems;
 }
 
-// utility function for enLSD_Check*
-enLSD_MoveAllPairs(
+// utility function for enLNX_Check*
+enLNX_MoveAllPairs(
     string k
 )
 {
     list l;
-    #if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        string old_head = _enLSD_BuildHead(_ENLSD_SCRIPT_NAME, k);
+    #if defined FEATURE_ENLNX_ENABLE_SCRIPT_NAME_HEADER
+        string old_head = _enLNX_BuildHead(_ENLNX_SCRIPT_NAME, k);
     #else
-        string old_head = _enLSD_BuildHead("", k);
+        string old_head = _enLNX_BuildHead("", k);
     #endif
     do
     {
@@ -197,87 +197,87 @@ enLSD_MoveAllPairs(
             string old_pair = llList2String(l, 0);
             string pair_name = llDeleteSubString(old_pair, 0, llStringLength(old_head) - 1);
             enLog_Trace("LSD pair \"" + pair_name + "\" moved");
-            llLinksetDataWrite(enLSD_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
+            llLinksetDataWrite(enLNX_Head() + pair_name, llLinksetDataRead(old_pair)); // write with updated header
             llLinksetDataDelete(old_pair); // immediately delete old pair to save memory
         }
     } while (l != []); // repeat until we didn't find any keys left with old header
 }
 
 // updates LSD entries that use old script name
-enLSD_CheckScriptName()
+enLNX_CheckScriptName()
 {
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_CheckScriptName", [], []);
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_CheckScriptName", [], []);
     #endif
-    #if defined FEATURE_ENLSD_ENABLE_SCRIPT_NAME_HEADER
-        if (llGetScriptName() == _ENLSD_SCRIPT_NAME) return; // no script name change
-        if (_ENLSD_SCRIPT_NAME != "")
+    #if defined FEATURE_ENLNX_ENABLE_SCRIPT_NAME_HEADER
+        if (llGetScriptName() == _ENLNX_SCRIPT_NAME) return; // no script name change
+        if (_ENLNX_SCRIPT_NAME != "")
         {
-            enLog_Debug("Moving LSD due to script name change from \"" + _ENLSD_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
-            enLSD_MoveAllPairs(llGetKey());
+            enLog_Debug("Moving LSD due to script name change from \"" + _ENLNX_SCRIPT_NAME + "\" to \"" + llGetScriptName() + "\"");
+            enLNX_MoveAllPairs(llGetKey());
         }
-        _ENLSD_SCRIPT_NAME = llGetScriptName();
+        _ENLNX_SCRIPT_NAME = llGetScriptName();
     #endif
 }
 
-_enLSD_uuid_changed(
+_enLNX_uuid_changed(
     string last_uuid
 )
 {
-    // if FEATURE_ENLSD_PASSIVE_SCOPE is defined, this function is never called - only need to run this code in one script in each prim
-    #if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
+    // if FEATURE_ENLNX_PASSIVE_SCOPE is defined, this function is never called - only need to run this code in one script in each prim
+    #if defined FEATURE_ENLNX_ENABLE_SCOPE && !defined FEATURE_ENLNX_PASSIVE_SCOPE
         enLog_Debug("Moving LSD due to UUID change from \"" + last_uuid + "\" to \"" + (string)llGetKey() + "\"");
-        enLSD_MoveAllPairs(last_uuid);
+        enLNX_MoveAllPairs(last_uuid);
     #endif
 }
 
-_enLSD_changed(
+_enLNX_changed(
     integer change
 )
 {
-    if (change & CHANGED_LINK) enLSD_CheckUUID(); // migrate prim-scope and script-scope pairs to new object UUID
-    if (change & CHANGED_INVENTORY) enLSD_CheckScriptName(); // migrate script-scope pairs to new script name
+    if (change & CHANGED_LINK) enLNX_CheckUUID(); // migrate prim-scope and script-scope pairs to new object UUID
+    if (change & CHANGED_INVENTORY) enLNX_CheckScriptName(); // migrate script-scope pairs to new script name
 }
 
-_enLSD_on_rez(
+_enLNX_on_rez(
     integer param
 )
 {
-    // update enLSD names if any use the UUID header
-    #if defined FEATURE_ENLSD_ENABLE_SCOPE && !defined FEATURE_ENLSD_PASSIVE_SCOPE
-        _enLSD_uuid_changed(enPrim_GetMyLast(1));
+    // update enLNX names if any use the UUID header
+    #if defined FEATURE_ENLNX_ENABLE_SCOPE && !defined FEATURE_ENLNX_PASSIVE_SCOPE
+        _enLNX_uuid_changed(enPrim_GetMyLast(1));
     #endif
 }
 
-// the below functions were never tested and are no longer "enLSD-compliant" so need to be rewritten at some point
+// the below functions were never tested and are no longer "enLNX-compliant" so need to be rewritten at some point
 
-/*enLSD_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLSD header
+/*enLNX_Pull( // reads a linkset data name-value pair FROM another script, optionally using the active enLNX header
     string prim,
     string domain,
     integer use_header,
     string name
     )
 {
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_Pull", ["prim", "domain", "use_header", "name"], [
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_Pull", ["prim", "domain", "use_header", "name"], [
             enPrim_Elem(prim),
             enString_Elem(domain),
             use_header,
             enString_Elem(name)
             ]);
     #endif
-    enCLEP_SendRaw(domain, prim, "enLSD_PullLSD", enList_ToEscapedCSV([use_header, name]));
+    enCLEP_SendRaw(domain, prim, "enLNX_PullLSD", enList_ToEscapedCSV([use_header, name]));
 }
 
-enLSD_Push( // writes a linkset data name-value pair TO another script, optionally using the active enLSD header
+enLNX_Push( // writes a linkset data name-value pair TO another script, optionally using the active enLNX header
     string prim,
     string domain,
     integer use_header,
     string name
     )
 {
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_Push", ["prim", "domain", "use_header", "name"], [
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_Push", ["prim", "domain", "use_header", "name"], [
             enPrim_Elem(prim),
             enString_Elem(domain),
             use_header,
@@ -285,16 +285,16 @@ enLSD_Push( // writes a linkset data name-value pair TO another script, optional
             ]);
     #endif
     string v;
-    if (use_header) v = enLSD_Read(name);
+    if (use_header) v = enLNX_Read(name);
     else v = llLinksetDataRead(name);
     integer u;
-    #if defined FEATURE_ENLSD_ENABLE_SCOPE
-        u = 1; // if FEATURE_ENLSD_ENABLE_SCOPE defined, note in response
+    #if defined FEATURE_ENLNX_ENABLE_SCOPE
+        u = 1; // if FEATURE_ENLNX_ENABLE_SCOPE defined, note in response
     #endif
-    enCLEP_SendRaw(domain, prim, "enLSD_Push", enList_ToEscapedCSV([u, use_header, _ENLSD_HEADER, name, v]));
+    enCLEP_SendRaw(domain, prim, "enLNX_Push", enList_ToEscapedCSV([u, use_header, _ENLNX_HEADER, name, v]));
 }
 
-enLSD_Process( // writes a linkset data name-value pair FROM another script
+enLNX_Process( // writes a linkset data name-value pair FROM another script
     string prim,
     integer use_uuid,
     integer use_header,
@@ -304,8 +304,8 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
     string value
     )
 {
-    #if defined TRACE_ENLSD
-        enLog_TraceParams("enLSD_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
+    #if defined TRACE_ENLNX
+        enLog_TraceParams("enLNX_Process", ["prim", "use_uuid", "use_header", "uuid", "header", "name", "value"], [
             enPrim_Elem(prim),
             use_uuid,
             use_header,
@@ -315,28 +315,28 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
             enString_Elem(value)
             ]);
     #endif
-    #if !defined ENLSD_PUSHED_ALLOW_BROADCAST
-        if (prim != (string)llGetKey()) return; // do not allow enLSD_Push calls sent to NULL_KEY
+    #if !defined ENLNX_PUSHED_ALLOW_BROADCAST
+        if (prim != (string)llGetKey()) return; // do not allow enLNX_Push calls sent to NULL_KEY
     #endif
-    #if defined ENLSD_PUSHED_ADD_HEADER
+    #if defined ENLNX_PUSHED_ADD_HEADER
         use_header = 1; // always use header when writing
     #endif
-    #if defined ENLSD_PUSHED_UPDATE_HEADER
-        if (use_header) header = _ENLSD_HEADER; // update header to local header
+    #if defined ENLNX_PUSHED_UPDATE_HEADER
+        if (use_header) header = _ENLNX_HEADER; // update header to local header
     #endif
-    #if defined ENLSD_PUSHED_ADD_UUID
-        use_uuid = 1; // always use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
+    #if defined ENLNX_PUSHED_ADD_UUID
+        use_uuid = 1; // always use uuid when writing (also define ENLNX_PUSHED_ADD_HEADER)
     #endif
-    #if defined ENLSD_PUSHED_REMOVE_UUID
-        use_uuid = 0; // never use uuid when writing (also define ENLSD_PUSHED_ADD_HEADER)
+    #if defined ENLNX_PUSHED_REMOVE_UUID
+        use_uuid = 0; // never use uuid when writing (also define ENLNX_PUSHED_ADD_HEADER)
     #endif
-    #if defined ENLSD_PUSHED_UPDATE_UUID
+    #if defined ENLNX_PUSHED_UPDATE_UUID
         // change header key if used
         if (use_uuid) header = llGetKey() + header;
     #else
         if (use_uuid) header = uuid + header;
     #endif
-    #if defined ENLSD_PUSHED_EVENT
+    #if defined ENLNX_PUSHED_EVENT
         en_pushed_lsd(
             prim,
             use_uuid,
@@ -347,7 +347,7 @@ enLSD_Process( // writes a linkset data name-value pair FROM another script
             value
             );
     #endif
-    #if defined ENLSD_PUSHED_WRITE
+    #if defined ENLNX_PUSHED_WRITE
         if (!use_header) header = "";
         llLinksetDataWrite(header + name, value);
     #endif

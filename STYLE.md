@@ -26,7 +26,7 @@ Options must be #define-d before #include-ing `libraries.lsl`, which automatical
 Global variables are named and capitalized as follows:
 
 - **_ENLIBRARYNAME_GLOBAL_NAME** is an internal library global variable that the script should not access directly, such as *_ENCLEP_DOMAINS* and *_ENTIMER_QUEUE*.
-- **_enLibraryName_FunctionName** is an internal library function or macro that the script should not call directly, such as *_enCLEP_MultiSayTo* and *_enLSD_BuildHead*.
+- **_enLibraryName_FunctionName** is an internal library function or macro that the script should not call directly, such as *_enCLEP_MultiSayTo* and *_enLNX_BuildHead*.
 
 ## Functions and Inline Macros
 

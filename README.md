@@ -19,7 +19,7 @@ Some of the useful features En provides:
 - enLog - a standardized logging interface that can be configured for "in-the-field" debugging
 - enLEP - heavily extended `llMessageLinked`-like functions
 - enCLEP - `llListen`/`llRegionSayTo` encapsulation for enLEP or other raw data
-- enLSD - functions to safely write, read, and manipulate key-value pairs in the `llLinksetData*` store
+- enLNX - functions to safely write, read, and manipulate key-value pairs in the `llLinksetData*` store
 - enKVS - simple in-memory key-value store, particularly useful for backing up critical linkset data
 - enTimer - `llSetTimerEvent` with string callbacks, multiple concurrent timers, and one-shot timers
 - Helper libraries for integers (including hex & bitwise), floats, vectors, rotations, strings, lists, and keys
