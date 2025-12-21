@@ -310,6 +310,42 @@ enPrim_VM()
     return ("" != "x");
 }
 
+/*!
+Safely resets the ENTIRE linkset_data datastore.
+Note that this erases all LNX namespaces for the linkset. To reset an LNX namespace, use enLNX_Reset().
+*/
+enPrim_ResetLinksetDatastore()
+{
+    #if defined TRACE_ENPRIM_RESETLINKSETDATASTORE
+        enLog_TraceParams("enPrim_ResetLinksetDatastore", [], []);
+    #endif
+
+    /*
+    the following pairs are protected for En use
+    */
+    list retain = [
+        "loglevel",
+        "logtarget",
+        "logsay",
+        "logchannel",
+        "stop"
+    ];
+    list values;
+    integer i;
+    integer l = llGetListLength(retain);
+
+    // copy retained values to memory
+    for (i = 0; i < l; i++)
+        values += [llLinksetDataRead(llList2String(retain, i))];
+    
+    // reset the datastore
+    llLinksetDataReset();
+
+    // write retained values back to datastore
+    for (i = 0; i < l; i++)
+        llLinksetDataWrite(llList2String(retain, i), llList2String(values, i));
+}
+
 _enPrim_changed(
     integer change
 )
