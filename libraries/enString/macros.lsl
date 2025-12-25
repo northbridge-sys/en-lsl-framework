@@ -29,10 +29,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define FLAG_ENSTRING_ESCAPE_FILTER_JSON 0x2
 #define FLAG_ENSTRING_ESCAPE_REVERSE 0x40000000
 
-#if defined TRACE_EN
-    #define TRACE_ENSTRING
-#endif
-
 #define enString_Elem(s) \
     enString_Quote(s)
 
@@ -41,10 +37,6 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 
 #define enString_EscapedQuote(s) \
     "\"" + llReplaceSubString(llReplaceSubString(s, "\\", "\\\\", 0), "\"", "\\\"", 0) + "\""
-
-// note: this ONLY escapes " to \", and \ to \\
-#define enString_EscapeQuotes(s) \
-    llReplaceSubString(llReplaceSubString(s, "\\", "\\\\", 0), "\"", "\\\"", 0)
 
 #define enString_Quote(s) \
     "\"" + s + "\""

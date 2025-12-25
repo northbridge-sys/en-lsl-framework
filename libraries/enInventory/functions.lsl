@@ -127,7 +127,7 @@ enInventory_NCRead(
         string s = NAK;
         if (llGetFreeMemory() > OVERRIDE_ENINVENTORY_NC_MEMORY_BUFFER && _ENINVENTORY_NC_T > 0) s = llGetNotecardLineSync(_ENINVENTORY_NC_N, i); // attempt sync read if at least 2k of memory free and the llGetNumberOfNotecardLines dataserver event resolved
         if (s == NAK) _ENINVENTORY_NC_H = llGetNotecardLine(_ENINVENTORY_NC_N, i); // sync read failed, do dataserver read
-        else en_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, s);
+        else eninventory_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, s);
     #endif
 }
 
@@ -138,7 +138,7 @@ integer enInventory_NCParse(
 {
     if (query == _ENINVENTORY_NC_H)
     {
-        en_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, data);
+        eninventory_nc_line(_ENINVENTORY_NC_N, _ENINVENTORY_NC_L, _ENINVENTORY_NC_T, data);
         return 1;
     }
     if (query == _ENINVENTORY_NC_G)

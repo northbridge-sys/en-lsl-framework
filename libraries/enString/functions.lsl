@@ -175,6 +175,19 @@ string enString_Escape(
     return x;
 }
 
+/*
+Escapes " to \", and \ to \\, within the string. Used for JSON escaping.
+For some reason, this was causing a compile error as a macro.
+@param string s Input.
+@return string Output.
+*/
+string enString_EscapeQuotes(
+    string s
+)
+{
+    return llReplaceSubString(llReplaceSubString(s, "\\", "\\\\", 0), "\"", "\\\"", 0);
+}
+
 //  finds the first instance of any of the specified characters, used for user input validation
 //  example:
 //      if (enString_FindChars(input, "|~") != -1) enLog_FatalStop("Pipe (|) or tilde (~) detected in input");

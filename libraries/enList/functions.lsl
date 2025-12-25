@@ -66,8 +66,8 @@ list enList_ToJsonPairs(
     integer l = llGetListLength(in);
     for (i = 0; i < l; i++)
     {
-        if (i % 2) out += ["\"" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""]; // value
-        else out += [enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i))]; // key - must be raw string, otherwise llList2Json breaks
+        if (i % 2) out += ["\"" + enString_EscapeQuotes(llList2String(in, i)) + "\""]; // value
+        else out += [enString_EscapeQuotes(llList2String(in, i))]; // key - must be raw string, otherwise llList2Json breaks
     }
     return out;
 }
@@ -95,7 +95,7 @@ string enList_ToJsonArray(
     integer i;
     integer l = llGetListLength(in);
     for (i = 0; i < l; i++)
-        out += ["\"" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_JSON, llList2String(in, i)) + "\""];
+        out += ["\"" + enString_EscapeQuotes(llList2String(in, i)) + "\""];
     return "[" + llDumpList2String(out, ",") + "]";
 }
 
