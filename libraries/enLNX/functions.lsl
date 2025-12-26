@@ -40,7 +40,7 @@ enLNX_Reset(
     #endif
 
     // erase all pairs starting with the head defined by flags
-    llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags)) + ".*$", "");
+    llLinksetDataDeleteFound("^" + enString_EscapeRegex(enLNX_Head(flags)) + ".*$", "");
 }
 
 integer enLNX_Write(integer flags, list name, string data)
@@ -101,7 +101,7 @@ list enLNX_Delete(integer flags, list name)
 
     string regex;
     if (flags & FLAG_ENLNX_DELETE_CHILDREN) regex = "\n.*";
-	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags) + llDumpList2String(name, "\n")) + regex + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_EscapeRegex(enLNX_Head(flags) + llDumpList2String(name, "\n")) + regex + "$", "");
 }
 
 integer enLNX_Exists(integer flags, list name)
@@ -128,7 +128,7 @@ list enLNX_Find(integer flags, list name, integer start, integer count)
             ]
         );
     #endif
-	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags) + llDumpList2String(name, "\n")) + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_EscapeRegex(enLNX_Head(flags) + llDumpList2String(name, "\n")) + "$", start, count);
 }
 
 list enLNX_FindRegex(
@@ -155,7 +155,7 @@ list enLNX_FindRegex(
             ]
         );
     #endif
-	return llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags)) + regex + "$", start, count);
+	return llLinksetDataFindKeys("^" + enString_EscapeRegex(enLNX_Head(flags)) + regex + "$", start, count);
 }
 
 list enLNX_DeleteRegex(
@@ -177,7 +177,7 @@ list enLNX_DeleteRegex(
         );
     #endif
 
-	return llLinksetDataDeleteFound("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, enLNX_Head(flags)) + regex + "$", "");
+	return llLinksetDataDeleteFound("^" + enString_EscapeRegex(enLNX_Head(flags)) + regex + "$", "");
 }
 
 string _enLNX_BuildHead(
@@ -220,7 +220,7 @@ enLNX_Purge()
             else if (script != "" && prim == (string)llGetKey() && llGetInventoryType(script) != INVENTORY_SCRIPT)
             { // this pair is associated with a script that is no longer in this prim
                 enLog_Debug("Purging enLNX pairs associated with script \"" + script + "\" in prim " + enPrim_Elem(prim) + " (root " + enPrim_Elem(prim_root) + ")");
-                llLinksetDataDeleteFound("^" + prim + "\n" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, script) + "\n.*$", ""); // delete all pairs scoped to this prim & script, since it's gone
+                llLinksetDataDeleteFound("^" + prim + "\n" + enString_EscapeRegex(script) + "\n.*$", ""); // delete all pairs scoped to this prim & script, since it's gone
                 i = 0; // start search again
             }
             else i++; // progress to next index
@@ -276,9 +276,9 @@ enLNX_Migrate(
         do
         {
             if (flags & FLAG_ENLNX_PRIM_SCOPE) // find keys where prim_uuid matches filter, any script_name
-                l = llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, filter) + "\n.*\n.*$", 0, 1);
+                l = llLinksetDataFindKeys("^" + enString_EscapeRegex(filter) + "\n.*\n.*$", 0, 1);
             else // find keys where prim_uuid is llGetKey(), and script_name matches filter
-                l = llLinksetDataFindKeys("^" + (string)llGetKey() + "\n" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, filter) + "\n.*$", 0, 1);
+                l = llLinksetDataFindKeys("^" + (string)llGetKey() + "\n" + enString_EscapeRegex(filter) + "\n.*$", 0, 1);
             if (l != [])
             {
                 list old_pair = llParseStringKeepNulls(llList2String(l, 0), ["\n"], []);

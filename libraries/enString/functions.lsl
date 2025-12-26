@@ -155,27 +155,26 @@ string enString_MultiByteUnit(
     return (string)bytes + llList2String(["", "K", "M", "G"], mult);
 }
 
-//  multi-purpose string escaping function for regex and JSON
-//  example:
-//      llLinksetDataFindKeys("^" + enString_Escape(FLAG_ENSTRING_ESCAPE_FILTER_REGEX, needle) + ".*$"")
-string enString_Escape(
-    integer f, // filter string flag
+/*!
+Escapes string for use in regex.
+Example: llLinksetDataFindKeys("^" + enString_EscapeRegex(needle) + ".*$"")
+@param string x Input.
+@return string Output.
+*/
+string enString_EscapeRegex(
     string x
-    )
+)
 {
-    list y;
-    if (f & FLAG_ENSTRING_ESCAPE_FILTER_REGEX) y = ["\\", "^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]"]; // note that \\ must be the first entry, otherwise previously escaped characters will be double-escaped
-    if (f & FLAG_ENSTRING_ESCAPE_FILTER_JSON) y = ["\\", "\""]; // note that you can also just use enString_Escape for this to save memory, since all JSON escaping is is string escaping
+    list y = ["\\", "^", "$", "*", "+", "?", ".", "(", ")", "|", "{", "}", "[", "]"]; // note that \\ must be the first entry, otherwise previously escaped characters will be double-escaped
     integer i;
     integer l = llGetListLength(y);
     // run llReplaceSubString on each possible character that needs to be escaped
-    // this is slow with regex, but takes the least memory compared to llParseStringKeepNulls-based approaches
-    // both regex and JSON are escaped with single backwards slash, so we can just pass that right into the replacement
+    // this is slow, but takes the least memory compared to llParseStringKeepNulls-based approaches
     for (i = 0; i < l; i++) x = llReplaceSubString(x, llList2String(y, i), "\\" + llList2String(y, i), 0);
     return x;
 }
 
-/*
+/*!
 Escapes " to \", and \ to \\, within the string. Used for JSON escaping.
 For some reason, this was causing a compile error as a macro.
 @param string s Input.
