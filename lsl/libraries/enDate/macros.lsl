@@ -1,7 +1,7 @@
 /*
 enDate
 Copyright (C) 2025  Northbridge Business Systems
-https://docs.northbridgesys.com/en-lsl-framework
+https://docs.northbridgesys.com/en-framework
 */
 
 #define FLAG_ENDATE_12_HOUR 0x1

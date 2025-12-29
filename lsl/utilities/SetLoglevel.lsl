@@ -3,7 +3,7 @@ SetLoglevel.lsl
 Utility Script
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
-https://docs.northbridgesys.com/en-lsl-framework
+https://docs.northbridgesys.com/en-framework
 
 ╒══════════════════════════════════════════════════════════════════════════════╕
 │ LICENSE                                                                      │
@@ -39,7 +39,7 @@ Loglevel can be FATAL, ERROR, WARN, INFO, DEBUG, or TRACE.
 
 #define FEATURE_ENPRIM_DISABLE_STOPIFFLAGGED
 
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-framework/lsl/libraries.lsl"
 
 setLoglevel()
 {

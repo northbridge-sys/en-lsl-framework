@@ -3,7 +3,7 @@ LEPTap.lsl
 Utility Script
 En LSL Framework
 Copyright (C) 2024  Northbridge Business Systems
-https://docs.northbridgesys.com/en-lsl-framework
+https://docs.northbridgesys.com/en-framework
 
 ╒══════════════════════════════════════════════════════════════════════════════╕
 │ LICENSE                                                                      │
@@ -35,7 +35,7 @@ this prim.
 #define FEATURE_ENLEP_ALLOW_ALL_TARGET_SCRIPTS
 #define OVERRIDE_ENLOG_DEFAULT_LOGLEVEL 6
 
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-framework/lsl/libraries.lsl"
 
 enlep_rpc_request(
     integer source_link,
@@ -81,7 +81,7 @@ enlep_rpc_result(
 )
 {
     enLog_TraceParams(
-        "enlep_rpc_error",
+        "enlep_rpc_result",
         [
             "source_link",
             "source_script",
@@ -147,5 +147,5 @@ enlep_rpc_error(
 
 default
 {
-    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-framework/lsl/event-handlers.lsl"
 }
