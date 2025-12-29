@@ -37,11 +37,8 @@ string _ENLNX_SCRIPT_NAME;
 #define enLNX_Head(flags) \
     _enLNX_BuildHead(flags, llGetScriptName(), llGetKey())
 
-#define enLNX_GetHeadCount() \
-    (llGetListLength(llParseStringKeepNulls(enLNX_Head(), ["\n"], [])) - 1)
+#define enLNX_WriteRaw(flags, name, data) \
+    llLinksetDataWrite(enLNX_Head(flags) + name, data, "")
 
-#define enLNX_WriteRaw(name, data) \
-    llLinksetDataWrite(enLNX_Head() + name, data, "")
-
-#define enLNX_ReadRaw(name, data) \
-    llLinksetDataRead(enLNX_Head() + name, "")
+#define enLNX_ReadRaw(flags, name, data) \
+    llLinksetDataRead(enLNX_Head(flags) + name, "")
