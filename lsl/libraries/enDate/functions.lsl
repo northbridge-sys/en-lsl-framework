@@ -69,6 +69,18 @@ integer enDate_DaysInYear(
 }
 
 /*!
+Gets number of days in a specific month from YM list.
+@param list ym [Y, M]. May include [D, h, m, s, u].
+@return integer Number of days in specified month.
+*/
+integer enDate_DaysInYM(
+    list ym
+)
+{
+    return enDate_DaysInMonth(llList2Integer(ym, 0), llList2Integer(ym, 1));
+}
+
+/*!
 Converts current environment time (sun position) at specified location to a proportion.
 @param vector p Region-scope position.
 @return float Daypart of 24 hours starting at midnight (0.0-1.0).
@@ -250,38 +262,92 @@ list enDate_UnixToYMDHMS(
 }
 
 /*!
-Gets number of days in a specific month from YM list.
-@param list ym [Y, M]. May include [D, h, m, s, u].
-@return integer Number of days in specified month.
+Returns a diff interval between two YMDHMSU lists in seconds.
+This requires that the ymdhmses be valid as Unix times for simplicity.
+@param list ymdhms_a [Y, M, D, h, m, s] list.
+@param list ymdhms_b [Y, M, D, h, m, s] list.
+@return integer Seconds between two lists (ymdhms_a - ymdhms_b). If positive, ymdhms_a is later; if negative, ymdhms_b is later.
 */
-integer enDate_DaysInYM(
-    list ym
+integer enDate_YMDHMSDiffToSeconds(
+    list ymdhms_a,
+    list ymdhms_b
 )
 {
-    return enDate_DaysInMonth(llList2Integer(ym, 0), llList2Integer(ym, 1));
+    return enDate_YMDHMSToUnix(ymdhms_a) - enDate_YMDHMSToUnix(ymdhms_b);
 }
 
 /*!
-Converts enDate datetime list to Unix time.
-@param list l enDate list. See enDate_*ToList().
+Converts YMDHMS list to pretty textual representation of a date.
+@param list ymdhms [Y, M, D, h, m, s]. May include [u].
+@param integer flags FLAG_ENDATE_* flags.
+@return string Pretty date.
+*/
+string enDate_YMDHMSToPretty(
+    list ymdhms,
+    integer flags
+)
+{
+    return enDate_YMDToPretty(llList2List(ymdhms, 0, 2), flags) + enDate_HMSToPretty(llList2List(ymdhms, 3, -1), flags);
+}
+
+/*!
+Converts YMDHMS list to Unix time.
+@param list ymdhms [Y, M, D, h, m, s].
 @return integer Unix time. Comparable to llGetUnixTime().
 */
 integer enDate_YMDHMSToUnix(
-    list l
+    list ymdhms
 )
 {
-    integer y = llList2Integer(l, 0) - 1902;
+    integer y = llList2Integer(ymdhms, 0) - 1902;
 
     if (y >> 31 || y / 136) return 2145916800 * (1 | y >> 31);
 
-    integer m = ~-llList2Integer(l, 1);
-    integer d = ~-llList2Integer(l, 2);
+    integer m = ~-llList2Integer(ymdhms, 1);
+    integer d = ~-llList2Integer(ymdhms, 2);
     m += !~m;
 
     return 86400 * ((integer)(y * 365.25 + 0.25) - 24837 + m * 30 + (m - (m < 7) >> 1) + (m < 2) - (((y + 2) & 3) > 0) * (m > 1) + d + !~d)
-        + llList2Integer(l, 3) * 3600
-        + llList2Integer(l, 4) * 60 
-        + llList2Integer(l, 5);
+        + llList2Integer(ymdhms, 3) * 3600
+        + llList2Integer(ymdhms, 4) * 60 
+        + llList2Integer(ymdhms, 5);
+}
+
+/*!
+Converts YMDHMSU list to enDate millisec.
+@param list ymdhmsu [Y, M, D, h, m, s, u].
+@return integer enDate millisec.
+*/
+integer enDate_YMDHMSUToMillisec(
+    list ymdhmsu
+)
+{
+    return enDate_TimestampToMillisec(enDate_YMDHMSUToTimestamp(ymdhmsu));
+}
+
+/*!
+Converts YMDHMSU list to ISO 8601 timestamp.
+@param list ymdhmsu [Y, M, D, h, m, s, u].
+@return string ISO 8601 timestamp.
+*/
+integer enDate_YMDHMSUToTimestamp(
+    list ymdhmsu
+)
+{
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 1, 2); // pad MM
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 2, 2); // pad DD
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 3, 2); // pad hh
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 4, 2); // pad mm
+    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 5, 2); // pad ss
+    return
+        llList2String(ymdhmsu, 0) // YYYY
+        + "-" + llList2String(ymdhmsu, 1) // MM
+        + "-" + llList2String(ymdhmsu, 2) // DD
+        + "T" + llList2String(ymdhmsu, 3) // hh
+        + ":" + llList2String(ymdhmsu, 4) // mm
+        + ":" + llList2String(ymdhmsu, 5) // ss
+        + _enDate_DecimalizeSubseconds((integer)llList2String(ymdhmsu, 6), TRUE) // .ff..f
+        + "Z";
 }
 
 /*!
@@ -322,57 +388,6 @@ string enDate_YMDToPretty(
     // textual representation of date in Mmm DD, YYYY
     if (flags & FLAG_ENDATE_TEXT_MDY)
         return m + " " + d + ", " + llList2Integer(ymd, 0);
-}
-
-/*!
-Converts YMDHMS list to pretty textual representation of a date.
-@param list ymdhms [Y, M, D, h, m, s]. May include [u].
-@param integer flags FLAG_ENDATE_* flags.
-@return string Pretty date.
-*/
-string enDate_YMDHMSToPretty(
-    list ymdhms,
-    integer flags
-)
-{
-    return enDate_YMDToPretty(llList2List(ymdhms, 0, 2), flags) + enDate_HMSToPretty(llList2List(ymdhms, 3, -1), flags);
-}
-
-/*!
-Converts YMDHMSU list to enDate millisec.
-@param list ymdhmsu [Y, M, D, h, m, s, u].
-@return integer enDate millisec.
-*/
-integer enDate_YMDHMSUToMillisec(
-    list ymdhmsu
-)
-{
-    return enDate_TimestampToMillisec(enDate_YMDHMSUToTimestamp(ymdhmsu));
-}
-
-/*!
-Converts YMDHMSU list to ISO 8601 timestamp.
-@param list ymdhmsu [Y, M, D, h, m, s, u].
-@return string ISO 8601 timestamp.
-*/
-integer enDate_YMDHMSUToTimestamp(
-    list ymdhmsu
-)
-{
-    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 1, 2); // pad MM
-    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 2, 2); // pad DD
-    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 3, 2); // pad hh
-    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 4, 2); // pad mm
-    ymdhmsu = _enDate_PadZeroesIndex(ymdhmsu, 5, 2); // pad ss
-    return
-        llList2String(ymdhmsu, 0) // YYYY
-        + "-" + llList2String(ymdhmsu, 1) // MM
-        + "-" + llList2String(ymdhmsu, 2) // DD
-        + "T" + llList2String(ymdhmsu, 3) // hh
-        + ":" + llList2String(ymdhmsu, 4) // mm
-        + ":" + llList2String(ymdhmsu, 5) // ss
-        + _enDate_DecimalizeSubseconds((integer)llList2String(ymdhmsu, 6), TRUE) // .ff..f
-        + "Z";
 }
 
 string _enDate_DecimalizeSubseconds(

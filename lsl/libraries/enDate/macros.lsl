@@ -94,6 +94,26 @@ For integer precision, use enDate_NowToYMDHMS().
     enDate_TimestampToYMDHMSU(llGetTimestamp())
 
 /*!
+Get difference between two timestamps in integer seconds, discarding microseconds.
+This is imprecise because second 0.999999 is considered 1 second away from 1.000000, but 1.000000 is considered 0 seconds away from 1.999999.
+Probably faster and more efficient than enDate_TimestampDiffToSecondsPrecise(). TODO: test this
+@param string ts_a First timestamp.
+@param string ts_b Second timestamp.
+@return integer Difference in seconds.
+*/
+#define enDate_TimestampDiffToSeconds(ts_a, ts_b) \
+    (enDate_TimestampToUnix(ts_a) - enDate_TimestampToUnix(ts_b))
+
+/*!
+Get difference between two timestamps in float seconds.
+@param string ts_a First timestamp.
+@param string ts_b Second timestamp.
+@return float Difference in seconds, with subseconds.
+*/
+#define enDate_TimestampDiffToSecondsPrecise(ts_a, ts_b) \
+    (enDate_TimestampDiffToSeconds(ts_a, ts_b) + (llList2Integer(enDate_TimestampToYMDHMSU(ts_a), 6) - llList2Integer(enDate_TimestampToYMDHMSU(ts_b), 6)) * 0.000001)
+
+/*!
 Converts ISO 8601 timestamp to pretty datetime.
 @param string t ISO 8601 timestamp. See llGetTimestamp().
 @param integer flags FLAG_ENDATE_* flags.
@@ -109,7 +129,7 @@ No validation is performed. NO subsecond precision.
 @return integer Unix time.
 */
 #define enDate_TimestampToUnix(t) \
-    enDate_ListToUnix(enDate_TimestampToList(t))
+    enDate_YMDHMSToUnix(enDate_TimestampToYMDHMSU(t))
 
 /*!
 Converts Unix time to pretty datetime.
