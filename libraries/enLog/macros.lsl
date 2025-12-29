@@ -38,6 +38,9 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define TRACE_ENLOG
 #endif
 
+#define enLog_TraceMemory() \
+    enLog_Trace("Memory: " + (string)llGetUsedMemory() + " used, " + (string)llGetSPMaxMemory() + " max, " + (string)llGetMemoryLimit() + " limit, " + (string)llGetFreeMemory() + " free")
+
 #define enLog_Print(...) enLog_To( 0, __LINE__, "", __VA_ARGS__ )
 #define enLog_Fatal(...) enLog_To( 1, __LINE__, "", __VA_ARGS__ )
 #define enLog_Error(...) enLog_To( 2, __LINE__, "", __VA_ARGS__ )
