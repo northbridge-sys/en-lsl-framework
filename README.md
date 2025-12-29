@@ -1,16 +1,20 @@
-<h1 align="center"> En LSL Framework </h1> <br>
+<h1 align="center"> En Framework </h1> <br>
 
 <p align="center">
-  Libraries, snippets, and utilities for Second Life scripters.
+  Libraries and utilities for Second Life scripters.
 </p>
 
 ## Introduction
 
 **En is under active and ongoing development; many functions have not been fully tested. Do not use this framework in your projects until this message is removed! It is experimental and highly unstable!**
 
-A framework for the [Linden Scripting Language](https://wiki.secondlife.com/wiki/LSL_Portal) in [Second Life](https://secondlife.com/).
+An unofficial framework for the [Linden Scripting Language](https://wiki.secondlife.com/wiki/LSL_Portal) and [SLua](https://create.secondlife.com/script/) in [Second Life](https://secondlife.com/).
 
-LSL is the native scripting language used to control Second Life objects. Certain third-party viewers incorporate an [LSL preprocessor](https://wiki.firestormviewer.org/fs_preprocessor) that provides C-style preprocessor macros via the built-in script editor. The En LSL Framework leverages the `#include` and `#define` macros, along with the built-in script optimizer, to make dozens of helper functions available to LSL scripts.
+*"Second Life®" is a trademark of Linden Research, Inc., d/b/a Linden Lab. Northbridge Business Systems and the En framework are are not affiliated with or sponsored by Linden Research.*
+
+LSL and SLua are the native scripting language used to control Second Life objects. Certain third-party viewers incorporate an [LSL preprocessor](https://wiki.firestormviewer.org/fs_preprocessor) that provides C-style preprocessor macros via the built-in script editor. The En Framework leverages the `#include` and `#define` macros, along with the built-in script optimizer, to make dozens of helper functions available to LSL scripts. It can also be used with the [official Second Life VSCode Plugin](https://github.com/secondlife/sl-vscode-plugin) to provide similar support in SLua using `require()`.
+
+**SLua support is currently limited and untested until SLua is available on a Linux-compatible viewer.**
 
 ## Key Features
 
@@ -24,7 +28,7 @@ Some of the useful features En provides:
 - enTimer - `llSetTimerEvent` with string callbacks, multiple concurrent timers, and one-shot timers
 - Helper libraries for integers (including hex & bitwise), floats, vectors, rotations, strings, lists, and keys
 - Miscellaneous additional libraries for avatars, environments, inventory, object parameters, and time/dates
-- Complete utility scripts, as well as drop-in `#import`able snippets for special use cases
+- Complete utility scripts
 
 ## Installation
 
@@ -32,18 +36,18 @@ If you haven't, enable the LSL preprocessor in your viewer and set the directory
 
 For the latest **development** release:
 - Create a directory called `northbridge-sys` in your LSL preprocessor include directory, if you haven't already.
-- Inside the `northbridge-sys` directory, clone the repository into your preprocessor include directory using the command `git clone https://git.catlab.systems/northbridge-sys/en-lsl-framework.git`. This will create the `en-lsl-framework` directory and clone the latest commit into it.
+- Inside the `northbridge-sys` directory, clone the repository into your preprocessor include directory using the command `git clone https://github.com/northbridge-sys/en-framework.git`. This will create the `en-framework` directory and clone the latest commit into it.
 
 Or, for the current **stable** release, or if you don't want to use git:
 - Create a directory called `northbridge-sys` in your LSL preprocessor include directory, if you haven't already.
-- Create a directory called `en-lsl-framework` in the `northbridge-sys` directory.
-- [Download](https://git.catlab.systems/northbridge-sys/en-lsl-framework/archive/main.zip) and unpack the repository into the `en-lsl-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-lsl-framework/libraries.lsl` (or with backslashes - \ - for Windows users). **Make sure you don't name the folder "en-lsl-framework-main", or the framework won't load correctly!**
+- Create a directory called `en-framework` in the `northbridge-sys` directory.
+- [Download](https://github.com/northbridge-sys/en-framework/archive/main.zip) and unpack the repository into the `en-framework` directory, so that `libraries.lsl` is located in `[preprocessor directory]/northbridge-sys/en-framework/libraries.lsl` (or with backslashes - \ - for Windows users). **Make sure you don't name the folder "en-framework-main", or the framework won't load correctly!**
 
 Note that you'll need to repeat this process for each update; there is no auto-updater.
 
 ## Usage
 
-**The complete reference guide for En is located on the [NBS Documentation portal](https://docs.northbridgesys.com/en-lsl-framework).**
+**The complete reference guide for En is located on the [NBS Documentation portal](https://docs.northbridgesys.com/en-framework).**
 
 The following information is only an overview meant to describe how the En framework works at a basic level. We strongly recommend using the reference guide when writing En scripts!
 
@@ -52,7 +56,7 @@ The following information is only an overview meant to describe how the En frame
 Include the framework libraries by placing the following line at the top of your script:
 
 ```
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-framework/libraries.lsl"
 ```
 
 Then, in the script body, include the framework event handlers in each state
@@ -60,7 +64,7 @@ Then, in the script body, include the framework event handlers in each state
 ```
 default
 {
-    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-framework/event-handlers.lsl"
 }
 ```
 
@@ -70,7 +74,7 @@ To run your own code on an event, most events can be forwarded to user-defined f
 #define EVENT_EN_STATE_ENTRY
 #define EVENT_EN_ON_REZ
 
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-framework/libraries.lsl"
 
 en_state_entry()
 {
@@ -87,7 +91,7 @@ en_on_rez( integer param )
 
 You can also #define additional options for library features and override default constants; see the documentation for details.
 
-No matter what, if you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-sys/en-lsl-framework/libraries.lsl"`.
+No matter what, if you need to define any preprocessor values, make sure you do so *above* `#include "northbridge-sys/en-framework/libraries.lsl"`.
 
 ## Frequently Asked Questions
 
@@ -109,7 +113,7 @@ The LSL preprocessor makes all of the helper functions defined in the En librari
 
 Additionally, the En framework creates and redirects event handlers (`state_entry`, `link_message`, etc.) dynamically based on the functionality you enable to optimize script performance. If you need to handle certain events yourself, En can do so by passing them through to user-defined functions. If an event handler isn't needed for an En feature and you don't specifically request it, it won't be added to the compiled script.
 
-Certain En features require that you define certain flags or variables before they work to minimize unnecessary memory usage and script time; see [the documentation](https://docs.northbridgesys.com/en-lsl-framework) for more information.
+Certain En features require that you define certain flags or variables before they work to minimize unnecessary memory usage and script time; see [the documentation](https://docs.northbridgesys.com/en-framework) for more information.
 
 ### Why "En"?
 
@@ -215,7 +219,7 @@ The script named "Target Script Name" in the same prim will call the `enlep_rpc_
 ```
 #define EVENT_ENLEP_RPC_REQUEST
 
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-framework/libraries.lsl"
 
 enlep_rpc_request(
     integer source_link,
@@ -247,7 +251,7 @@ enlep_rpc_request(
 
 default
 {
-    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-framework/event-handlers.lsl"
 }
 ```
 
@@ -257,7 +261,7 @@ Then, the source script will trigger `enlep_rpc_result()`, as long as `EVENT_ENL
 #define EVENT_EN_STATE_ENTRY
 #define EVENT_ENLEP_RPC_RESULT
 
-#include "northbridge-sys/en-lsl-framework/libraries.lsl"
+#include "northbridge-sys/en-framework/libraries.lsl"
 
 en_state_entry()
 {
@@ -320,7 +324,7 @@ enlep_rpc_result(
 
 default
 {
-    #include "northbridge-sys/en-lsl-framework/event-handlers.lsl"
+    #include "northbridge-sys/en-framework/event-handlers.lsl"
 }
 
 ```
@@ -329,4 +333,4 @@ All other En scripts will ignore both `link_message` events, returning them as q
 
 ## License
 
-The En LSL Framework is licensed under the GNU Lesser General Public License v3.0. In short, you (yes, you!) may use the En LSL Framework in any LSL scripts - whether commercial or non-commercial - but you may not redistribute the En LSL Framework itself, in whole or in part, as a derivative work under any other license. Northbridge Business Systems and contributors to the En LSL Framework cannot be held liable for legal issues or damages due to its use.
+The En Framework is licensed under the GNU Lesser General Public License v3.0. In short, you (yes, you!) may use the En Framework in any LSL scripts - whether commercial or non-commercial - but you may not redistribute the En Framework itself, in whole or in part, as a derivative work under any other license. Northbridge Business Systems and contributors to the En Framework cannot be held liable for legal issues or damages due to its use.
