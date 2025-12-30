@@ -1,6 +1,4 @@
 /*
-enLEP.lsl
-Library Functions
 En LSL Framework
 Copyright (C) 2024-25  Northbridge Business Systems
 https://docs.northbridgesys.com/en-framework
