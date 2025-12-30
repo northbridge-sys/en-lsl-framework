@@ -44,8 +44,6 @@ string enSign_Sign(
     return "{\"a\":\"sha512\",\"t\":\"" + timestamp + "\",\"p\":\"" + (string)llGetKey() + "\",\"n\":\"" + enString_EscapeQuotes(llGetScriptName()) + "\",\"m\":\"" + enString_EscapeQuotes(message) + "\",\"s\":\"" + llSignRSA(private_key, timestamp + (string)llGetKey() + llGetScriptName() + message, "sha512") + "\"}";
 }
 
-string enSign_Sign
-
 /*!
 Validates a JSON object as a valid enSign signature created using enSign_Sign() and returns various information verified by the signature.
 @param string ensign_object JSON object created by enSign_Sign().
