@@ -5,14 +5,14 @@ https://docs.northbridgesys.com/en-framework
 */
 
 /*!
-Validates a JSON object as a valid enSign signature created using enSign_Sign() and returns the message.
-@param string ensign_object JSON object created by enSign_Sign().
+Validates a JSON object as a valid enSign signature created using enSign_RSA() and returns the message.
+@param string ensign_object JSON object created by enSign_RSA().
 @param string public_key RSA public key.
 @param integer expiry Seconds to allow for timestamp fluctuation.
 @return string Message, or "" if invalid/expired.
 */
 #define enSign_ExtractMessage(ensign_object, public_key, expiry) \
-    llList2String(enSign_ExtractAll(ensign_object, public_key, expiry), 2)
+    llList2String(enSign_ExtractAll(ensign_object, public_key, expiry), 3)
 
 /*!
 Validates a JSON object as a valid enSign signature created using enSign_Signature() and returns a boolean.
@@ -23,3 +23,5 @@ Validates a JSON object as a valid enSign signature created using enSign_Signatu
 */
 #define enSign_IsValid(ensign_object, public_key, expiry) \
     (enSign_ExtractAll(ensign_object, public_key, expiry) != [])
+
+list _ENSIGN_KEYS;

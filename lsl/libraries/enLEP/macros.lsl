@@ -31,6 +31,10 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
     #define OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
+#if !defined OVERRIDE_ENLEP_ENSIGN_EXPIRY
+    #define OVERRIDE_ENLEP_ENSIGN_EXPIRY 1
+#endif
+
 /*!
 Sends a request using the LEP-RPC protocol.
 @param integer target_link Target link number.

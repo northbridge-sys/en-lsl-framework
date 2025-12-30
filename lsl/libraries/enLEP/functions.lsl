@@ -150,6 +150,27 @@ integer _enLEP_link_message(
         ]);
     #endif
 
+    string ensign_script_name;
+    string ensign_key_identifier;
+    if (llJsonValueType(s, ["enSign"]) == JSON_OBJECT)
+    { // we need to extract from an enSign-encapsulated LEP message
+        list ensign_data = enSign_ExtractAll(s, OVERRIDE_ENLEP_ENSIGN_EXPIRY);
+        if (ensign_data == []) return 0; // invalid/expired/unknown
+        
+        if (llList2String(ensign_data, 0) != llGetLinkKey(l))
+        {
+            enLog_Error("enSign prim_uuid mismatch");
+            return 0;
+        }
+        ensign_script_name = llList2String(ensign_data, 1);
+        // TODO: check that ensign_script_name matches LEP script_name
+        ensign_key_identifier = llList2String(ensign_data, 2);
+        // TODO: how to pass ensign_key_identifier via enlep_rpc_*()?
+        s = llList2String(ensign_data, 3);
+    }
+
+    // TODO: what about k (params)? that needs to be signed. move to json?
+
     if (llJsonValueType(s, []) != JSON_OBJECT) return __LINE__; // LEP messages are always objects
     
     string source_script = llJsonGetValue(s, ["ss"]);
