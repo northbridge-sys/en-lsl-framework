@@ -85,6 +85,21 @@ string enString_PadZeroes(
     return src;
 }
 
+/*!
+Generates sort-of-random hex.
+WARNING: This is not safe for cryptography operations, because llGenerateKey's UUID version is subject to change, among other reasons.
+@param integer l_target Length of hex string in characters. Each character is 4 bytes.
+*/
+string enString_GenerateHex(
+    integer l_target
+)
+{
+    if (l_target <= 0) return "";
+    string r;
+    while (llStringLength(r) < l_target) r += enKey_Strip(llGenerateKey());
+    return llGetSubString(r, 0, l_target - 1);
+}
+
 string enString_Generate(
 	string pattern, // pattern to use - typically " "
 	integer l_target // number of characters to generate
