@@ -27,12 +27,22 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 #define FLAG_ENLEP_TYPE_RESPONSE 0x2
 #define FLAG_ENLEP_STATUS_ERROR 0x80000000
 
+#define FLAG_ENLEP_EMBED_INT 0x1
+
 #ifndef OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE
     #define OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE LINK_THIS
 #endif
 
 #if !defined OVERRIDE_ENLEP_ENSIGN_EXPIRY
     #define OVERRIDE_ENLEP_ENSIGN_EXPIRY 1
+#endif
+
+#if !defined OVERRIDE_ENLEP_HMAC_ALGORITHM
+    #define OVERRIDE_ENLEP_HMAC_ALGORITHM "sha256"
+#endif
+
+#if !defined OVERRIDE_ENLEP_RSA_ALGORITHM
+    #define OVERRIDE_ENLEP_RSA_ALGORITHM "sha512"
 #endif
 
 /*!
@@ -44,8 +54,8 @@ Sends a request using the LEP-RPC protocol.
 @param string params Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
 @param string id Any string. If "", will be omitted.
 */
-#define enLEP_RequestRPC(target_link, target_script, int, method, params, id) \
-    _enLEP_SendRPC(target_link, target_script, int, method, params, id, "", 0, "", "")
+#define enLEP_RequestRPC(private_key, target_link, target_script, int, method, params, id) \
+    _enLEP_SendRPC(private_key, target_link, target_script, int, method, params, id, "", 0, "", "")
 
 /*!
 Responds using the LEP-RPC protocol.
@@ -59,8 +69,8 @@ Responds using the LEP-RPC protocol.
 @param string error_message ERROR RESPONSES ONLY: Any string.
 @param string error_data ERROR RESPONSES ONLY: Any JSON.
 */
-#define _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data) \
-    _enLEP_SendRPC(target_link, target_script, int, method, params, id, result, error_code, error_message, error_data)
+#define _enLEP_RespondRPC(private_key, target_link, target_script, int, method, params, id, result, error_code, error_message, error_data) \
+    _enLEP_SendRPC(private_key, target_link, target_script, int, method, params, id, result, error_code, error_message, error_data)
 
 /*!
 Responds with a result using the LEP-RPC protocol.
@@ -71,8 +81,8 @@ Responds with a result using the LEP-RPC protocol.
 @param string id ID sent in request.
 @param string result Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
 */
-#define enLEP_RespondRPCResult(target_link, target_script, int, method, params, id, result) \
-    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, result, 0, "", "")
+#define enLEP_RespondRPCResult(private_key, target_link, target_script, int, method, params, id, result) \
+    _enLEP_RespondRPC(private_key, target_link, target_script, int, method, params, id, result, 0, "", "")
 
 /*!
 Responds with an error using the LEP-RPC protocol.
@@ -85,5 +95,5 @@ Responds with an error using the LEP-RPC protocol.
 @param string error_message Any string.
 @param string error_data Any JSON.
 */
-#define enLEP_RespondRPCError(target_link, target_script, int, method, params, id, error_code, error_message, error_data) \
-    _enLEP_RespondRPC(target_link, target_script, int, method, params, id, "", error_code, error_message, error_data)
+#define enLEP_RespondRPCError(private_key, target_link, target_script, int, method, params, id, error_code, error_message, error_data) \
+    _enLEP_RespondRPC(private_key, target_link, target_script, int, method, params, id, "", error_code, error_message, error_data)

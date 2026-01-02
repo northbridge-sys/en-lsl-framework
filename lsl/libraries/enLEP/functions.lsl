@@ -24,9 +24,16 @@ with this script.  If not, see <https://www.gnu.org/licenses/>.
 this is loosely based on JSON-RPC, optimized for LSL's tight memory limits and adding LEP routing metadata: https://en.wikipedia.org/wiki/JSON-RPC
 */
 string _enLEP_FormJsonRPC(
+    integer flags, // internal flags
+    string private_key,
+    string domain,
+    string target_region, // MISSING: only required if relay routing is requested
+    string target_prim, // MISSING: only required if relay routing is requested
     string source_script,
     string target_script,
+    integer int,
     string method,
+    string params,
     string id,
     string result,
     integer error_code,
@@ -35,49 +42,114 @@ string _enLEP_FormJsonRPC(
 )
 {
     /*
-    LEP requests are:
+    LEP messages are:
     {
-        "t":"RPC",
-        "ss":"(name of source script)",
+        "d":"(any domain string)", <- omitted if blank, but CLEP messages require that this be set to a value for channel hashing
+        "ss":llGetScriptName(),
         "ts":"(name of target script)",
+        "sp":llGetKey(), <- only required if (1) "s" signature is used, OR (2) relayed routing is requested
+        "tp":"(UUID of target prim)", <- only required if relay routing is requested
+        "sr":llGetRegionName(), <- only required if relay routing is requested
+        "tr":"(name of region that target prim is in)", <- only required if relay routing is requested
+        "m":"any.method",
+        "p":(any JSON object), <- can be omitted if no params
         "id":"(any string)", <- can be omitted if no response requested (broadcast)
-        "m":"any.method"
-    }
-    LEP responses swap "ss" and "ts", and add either:
-    {
-        "e":{
+        "r":(any JSON object), <- only for responses that DO NOT return an error
+        "e":{ <- only for responses that DO return an error
             "c":(integer error code),
             "m":"(string error message)",
-            "d":(any JSON data) <- can be omitted if no error_data provided
-        }
+            "d":(any JSON object) <- can be omitted if no error_data provided
+        },
+        "s":{ <- can be omitted if message unsigned
+            "a": llHMAC()/llSignRSA() algorithm,
+            "t": llGetTimestamp(),
+            "s": HMAC or RSA signature using private_key (see code for underlying "message")
+        },
+        "i":(any integer) <- omitted for LEP, reserved for CLEP (applied by _enCLEP_SendRPC()); note that int must still be passed to this function if signing; use FLAG_ENLEP_EMBED_INT
     }
-    or:
-    {
-        "r":(any JSON data)
-    }
-    LEP sends the raw "params" value to an independent string so it can handle any data (JSON-RPC packs it into the JSON).
-    LEP also passes through target_link and int directly to llMessageLinked().
-    The "p" param is optionally reserved for params (used in CLEP, but not LEP for message processing efficiency)
-    Technically no other params are allowed, and the whole spec is reserved for future expansion - all user values must be passed via existing params in the spec
+    NOTE: these values are not ordered this way!
+    LEP passes through target_link and int directly to llMessageLinked().
+    No other params are allowed, and the whole spec is reserved for future expansion - all user values must be passed via existing params in the spec
     */
-    string json = "{\"t\":\"RPC\",\"ss\":" + enString_EscapedQuote(source_script) + ",\"ts\":" + enString_EscapedQuote(target_script) + ",\"m\":" + enString_EscapedQuote(method) + "}";
-    if (id != "") json = llJsonSetValue(json, ["id"], enString_EscapedQuote(id));
-    if (llJsonValueType(result, []) != JSON_INVALID)
-    { // we are sending a response with a result
-        json = llJsonSetValue(json, ["r"], result);
-    }
+    string addl;
+    if (flag & FLAG_ENLEP_EMBED_INT) addl += "\"i\":" + (string)int; // embed int into JSON (used by CLEP)
+    if (d != "") addl += ",\"d\":\"" + enString_EscapeQuotes(domain) + "\""; // add domain
+    if (id != "") addl += ",\"id\":\"" + enString_EscapeQuotes(id) + "\""; // add id
+    if (llJsonValueType(params, []) != JSON_INVALID) addl += ",\"p\":" + params; // add params
+    if (llJsonValueType(result, []) != JSON_INVALID) addl += ",\"r\":" + result; // we are sending a response with a result, so add it
     else if (error_code || error_message != "" || error_data != "")
-    { // we are sending a response with an error
-        json = llJsonSetValue(json, ["e", "c"], (string)error_code);
-        json = llJsonSetValue(json, ["e", "m"], enString_EscapedQuote(error_message));
-        if (llJsonValueType(error_data, []) != JSON_INVALID) json = llJsonSetValue(json, ["e", "d"], error_data);
+    { // we are sending a response with an error, so add it
+        addl += ",\"e\":{\"c\":" + (string)error_code + ",\"m\":\"" + enString_EscapeQuotes(error_message) + "\"";
+        if (llJsonValueType(error_data, []) != JSON_INVALID) addl += "\"d\":" + error_data;
+        addl += "}";
     }
-    // else, we are sending a request
+    // if no r/e, we are sending a request
+
+    #if defined FEATURE_ENCLEP_ENABLE_ROUTING || defined FEATURE_ENCLEP_ENABLE_SIGNING || defined FEATURE_ENLEP_ENABLE_SIGNING
+        if (enKey_IsNotNull(target_prim)) // we are requesting routing, so add routing information
+            addl += ",\"sp\":\"" + (string)llGetKey() + "\",\"tp\":\"" + target_prim + "\",\"sr\":\"" + enString_EscapeQuotes(llGetRegionName()) + "\",\"tr\":\"" + enString_EscapeQuotes(target_region) + "\"";
+        else if (private_key != "") // we are not requesting routing, but we are signing
+            addl += ",\"sp\":\"" + (string)llGetKey() + "\"";
+    #endif
+    
+    #if defined FEATURE_ENCLEP_ENABLE_SIGNING || defined FEATURE_ENLEP_ENABLE_SIGNING
+        // signing is enabled - are we signing this message?
+        if (private_key != "")
+        {
+            string timestamp = llGetTimestamp();
+            /*
+                algorithm
+                timestamp
+                domain
+                source_script
+                target_script
+                source_prim
+                int
+                method
+                params
+                id
+                result
+                error_code
+                error_message
+                error_data
+                target_prim   \
+                source_region  > these three values are only included if we are requesting routing
+                target_region /
+            */
+            #define _ENLEP_OUTBOUND_SIGNATURE_MESSAGE \
+                  timestamp \
+                + domain \
+                + source_script \
+                + target_script \
+                + (string)llGetKey() \
+                + (string)int \
+                + method \
+                + params \
+                + id \
+                + result \
+                + (string)error_code \
+                + error_message \
+                + error_data \
+                + enString_If(enKey_IsNotNull(target_prim), target_prim + llGetRegionName() + target_region, "")
+
+            if (llGetSubString(private_key, 0, 4) == "-----") addl += ",\"a\":\"" + OVERRIDE_ENLEP_RSA_ALGORITHM + "\",\"t\":\"" + timestamp + "\",\"s\":\"" + llSignRSA(private_key, OVERRIDE_ENLEP_RSA_ALGORITHM + _ENLEP_OUTBOUND_SIGNATURE_MESSAGE, OVERRIDE_ENLEP_RSA_ALGORITHM) + "\""; // use RSA if we were passed an RSA private key
+            else addl += ",\"a\":\"" + OVERRIDE_ENLEP_HMAC_ALGORITHM + "\",\"t\":\"" + timestamp + "\",\"s\":\"" + llHMAC(private_key, OVERRIDE_ENLEP_HMAC_ALGORITHM + _ENLEP_OUTBOUND_SIGNATURE_MESSAGE, OVERRIDE_ENLEP_HMAC_ALGORITHM) + "\""; // use HMAC otherwise, since it accepts anything
+        }
+    #endif
+
     // return whatever we're sending
-    return json;
+    return "{\"ss\":\"" + enString_EscapeQuotes(source_script)
+        + "\",\"ts\":\"" + enString_EscapeQuotes(target_script)
+        + "\",\"m\":\"" + enString_EscapeQuotes(method)
+        + "\"" + addl + "}";
 }
 
+/*!
+Internal function. Sends a LEP-RPC message via llMessageLinked.
+Use enLEP_RequestRPC(), enLEP_RespondRPCResult(), and enLEP_RespondRPCError() instead.
+*/
 string _enLEP_SendRPC(
+    string private_key,
     integer target_link,
     string target_script,
     integer int,
@@ -94,6 +166,7 @@ string _enLEP_SendRPC(
         enLog_TraceParams(
             "_enLEP_SendRPC",
             [
+                "private_key",
                 "target_link",
                 "target_script",
                 "int",
@@ -106,6 +179,7 @@ string _enLEP_SendRPC(
                 "error_data"
             ],
             [
+                enString_If(private_key == "", "", "(hidden)"),
                 target_link,
                 enString_Elem(target_script),
                 int,
@@ -121,7 +195,8 @@ string _enLEP_SendRPC(
     #endif
 
     if (!target_link) target_link = OVERRIDE_ENLEP_LINK_MESSAGE_SCOPE;
-    llMessageLinked(target_link, int, _enLEP_FormJsonRPC(llGetScriptName(), target_script, method, id, result, error_code, error_message, error_data), params);
+
+    llMessageLinked(target_link, int, _enLEP_FormJsonRPC(0, private_key, "", "", "", llGetScriptName(), target_script, int, method, params, id, result, error_code, error_message, error_data), "");
     return id;
 }
 
@@ -150,35 +225,48 @@ integer _enLEP_link_message(
         ]);
     #endif
 
-    string ensign_script_name;
-    string ensign_key_identifier;
-    if (llJsonValueType(s, ["enSign"]) == JSON_OBJECT)
-    { // we need to extract from an enSign-encapsulated LEP message
-        list ensign_data = enSign_ExtractAll(s, OVERRIDE_ENLEP_ENSIGN_EXPIRY);
-        if (ensign_data == []) return 0; // invalid/expired/unknown
-        
-        if (llList2String(ensign_data, 0) != llGetLinkKey(l))
-        {
-            enLog_Error("enSign prim_uuid mismatch");
-            return 0;
-        }
-        ensign_script_name = llList2String(ensign_data, 1);
-        // TODO: check that ensign_script_name matches LEP script_name
-        ensign_key_identifier = llList2String(ensign_data, 2);
-        // TODO: how to pass ensign_key_identifier via enlep_rpc_*()?
-        s = llList2String(ensign_data, 3);
+    /*
+    LEP messages are:
+    {
+        "d":"(any domain string)", <- omitted if blank, but CLEP messages require that this be set to a value for channel hashing
+        "ss":llGetScriptName(),
+        "ts":"(name of target script)",
+        "sp":llGetKey(), <- only required if (1) "s" signature is used, OR (2) relayed routing is requested
+        "tp":"(UUID of target prim)", <- only required if relay routing is requested
+        "sr":llGetRegionName(), <- only required if relay routing is requested
+        "tr":"(name of region that target prim is in)", <- only required if relay routing is requested
+        "m":"any.method",
+        "p":(any JSON object), <- can be omitted if no params
+        "id":"(any string)", <- can be omitted if no response requested (broadcast)
+        "r":(any JSON object), <- only for responses that DO NOT return an error
+        "e":{ <- only for responses that DO return an error
+            "c":(integer error code),
+            "m":"(string error message)",
+            "d":(any JSON object) <- can be omitted if no error_data provided
+        },
+        "s":{ <- can be omitted if message unsigned
+            "a": llHMAC()/llSignRSA() algorithm,
+            "t": llGetTimestamp(),
+            "s": HMAC or RSA signature using private_key (see code for underlying "message")
+        },
+        "i":(any integer) <- omitted for LEP, reserved for CLEP (applied by _enCLEP_SendRPC()); note that int must still be passed to this function if signing; use FLAG_ENLEP_EMBED_INT
     }
-
-    // TODO: what about k (params)? that needs to be signed. move to json?
+    */
 
     if (llJsonValueType(s, []) != JSON_OBJECT) return __LINE__; // LEP messages are always objects
-    
-    string source_script = llJsonGetValue(s, ["ss"]);
+
+    string target_region = llJsonGetValue(s, ["tr"]);
+    string target_prim = llJsonGetValue(s, ["tp"]);
     string target_script = llJsonGetValue(s, ["ts"]);
 
-    // filter out messages that don't match OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS list
-    #if defined OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS
-        if (llListFindList(OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS, [source_script]) == -1) return 0; // discard otherwise valid LEP message, not sent from an allowed source script
+    #if !defined FEATURE_ENCLEP_ALLOW_ALL_TARGET_REGIONS
+        // filter out messages that are targeted to a specific other region
+        if (target_region != JSON_INVALID && target_region != "" && target_region != llGetRegionName()) return 0; // not targeted to this region
+    #endif
+
+    #if !defined FEATURE_ENCLEP_ALLOW_ALL_TARGET_PRIMS
+        // filter out messages that are targeted to a specific other prim
+        if (enKey_IsNotNull(target_prim) && target_prim != (string)llGetKey()) return 0; // not targeted to this prim
     #endif
 
     /// generate allowed target_scripts list
@@ -201,16 +289,75 @@ integer _enLEP_link_message(
             return 0; // discard otherwise valid LEP message, not targeted to us
         #endif
     }
+    
+    string source_script = llJsonGetValue(s, ["ss"]);
 
-    if (llJsonGetValue(s, ["t"]) != "RPC") return __LINE__; // LEP messages always have "t":"RPC", though other types may be added within LEP spec eventually
+    // filter out messages that don't match OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS list
+    #if defined OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS
+        if (llListFindList(OVERRIDE_ENLEP_ALLOWED_SOURCE_SCRIPTS, [source_script]) == -1) return 0; // discard otherwise valid LEP message, not sent from an allowed source script
+    #endif
 
     string id = llJsonGetValue(s, ["id"]);
+    if (id == JSON_INVALID) id = "";
+
+    string domain = llJsonGetValue(s, ["d"]);
     string method = llJsonGetValue(s, ["m"]);
+    string params = llJsonGetValue(s, ["p"]);
+
     string result = llJsonGetValue(s, ["r"]);
+    integer error_code = (integer)llJsonGetValue(s, ["e", "c"]);
+    string error_message = llJsonGetValue(s, ["e", "m"]);
+    string error_data = llJsonGetValue(s, ["e", "d"]);
+
+    #if defined FEATURE_ENLEP_DOMAIN
+        if (domain != FEATURE_ENLEP_DOMAIN) return 0; // discard message if it doesn't match the domain FEATURE_ENLEP_DOMAIN
+    #endif
+
+    #if defined FEATURE_ENLEP_ENABLE_INBOUND_VERIFICATION
+        string algorithm = llJsonGetValue(s, ["s", "a"]);
+        string timestamp = llJsonGetValue(s, ["s", "t"]);
+        string source_region = llJsonGetValue(s, ["sr"]);
+        string source_prim = llJsonGetValue(s, ["sp"]);
+
+        #define _ENLEP_INBOUND_SIGNATURE_MESSAGE \
+            algorithm \
+            + timestamp \
+            + domain \
+            + source_script \
+            + target_script \
+            + source_prim \
+            + (string)i \
+            + method \
+            + params \
+            + id \
+            + result \
+            + (string)error_code \
+            + error_message \
+            + error_data \
+            + enString_If(enKey_IsNotNull(target_prim), target_prim + source_region + target_region, "")
+
+        if (llGetSubString(private_key, 0, 4) == "-----")
+        {
+            if (!llVerifyRSA(
+                OVERRIDE_ENLEP_PUBLIC_KEY, 
+                _ENLEP_INBOUND_SIGNATURE_MESSAGE,
+                llJsonGetValue(s, ["s", "s"]),
+                algorithm)) return 0;
+        }
+        else
+        {
+            if (llHMAC(
+                OVERRIDE_ENLEP_PRIVATE_KEY, 
+                _ENLEP_INBOUND_SIGNATURE_MESSAGE,
+                algorithm) != llJsonGetValue(s, ["s", "s"])) return 0;
+        }
+    #endif
+
+    // TODO: copy inbound verification key registration code from enSign, since the above doesn't really work
 
     if (result == JSON_INVALID)
     {
-        if (llJsonValueType(s, ["e"]) == JSON_INVALID)
+        if (error_message == JSON_INVALID)
         { // request
             #if defined EVENT_ENLEP_RPC_REQUEST && defined TRACE_EVENT_ENLEP_RPC_REQUEST
                 enLog_TraceParams(
@@ -249,9 +396,6 @@ integer _enLEP_link_message(
         }
 
         // error response
-        integer error_code = (integer)llJsonGetValue(s, ["e", "c"]);
-        string error_message = llJsonGetValue(s, ["e", "m"]);
-        string error_data = llJsonGetValue(s, ["e", "d"]);
         #if defined EVENT_ENLEP_RPC_ERROR && defined TRACE_EVENT_ENLEP_RPC_ERROR
             enLog_TraceParams(
                 "enlep_rpc_error",

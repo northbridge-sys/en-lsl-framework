@@ -139,9 +139,11 @@ _enCLEP_SendRaw( // llRegionSayTo with llRegionSay for NULL_KEY instead of silen
 CLEP-RPC, compatible with LEP-RPC.
 */
 string _enCLEP_SendRPC(
+    string private_key,
+    string domain,
+    string target_region,
     string target_prim,
     string target_script,
-    string clep_domain,
     integer int,
     string method,
     string params,
@@ -156,9 +158,11 @@ string _enCLEP_SendRPC(
         enLog_TraceParams(
             "_enCLEP_SendRPC",
             [
+                "private_key",
+                "domain",
+                "target_region",
                 "target_prim",
                 "target_script",
-                "clep_domain",
                 "int",
                 "method",
                 "params",
@@ -169,9 +173,11 @@ string _enCLEP_SendRPC(
                 "error_data"
             ],
             [
+                enString_If(private_key == "", "", "(hidden)"),
+                enString_Elem(domain),
+                enString_Elem(target_region),
                 enPrim_Elem(target_prim),
                 enString_Elem(target_script),
-                enString_Elem(clep_domain),
                 int,
                 method,
                 params,
@@ -186,15 +192,26 @@ string _enCLEP_SendRPC(
 
     string json = 
         llJsonSetValue(
-            _enLEP_FormJsonRPC(llGetScriptName(), target_script, method, id, result, error_code, error_message, error_data),
+            _enLEP_FormJsonRPC(
+                FLAG_ENLEP_EMBED_INT,
+                private_key,
+                domain,
+                target_region, // target region (if routing only)
+                target_prim, // target prim (if routing only)
+                llGetScriptName(),
+                target_script,
+                int,
+                method,
+                params,
+                id,
+                result,
+                error_code,
+                error_message,
+                error_data
+            ),
             ["i"],
             (string)int
         );
-    
-    if (llJsonValueType(clep_domain, []) == JSON_INVALID) json = llJsonSetValue(json, ["cd"], clep_domain);
-    else json = llJsonSetValue(json, ["cd"], enString_EscapedQuote(clep_domain));
-
-    if (llJsonValueType(params, []) != JSON_INVALID) json = llJsonSetValue(json, ["p"], params);
 
     _enCLEP_SendRaw(target_prim, enCLEP_Channel(clep_domain), json);
 
