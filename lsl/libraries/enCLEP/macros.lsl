@@ -65,8 +65,8 @@ Sends a request using the CLEP-RPC protocol.
 @param string params Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
 @param string id Any string. If "", will be omitted.
 */
-#define enCLEP_RequestRPC(target_prim, target_script, clep_domain, int, method, params, id) \
-    _enCLEP_SendRPC(target_prim, target_script, clep_domain, int, method, params, id, "", 0, "", "")
+#define enCLEP_RequestRPC(private_key, domain, target_region, target_prim, target_script, int, method, params, id) \
+          _enCLEP_SendRPC(private_key, domain, target_region, target_prim, target_script, int, method, params, id, "", 0, "", "")
 
 /*!
 Responds using the CLEP-RPC protocol.
@@ -81,8 +81,8 @@ Responds using the CLEP-RPC protocol.
 @param string error_message ERROR RESPONSES ONLY: Any string.
 @param string error_data ERROR RESPONSES ONLY: Any JSON.
 */
-#define _enCLEP_RespondRPC(target_prim, target_script, clep_domain, int, method, params, id, result, error_code, error_message, error_data) \
-    _enCLEP_SendRPC(target_prim, target_script, clep_domain, int, method, params, id, result, error_code, error_message, error_data)
+#define _enCLEP_RespondRPC(private_key, domain, target_region, target_prim, target_script, int, method, params, id, result, error_code, error_message, error_data) \
+           _enCLEP_SendRPC(private_key, domain, target_region, target_prim, target_script, int, method, params, id, result, error_code, error_message, error_data)
 
 /*!
 Responds with a result using the CLEP-RPC protocol.
@@ -94,8 +94,8 @@ Responds with a result using the CLEP-RPC protocol.
 @param string id ID sent in request.
 @param string result Any JSON. This parameter is passed as a raw string, but needs to be valid JSON for CLEP encapsulation, which assumes it is valid JSON.
 */
-#define enCLEP_RespondRPCResult(target_prim, target_script, clep_domain, int, method, params, id, result) \
-    _enCLEP_RespondRPC(target_prim, target_script, clep_domain, int, method, params, id, result, 0, "", "")
+#define enCLEP_RespondRPCResult(private_key, domain, target_region, target_prim, target_script, int, method, params, id, result) \
+             _enCLEP_RespondRPC(private_key, domain, target_region, target_prim, target_script, int, method, params, id, result, 0, "", "")
 
 /*!
 Responds with an error using the CLEP-RPC protocol.
@@ -109,5 +109,5 @@ Responds with an error using the CLEP-RPC protocol.
 @param string error_message Any string.
 @param string error_data Any JSON.
 */
-#define enCLEP_RespondRPCError(target_prim, target_script, clep_domain, int, method, params, id, error_code, error_message, error_data) \
-    _enCLEP_RespondRPC(target_prim, target_script, clep_domain, int, method, params, id, "", error_code, error_message, error_data)
+#define enCLEP_RespondRPCError(private_key, domain, target_region, target_prim, target_script, int, method, params, id,     error_code, error_message, error_data) \
+            _enCLEP_RespondRPC(private_key, domain, target_region, target_prim, target_script, int, method, params, id, "", error_code, error_message, error_data)
